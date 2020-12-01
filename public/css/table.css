@@ -1,0 +1,22 @@
+td.highlight_success{
+    font-weight: bold;
+    color: green;
+}
+
+td.highlight_half{
+    font-weight: bold;
+    color: yellow;
+}
+td.highlight_none{
+    font-weight: bold;
+    color: red;
+}
+
+.dataTables_wrapper .dataTables_processing {
+    top: 0;
+    width: auto;
+    margin: 0;
+    z-index: 1;
+    transform: translateX(+50%);
+    background-color: rgb(255, 255, 255, 1);
+   }
