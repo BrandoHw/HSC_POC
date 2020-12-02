@@ -36,3 +36,8 @@ import "./modules/select2";
 
 // Stepper
 import "./modules/stepper";
+
+// Leaflet
+require('leaflet');
+require('leaflet-draw');
+

@@ -1,10 +1,9 @@
-# Atalian POS
-This is an employee attendance management system with indoor people tracking features.
+# HSC PoC
 
 ## Installation Steps
 1. clone GitHub repo (https)
 ```
-git clone https://github.com/mush00/WECare-POS.git
+git clone https://github.com/BrandoHw/HSC_POC
 ```
 To clone with SSH, please visit https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh.
 

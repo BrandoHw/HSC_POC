@@ -1,0 +1,106 @@
+#map{ z-index:1; }
+#dialog-form{ z-index:2; }
+label, input { display:block; }
+input.text { margin-bottom:12px; width:95%; padding: .4em; }
+fieldset { padding:0; border:0; margin-top:25px; }
+h1 { font-size: 1.2em; margin: .6em 0; }
+div#users-contain { width: 350px; margin: 20px 0; }
+div#users-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
+div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
+.ui-dialog .ui-state-error { padding: .3em; }
+.validateTips { border: 1px solid transparent; padding: 0.3em; }
+
+
+.list {
+    font-family:sans-serif;
+    margin:0;
+    padding:20px 0 0;
+  }
+
+  a[href], input[type='submit'], input[type='image'], label[for], select, button, .pointer {
+    cursor: pointer;
+    }
+
+  .list > li {
+    display:block;
+    background-color: #eee;
+    padding:10px;
+    box-shadow: inset 0 1px 0 #fff;
+    cursor: pointer;
+  }
+  .avatar {
+    max-width: 150px;
+  }
+  img {
+    max-width: 100%;
+  }
+  h3 {
+    font-size: 16px;
+    margin:0 0 0.3rem;
+    font-weight: normal;
+    font-weight:bold;
+  }
+  p {
+    margin:0;
+  }
+
+  input {
+    border:solid 1px #ccc;
+    border-radius: 5px;
+    padding:7px 14px;
+    margin-bottom:10px
+  }
+  input:focus {
+    outline:none;
+    border-color:#aaa;
+  }
+  .sort {
+    padding:8px 30px;
+    border-radius: 6px;
+    border:none;
+    display:inline-block;
+    color:#fff;
+    text-decoration: none;
+    background-color: #28a8e0;
+    height:30px;
+  }
+  .sort:hover {
+    text-decoration: none;
+    background-color:#1b8aba;
+  }
+  .sort:focus {
+    outline:none;
+  }
+  .sort:after {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    content:"";
+    position: relative;
+    top:-10px;
+    right:-5px;
+  }
+  .sort.asc:after {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #fff;
+    content:"";
+    position: relative;
+    top:13px;
+    right:-5px;
+  }
+  .sort.desc:after {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid #fff;
+    content:"";
+    position: relative;
+    top:-10px;
+    right:-5px;
+  }

@@ -25,6 +25,17 @@
             </li>
             @endcan
 
+            
+            @can('company-list')
+            <li class="{{ Request::segment(1) === 'companies' ? 'sidebar-item active' : 'sidebar-item' }}">
+                <a class="sidebar-link" href="{{ url('map') }}">
+                    @svg('map', 'feather-map align-middle')
+                    <span class="align-middle">Tracking</span>
+                </a>
+            </li>
+            @endcan
+
+
             @can('company-list')
             <li class="{{ Request::segment(1) === 'companies' ? 'sidebar-item active' : 'sidebar-item' }}">
                 <a class="sidebar-link" href="{{ route('companies.index') }}">
