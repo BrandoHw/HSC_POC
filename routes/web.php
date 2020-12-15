@@ -4,6 +4,7 @@ use App\Http\Controllers\BuildingController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyReaderController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GatewayZoneController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupUserController;
 use App\Http\Controllers\HomeController;
@@ -16,6 +17,8 @@ use App\Http\Controllers\TagController;
 use App\Http\Controllers\TagDataLogController;
 use App\Http\Controllers\TimeblockController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserLastSeenController;
+use App\UserLastSeen;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 //use Response;
@@ -58,5 +61,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('groups.timeblocks', TimeblockController::class);
     Route::resource('map', MapController::class);
 
+    Route::resource('zones', GatewayZoneController::class);
+    Route::resource('user-position', UserLastSeenController::class);
+    Route::get('user/get', [UserLastSeenController::class, 'get']);
 
 });

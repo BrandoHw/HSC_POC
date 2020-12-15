@@ -35,7 +35,7 @@ class CreateTagData extends Migration
         });
 
         /**
-         * Name: attendacne_trigger:
+         * Name: attendance_trigger:
          * Function: Insert the tag data received from api to tag_data_logs table
          * When: After insert
          */
@@ -51,7 +51,10 @@ class CreateTagData extends Migration
                 reader_mac_last = NEW.reader_mac, last_detected_at= NEW.created_at;
         END
         ');
+
+
     }
+
 
     /**
      * Reverse the migrations.

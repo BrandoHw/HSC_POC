@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
         //     }
         // }
 
-        /* Define our own seeding sequence */
+        // /* Define our own seeding sequence */
         // $this->call(PermissionsTableSeeder::class);
         // $this->command->info('Permissions table has been seeded!');
 

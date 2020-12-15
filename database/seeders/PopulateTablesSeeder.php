@@ -16,7 +16,7 @@ use App\User;
 use Carbon\Carbon;
 use Faker\Generator as Faker;
 
-class AttendanceTestingSeeder extends Seeder
+class PopulateTablesSeeder extends Seeder
 {
     /**
      * Run the database seeds.

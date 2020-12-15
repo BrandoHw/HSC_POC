@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\GatewayZone;
+use App\Reader;
 use Illuminate\Http\Request;
 
 class MapController extends Controller
@@ -15,13 +17,13 @@ class MapController extends Controller
     {
         //
         
-        // $readers = Reader::where('assigned', '!=' , 1)->get();
-        // $readerZones = ReaderZone::all();
+        $readers = Reader::where('assigned', '!=' , 1)->get();
+        $gatewayZones = GatewayZone::all();
 
-        // foreach ($readerZones as $readerZone){
-        //     $readerZone->geoJson = json_decode($readerZone->geoJson);
-        // }
-        return view('map.show');//, compact('readers', 'readerZones'));
+        foreach ($gatewayZones as $gatewayZone){
+            $gatewayZone->geoJson = json_decode($gatewayZone->geoJson);
+        }
+        return view('map.show', compact('readers', 'gatewayZones'));
     }
 
     /**

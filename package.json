@@ -12,7 +12,7 @@
     "devDependencies": {
         "axios": "^0.19",
         "bootstrap": "^4.5.3",
-        "cross-env": "^7.0",
+        "cross-env": "^7.0.3",
         "jquery": "^3.5.1",
         "laravel-mix": "^5.0.9",
         "lodash": "^4.17.20",
@@ -47,6 +47,8 @@
         "jvectormap-next": "^3.1.1",
         "leaflet": "^1.7.1",
         "leaflet-draw": "^1.0.4",
+        "list": "^2.0.19",
+        "list.js": "^2.3.0",
         "notyf": "^3.9.0",
         "script-loader": "^0.7.2",
         "select2": "^4.0.13",

@@ -41,3 +41,9 @@ import "./modules/stepper";
 require('leaflet');
 require('leaflet-draw');
 
+// Jquery
+import 'jquery-ui/ui/widgets/dialog.js';
+
+//List
+import List from "list.js";
+window.List = List;

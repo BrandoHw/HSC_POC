@@ -13,11 +13,13 @@ class CreateReadersTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('readers');
         Schema::create('readers', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('serial')->unique();
             $table->macAddress('mac_addr')->unique();
             $table->unsignedBigInteger('floor_id')->nullable();
+            $table->boolean('assigned')->default(false);
             $table->timestamps();
 
             $table->foreign('floor_id')
@@ -25,6 +27,7 @@ class CreateReadersTable extends Migration
                 ->on('floors')
                 ->onDelete('cascade');
         });
+
     }
 
     /**

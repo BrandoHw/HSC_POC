@@ -11,16 +11,42 @@ div#users-contain table td, div#users-contain table th { border: 1px solid #eee;
 .validateTips { border: 1px solid transparent; padding: 0.3em; }
 
 
+/* Style the search field */
+.fuzzy-search {
+  padding: 10px;
+  font-size: 17px;
+  border: 1px solid grey;
+  float: left;
+  width: 80%;
+  background: #f1f1f1;
+}
+
+@keyframes fade { 
+  from { opacity: 0.5; } 
+}
+
+.blinking {
+  animation: fade 1s infinite alternate;
+}
+
+a[href], input[type='submit'], input[type='image'], label[for], select, button, .pointer {
+  cursor: pointer;
+  }
+  
 .list {
     font-family:sans-serif;
     margin:0;
     padding:20px 0 0;
   }
 
-  a[href], input[type='submit'], input[type='image'], label[for], select, button, .pointer {
-    cursor: pointer;
-    }
-
+  h2 {
+    font-family:sans-serif;
+  }
+  .list {
+    font-family:sans-serif;
+    margin:0;
+    padding:20px 0 0;
+  }
   .list > li {
     display:block;
     background-color: #eee;
@@ -43,7 +69,7 @@ div#users-contain table td, div#users-contain table th { border: 1px solid #eee;
   p {
     margin:0;
   }
-
+  
   input {
     border:solid 1px #ccc;
     border-radius: 5px;

@@ -58,6 +58,8 @@ class InsertInitialData extends Migration
             // Attendance
             // 'attendance-list',
             // 'attendance-delete',
+            //Map
+            'map-view',
         ];
 
         foreach ($permissions as $permission){
