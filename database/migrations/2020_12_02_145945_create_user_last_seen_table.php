@@ -58,7 +58,7 @@ class CreateUserLastSeenTable extends Migration
                     FROM tags t
                     WHERE t.mac_addr = NEW.mac_addr
                 ON DUPLICATE KEY UPDATE  
-                    users_last_seen.updated_at = IF(@condition:=((users_last_seen.updated_at + INTERVAL 15 second) < NEW.created_at OR NEW.rssi > rssi), NEW.created_at, users_last_seen.created_at),
+                    users_last_seen.updated_at = IF(@condition:=((users_last_seen.updated_at + INTERVAL 15 second) < NEW.created_at OR NEW.rssi > rssi), NEW.created_at, users_last_seen.updated_at),
                     rssi =  IF(@condition, NEW.rssi, rssi),
                     users_last_seen.reader_mac =  IF(@condition, NEW.reader_mac, users_last_seen.reader_mac),
                     users_last_seen.user_id =  IF(@condition, t.user_id,  users_last_seen.user_id);

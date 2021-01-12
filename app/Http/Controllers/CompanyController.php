@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Building;
 use App\Company;
+use App\Floor;
 use App\Reader;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -101,8 +102,10 @@ class CompanyController extends Controller
     {
         $buildings = $company->buildings->pluck('name', 'id')->all();
         $readersNull = Reader::doesntHave('floor')->get();
-        
-		return view('companies.show', compact('readersNull', 'buildings', 'company'));
+        $id = $company->buildings->pluck('id')->all();
+        $floors = Floor::whereIn('building_id', $id)->with('map')->get();
+
+		return view('companies.show', compact('readersNull', 'buildings', 'company', 'floors'));
     }
     
     /**

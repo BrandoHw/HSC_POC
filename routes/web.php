@@ -5,6 +5,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyReaderController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GatewayZoneController;
+use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupUserController;
 use App\Http\Controllers\HomeController;
@@ -62,7 +63,14 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('map', MapController::class);
 
     Route::resource('zones', GatewayZoneController::class);
+    Route::post('gateway-zones/destroy', [GatewayZoneController::class, 'destroyAjax'])->name('zone.destroy');
+    Route::post('gateway-zones/update', [GatewayZoneController::class, 'updateAjax'])->name('zone.update');
     Route::resource('user-position', UserLastSeenController::class);
     Route::get('user/get', [UserLastSeenController::class, 'get']);
+
+
+    Route::view('/file-upload', 'map.upload');
+    Route::post('/file-upload', [GeneralController::class, 'store']);
+    Route::get('/view-uploads', [GeneralController::class, 'viewUploads']);
 
 });
