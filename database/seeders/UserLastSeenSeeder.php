@@ -120,7 +120,7 @@ class UserLastSeenSeeder extends Seeder
                     "Martin"];
 
          /* User Creation */
-         for ($i=1;$i<20;$i++){
+         for ($i=0;$i<20;$i++){
             $users[$i] = User::create([
                 'name' => $names[$i]." ".$last_name[$i],
                 'username' => $names[$i],
@@ -129,23 +129,25 @@ class UserLastSeenSeeder extends Seeder
             ]);
 
             $tags[$i] = Tag::create([
-                'serial' => 'T000000'.($i+6),
+                'serial' => 'T00000'.($i+10),
                 'mac_addr' => $tag_array[$i]
             ]);
 
             Reader::create([
-                'serial' => 'R000000'.($i+5),
+                'serial' => 'R00000'.($i+10),
                 'mac_addr' => $mac_array[$i]   
             ]);
 
             $usersLastSeen[$i] = UserLastSeen::create([
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'rssi' => rand(-60, 15),
+                'user_id' => $users[$i]->id,
                 'tag_mac' => $tag_array[$i],
                 'reader_mac' => $mac_array[$i]   
             ]);
          }
-  
+         
+        
   
         foreach ($users as $user){
             /* Add user to this group */
@@ -153,15 +155,15 @@ class UserLastSeenSeeder extends Seeder
             // $this->command->info('User saved into Group!');
 
             /* Assign default role to this user */
-            $user->assignRole('Default');
+            $user->assignRole('Admin');
             // $this->command->info('User assigned Role!');
         }
 
-        for($i = 1; $i < 20; $i++){
+        for($i = 0; $i < 20; $i++){
             /* Assign tag to user */
             $users[$i]->tag()->save($tags[$i]);
             // $this->command->info('Tag '.($i + 1).' saved into '.($i + 1).'!');
-            $users[$i]->lastSeen()->save($usersLastSeen[$i]);
+            // $users[$i]->lastSeen()->save($usersLastSeen[$i]);
         }
 
     }
