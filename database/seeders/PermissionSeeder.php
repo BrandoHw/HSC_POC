@@ -60,7 +60,12 @@ class PermissionSeeder extends Seeder
             //Map
             'map-list',
             'map-view',
-            'map-edit'
+            'map-edit',
+            //Policy
+            'policy-create',
+            'policy-list',
+            'policy-view',
+            'policy-edit'
         ];
 
         foreach ($permissions as $permission){

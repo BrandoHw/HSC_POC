@@ -72,6 +72,15 @@
             </li>
             @endcan
 
+            @can('policy-list')
+            <li class="{{ Request::segment(1) === 'policy' ? 'sidebar-item active' : 'sidebar-item' }}">
+                <a class="sidebar-link" href="{{ route('policy.index') }}">
+                    @svg('book', 'feather-book align-middle')
+                    <span class="align-middle">Policy</span>
+                </a>
+            </li>
+            @endcan
+
             @can('role-list')
             <li class="{{ Request::segment(1) === 'roles' ? 'sidebar-item active' : 'sidebar-item' }}">
                 <a class="sidebar-link" href="{{ route('roles.index') }}">

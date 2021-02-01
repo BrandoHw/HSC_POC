@@ -25,11 +25,6 @@
         <div class="col-auto d-none d-sm-block">
             <h3><strong>Maps</strong> Management</h3>
         </div>
-        <div class="col-auto ml-auto text-right mt-n1">
-            @can('map-edit')
-            <a href="{{ url('map/1/edit') }}"class="btn btn-primary">Edit Map</a>
-            @endcan
-        </div>
     </div>
     
     <div style="width:250px;height:400px;line-height:3em;overflow:scroll;padding:5px;background-color: #eee;display: inline-block;">

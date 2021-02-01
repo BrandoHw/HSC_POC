@@ -66,6 +66,9 @@
             var set_delay = 5000;
             var dataSet;
 
+            var listSet = false;
+            var userList;
+
             getUserLocation = function(id){
                 var redIcon = L.icon({
                     iconUrl: "{{url('/css/images/redmarker.png')}}",
@@ -109,25 +112,37 @@
                             page: 10,
                             pagination: true
                         };
-                        var userList = new List('user-list-holder', options);
 
-                        //userList.remove("name", "Name"); 
-                        userList.clear();
-                        removeAll(drawnLayersArray, 'tempall');
-                        for (var i = 0; i < data.length; ++i) {
+                        if (listSet === false){
+                            //var 
+                            userList = new List('user-list-holder', options);
+
+                            //userList.remove("name", "Name"); 
+                            userList.clear();
+                    
+                            $('#user-list').on('click', 'li', function() {
+                                getUserLocation(this.getAttribute("data-id"));    
+                            })
+                            for (var i = 0; i < data.length; ++i) {
                                 userList.add({name: data[i].user.name, tag: data[i].tag_mac, id: data[i].id});
+                            }
+                            listSet = true;
 
-                                var redIcon = L.icon({
-                                    iconUrl: "{{url('/css/images/redmarker.png')}}",
-                                    iconSize: [50,50],
-                                    className: 'blinking'
-                                    });
-                                    addTooltip(data[i], drawnLayers, gatewayZones, redIcon);
+                            console.log("printerino");
                         }
-                
-                        $('#user-list').on('click', 'li', function() {
-                            getUserLocation(this.getAttribute("data-id"));    
-                        })
+
+                        removeAll(drawnLayersArray, 'tempall');
+                        console.log("cappucino");
+                        for (var i = 0; i < data.length; ++i) {
+                            // userList.add({name: data[i].user.name, tag: data[i].tag_mac, id: data[i].id});
+
+                            var redIcon = L.icon({
+                                iconUrl: "{{url('/css/images/redmarker.png')}}",
+                                iconSize: [50,50],
+                                className: 'blinking'
+                                });
+                                addTooltip(data[i], drawnLayers, gatewayZones, redIcon);
+                            }
                         
                     },
                     headers: {
@@ -138,7 +153,7 @@
                     },
                 })
                 .always(function () {
-                   // setTimeout(getUserData, set_delay);
+                   setTimeout(getUserData, set_delay);
                 });
             }
             getUserData();

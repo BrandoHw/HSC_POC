@@ -69,7 +69,7 @@ class CreateTagDataLogsTable extENDs MigratiON
             SELECT timeblocks.start_time
             FROM tags
             INNER JOIN users ON users.id = tags.user_id 
-            INNER JOIN groups ON groups.id = users.group_id
+            INNER JOIN `groups` ON groups.id = users.group_id
             INNER JOIN schedules ON groups.id = schedules.group_id 
             INNER JOIN timeblocks ON schedules.id = timeblocks.schedule_id 
             INNER JOIN buildings ON buildings.id = timeblocks.building_id
@@ -108,7 +108,7 @@ class CreateTagDataLogsTable extENDs MigratiON
             SELECT timeblocks.end_time
             FROM tags
             INNER JOIN users ON users.id = tags.user_id 
-            INNER JOIN groups ON groups.id = users.group_id
+            INNER JOIN `groups` ON groups.id = users.group_id
             INNER JOIN schedules ON groups.id = schedules.group_id 
             INNER JOIN timeblocks ON schedules.id = timeblocks.schedule_id 
             INNER JOIN buildings ON buildings.id = timeblocks.building_id

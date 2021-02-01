@@ -3,3 +3,6 @@
 *.scss linguist-vendored
 *.js linguist-vendored
 CHANGELOG.md export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+/mytemp export-ignore

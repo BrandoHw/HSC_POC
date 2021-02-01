@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AwsController;
 use App\Http\Controllers\BuildingController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyReaderController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\TagDataLogController;
 use App\Http\Controllers\TimeblockController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserLastSeenController;
+use App\Http\Controllers\PolicyController;
 use App\UserLastSeen;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -61,6 +63,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('groups.users', GroupUserController::class);
     Route::resource('groups.timeblocks', TimeblockController::class);
     Route::resource('map', MapController::class);
+    Route::resource('policy', PolicyController::class);
 
     Route::resource('zones', GatewayZoneController::class);
     Route::post('gateway-zones/destroy', [GatewayZoneController::class, 'destroyAjax'])->name('zone.destroy');
@@ -72,5 +75,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::view('/file-upload', 'map.upload');
     Route::post('/file-upload', [GeneralController::class, 'store']);
     Route::get('/view-uploads', [GeneralController::class, 'viewUploads']);
-
+    Route::get('/aws-test', [AwsController::class, 'test']);
+    Route::get('/aws-thing', [AwsController::class, 'createThing']);
+    Route::get('/aws-rule', [AwsController::class, 'createRule']);
+    Route::get('/aws-action', [AwsController::class, 'createAction']);
 });

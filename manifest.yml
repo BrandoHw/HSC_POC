@@ -1,6 +1,6 @@
 ---
 applications:
-- name: WECare WFM
+- name: WECare WFM-Map
   memory: 500M
   buildpacks: 
     - https://github.com/cloudfoundry/php-buildpack
