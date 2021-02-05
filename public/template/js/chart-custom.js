@@ -8415,7 +8415,7 @@ if(jQuery('#menu-chart-03').length){
             }
           }
         },
-        labels: ['sales', 'profit', 'cost', 'Investment'],
+        labels: ['Breakfast', 'Lunch', 'Tea-Time', 'Dinner'],
         };
 
         var chart = new ApexCharts(document.querySelector("#home-perfomer-chart"), options);
