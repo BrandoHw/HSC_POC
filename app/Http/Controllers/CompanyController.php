@@ -6,6 +6,7 @@ use App\Building;
 use App\Company;
 use App\Floor;
 use App\Reader;
+use App\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 

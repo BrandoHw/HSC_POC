@@ -48,13 +48,6 @@ class User extends Authenticatable
         return $this->hasOne(Tag::class);
     }
     
-    /**
-     * Get the group that owns the user
-     */
-    public function group()
-    {
-        return $this->belongsTo(Group::class);
-    }
 
       /**
      * Get the record of the last time the user was seen

@@ -24,12 +24,4 @@ class Tag extends Model
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the tag_data_logs that owns the tag
-     */
-    public function tagDataLogs()
-    {
-        return $this->hasMany(TagDataLog::class, 'mac_addr', 'mac_addr');
-    }
-
 }

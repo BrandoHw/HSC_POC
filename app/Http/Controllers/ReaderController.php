@@ -29,7 +29,8 @@ class ReaderController extends Controller
     */
     public function index()
     {
-        $readers = Reader::orderBy('id', 'asc')->get();
+        $readers = Reader::orderBy('readers.id', 'asc')
+                    ->get();
         return view('readers.index',compact('readers'));
     }
     
@@ -81,8 +82,10 @@ class ReaderController extends Controller
     * @param  \App\Reader  $reader
     * @return \Illuminate\Http\Response
     */
-    public function edit(Reader $reader)
+    public function edit($id)
     {
+        $reader = Reader::where('id', $id)->get()[0];
+        $this->console_log($reader);
         return view('readers.edit',compact('reader'));
     }
     
@@ -116,4 +119,11 @@ class ReaderController extends Controller
         return redirect()->route('readers.index')
           ->with('success','Reader deleted successfully');
     }
+
+    
+    function console_log( $data ){
+        echo '<script>';
+        echo 'console.log('. json_encode( $data ) .')';
+        echo '</script>';
+      }
 }

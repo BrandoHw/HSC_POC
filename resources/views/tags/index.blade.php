@@ -10,7 +10,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <div class="alert-message">
-                <strong>Hello there!</strong> {{ $message }}
+                <strong>{{ $message }}</strong> 
             </div>
         </div>
     @endif
@@ -18,15 +18,15 @@
     <!-- Title & Add-Button -->
     <div class="row mb-2 mb-xl-3">
         <div class="col-auto d-none d-sm-block">
-            <h3><strong>Tags</strong> Management</h3>
+            <h3><strong>Beacons</strong> Management</h3>
         </div>
         <div class="col-auto ml-auto text-right mt-n1">
-            <!-- @can('tag-create')
-                <a class="btn btn-primary" href="{{ route('tags.create') }}">
+            @can('tag-create')
+                <a class="btn btn-primary" href="{{ route('beacons.create') }}">
                     @svg('plus', 'feather-plus align-middle')  
                     <span class="align-middle">Add tag</span>
                 </a>
-            @endcan -->
+            @endcan 
         </div>
 	</div>
     
@@ -42,7 +42,6 @@
                                     <th scope="col" style="width:5%">#</th>
                                     <th scope="col" style="width:25%">ID</th>
                                     <th scope="col" style="width:25%">Mac Address</th>
-                                    <th scope="col" style="width:15%">Group</th>
                                     <th scope="col" style="width:20%">User</th>
                                     <th scope="col" class="noSort">Actions</th>
                                 </tr>
@@ -52,7 +51,7 @@
                                     <tr>
                                         <td>{{ $tag->id }}</td>
                                         <td>
-                                            <a href="{{ route('tags.show',$tag->id) }}">
+                                            <a href="{{ route('beacons.show',$tag->id) }}">
                                                 {{ $tag->serial }} 
                                             </a>
                                         </td>
@@ -61,20 +60,13 @@
                                             @if(empty($tag->user))
                                                 <font color='gray'><em>Not Assigned</em></font>
                                             @else
-                                                {{ $tag->user->group->name }}
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if(empty($tag->user))
-                                                <font color='gray'><em>Not Assigned</em></font>
-                                            @else
                                                 {{ $tag->user->name }}
                                             @endif
                                         </td>
                                         <td class="table-action">
-                                            <!-- <form action="{{ route('tags.destroy',$tag->id) }}" method="POST">
+                                            <!-- <form action="{{ route('beacons.destroy',$tag->id) }}" method="POST">
                                                 @can('tag-edit')
-                                                    <a href="{{ route('tags.edit',$tag->id) }}">
+                                                    <a href="{{ route('beacons.edit',$tag->id) }}">
                                                         @svg('edit-2', 'feather-edit-2 align-middle')
                                                     </a>
                                                 @endcan

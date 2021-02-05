@@ -18,15 +18,15 @@
     <!-- Title & Add-Button -->
     <div class="row mb-2 mb-xl-3">
         <div class="col-auto d-none d-sm-block">
-            <h3><strong>Readers</strong> Management</h3>
+            <h3><strong>Gateways</strong> Management</h3>
         </div>
         <div class="col-auto ml-auto text-right mt-n1">
-            <!-- @can('reader-create')
-                <a class="btn btn-primary" href="{{ route('readers.create') }}">
+            @can('reader-create')
+                <a class="btn btn-primary" href="{{ route('gateways.create') }}">
                     @svg('plus', 'feather-plus align-middle')  
-                    <span class="align-middle">Add reader</span>
+                    <span class="align-middle">Add Gateway</span>
                 </a>
-            @endcan -->
+            @endcan 
         </div>
 	</div>
     
@@ -40,10 +40,9 @@
                             <thead>
                                 <tr>
                                     <th scope="col" style="width:5%">#</th>
-                                    <th scope="col" style="width:25%">ID</th>
-                                    <th scope="col" style="width:25%">M.A.C</th>
-                                    <th scope="col" style="width:15%">Building</th>
-                                    <th scope="col" style="width:20%">Floor</th>
+                                    <th scope="col" style="width:30%">ID</th>
+                                    <th scope="col" style="width:30%">MAC</th>
+                                    <th scope="col" style="width:25%">Floor</th>
                                     <th scope="col" class="noSort">Actions</th>
                                 </tr>
                             </thead>
@@ -52,19 +51,12 @@
                                     <tr id="trReader-{{ $reader->id }}">
                                         <td>{{ $reader->id }}</td>
                                         <td id="tdReaderSerial-{{ $reader->id }}">
-                                            <a href="{{ route('readers.show',$reader->id) }}">
+                                            <a href="{{ route('gateways.show',$reader->id) }}">
                                                 {{ $reader->serial }} 
                                             </a>
                                         </td>
                                         <td id="tdReaderMacAdd-{{ $reader->id }}">
                                             {{ $reader->mac_addr }}
-                                        </td>
-                                        <td id="tdReaderBuilding-{{ $reader->id }}">
-                                            @if(empty($reader->floor))
-                                                <font color='gray'><em>Not Assigned</em></font>
-                                            @else
-                                                {{ $reader->floor->building->name }}
-                                            @endif
                                         </td>
                                         <td id="tdReaderFloor-{{ $reader->id }}"d>
                                             @if(empty($reader->floor))
@@ -74,8 +66,8 @@
                                             @endif
                                         </td>
                                         <td class="table-action row" style="margin:0px">
-                                            <!-- @can('reader-edit')
-                                                <a href="{{ route('readers.edit',$reader->id) }}">
+                                            @can('reader-edit')
+                                                <a href="{{ route('gateways.edit',$reader->id) }}">
                                                     @svg('edit-2', 'feather-edit-2 align-middle')  
                                                 </a>
                                             @endcan
@@ -83,7 +75,7 @@
                                                 <a href="#">
                                                     @svg("trash", "feather-trash align-middle")
                                                 </a>
-                                            @endcan -->
+                                            @endcan 
                                         </td>
                                     </tr>
                                 @endforeach
@@ -95,6 +87,12 @@
         </div>
     </div>
 </div>
+   <!-- Create Reader Modal -->
+   <div class="modal fade" id="createReaderModal" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            @include('readers.create')
+        </div>
+    </div>
 @endsection
 
 @section('script')

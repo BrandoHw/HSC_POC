@@ -22,7 +22,7 @@
         </div>
         <div class="col-auto ml-auto text-right mt-n1">
             @can('policy-create')
-                <a class="btn btn-primary" href="{{ route('tags.create') }}">
+                <a class="btn btn-primary" href="{{ route('beacons.create') }}">
                     @svg('plus', 'feather-plus align-middle')  
                     <span class="align-middle">Add tag</span>
                 </a>
@@ -52,7 +52,7 @@
                                     <tr>
                                         <td>{{ $tag->id }}</td>
                                         <td>
-                                            <a href="{{ route('tags.show',$tag->id) }}">
+                                            <a href="{{ route('beacons.show',$tag->id) }}">
                                                 {{ $tag->serial }} 
                                             </a>
                                         </td>
@@ -61,20 +61,20 @@
                                             @if(empty($tag->user))
                                                 <font color='gray'><em>Not Assigned</em></font>
                                             @else
-                                                {{ $tag->user->group->name }}
+                                                {{ $tag->user}}
                                             @endif
                                         </td>
                                         <td>
                                             @if(empty($tag->user))
                                                 <font color='gray'><em>Not Assigned</em></font>
                                             @else
-                                                {{ $tag->user->name }}
+                                                {{ $tag->user->name}}
                                             @endif
                                         </td>
                                         <td class="table-action">
-                                            <!-- <form action="{{ route('tags.destroy',$tag->id) }}" method="POST">
+                                            <!-- <form action="{{ route('beacons.destroy',$tag->id) }}" method="POST">
                                                 @can('tag-edit')
-                                                    <a href="{{ route('tags.edit',$tag->id) }}">
+                                                    <a href="{{ route('beacons.edit',$tag->id) }}">
                                                         @svg('edit-2', 'feather-edit-2 align-middle')
                                                     </a>
                                                 @endcan

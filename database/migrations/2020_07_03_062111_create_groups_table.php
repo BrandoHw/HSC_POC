@@ -13,12 +13,12 @@ class CreateGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('groups', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name');
-            $table->text('detail')->nullable();
-            $table->timestamps();
-        });
+        // Schema::create('groups', function (Blueprint $table) {
+        //     $table->bigIncrements('id');
+        //     $table->string('name');
+        //     $table->text('detail')->nullable();
+        //     $table->timestamps();
+        // });
     }
 
     /**

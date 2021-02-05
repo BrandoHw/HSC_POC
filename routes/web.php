@@ -1,10 +1,13 @@
 <?php
 
+use App\Building;
 use App\Http\Controllers\AwsController;
 use App\Http\Controllers\BuildingController;
+use App\Http\Controllers\BuildingsManagmentController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyReaderController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FloorController;
 use App\Http\Controllers\GatewayZoneController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\GroupController;
@@ -45,23 +48,14 @@ Route::group(['middleware' => ['auth']], function() {
     
     Route::resource('dashboard', DashboardController::class);
 
-    Route::get('tag_data_logs/view/', [TagDataLogController::class, 'process'])->name('tag_data_logs.process');
- 
-
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
-    Route::resource('projects', ProjectController::class);
     Route::resource('buildings', BuildingController::class);
-    Route::resource('companies', CompanyController::class);
-    Route::resource('schedules', ScheduleController::class);
-    Route::resource('tags', TagController::class);
-    // Route::resource('tag_data_logs', 'TagDataLogController');
-    Route::resource('readers', ReaderController::class);
-    // Route::resource('attendances', 'TagDataLogController');
-    Route::resource('companies.readers', CompanyReaderController::class);
-    Route::resource('groups', GroupController::class);
-    Route::resource('groups.users', GroupUserController::class);
-    Route::resource('groups.timeblocks', TimeblockController::class);
+    Route::resource('floors', FloorController::class);
+
+    Route::resource('beacons', TagController::class);
+    Route::resource('gateways', ReaderController::class);
+
     Route::resource('map', MapController::class);
     Route::resource('policy', PolicyController::class);
 
@@ -71,12 +65,4 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('user-position', UserLastSeenController::class);
     Route::get('user/get', [UserLastSeenController::class, 'get']);
 
-
-    Route::view('/file-upload', 'map.upload');
-    Route::post('/file-upload', [GeneralController::class, 'store']);
-    Route::get('/view-uploads', [GeneralController::class, 'viewUploads']);
-    Route::get('/aws-test', [AwsController::class, 'test']);
-    Route::get('/aws-thing', [AwsController::class, 'createThing']);
-    Route::get('/aws-rule', [AwsController::class, 'createRule']);
-    Route::get('/aws-action', [AwsController::class, 'createAction']);
 });

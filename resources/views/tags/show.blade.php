@@ -5,7 +5,7 @@
 
     <!-- Title & Add-Button -->
     <div class="row mb-2 mb-xl-3 justify-content-start">
-        <a href="{{ route('tags.index') }}" style="padding-left: 12px">
+        <a href="{{ route('beacons.index') }}" style="padding-left: 12px">
             @svg('chevron-left', 'feather-chevron-left align-middle')  
         </a>
         <h3 style="padding-left: 12px">Tag: <strong>{{ $tag->serial }}</strong></h3>
@@ -42,7 +42,7 @@
     </div>
     <!-- Button -->
     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-        <a href="{{ route('tags.index') }}" class="btn btn-secondary">Back</a>
+        <a href="{{ route('beacons.index') }}" class="btn btn-secondary">Back</a>
     </div>
 </div>
 @endsection

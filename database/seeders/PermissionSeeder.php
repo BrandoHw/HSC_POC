@@ -29,31 +29,31 @@ class PermissionSeeder extends Seeder
             'role-create',
             'role-edit',
             'role-delete',
-            // Group
-            'group-list',
-            'group-create',
-            'group-edit',
-            'group-delete',
-            // Project
-            'project-list',
-            'project-create',
-            'project-edit',
-            'project-delete',
-            // Company
-            'company-list',
-            'company-create',
-            'company-edit',
-            'company-delete',
+            // // Group
+            // 'group-list',
+            // 'group-create',
+            // 'group-edit',
+            // 'group-delete',
+            // // Project
+            // 'project-list',
+            // 'project-create',
+            // 'project-edit',
+            // 'project-delete',
+            // // Company
+            // 'company-list',
+            // 'company-create',
+            // 'company-edit',
+            // 'company-delete',
             // Reader
             'reader-list',
-            // 'reader-create',
-            // 'reader-edit',
-            // 'reader-delete',
+            'reader-create',
+            'reader-edit',
+            'reader-delete',
             // Tag
             'tag-list',
-            // 'tag-create',
-            // 'tag-edit',
-            // 'tag-delete',
+            'tag-create',
+            'tag-edit',
+            'tag-delete',
             // Attendance
             // 'attendance-list',
             // 'attendance-delete',
@@ -65,7 +65,13 @@ class PermissionSeeder extends Seeder
             'policy-create',
             'policy-list',
             'policy-view',
-            'policy-edit'
+            'policy-edit',
+            //Floor
+            'floor-create',
+            'floor-list',
+            'floor-view',
+            'floor-edit',
+            'floor-delete'      
         ];
 
         foreach ($permissions as $permission){
