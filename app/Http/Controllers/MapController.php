@@ -11,6 +11,19 @@ use Illuminate\Http\Request;
 class MapController extends Controller
 {
     /**
+    * Display a listing of the resource.
+    *
+    * @return \Illuminate\Http\Response
+    */
+    function __construct()
+    {
+        $this->middleware('permission:map-list|map-create|map-edit|map-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:map-create', ['only' => ['create','store']]);
+        $this->middleware('permission:map-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:map-delete', ['only' => ['destroy']]);
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

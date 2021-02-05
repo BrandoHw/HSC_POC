@@ -28,26 +28,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $id = 1;
-        $readers = Reader::where('assigned', '!=', 1)
-        ->join('floors', 'readers.floor_id', '=', 'floors.id')
-        ->where('floors.building_id', $id)
-        ->get();
-
-
-        $gatewayZones = GatewayZone::join('readers', 'gateway_zones.mac_addr', '=', 'readers.mac_addr')
-        ->join('floors', 'readers.floor_id', '=', 'floors.id')
-        ->where('floors.building_id', $id)
-        ->select('gateway_zones.*', 'readers.mac_addr', 'readers.floor_id',
-                 'readers.serial', 'readers.assigned', 'floors.number', 'floors.building_id', 'floors.alias')
-        ->get();
-        foreach ($gatewayZones as $gatewayZone){
-            $gatewayZone->geoJson = json_decode($gatewayZone->geoJson);
-        }
-
-        $building = Building::where('id', $id)->get();
-     
-        $floors = Floor::where('building_id', $id)->with('map')->get();
-        return view('map.show', compact('readers', 'gatewayZones', 'building', 'floors'));
+        return view('home');
     }
 }

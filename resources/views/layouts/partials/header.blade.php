@@ -1,196 +1,100 @@
-<nav class="navbar navbar-expand navbar-light navbar-bg">
-    <a class="sidebar-toggle d-flex">
-        <i class="hamburger align-self-center"></i>
-    </a>
-
-    <!-- Search -->
-    <!-- <form class="form-inline d-none d-sm-inline-block">
-        <div class="input-group input-group-navbar">
-            <input type="text" class="form-control" placeholder="Search…" aria-label="Search">
-            <div class="input-group-append">
-                <button class="btn" type="button">
-                    @svg('search', 'feather-search align-middle')
-                </button>
+<!-- TOP Nav Bar -->
+<div class="iq-top-navbar">
+    <div class="iq-navbar-custom">
+        <div class="iq-sidebar-logo">
+            <div class="top-logo">
+                <a href="index.html" class="logo">
+                    <img src="{{ asset('img/icons/wecare.png') }}" alt="logo">
+                <span>vito</span>
+                </a>
             </div>
         </div>
-    </form> -->
+        <nav class="navbar navbar-expand-lg navbar-light p-0">
+            <nav aria-label="breadcrumb" style="padding-left:20px">
+                <ol class="breadcrumb iq-bg-primary mb-0">
+                    @switch(Request::segment(1))
+                        @case('residents')
+                            <li class="breadcrumb-item active"><a href="#"><i class="ri-user-3-line mr-1 float-left"></i>Resident Management</a></li>
+                            @break
+                        @case('map')
+                            <li class="breadcrumb-item active"><a href="#"><i class="ri-map-2-line mr-1 float-left"></i>Location Management</a></li>
+                            @break
+                        @case('readers')
+                            <li class="breadcrumb-item active"><a href="#"><i class="ri-base-station-line mr-1 float-left"></i>Gateway Management</a></li>
+                            @break
+                        @case('tags')
+                            <li class="breadcrumb-item active"><a href="#"><i class="ri-share-line mr-1 float-left"></i>Beacon Management</a></li>
+                            @break
+                        @case('policies')
+                            <li class="breadcrumb-item active"><a href="{{ route('policies.index') }}"><i class="ri-message-line mr-1 float-left"></i>Policy Management</a></li>
+                            @break
+                        @case('alerts')
+                            <li class="breadcrumb-item active"><a href="#"><i class="ri-alarm-warning-line mr-1 float-left"></i>Alerts</a></li>
+                            @break
+                        @case('tracking')
+                            <li class="breadcrumb-item active"><a href="#"><i class="ri-map-pin-user-line mr-1 float-left"></i>Tracking</a></li>
+                            @break
+                        @case('reports')
+                            <li class="breadcrumb-item active"><a href="#"><i class="ri-file-chart-line mr-1 float-left"></i>Reports</a></li>
+                            @break
+                        @case('settings')
+                            <li class="breadcrumb-item active"><a href="#"><i class="ri-settings-4-line mr-1 float-left"></i>Settings</a></li>
+                            @break
+                        @default
+                            <li class="breadcrumb-item active"><a href="#"><i class="ri-home-4-line mr-1 float-left"></i>Dashboard</a></li>
+                    @endswitch
 
-    <!-- Notification, Message & Profile -->
-    <div class="navbar-collapse collapse">
-        <ul class="navbar-nav navbar-align">
-            
-            <!-- Notification -->
-            <!-- <li class="nav-item dropdown">
-                <a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-toggle="dropdown">
-                    <div class="position-relative">
-                        @svg('bell', 'feather-bell align-middle')
-                        <span class="indicator">4</span>
+                    @switch(Request::segment(2))
+                        @case('create')
+                            <li class="breadcrumb-item active" aria-current="page">Create</li>
+                            @break
+                    @endswitch
+                </ol>
+            </nav>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            </div>
+            <ul class="navbar-list">
+                <li>
+                <a href="#" class="search-toggle iq-waves-effect d-flex align-items-center bg-primary rounded">
+                    <img src="{{ asset('template/images/user/1.jpg') }}" class="img-fluid rounded mr-3" alt="user">
+                    <div class="caption">
+                        <h6 class="mb-0 line-height text-white">Nik jone</h6>
                     </div>
-                </a> -->
-
-                <!-- Display notifications in dropdown -->
-                <!-- <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right py-0" aria-labelledby="alertsDropdown">
-                    <div class="dropdown-menu-header">
-                        4 New Notifications
-                    </div>
-                    <div class="list-group">
-                        <a href="#" class="list-group-item">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-2">
-                                    @svg('circle', 'feather-circle text-danger')
+                </a>
+                <div class="iq-sub-dropdown iq-user-dropdown">
+                    <div class="iq-card shadow-none m-0">
+                        <div class="iq-card-body p-0 ">
+                            <div class="bg-primary p-3">
+                            <h5 class="mb-0 text-white line-height">Hello Nik jone</h5>
+                            </div>
+                            <a href="profile.html" class="iq-sub-card iq-bg-primary-hover">
+                            <div class="media align-items-center">
+                                <div class="rounded iq-card-icon iq-bg-primary">
+                                    <i class="ri-file-user-line"></i>
                                 </div>
-                                <div class="col-10">
-                                    <div class="text-dark">Update completed</div>
-                                    <div class="text-muted small mt-1">Restart server 12 to complete the update.</div>
-                                    <div class="text-muted small mt-1">30m ago</div>
+                                <div class="media-body ml-3">
+                                    <h6 class="mb-0 ">My Profile</h6>
+                                    <p class="mb-0 font-size-12">View personal profile details.</p>
                                 </div>
                             </div>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-2">
-                                    @svg('bell', 'feather-circle text-warning')
-                                </div>
-                                <div class="col-10">
-                                    <div class="text-dark">Lorem ipsum</div>
-                                    <div class="text-muted small mt-1">Aliquam ex eros, imperdiet vulputate hendrerit et.</div>
-                                    <div class="text-muted small mt-1">2h ago</div>
-                                </div>
+                            </a>
+                            <div class="d-inline-block w-100 text-center p-3">
+                            <a class="bg-primary iq-sign-btn" href="{{ route('logout') }}" 
+                                onclick="event.preventDefault();
+                                    document.getElementById('logout-form').submit();">
+                                    Sign out
+                                    <i class="ri-login-box-line ml-2"></i>
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
                             </div>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-2">
-                                    @svg('home', 'feather-home text-primary')
-                                </div>
-                                <div class="col-10">
-                                    <div class="text-dark">Login from 192.186.1.8</div>
-                                    <div class="text-muted small mt-1">5h ago</div>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-2">
-                                    @svg('user-plus', 'feather-circle text-success')
-                                </div>
-                                <div class="col-10">
-                                    <div class="text-dark">New connection</div>
-                                    <div class="text-muted small mt-1">Christina accepted your request.</div>
-                                    <div class="text-muted small mt-1">14h ago</div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="dropdown-menu-footer">
-                        <a href="#" class="text-muted">Show all notifications</a>
-                    </div>
-                </div>
-            </li> -->
-
-            <!-- Message -->
-            <!-- <li class="nav-item dropdown">
-                <a class="nav-icon dropdown-toggle" href="#" id="messagesDropdown" data-toggle="dropdown">
-                    <div class="position-relative">
-                        @svg('message-square', 'feather-message-square align-middle')
-                    </div>
-                </a> -->
-                
-                <!-- Display messages in dropdown -->
-                <!-- <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right py-0" aria-labelledby="messagesDropdown">
-                    <div class="dropdown-menu-header">
-                        <div class="position-relative">
-                            4 New Messages
                         </div>
                     </div>
-                    <div class="list-group">
-                        <a href="#" class="list-group-item">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-2">
-                                    <img src="{{ asset('img/avatars/avatar-5.jpg') }}" class="avatar img-fluid rounded-circle" alt="Vanessa Tucker">
-                                </div>
-                                <div class="col-10 pl-2">
-                                    <div class="text-dark">Vanessa Tucker</div>
-                                    <div class="text-muted small mt-1">Nam pretium turpis et arcu. Duis arcu tortor.</div>
-                                    <div class="text-muted small mt-1">15m ago</div>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-2">
-                                    <img src="{{ asset('img/avatars/avatar-2.jpg') }}" class="avatar img-fluid rounded-circle" alt="William Harris">
-                                </div>
-                                <div class="col-10 pl-2">
-                                    <div class="text-dark">William Harris</div>
-                                    <div class="text-muted small mt-1">Curabitur ligula sapien euismod vitae.</div>
-                                    <div class="text-muted small mt-1">2h ago</div>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-2">
-                                    <img src="{{ asset('img/avatars/avatar-4.jpg') }}" class="avatar img-fluid rounded-circle" alt="Christina Mason">
-                                </div>
-                                <div class="col-10 pl-2">
-                                    <div class="text-dark">Christina Mason</div>
-                                    <div class="text-muted small mt-1">Pellentesque auctor neque nec urna.</div>
-                                    <div class="text-muted small mt-1">4h ago</div>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-2">
-                                    <img src="{{ asset('img/avatars/avatar-3.jpg') }}" class="avatar img-fluid rounded-circle" alt="Sharon Lessman">
-                                </div>
-                                <div class="col-10 pl-2">
-                                    <div class="text-dark">Sharon Lessman</div>
-                                    <div class="text-muted small mt-1">Aenean tellus metus, bibendum sed, posuere ac, mattis non.</div>
-                                    <div class="text-muted small mt-1">5h ago</div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="dropdown-menu-footer">
-                        <a href="#" class="text-muted">Show all messages</a>
-                    </div>
                 </div>
-            </li> -->
-
-            <!-- Profile -->
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-toggle="dropdown">
-                    <img src="{{ asset('img/user-default.png') }}" class="avatar img-fluid rounded mr-1" />
-                    <span class="text-dark">{{ Auth::user()->name }}</span>
-                </a>
-
-            <!-- Edit profile & settings, logout -->
-                <div class="dropdown-menu dropdown-menu-right">
-                    <!-- <a class="dropdown-item" href="#">
-                        @svg('user', 'feather-user align-middle mr-1')
-                        Profile
-                    </a>
-                    <a class="dropdown-item" href="#">
-                        @svg('settings', 'feather-settings align-middle mr-1')
-                        Settings & Privacy
-                    </a>
-                    <a class="dropdown-item" href="#">
-                        @svg('help-circle', 'feather-help-circle align-middle mr-1')
-                        Help Center
-                    </a>
-                    <div class="dropdown-divider"></div> -->
-                    <a class="dropdown-item" href="{{ route('logout') }}"
-                        onclick="event.preventDefault();
-                            document.getElementById('logout-form').submit();">
-                        {{ __('Logout') }}  
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
-                </div>
-            </li>
-        </ul>
+                </li>
+            </ul>
+        </nav>
     </div>
-</nav>
+    </div>
+    <!-- TOP Nav Bar END -->

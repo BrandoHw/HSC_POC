@@ -77,7 +77,7 @@
                                                         @svg('trash', 'feather-trash align-middle')
                                                     </button>
                                                 @endcan
-                                            </form> -->
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach

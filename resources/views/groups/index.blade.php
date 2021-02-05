@@ -1,7 +1,16 @@
 @extends('layouts.app')
 
+@section('style')
+<style>
+#groupTable input {
+  border-radius: 5px;
+}
+</style>
+@endsection
+
 @section('content')
 <div class="container-fluid p-0">
+<div class="col-md-12">
     <!-- Display alert -->
     @if ($message = Session::get('success'))
 
@@ -22,9 +31,8 @@
         </div>
         <div class="col-auto ml-auto text-right mt-n1">
             @can('group-create')
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createGroupModal" onClick="getCreateGroupInfo()">
-                    @svg('plus', 'feather-plus align-middle')  
-                    <span class="align-middle">Add group</span>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#createGroupModal" onClick="getCreateGroupInfo()">
+                    <span class="align-middle">Remove</span>
                 </button>
             @endcan
         </div>
@@ -95,6 +103,7 @@
             @include("groups.create")
         </div>
     </div>
+</div>
 </div>
 @endsection 
 
