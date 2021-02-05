@@ -47,19 +47,47 @@ class InsertInitialData extends Migration
             'company-delete',
             // Reader
             'reader-list',
-            // 'reader-create',
-            // 'reader-edit',
-            // 'reader-delete',
+            'reader-create',
+            'reader-edit',
+            'reader-delete',
             // Tag
             'tag-list',
-            // 'tag-create',
-            // 'tag-edit',
-            // 'tag-delete',
+            'tag-create',
+            'tag-edit',
+            'tag-delete',
             // Attendance
-            // 'attendance-list',
-            // 'attendance-delete',
+            'attendance-list',
+            'attendance-delete',
             //Map
-            'map-view',
+            'map-list',
+            'map-create',
+            'map-edit',
+            'map-delete',
+            // Policy
+            'policy-list',
+            'policy-create',
+            'policy-edit',
+            'policy-delete',
+            // Alert
+            'alert-list',
+            'alert-create',
+            'alert-edit',
+            'alert-delete',
+            // Tracking
+            'tracking-list',
+            'tracking-create',
+            'tracking-edit',
+            'tracking-delete',
+            // Report
+            'report-list',
+            'report-create',
+            'report-edit',
+            'report-delete',
+            // Setting
+            'setting-list',
+            'setting-create',
+            'setting-edit',
+            'setting-delete'
         ];
 
         foreach ($permissions as $permission){

@@ -21,12 +21,12 @@
             <h3><strong>Tags</strong> Management</h3>
         </div>
         <div class="col-auto ml-auto text-right mt-n1">
-            <!-- @can('tag-create')
+            @can('tag-create')
                 <a class="btn btn-primary" href="{{ route('tags.create') }}">
                     @svg('plus', 'feather-plus align-middle')  
                     <span class="align-middle">Add tag</span>
                 </a>
-            @endcan -->
+            @endcan
         </div>
 	</div>
     
@@ -42,7 +42,6 @@
                                     <th scope="col" style="width:5%">#</th>
                                     <th scope="col" style="width:25%">ID</th>
                                     <th scope="col" style="width:25%">Mac Address</th>
-                                    <th scope="col" style="width:15%">Group</th>
                                     <th scope="col" style="width:20%">User</th>
                                     <th scope="col" class="noSort">Actions</th>
                                 </tr>
@@ -61,18 +60,11 @@
                                             @if(empty($tag->user))
                                                 <font color='gray'><em>Not Assigned</em></font>
                                             @else
-                                                {{ $tag->user->group->name }}
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if(empty($tag->user))
-                                                <font color='gray'><em>Not Assigned</em></font>
-                                            @else
                                                 {{ $tag->user->name }}
                                             @endif
                                         </td>
                                         <td class="table-action">
-                                            <!-- <form action="{{ route('tags.destroy',$tag->id) }}" method="POST">
+                                            <form action="{{ route('tags.destroy',$tag->id) }}" method="POST">
                                                 @can('tag-edit')
                                                     <a href="{{ route('tags.edit',$tag->id) }}">
                                                         @svg('edit-2', 'feather-edit-2 align-middle')
@@ -85,7 +77,7 @@
                                                         @svg('trash', 'feather-trash align-middle')
                                                     </button>
                                                 @endcan
-                                            </form> -->
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach

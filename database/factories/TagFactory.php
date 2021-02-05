@@ -8,7 +8,6 @@ use Faker\Generator as Faker;
 
 $factory->define(Tag::class, function (Faker $faker) {
     $serial = $faker->unique()->numerify('T#######');
-    $uuid = $faker->unique()->uuid();
     $mac_addr = $faker->unique()->macAddress();
     return [
         'serial' => $serial,

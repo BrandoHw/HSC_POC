@@ -26,12 +26,12 @@ class PopulateTablesSeeder extends Seeder
     public function run()
     {
         /* Projects Table */
-        factory(Project::class, 50)->create();
+        // factory(Project::class, 50)->create();
         
         /* Users Table */
-        factory(User::class, 50)->create()->each(function ($user){
-            $user->assignRole('Default');
-        });
+        // factory(User::class, 50)->create()->each(function ($user){
+        //     $user->assignRole('Admin');
+        // });
 
         /* Readers Table */
         factory(Reader::class, 150)->create();

@@ -18,6 +18,9 @@ try {
     // Notyf
     require('notyf');
 
+    //Flatpickr
+    require('flatpickr');
+
     // Daterangepicker
     require('daterangepicker');
 

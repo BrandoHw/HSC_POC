@@ -18,6 +18,13 @@ use App\Http\Controllers\TagDataLogController;
 use App\Http\Controllers\TimeblockController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserLastSeenController;
+use App\Http\Controllers\ResidentController;
+use App\Http\Controllers\PolicyController;
+use App\Http\Controllers\AlertController;
+use App\Http\Controllers\TrackingController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SettingController;
+
 use App\UserLastSeen;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -60,9 +67,15 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('groups.users', GroupUserController::class);
     Route::resource('groups.timeblocks', TimeblockController::class);
     Route::resource('map', MapController::class);
-
+    
     Route::resource('zones', GatewayZoneController::class);
     Route::resource('user-position', UserLastSeenController::class);
     Route::get('user/get', [UserLastSeenController::class, 'get']);
-
+    
+    Route::resource('residents', ResidentController::class);
+    Route::resource('policies', PolicyController::class);
+    Route::resource('alerts', AlertController::class);
+    Route::resource('tracking', TrackingController::class);
+    Route::resource('reports', ReportController::class);
+    Route::resource('settings', SettingController::class);
 });

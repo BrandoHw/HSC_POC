@@ -21,12 +21,12 @@
             <h3><strong>Readers</strong> Management</h3>
         </div>
         <div class="col-auto ml-auto text-right mt-n1">
-            <!-- @can('reader-create')
+            @can('reader-create')
                 <a class="btn btn-primary" href="{{ route('readers.create') }}">
                     @svg('plus', 'feather-plus align-middle')  
                     <span class="align-middle">Add reader</span>
                 </a>
-            @endcan -->
+            @endcan
         </div>
 	</div>
     
@@ -74,7 +74,7 @@
                                             @endif
                                         </td>
                                         <td class="table-action row" style="margin:0px">
-                                            <!-- @can('reader-edit')
+                                            @can('reader-edit')
                                                 <a href="{{ route('readers.edit',$reader->id) }}">
                                                     @svg('edit-2', 'feather-edit-2 align-middle')  
                                                 </a>
@@ -83,7 +83,7 @@
                                                 <a href="#">
                                                     @svg("trash", "feather-trash align-middle")
                                                 </a>
-                                            @endcan -->
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach

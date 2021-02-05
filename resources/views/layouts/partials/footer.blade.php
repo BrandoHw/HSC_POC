@@ -1,27 +1,17 @@
-<footer class="footer">
+<!-- Footer -->
+<footer class="bg-white iq-footer">
     <div class="container-fluid">
-        <div class="row text-muted">
-            <div class="col-6 text-left">
-                <p class="mb-0">
-                    <a href="index.html" class="text-muted"><strong>MDT Innovations</strong></a> &copy;
-                </p>
-            </div>
-            <div class="col-6 text-right">
-                <!-- <ul class="list-inline">
-                    <li class="list-inline-item">
-                        <a class="text-muted" href="#">Support</a>
-                    </li>
-                    <li class="list-inline-item">
-                        <a class="text-muted" href="#">Help Center</a>
-                    </li>
-                    <li class="list-inline-item">
-                        <a class="text-muted" href="#">Privacy</a>
-                    </li>
-                    <li class="list-inline-item">
-                        <a class="text-muted" href="#">Terms</a>
-                    </li>
-                </ul> -->
-            </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <ul class="list-inline mb-0">
+                <li class="list-inline-item"><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li class="list-inline-item"><a href="terms-of-service.html">Terms of Use</a></li>
+            </ul>
+        </div>
+        <div class="col-lg-6 text-right">
+            Copyright 2021 <a href="#">MDT Innovations</a> All Rights Reserved.
         </div>
     </div>
+    </div>
 </footer>
+<!-- Footer END -->

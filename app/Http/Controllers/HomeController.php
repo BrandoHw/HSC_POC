@@ -26,9 +26,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $tag_data_logs = TagDataLog::latest('last_detected_at')->get();
-        $groups = Group::pluck('name', 'id')->all();
-        $groupNum = Group::count();
-        return view('tag_data_logs.index', compact('tag_data_logs', 'groups', 'groupNum'));
+        return view('home');
     }
 }

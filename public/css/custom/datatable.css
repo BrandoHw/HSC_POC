@@ -1,0 +1,96 @@
+.dataTables_wrapper .dataTables_length {
+    padding-top: 0.85em;
+    float: left;
+}
+.dataTables_wrapper .dataTables_length label select{
+    height: 35px;
+    width: 100px !important;
+    line-height: 30px;
+    background: transparent;
+    border: 1px solid var(--iq-dark-border);
+    font-size: 14px;
+    color: var(--iq-secondary);
+    border-radius: 10px;
+    margin-right: 25px;
+}
+.dataTables_wrapper .dataTables_info {
+    float: left;
+    margin: 5px;
+    margin-left: 25px;
+}
+.dataTables_wrapper .dataTables_paginate {
+    padding-top: 0.85em;
+    float: left;
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    border-radius: .25rem;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button,
+.dataTables_wrapper .dataTables_paginate .ellipsis {
+    position: relative;
+    padding: .49rem .75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #827af3;
+    background-color: #fff;
+    border: 1px solid #827af3;
+    top: 0.4em;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.first {
+    top: 0;
+    padding: .5rem .75rem;
+    margin-left: 0;
+    border-top-left-radius: .25rem;
+    border-bottom-left-radius: .25rem;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.previous,
+.dataTables_wrapper .dataTables_paginate .paginate_button.next {
+    padding: .5rem .75rem;
+    top: 0;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.last {
+    top: 0;
+    padding: .5rem .75rem;
+    border-top-right-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    z-index: 2;
+    color: #0056b3;
+    text-decoration: none;
+    background-color: #e9ecef;
+    border-color: #827af3;
+}
+ 
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    z-index: 3;
+    color: #fff;
+    background-color: #827af3;
+    border-color: #827af3;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+    color: #6c757d;
+    pointer-events: none;
+    cursor: auto;
+    background-color: #fff;
+    border-color: #827af3;
+}
+
+.dataTable tbody tr.selected,
+.dataTable tbody th.selected,
+.dataTable tbody td.selected {
+    color: black !important;
+}
+
+.dataTable tbody > tr.selected, 
+.dataTable tbody > tr > .selected {
+    background-color: var(--iq-light-danger) !important;
+}
+
+table.dataTable.hover tbody tr:hover,
+table.dataTable.display tbody tr:hover {
+  background-color: rgba(0, 0, 0, .05) !important;
+}
