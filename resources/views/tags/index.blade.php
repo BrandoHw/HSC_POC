@@ -1,49 +1,29 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid p-0">
-    <!-- Display alert -->
-    @if ($message = Session::get('success'))
-
-        <div class="alert alert-success alert-dismissible" tag="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <div class="alert-message">
-                <strong>Hello there!</strong> {{ $message }}
-            </div>
-        </div>
-    @endif
-
-    <!-- Title & Add-Button -->
-    <div class="row mb-2 mb-xl-3">
-        <div class="col-auto d-none d-sm-block">
-            <h3><strong>Tags</strong> Management</h3>
-        </div>
-        <div class="col-auto ml-auto text-right mt-n1">
-            @can('tag-create')
-                <a class="btn btn-primary" href="{{ route('tags.create') }}">
-                    @svg('plus', 'feather-plus align-middle')  
-                    <span class="align-middle">Add tag</span>
-                </a>
-            @endcan
-        </div>
-	</div>
-    
-    <!-- Table -->
+<div class="container-fluid">
     <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover nowrap" id="tagTable">
-                            <thead>
+        <div class="col-sm-12">
+            <div class="iq-card">
+                <div class="iq-card-body">
+                    <div class="iq-search-bar row justify-content-between">
+                        <form action="#" class="searchbox">
+                            <input type="text" id="myCustomSearchBox" class="text search-input" placeholder="Type here to search...">
+                            <a class="search-link" href="#"><i class="ri-search-line"></i></a>
+                        </form>
+                        <div class="col-4 row justify-content-end">
+                            <a class="btn btn-primary" href="{{ route('tags.create') }}" style="margin-right: 10px">Create</a>
+                            <a class="btn btn-danger" href="#">Delete</a>
+                        </div>
+                    </div>
+                    <div class="table-responsive" style="margin-top: 15px">
+                        <table class="table table-stripe table-bordered hover" id="tagTable">
+                        <thead>
                                 <tr>
-                                    <th scope="col" style="width:5%">#</th>
+                                    <th scope="col" style="width:10%">#</th>
                                     <th scope="col" style="width:25%">ID</th>
                                     <th scope="col" style="width:25%">Mac Address</th>
-                                    <th scope="col" style="width:20%">User</th>
-                                    <th scope="col" class="noSort">Actions</th>
+                                    <th scope="col" style="width:40%">Resident</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -51,7 +31,7 @@
                                     <tr>
                                         <td>{{ $tag->id }}</td>
                                         <td>
-                                            <a href="{{ route('tags.show',$tag->id) }}">
+                                            <a href="{{ route('tags.edit',$tag->id) }}">
                                                 {{ $tag->serial }} 
                                             </a>
                                         </td>
@@ -62,22 +42,6 @@
                                             @else
                                                 {{ $tag->user->name }}
                                             @endif
-                                        </td>
-                                        <td class="table-action">
-                                            <form action="{{ route('tags.destroy',$tag->id) }}" method="POST">
-                                                @can('tag-edit')
-                                                    <a href="{{ route('tags.edit',$tag->id) }}">
-                                                        @svg('edit-2', 'feather-edit-2 align-middle')
-                                                    </a>
-                                                @endcan
-                                                @csrf
-                                                @method('DELETE')
-                                                @can('tag-delete')
-                                                    <button type="submit">
-                                                        @svg('trash', 'feather-trash align-middle')
-                                                    </button>
-                                                @endcan
-                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -94,23 +58,9 @@
 @section("script")
 <script>
     $(function () {
-        /* Initiate tooltip */
-        $('[data-toggle="tooltip"]').tooltip()
-
-        /* Initiate popover */
-        $('[data-toggle="popover"]').popover()
-
         /* Initiate dataTable */
         $('#tagTable').DataTable({
-            dom: '<fl<t>ip>',
-            responsive: true,
-            stateSave: true,
-            'lengthMenu': [[10, 25, 50, -1], [10, 25, 50, "All"]],
-            orders: [],
-            "columnDefs": [ {
-                "targets"  : 'noSort',
-                "orderable": false,
-            }]
+            order: [[1, 'asc']],
         })
     })
 </script>

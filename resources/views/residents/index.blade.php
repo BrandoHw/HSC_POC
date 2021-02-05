@@ -5,37 +5,18 @@
     <div class="row">
         <div class="col-sm-12">
                 <div class="iq-card">
-                    <div class="iq-card-header d-flex justify-content-between">
-                    <div class="iq-header-title">
-                        <h4 class="card-title">Resident List</h4>
-                    </div>
-                    </div>
                     <div class="iq-card-body">
-                    <div class="table-responsive">
-                        <div class="row justify-content-between">
-                            <div class="col-sm-12 col-md-6">
-                                <div id="user_list_datatable_info" class="dataTables_filter">
-                                <form class="mr-3 position-relative">
-                                    <div class="form-group mb-0">
-                                        <input type="search" class="form-control" id="exampleInputSearch" placeholder="Search" aria-controls="user-list-table">
-                                    </div>
-                                </form>
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-6">
-                                <div class="user-list-files d-flex float-right">
-                                <a class="iq-bg-primary" href="javascript:void();" >
-                                    Print
-                                    </a>
-                                <a class="iq-bg-primary" href="javascript:void();">
-                                    Excel
-                                    </a>
-                                    <a class="iq-bg-primary" href="javascript:void();">
-                                    Pdf
-                                    </a>
-                                </div>
-                            </div>
+                    <div class="iq-search-bar row justify-content-between">
+                        <form action="#" class="searchbox">
+                            <input type="text" id="myCustomSearchBox" class="text search-input" placeholder="Type here to search...">
+                            <a class="search-link" href="#"><i class="ri-search-line"></i></a>
+                        </form>
+                        <div class="col-4 row justify-content-end">
+                            <a class="btn btn-primary" href="{{ route('tags.create') }}" style="margin-right: 10px">Create</a>
+                            <a class="btn btn-danger" href="#">Delete</a>
                         </div>
+                    </div>
+                    <div class="table-responsive">
                         <table id="user-list-table" class="table table-striped table-bordered mt-4" role="grid" aria-describedby="user-list-page-info">
                             <thead>
                                 <tr>

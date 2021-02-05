@@ -1,50 +1,30 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid p-0">
-    <!-- Display alert -->
-    @if ($message = Session::get('success'))
-
-        <div class="alert alert-success alert-dismissible" reader="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <div class="alert-message">
-                <strong>Hello there!</strong> {{ $message }}
-            </div>
-        </div>
-    @endif
-
-    <!-- Title & Add-Button -->
-    <div class="row mb-2 mb-xl-3">
-        <div class="col-auto d-none d-sm-block">
-            <h3><strong>Readers</strong> Management</h3>
-        </div>
-        <div class="col-auto ml-auto text-right mt-n1">
-            @can('reader-create')
-                <a class="btn btn-primary" href="{{ route('readers.create') }}">
-                    @svg('plus', 'feather-plus align-middle')  
-                    <span class="align-middle">Add reader</span>
-                </a>
-            @endcan
-        </div>
-	</div>
-    
-    <!-- Table -->
+<div class="container-fluid">
     <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover nowrap" id="readerTable">
+        <div class="col-sm-12">
+            <div class="iq-card">
+                <div class="iq-card-body">
+                    <div class="iq-search-bar row justify-content-between">
+                        <form action="#" class="searchbox">
+                            <input type="text" id="myCustomSearchBox" class="text search-input" placeholder="Type here to search...">
+                            <a class="search-link" href="#"><i class="ri-search-line"></i></a>
+                        </form>
+                        <div class="col-4 row justify-content-end">
+                            <a class="btn btn-primary" href="{{ route('readers.create') }}" style="margin-right: 10px">Create</a>
+                            <a class="btn btn-danger" href="#">Delete</a>
+                        </div>
+                    </div>
+                    <div class="table-responsive" style="margin-top: 15px">
+                        <table class="table table-stripe table-bordered hover" id="readerTable">
                             <thead>
                                 <tr>
-                                    <th scope="col" style="width:5%">#</th>
+                                    <th scope="col" style="width:10%">#</th>
                                     <th scope="col" style="width:25%">ID</th>
                                     <th scope="col" style="width:25%">M.A.C</th>
-                                    <th scope="col" style="width:15%">Building</th>
                                     <th scope="col" style="width:20%">Floor</th>
-                                    <th scope="col" class="noSort">Actions</th>
+                                    <th scope="col" style="width:20%">Zone</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -52,7 +32,7 @@
                                     <tr id="trReader-{{ $reader->id }}">
                                         <td>{{ $reader->id }}</td>
                                         <td id="tdReaderSerial-{{ $reader->id }}">
-                                            <a href="{{ route('readers.show',$reader->id) }}">
+                                            <a href="{{ route('readers.edit',$reader->id) }}">
                                                 {{ $reader->serial }} 
                                             </a>
                                         </td>
@@ -73,18 +53,6 @@
                                                 {{ $reader->floor->number }}
                                             @endif
                                         </td>
-                                        <td class="table-action row" style="margin:0px">
-                                            @can('reader-edit')
-                                                <a href="{{ route('readers.edit',$reader->id) }}">
-                                                    @svg('edit-2', 'feather-edit-2 align-middle')  
-                                                </a>
-                                            @endcan
-                                            @can('reader-delete')
-                                                <a href="#">
-                                                    @svg("trash", "feather-trash align-middle")
-                                                </a>
-                                            @endcan
-                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -100,23 +68,9 @@
 @section('script')
 <script type="text/javascript">
     $(function () {
-        /* Initiate tooltip */
-        $('[data-toggle="tooltip"]').tooltip()
-
-        /* Initiate popover */
-        $('[data-toggle="popover"]').popover()
-
         /* Initiate dataTable */
         $('#readerTable').DataTable({
-            dom: '<fl<t>ip>',
-            responsive: true,
-            stateSave: true,
-            'lengthMenu': [[10, 25, 50, -1], [10, 25, 50, "All"]],
-            orders: [],
-            "columnDefs": [ {
-                "targets"  : 'noSort',
-                "orderable": false,
-            }]
+            order: [[1, 'asc']],
         })
     })
 </script>
