@@ -58,7 +58,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('users', UserController::class);
     Route::resource('buildings', BuildingController::class);
     Route::resource('floors', FloorController::class);
-
+    Route::get('floors/destroy/{id}', [FloorController::class, 'destroyHref'])->name('floor.destroy');
     Route::resource('beacons', TagController::class);
     Route::resource('gateways', ReaderController::class);
 

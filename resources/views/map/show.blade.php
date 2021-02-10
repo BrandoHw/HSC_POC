@@ -128,11 +128,9 @@
                             }
                             listSet = true;
 
-                            console.log("printerino");
                         }
 
                         removeAll(drawnLayersArray, 'tempall');
-                        console.log("cappucino");
                         for (var i = 0; i < data.length; ++i) {
                             // userList.add({name: data[i].user.name, tag: data[i].tag_mac, id: data[i].id});
 
@@ -176,7 +174,12 @@
         //Add gatewayzones and floor image to appropriate layer
         for (var i = 0; i < floors.length; i++) {
             alias = floors[i].alias;
-            url = floors[i].map.url;
+
+            if(floors[i].map === null){
+                url = "/storage/greyimage.png"
+            }else{
+                url = floors[i].map.url;
+            }
             if (alias == null){
                 alias = "Floor ".concat(floors[i].number.toString());
             };

@@ -22,7 +22,8 @@
                     <a href="{{ route('home') }}" class="iq-waves-effect"><i class="ri-home-4-fill"></i><span>Dashboard</span></a>
                 </li>
                 <li class="{{ Request::segment(1) === 'residents' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('residents.index') }}" class="iq-waves-effect"><i class="ri-user-3-fill"></i><span>Residents</span></a></li>
-                <li class="{{ Request::segment(1) === 'map' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('map.index') }}" class="iq-waves-effect"><i class="ri-map-2-fill"></i><span>Locations</span></a></li>
+                <li class="{{ Request::segment(1) === 'map' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ url('map/1') }}" class="iq-waves-effect"><i class="ri-map-2-fill"></i><span>Locations</span></a></li>
+                <li class="{{ Request::segment(1) === 'floor' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('floors.index') }}" class="iq-waves-effect"><i class="ri-layout-line"></i><span>Floors</span></a></li>
                 <li class="{{ Request::segment(1) === 'readers' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('gateways.index') }}" class="iq-waves-effect"><i class="ri-base-station-fill"></i><span>Gateways</span></a></li>
                 <li class="{{ Request::segment(1) === 'tags' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('beacons.index') }}" class="iq-waves-effect"><i class="ri-share-fill"></i><span>Beacons</span></a></li>
                 <li class="{{ Request::segment(1) === 'policies' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('policies.index') }}" class="iq-waves-effect"><i class="ri-message-fill"></i><span>Policies</span></a></li>

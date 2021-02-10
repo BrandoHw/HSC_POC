@@ -89,7 +89,8 @@ class MapController extends Controller
 
         $building = Building::where('id', $id)->get();
      
-        $floors = Floor::where('building_id', $id)->with('map')->get();
+        $floors = Floor::where('building_id', $id)->with('map')->orderBy('number', 'asc')->get();
+        //TODO: check map url whether image exists then change to greyimage/noimage found
         return view('map.show', compact('readers', 'gatewayZones', 'building', 'floors'));
     }
 
@@ -126,7 +127,7 @@ class MapController extends Controller
 
         $building = Building::where('id', $id)->get();
      
-        $floors = Floor::where('building_id', $id)->with('map')->get();
+        $floors = Floor::where('building_id', $id)->with('map')->orderBy('number', 'asc')->get();
         return view('map.edit', compact('readers', 'gatewayZones', 'building', 'floors'));
     }
 

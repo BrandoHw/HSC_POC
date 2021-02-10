@@ -100,13 +100,30 @@ function addTooltip(data, drawnLayers, gatewayZones, redIcon){
       
       //Programmatically go to required floor
       $('.leaflet-control-layers input').get(floorIndex[floor]).click();
-      var string = "<b>Name</b>: ".concat(data[0].user.name,"<br> <b>Tag Mac</b>: ",data[0].tag_mac,
+      var string = "<br> <b>Tag Mac</b>: ".concat(data[0].tag_mac,
                                           "<br> <b>Last Seen</b>: ", data[0].updated_at );
       var x= Number(result.geoJson.marker.lng);
       var y= Number(result.geoJson.marker.lat);
       var marker = L.marker({lng: x,lat: (y-15)}, {icon: redIcon}).bindPopup(
         string
       );
+
+      // Create an element to hold all your text and markup
+      var container = $('<div />');
+
+      // Delegate all event handling for the container itself and its contents to the container
+      container.on('click', '.smallPolygonLink', function() {
+        alert("test");
+      });
+
+      // Insert whatever you want into the container, using whichever approach you prefer
+      container.html("<b>Name</b>: ".concat("<a href='#' class='smallPolygonLink'>", data[0].user.name, "</a>"));
+      container.append($('<span class="bold">').append(string))
+
+      var link = $('<a href="#" class="speciallink">TestLink</a>').on('click', function() {
+        alert("test");
+      })[0];
+      marker.bindPopup(container[0]);
       marker.id = "temp";
       marker.addTo(drawnLayers[floor]);
       marker.openPopup();

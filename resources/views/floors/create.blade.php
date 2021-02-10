@@ -34,7 +34,7 @@
                         />
                     </div>
                 </div>
-                <label for="image" class="col-sm-6 col-form-label">Floor Plan Image</label>
+                <label for="image-input" class="col-sm-6 col-form-label">Floor Plan Image</label>
                 <div class="col-sm-7">
                     <input id="image-input" type="file" class="form-control" name="image-input">
                     <img src="#" alt = "" id="img-preview" width="200px" />   <!--for preview purpose -->
