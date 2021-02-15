@@ -42,7 +42,6 @@
                                 <option value="duress">Duress Button</option>
                                 <option value="fall">Fall</option>
                                 <option value="geofence">Geofence</option>
-                                <option value="motion">Motion</option>
                                 <option value="violence">Violence</option>
                             </select>
                         </div>
@@ -78,19 +77,6 @@
                                 <div class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" id="leave-zone" name="geofence-option" class="custom-control-input">
                                     <label class="custom-control-label" for="leave-zone"> Leaving Zone</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group" id="trigger-option-motion" hidden>
-                            <label>Motion Option:</label>
-                            <div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="in-motion" name="motion-option" class="custom-control-input">
-                                    <label class="custom-control-label" for="in-motion"> In Motion</label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="at-rest" name="motion-option" class="custom-control-input">
-                                    <label class="custom-control-label" for="at-rest"> At Rest</label>
                                 </div>
                             </div>
                         </div>
@@ -200,59 +186,7 @@
                         </div>
                     </form>
                 </div>
-                <hr class="mt-0 mb-0">
-                <div class="iq-card-body" id="scope-setting">
-                    <p class="iq-bg-primary pl-3 pr-3 pt-2 pb-2 rounded">Scope Setting</p>
-                    <form>
-                        <div class="form-group" id="scope-device">
-                            <label>Device Option:</label>
-                            <div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="beacon" name="device-option" class="custom-control-input">
-                                    <label class="custom-control-label" for="beacon"> Beacon</label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="gateway" name="device-option" class="custom-control-input">
-                                    <label class="custom-control-label" for="gateway"> Gateway</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group" id="scope-option">
-                            <label for="zone">Scope:</label>
-                            <div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="all-device" name="scope-option" class="custom-control-input">
-                                    <label class="custom-control-label" for="all-device"> All Devices</label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="custom-device" name="scope-option" class="custom-control-input">
-                                    <label class="custom-control-label" for="custom-device"> Select Individual Devices</label>
-                                </div>
-                            </div>
-                            <div class="table-responsive" style="margin-top: 15px" id="deviceTable-div" hidden>
-                                <table id="deviceTable" class="table table-stripe table-bordered hover">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>Name</th>
-                                            <th>Beacon</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($residents as $resident)
-                                        <tr>
-                                            <td>{{ $resident['id'] }}</td>
-                                            <td>{{ $resident['name'] }}</td>
-                                            <td>{{ $resident['beacon'] }}</td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <hr class="mt-0 mb-0">
+                <hr class="mt-0 mb-0" id="line">
                 <div class="iq-card-body" id="location-setting" hidden>
                     <p class="iq-bg-primary pl-3 pr-3 pt-2 pb-2 rounded">Location Setting</p>
                     <form>
@@ -272,29 +206,6 @@
                         <div class="form-group">
                             <label for="zone">Zone:</label>
                             <select class="form-control" id="zone">
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <hr class="mt-0 mb-0">
-                <div class="iq-card-body" id="action-setting">
-                    <p class="iq-bg-primary pl-3 pr-3 pt-2 pb-2 rounded">Action Setting</p>
-                    <form>
-                        <div class="form-group">
-                            <label for="action">Action Type:</label>
-                            <select class="form-control" id="action">
-                                <option selected="" disabled="">Please select ...</option>
-                                <option value="alert">Send Alert Only</option>
-                                <option value="notif">Send Notification Only</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="action-to">Subject to:</label>
-                            <select class="form-control" id="action">
-                                <option selected="" disabled="">Please select ...</option>
-                                <option value="dashboard">Dashboard Only</option>
-                                <option value="nurse">Staff Only</option>
-                                <option value="all">Both Dashboard & Staff</option>
                             </select>
                         </div>
                     </form>
@@ -328,14 +239,6 @@
                 dateFormat: "H:i",
             }
         );
-        dTable = $('#deviceTable').DataTable({
-            order: [[1, 'asc']],
-			scrollY: 400,
-			scrollCollapse: true,
-			paging:true,
-            scroller: true,
-            info: false
-        });
     });
 
     // Display different configuration for different policy type
@@ -346,20 +249,18 @@
         var option = {
             attendance: false,
             geofence: false,
-            motion: false,
             violence: false,
             duration: true,
             specific: true,
-            device: "all",
             location: true,
         };
 
         $('#duration-label').html('(After detection)');
         $('#duration-tooltip').attr('title', 'The amount of time allowed before a violation is triggered.');
+        $('#line').prop('hidden', true);
         switch($(this).val()){
             case "attendance":
                 option['attendance'] = true;
-                option['device'] = 'beacon';
                 break;
             case "battery":
                 option['specific_time'] = false;
@@ -367,53 +268,30 @@
                 break;
             case "duress":
                 option['specific'] = false;
-                option['device'] = 'beacon';
                 option['location'] = false;
                 $('#duration-label').html('(To be ignored)');
                 $('#duration-tooltip').attr('title', 'The amount of time after which the violations will be ignored.');
                 break;
             case "fall":
                 option['specific'] = false;
-                option['device'] = 'beacon';
                 option['location'] = false;
                 break;
             case "geofence":
                 option['geofence'] = true;
-                option['device'] = 'beacon';
-                break;
-            case "motion":
-                option['motion'] = true;
-                option['device'] = 'beacon';
+                $('#line').prop('hidden', false);
                 break;
             case "violence":
                 option['violence'] = true;
                 option['specific'] = false;
-                option['device'] = 'beacon';
                 break;
         }
-        console.log(!option["attendance"]);
         $('#trigger-option-attendance').prop('hidden', !option['attendance']);
         $('#trigger-option-geofence').prop('hidden', !option['geofence']);
-        $('#trigger-option-motion').prop('hidden', !option['motion']);
         $('#trigger-option-violence').prop('hidden', !option['violence']);
         $('#trigger-duration').prop('hidden', !option['duration']);
         $('#trigger-specific-time').prop('hidden', !option['specific']);
         $('#location-setting').prop('hidden', !option['location']);
 
-        switch(option['device']){
-            case "all":
-                $('#beacon').prop('checked', false).prop('disabled', false);
-                $('#gateway').prop('checked', false).prop('disabled', false);
-                break;
-            case 'beacon':
-                $('#beacon').prop('checked', true).prop('disabled', true);
-                $('#gateway').prop('checked', false).prop('disabled', true);
-                break;
-            case 'gateway':
-                $('#beacon').prop('checked', false).prop('disabled', true);
-                $('#gateway').prop('checked', true).prop('disabled', true);
-                break;
-        }
     })
 
     // Select violence axis
@@ -444,19 +322,6 @@
         } else{
             $('#z-axis-operator-div').prop('hidden', true);
             $('#z-axis-value-div').prop('hidden', true);
-        }
-    });
-
-    // Display table if custom-device selected
-    $('#custom-device').on('change', function(){
-        if ($(this).is(':checked')){
-            $('#deviceTable-div').prop('hidden', false);
-            dTable.columns.adjust().draw();
-        }
-    });
-    $('#all-device').on('change', function(){
-        if ($(this).is(':checked')){
-            $('#deviceTable-div').prop('hidden', true);
         }
     });
 

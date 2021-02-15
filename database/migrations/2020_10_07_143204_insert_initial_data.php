@@ -31,20 +31,20 @@ class InsertInitialData extends Migration
             'role-edit',
             'role-delete',
             // Group
-            'group-list',
-            'group-create',
-            'group-edit',
-            'group-delete',
-            // Project
-            'project-list',
-            'project-create',
-            'project-edit',
-            'project-delete',
-            // Company
-            'company-list',
-            'company-create',
-            'company-edit',
-            'company-delete',
+            // 'group-list',
+            // 'group-create',
+            // 'group-edit',
+            // 'group-delete',
+            // // Project
+            // 'project-list',
+            // 'project-create',
+            // 'project-edit',
+            // 'project-delete',
+            // // Company
+            // 'company-list',
+            // 'company-create',
+            // 'company-edit',
+            // 'company-delete',
             // Reader
             'reader-list',
             'reader-create',

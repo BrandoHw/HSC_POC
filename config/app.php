@@ -184,6 +184,9 @@ return [
 
         //Laravel-Datatables
         // Yajra\DataTables\DataTablesServiceProvider::class,
+
+        //AWS
+        Aws\Laravel\AwsServiceProvider::class,
     ],
 
     /*
@@ -240,6 +243,7 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
 
+        'AWS' => Aws\Laravel\AwsFacade::class,
         // 'Datatables' => yajra\Datatables\Datatables::class,
         
 

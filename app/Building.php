@@ -31,19 +31,4 @@ class Building extends Model
   return $this->hasManyThrough(Reader::class, Floor::class);
   }
 
-  /**
-   * Get the company records associated with the building.
-   */
-  public function company()
-  {
-  return $this->belongsTo(Company::class);
-  }
-
-  /**
-   * Get the timeblock records associated with the building.
-   */
-  public function timeblocks()
-  {
-  return $this->hasMany(Timeblocks::class);
-  }
 }

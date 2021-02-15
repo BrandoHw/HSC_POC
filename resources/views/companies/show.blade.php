@@ -6,6 +6,7 @@
 </style>
 @endsection
 
+
 @section('content')
 <div class="container-fluid p-0">
     <!-- Title & Add-Button -->
@@ -86,7 +87,6 @@
     var stepper = new Stepper(stepperEle);
 
     $(function () {
-		
 		/* Company Building DataTable */
 		companyBuildingTable = $('#companyBuildingTable').DataTable({
 			dom: '<fB<t>ip>',
@@ -850,4 +850,5 @@
 		})
     }
 </script>
+
 @endsection

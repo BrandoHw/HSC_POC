@@ -5,14 +5,14 @@
 
     <!-- Title & Add-Button -->
     <div class="row mb-2 mb-xl-3 justify-content-start">
-        <a href="{{ route('tags.index') }}" style="padding-left: 12px">
+        <a href="{{ route('beacons.index') }}" style="padding-left: 12px">
             @svg('chevron-left', 'feather-chevron-left align-middle')  
         </a>
         <h3 style="padding-left: 12px">Create New<strong> Tag</strong></h3>
     </div>
 
     <!-- Form -->
-    {!! Form::open(array('route' => 'tags.store','method'=>'POST')) !!}
+    {!! Form::open(array('route' => 'beacons.store','method'=>'POST')) !!}
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <!-- Basic Information -->
@@ -52,7 +52,7 @@
 
     <!-- Button -->
     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-        <a href="{{ route('tags.index') }}" class="btn btn-secondary">Cancel</a>
+        <a href="{{ route('beacons.index') }}" class="btn btn-secondary">Cancel</a>
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
     {!! Form::close() !!}

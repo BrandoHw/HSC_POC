@@ -31,7 +31,11 @@
                                     <tr>
                                         <td>{{ $tag->id }}</td>
                                         <td>
+<<<<<<< HEAD
                                             <a href="{{ route('tags.edit',$tag->id) }}">
+=======
+                                            <a href="{{ route('beacons.show',$tag->id) }}">
+>>>>>>> cc5e049255bdcd02557b32a4116a603b3f8644c7
                                                 {{ $tag->serial }} 
                                             </a>
                                         </td>
@@ -43,6 +47,25 @@
                                                 {{ $tag->user->name }}
                                             @endif
                                         </td>
+<<<<<<< HEAD
+=======
+                                        <td class="table-action">
+                                            <!-- <form action="{{ route('beacons.destroy',$tag->id) }}" method="POST">
+                                                @can('tag-edit')
+                                                    <a href="{{ route('beacons.edit',$tag->id) }}">
+                                                        @svg('edit-2', 'feather-edit-2 align-middle')
+                                                    </a>
+                                                @endcan
+                                                @csrf
+                                                @method('DELETE')
+                                                @can('tag-delete')
+                                                    <button type="submit">
+                                                        @svg('trash', 'feather-trash align-middle')
+                                                    </button>
+                                                @endcan
+                                            </form>
+                                        </td>
+>>>>>>> cc5e049255bdcd02557b32a4116a603b3f8644c7
                                     </tr>
                                 @endforeach
                             </tbody>

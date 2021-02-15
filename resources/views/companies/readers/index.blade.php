@@ -38,6 +38,7 @@
                                     @svg("trash", "feather-trash align-middle")
                                 </a>
                             </td>
+
                         </tr>
                     @endforeach
                 @endforeach

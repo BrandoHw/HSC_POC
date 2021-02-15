@@ -13,14 +13,14 @@ class CreateProjectsTable extends Migration
      */
     public function up()
     {
-        Schema::create('projects', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name');
-            $table->text('detail')->nullable();
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->timestamps();
-        });
+        // Schema::create('projects', function (Blueprint $table) {
+        //     $table->bigIncrements('id');
+        //     $table->string('name');
+        //     $table->text('detail')->nullable();
+        //     $table->date('start_date');
+        //     $table->date('end_date');
+        //     $table->timestamps();
+        // });
     }
 
     /**

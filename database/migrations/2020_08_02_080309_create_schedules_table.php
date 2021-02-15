@@ -13,16 +13,16 @@ class CreateSchedulesTable extends Migration
      */
     public function up()
     {
-        Schema::create('schedules', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('group_id')->nullable();
-            $table->timestamps();
+        // Schema::create('schedules', function (Blueprint $table) {
+        //     $table->bigIncrements('id');
+        //     $table->unsignedBigInteger('group_id')->nullable();
+        //     $table->timestamps();
 
-            $table->foreign('group_id')
-                ->references('id')
-                ->on('groups')
-                ->onDelete('cascade');
-        });
+        //     $table->foreign('group_id')
+        //         ->references('id')
+        //         ->on('groups')
+        //         ->onDelete('cascade');
+        // });
     }
 
     /**

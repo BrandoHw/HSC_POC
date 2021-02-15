@@ -41,7 +41,18 @@ class GatewayZoneController extends Controller
         $input['mac_addr'] = $request->input('mac_addr');
         $input['location'] =  $request->input('location');
         $gatewayZone = GatewayZone::create($input);
-        return $gatewayZone;
+        $id = $gatewayZone->id;
+  
+        $gatewayZoneEager = GatewayZone::join('readers', 'gateway_zones.mac_addr', '=', 'readers.mac_addr')
+        ->join('floors', 'readers.floor_id', '=', 'floors.id')
+        ->where('gateway_zones.id', $id)
+        ->select('gateway_zones.*', 'readers.mac_addr', 'readers.floor_id',
+                 'readers.serial', 'readers.assigned', 'floors.number', 'floors.building_id', 'floors.alias')
+        ->first();
+
+        $gatewayZoneEager->geoJson = json_decode($gatewayZoneEager->geoJson);
+        return $gatewayZoneEager;
+       
     }
 
     /**
@@ -73,9 +84,19 @@ class GatewayZoneController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         //
+        $gatewayZones = $request->input('gateways');
+
+        foreach ($gatewayZones as $gatewayZone){
+            $id = $gatewayZone->id;
+            $geoJson = json_encode(($gatewayZone->geoJson));
+            $macAddr = $gatewayZone->mac_addr;
+            $location = $gatewayZone->location;
+            GatewayZone::where('id', $id)->update(['geoJson' => $geoJson, 'mac_addr' => $macAddr, 'location' => $location]);
+        }
+        return "Success";
     }
 
     /**
@@ -87,6 +108,9 @@ class GatewayZoneController extends Controller
     public function destroy($id)
     {
         //
+
+        return GatewayZone::destroy($id);
+        
     }
 
     /**
@@ -100,4 +124,51 @@ class GatewayZoneController extends Controller
         $gatewayZones = GatewayZone::all();
         return $gatewayZones;
     }
+
+    
+    /**
+     * Remove the specified resource from storage, using the post method for AJAX
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyAjax(Request $request)
+    {
+        //
+        $id = $request->input('id');
+        return GatewayZone::destroy($id);
+    }
+
+    /**
+     * Update the specified resource in storage, using post for AJAX
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateAjax(Request $request)
+    {
+        //
+        $this->console_log($request);
+        $gatewayZones = $request->input('gateways');
+        $this->console_log($gatewayZones[0]);
+        foreach ($gatewayZones as $gatewayZone){
+            $id = $gatewayZone['id'];
+            $geoJson = json_encode(($gatewayZone['geoJson']));
+            $macAddr = $gatewayZone['mac_addr'];
+            $location = $gatewayZone['location'];
+            GatewayZone::where('id', $id)->update(['geoJson' => $geoJson, 'mac_addr' => $macAddr, 'location' => $location]);
+        }
+        return "Success";
+    }
+
+    function console_log($output, $with_script_tags = true) {
+        $js_code = 'console.log(' . json_encode($output, JSON_HEX_TAG) . 
+    ');';
+        if ($with_script_tags) {
+            $js_code = '<script>' . $js_code . '</script>';
+        }
+        echo $js_code;
+    }
+
 }

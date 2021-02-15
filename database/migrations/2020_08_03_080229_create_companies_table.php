@@ -13,12 +13,12 @@ class CreateCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::create('companies', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name');
-            $table->text('detail')->nullable();
-            $table->timestamps();
-        });
+        // Schema::create('companies', function (Blueprint $table) {
+        //     $table->bigIncrements('id');
+        //     $table->string('name');
+        //     $table->text('detail')->nullable();
+        //     $table->timestamps();
+        // });
     }
 
     /**

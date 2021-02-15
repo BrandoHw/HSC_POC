@@ -12,7 +12,7 @@ class Floor extends Model
      * @var array
      */
     protected $fillable = [
-          'number'
+          'number', 'alias'
      ];
 
     /**
@@ -29,5 +29,13 @@ class Floor extends Model
 	public function readers()
 	{
 		return $this->hasMany(Reader::class);
+     }
+     
+      /**
+     * Get the readers records associated with the floor.
+     */
+	public function map()
+	{
+		return $this->hasOne(MapFile::class);
 	}
 }

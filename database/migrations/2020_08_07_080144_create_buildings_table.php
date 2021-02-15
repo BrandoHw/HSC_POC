@@ -21,13 +21,13 @@ class CreateBuildingsTable extends Migration
             $table->string('address');
 			$table->float('lat');
             $table->float('lng');
-            $table->unsignedBigInteger('company_id')->nullable();
+            // $table->unsignedBigInteger('company_id')->nullable();
             $table->timestamps();
 
-            $table->foreign('company_id')
-                ->references('id')
-                ->on('companies')
-                ->onDelete('cascade');
+            // $table->foreign('company_id')
+            //     ->references('id')
+            //     ->on('companies')
+            //     ->onDelete('cascade');
         });
     }
 

@@ -47,6 +47,16 @@ php artisan migrate
 php artisan db:seed
 ```
 
+10. symlink public storage 
+```
+Local
+php artisan storage:link
+
+Cloud
+SSH and run
+ln -sfn ../storage/app/public/ public/storage
+
+
 12. run the project
 ```
 php artisan serve

@@ -17,6 +17,19 @@
     </head>
 
     <body>
+
+    <!-- Title & Add-Button -->
+    <div class="row mb-2 mb-xl-3">
+        <div class="col-auto d-none d-sm-block">
+            <h3><strong>Maps</strong> Management</h3>
+        </div>
+        <div class="col-auto ml-auto text-right mt-n1">
+            @can('map-edit')
+            <a href="{{ url('map/1/edit') }}"class="btn btn-primary">Edit Map</a>
+            @endcan
+        </div>
+    </div>
+    
     <div style="width:250px;height:400px;line-height:3em;overflow:scroll;padding:5px;display: inline-block;">
         <div id="user-list-holder">
             <input type="text" class="fuzzy-search" placeholder="Search" />
@@ -37,46 +50,24 @@
         $( function() {
             var dialog, form,
 
-            location = $( "#location" ),
             //allFields = $( [] ).add( name ).add( mac ).add( location ),
             tips = $( ".validateTips" );
             gatewayZones = <?php echo $gatewayZones; ?>;
-            center_x = 0;
-            center_y = 0;
-            radius = 0;
-            geoJson = new Object();
-            newZone = new Object();
-            selectedData = new Object();
-            currentFloor = "1st Storey";
+            currentFloor = "";
             readers = <?php echo $readers; ?>;
-            selectData = $.map(readers, function (obj) {
-                obj.text = obj.text || obj.mac_addr; // replace name with the property used for the text
-                return obj;
-            });
-
+            building = <?php echo $building; ?>;
+            floors = <?php echo $floors; ?>;
+           
             var btIcon = L.icon({
                 iconUrl: "{{url('/css/images/bt.png')}}",
                 iconSize: [25,25]
             });
 
-            console.log(selectData);
-
-
-            $("#selReader").select2({
-                data:selectData
-            });
-
-            selectedData = $('#selReader').select2('data')[0];
-            $('#selReader').change(function(){
-                location.readOnly = true; 
-                selectedData = $('#selReader').select2('data')[0];
-
-              
-            });
-            
-
             var set_delay = 5000;
             var dataSet;
+
+            var listSet = false;
+            var userList;
 
             getUserLocation = function(id){
                 var redIcon = L.icon({
@@ -121,25 +112,37 @@
                             page: 10,
                             pagination: true
                         };
-                        var userList = new List('user-list-holder', options);
 
-                        //userList.remove("name", "Name"); 
-                        userList.clear();
-                        removeAll(drawnLayersArray, 'tempall');
-                        for (var i = 0; i < data.length; ++i) {
+                        if (listSet === false){
+                            //var 
+                            userList = new List('user-list-holder', options);
+
+                            //userList.remove("name", "Name"); 
+                            userList.clear();
+                    
+                            $('#user-list').on('click', 'li', function() {
+                                getUserLocation(this.getAttribute("data-id"));    
+                            })
+                            for (var i = 0; i < data.length; ++i) {
                                 userList.add({name: data[i].user.name, tag: data[i].tag_mac, id: data[i].id});
+                            }
+                            listSet = true;
 
-                                var redIcon = L.icon({
-                                    iconUrl: "{{url('/css/images/redmarker.png')}}",
-                                    iconSize: [50,50],
-                                    className: 'blinking'
-                                    });
-                                    addTooltip(data[i], drawnLayers, gatewayZones, redIcon);
+                            console.log("printerino");
                         }
-                
-                        $('#user-list').on('click', 'li', function() {
-                            getUserLocation(this.getAttribute("data-id"));    
-                        })
+
+                        removeAll(drawnLayersArray, 'tempall');
+                        console.log("cappucino");
+                        for (var i = 0; i < data.length; ++i) {
+                            // userList.add({name: data[i].user.name, tag: data[i].tag_mac, id: data[i].id});
+
+                            var redIcon = L.icon({
+                                iconUrl: "{{url('/css/images/redmarker.png')}}",
+                                iconSize: [50,50],
+                                className: 'blinking'
+                                });
+                                addTooltip(data[i], drawnLayers, gatewayZones, redIcon);
+                            }
                         
                     },
                     headers: {
@@ -150,278 +153,70 @@
                     },
                 })
                 .always(function () {
-                    setTimeout(getUserData, set_delay);
+                   setTimeout(getUserData, set_delay);
                 });
             }
             getUserData();
-
-            function drawMarkers(data){
-            id = data.id;
-            e = newZone;
-            drawnLayers[currentFloor].addLayer(e.layer);
-            if (e.layerType == "rectangle"){
-                corner1 = e.layer.toGeoJSON().geometry.coordinates[0][0];
-                corner2 = e.layer.toGeoJSON().geometry.coordinates[0][2];
-                x = (corner1[0] + corner2[0])/2;
-                y = (corner1[1] + corner2[1])/2;
-
-                drawnLayers[currentFloor].addLayer(L.marker({lng: x, lat: y}, {icon: btIcon}));
-                var string = "<b>Mac</b>:".concat(selectedData.mac_addr,"<br> <b>Location</b>: ",location.val());
-                L.marker({lng: x,lat: y}, {icon: btIcon})
-                        .bindTooltip(string)
-                        .addTo(drawnLayers[currentFloor]);
-                geoJson = e.layer.toGeoJSON().geometry;
-            }
-            else{
-                drawnLayers[currentFloor].addLayer(L.marker(e.layer.getLatLng(), {icon: btIcon}));
-                var string = "<b>Mac</b>:".concat(selectedData.mac_addr,"<br> <b>Location</b>: ",location.val());
-                L.marker(e.layer.getLatLng(), {icon: btIcon})
-                        .bindTooltip(string)
-                        .addTo(drawnLayers[currentFloor]);
-                geoJson = e.layer.toGeoJSON().geometry;
-                geoJson.radius = e.layer.getRadius();
-            }
-            geoJson.floor = currentFloor;
-            }
-
-            function addReaderZone() {
-            var valid = true;
-            //allFields.removeClass( "ui-state-error" );
-
-            if ( valid ) {
-            
-                console.log(location.val());
-                console.log(selectedData.mac_addr);
-                console.log(geoJson);
-                $.ajax({
-                        url: "{{ url('zones') }}",
-                        method: 'post',             
-                        data: {location: location.val(),
-                            mac_addr: selectedData.mac_addr,
-                            geoJson: geoJson
-                        },
-                        success: function(data){
-                        console.log("success");
-                        console.log(data);
-                        drawMarkers(data);
-                        selectData = selectData.filter(reader => reader.mac_addr != selectedData.mac_addr);
-                        $("#selReader").empty();
-                        $("#selReader").select2({
-                            data: selectData
-                        });
- 
-                        },
-                        headers: {
-                            'X-CSRF-Token': '{{ csrf_token() }}',
-                        },
-                        error: function(xhr, request, error){
-                            console.log('error');
-                            console.log(xhr.responseText);
-                        },
-                });
-                dialog.dialog( "close" );
-            }
-            return valid;
-        };
-
-        dialog = $( "#dialog-form" ).dialog({
-        autoOpen: false,
-        height: 400,
-        width: 350,
-        modal: true,
-        buttons: {
-            "Create Gateway": addReaderZone,
-            Cancel: function() {
-            dialog.dialog( "close" );
-            }
-        },
-        close: function() {
-            //form[ 0 ].reset();
-            //allFields.removeClass( "ui-state-error" );
-        }
-        });
-    
-        form = dialog.find( "form" ).on( "submit", function( event ) {
-        event.preventDefault();
-        //addReaderZone();
-        });
-    
-        $( "#create-user" ).button().on( "click", function() {
-        dialog.dialog( "open" );
-        });
-
 
         var map = L.map("map", {
             crs: L.CRS.Simple,
             minZoom: -4,
         }); //CRS simple referring to normal coordinate value
-        var bounds = [[0, 0],[505, 598]]; 
-        var bounds2 = [[0, 0],[518, 800]]; 
-        var bounds3 = [[0, 0],[1768, 2500]]; 
-        var bounds4 = [[0, 0],[2048, 2896]]; 
+       
+        //Map
+        var drawnLayers = new Object();
+        var drawnLayersArray = []
+        var floorIndex = new Object();
+        var baseLayer = new Object();
+        var bounds = new Object();
+        
+        //Add Empty Base Layer to map
+        var layercontrol = L.control.layers(baseLayer).addTo(map);
 
-        map.fitBounds(bounds);
-        var image = L.imageOverlay("{{url('/images/floorplan.png')}}", bounds).addTo(map);
-        var image2 = L.imageOverlay("{{url('/images/floorplan2.png')}}", bounds2)
-        var image3 = L.imageOverlay("{{url('/images/floorplan3.png')}}", bounds3)
-        var image4 = L.imageOverlay("{{url('/images/floorplan4.png')}}", bounds4)
-
-        var baseLayers = {
-        "1st Storey": image,
-        "2nd Storey": image2,
-        "3rd Storey": image3,
-        "4th Storey": image4
-        };
-
-        L.control.layers(baseLayers).addTo(map);
-
-        var drawnItems = new L.FeatureGroup();
-        var drawnItems1 = new L.FeatureGroup();
-        var drawnItems2 = new L.FeatureGroup();
-        var drawnItems3 = new L.FeatureGroup();
-        var drawnItems4 = new L.FeatureGroup();
-
-        var drawnLayers = {
-        "1st Storey": drawnItems1,
-        "2nd Storey": drawnItems2,
-        "3rd Storey": drawnItems3,
-        "4th Storey": drawnItems4
-        };
-
-        drawnLayersArray = [drawnItems1,drawnItems2,drawnItems3,drawnItems4];
-
-        var floorIndex = {
-        "1st Storey": 0,
-        "2nd Storey": 1,
-        "3rd Storey": 2,
-        "4th Storey": 3
-        };
-
-        map.addLayer(drawnItems);
-        map.addLayer(drawnItems1);
-
-        drawControl = new L.Control.Draw({
-                draw: {
-                    polygon: false,
-                    marker: false,
-                    polyline: false,
-                    circlemarker: false
-                },
-                edit: {
-                    featureGroup: drawnItems1
+        //Add gatewayzones and floor image to appropriate layer
+        for (var i = 0; i < floors.length; i++) {
+            alias = floors[i].alias;
+            url = floors[i].map.url;
+            if (alias == null){
+                alias = "Floor ".concat(floors[i].number.toString());
+            };
+            drawnLayers[alias] = new L.featureGroup();
+            drawnLayersArray.push(drawnLayers[alias]);
+            floorIndex[alias] = i;
+            var img = new Image();
+            img.src = url;
+            baseLayer[alias] =  L.imageOverlay("storage/greyimage.png", [[0,0], [36, 35]]);;
+            img.onload = (function (alias, url) {
+                return function() {
+                    bounds[alias] =  [[0,0], [this.height, this.width]];
+                    baseLayer[alias] = L.imageOverlay(url, bounds[alias]);
+                 
+                    // for (var key in drawnLayers){
+                    //     map.removeLayer(drawnLayers[key]);
+                    // }
+                    // map.addLayer(drawnLayers[alias]);
+                    currentFloor = alias;
+                    map.fitBounds(bounds[alias]);
+                    console.log(baseLayer);
+                    layercontrol.remove();
+                    layercontrol = L.control.layers(baseLayer).addTo(map);
+                    $('.leaflet-control-layers input').get(floorIndex[currentFloor]).click();
                 }
-        });;
-
-        drawControlLayer = function(controlLayer){
-            map.removeControl(drawControl);
-            drawControl = new L.Control.Draw({
-                draw: {
-                    polygon: false,
-                    marker: false,
-                    polyline: false,
-                    circlemarker: false
-                },
-                edit: {
-                    featureGroup: controlLayer
-                }
-            });
-             map.addControl(drawControl);
-        }
-
-        drawControlLayer(drawnLayers[currentFloor]);
+            }(alias, url));  
+        };
+  
         drawZones(gatewayZones, drawnLayers, btIcon);
 
-
-        map.on('draw:created', function (e) {
-            var type = e.layerType,
-                layer = e.layer;
-            console.log(layer);
-            //drawnItems.addLayer(layer);
-            dialog.dialog('open');
-
-            console.log('On draw:created', e.target);
-            console.log(e.type, e);
-            console.log(e.layerType);
-        
-            var btIcon = L.icon({
-            iconUrl: "{{url('/css/images/bt.png')}}",
-            iconSize: [25,25],
-        });
-
-            newZone = e;
-            geoJson = e.layer.toGeoJSON().geometry;
-
-            if (e.layerType == "rectangle"){
-                corner1 = e.layer.toGeoJSON().geometry.coordinates[0][0];
-                corner2 = e.layer.toGeoJSON().geometry.coordinates[0][2];
-                x = (corner1[0] + corner2[0])/2;
-                y = (corner1[1] + corner2[1])/2;
-                geoJson.marker = {lng: x, lat: y};
-            }
-
-            if (e.layerType == "circle"){
-                geoJson.radius = e.layer.getRadius();
-                console.log(geoJson.radius);
-                geoJson.marker = {lng: e.layer.getLatLng().lng, lat: e.layer.getLatLng().lat};
-            }
-            geoJson.floor = currentFloor;
-        });
-
-        map.on('draw:edited', function (e) {
-            var layers = e.layers;
-            console.log("LAYERS");
-            console.log(e);
-            console.log(layers);
-            layers.eachLayer(function (layer) {
-                //do stuff, but I can't check which type I'm working with
-                // the layer parameter doesn't mention its type
-                console.log(layer);
-                console.log("Geometry");
-                console.log(layer.toGeoJSON().geometry);
-            });
-        });
-
-        map.on('draw:deleted', function (e) {
-            var type = e.layerType,
-                layer = e.layer;
-            console.log(layer);
-            //drawnItems.addLayer(layer);
-            dialog.dialog('open');
-
-            console.log('On draw:created', e.target);
-            console.log(e.type, e);
-            console.log(e.layerType);
-            console.log("GeoJSON:".geoJson);
-        });
         map.on('baselayerchange', function(e) {
-            map.removeLayer(drawnItems1);
-            map.removeLayer(drawnItems2);
-            map.removeLayer(drawnItems3);
-            map.removeLayer(drawnItems4);
+            for (var key in drawnLayers){
+                map.removeLayer(drawnLayers[key]);
+            }
             map.addLayer(drawnLayers[e.name]);
             currentFloor = e.name;
-            drawControlLayer(drawnLayers[currentFloor]);
-            });
+         
+        });
 
     });
     </script>
-
-
-    <body>
-        <div id="dialog-form" title="Create new Gateway">
-      
-            <fieldset>
-        
-            <label for="selReader">Mac Address</label>
-            <select id='selReader' style='height: 200px; width: 295px;'></select>
-            <label for="location">Location</label>
-            <input type="text" name="location" id="location"  class="text ui-widget-content ui-corner-all" >
-        
-            <!-- Allow form submission with keyboard without duplicating the dialog button -->
-            <input type="submit" tabindex="-1" style="position:absolute; top:-90px">
-            </fieldset>
-        </form>
-        </div>
-    </body>
 
 @endsection

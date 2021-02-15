@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\TagDataLog;
-use App\Group;
+use App\Building;
+use App\GatewayZone;
+use App\Reader;
+use App\Floor;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 

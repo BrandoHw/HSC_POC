@@ -5,14 +5,14 @@
 
     <!-- Title & Add-Button -->
     <div class="row mb-2 mb-xl-3 justify-content-start">
-        <a href="{{ route('readers.index') }}" style="padding-left: 12px">
+        <a href="{{ route('gateways.index') }}" style="padding-left: 12px">
             @svg('chevron-left', 'feather-chevron-left align-middle')  
         </a>
         <h3 style="padding-left: 12px">Edit <strong>{{ $reader->serial }}</strong></h3>
     </div>
 
     <!-- Form -->
-    {!! Form::model($reader, ['method' => 'PATCH','route' => ['readers.update', $reader->id]]) !!}
+    {!! Form::model($reader, ['method' => 'PATCH','route' => ['gateways.update', $reader->id]]) !!}
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <!-- Basic Information -->
@@ -52,7 +52,7 @@
 
     <!-- Button -->
     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-        <a href="{{ route('readers.index') }}" class="btn btn-secondary">Cancel</a>
+        <a href="{{ route('gateways.index') }}" class="btn btn-secondary">Cancel</a>
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
     {!! Form::close() !!}

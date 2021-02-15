@@ -13,22 +13,22 @@ class CreateGroupProjectTable extends Migration
      */
     public function up()
     {
-        Schema::create('group_project', function (Blueprint $table) {
-            $table->unsignedBigInteger('project_id');
-            $table->unsignedBigInteger('group_id');
+        // Schema::create('group_project', function (Blueprint $table) {
+        //     $table->unsignedBigInteger('project_id');
+        //     $table->unsignedBigInteger('group_id');
             
-            $table->foreign('project_id')
-                ->references('id')
-                ->on('projects')
-                ->onDelete('cascade');
+        //     $table->foreign('project_id')
+        //         ->references('id')
+        //         ->on('projects')
+        //         ->onDelete('cascade');
 
-            $table->foreign('group_id')
-                ->references('id')
-                ->on('groups')
-                ->onDelete('cascade');
+        //     $table->foreign('group_id')
+        //         ->references('id')
+        //         ->on('groups')
+        //         ->onDelete('cascade');
 
-            $table->primary(['project_id', 'group_id'], 'group_project_project_id_group_id_primary');
-        });
+        //     $table->primary(['project_id', 'group_id'], 'group_project_project_id_group_id_primary');
+        // });
     }
 
     /**
