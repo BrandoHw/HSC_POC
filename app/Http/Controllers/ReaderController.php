@@ -29,8 +29,13 @@ class ReaderController extends Controller
     */
     public function index()
     {
-        $readers = Reader::orderBy('readers.id', 'asc')
+        $readers = Reader::orderBy('gateway_id', 'asc')
                     ->get();
+
+        foreach ($readers as $reader){
+            $reader->id = $reader->gateway_id;
+        }
+
         return view('readers.index',compact('readers'));
     }
     

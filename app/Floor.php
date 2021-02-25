@@ -37,5 +37,13 @@ class Floor extends Model
 	public function map()
 	{
 		return $this->hasOne(MapFile::class);
+     }
+     
+       /**
+     * Get the locations associated with the floor.
+     */
+	public function locations()
+	{
+		return $this->hasMany(Location::class);
 	}
 }

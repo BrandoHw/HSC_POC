@@ -114,4 +114,9 @@ class TagController extends Controller
         return redirect()->route('tags.index')
           ->with('success','Tag deleted successfully');
     }
+
+    public function userLastSeen(){
+        // $userLastSeen = UserLastSeen::with('user')->get();
+        // return $userLastSeen;
+    }
 }

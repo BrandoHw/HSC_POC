@@ -20,13 +20,6 @@
 
     <body>
 
-    <!-- Title & Add-Button -->
-    <div class="row mb-2 mb-xl-3">
-        <div class="col-auto d-none d-sm-block">
-            <h3><strong>Maps</strong> Management</h3>
-        </div>
-    </div>
-    
     <div style="width:250px;height:400px;line-height:3em;overflow:scroll;padding:5px;background-color: #eee;display: inline-block;">
         <div id="reader-list-holder">
             <input type="text" class="search" placeholder="Search" />
@@ -41,11 +34,31 @@
             <ul class="pagination"></ul>
         </div>
     </div>
-        <div id="map" style="width: 600px; height: 400px; display: inline-block"></div>
+    <div id="map" style="width: 60%; height: 400px; display: inline-block"></div>
+
+            <!-- Create Zone Modal -->
+    <div class="modal fade" id="createZoneModal" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            @include('map.create')
+        </div>
+    </div>
     </body>
 
-
+        
+    <script src="{{ asset('js/views/map/jquery_functions.js')}}"></script>
     <script>
+   
+        var drawnLayers = new Object();
+        var drawnLayersArray = []
+        var floorIndex = new Object();
+        var baseLayer = new Object();
+        var bounds = new Object();
+
+        var btIcon = L.icon({
+                iconUrl: "{{url('/css/images/bt.png')}}",
+                iconSize: [25,25]
+            });
+
         $( function() {
             var dialog, form,
 
@@ -72,20 +85,23 @@
             floors = <?php echo $floors; ?>;
             console.log(floors);
             selectData = $.map(readers, function (obj) {
-                obj.text = obj.text || obj.mac_addr; // replace name with the property used for the text
+                obj.text = obj.text || obj.serial.concat(" - ", obj.mac_addr); // replace name with the property used for the text
+                obj.id = obj.gateway_id;
                 return obj;
             });
 
+            console.log(selectData);
             var btIcon = L.icon({
                 iconUrl: "{{url('/css/images/bt.png')}}",
                 iconSize: [25,25]
             });
 
-            for (var i = 0; i < selectData.length; i++){
-                if (selectData[i].alias == null){
-                    selectData[i].alias =  "Floor ".concat(selectData[i].number.toString())
-                }
-            }
+            // for (var i = 0; i < selectData.length; i++){
+            //     if (selectData[i].alias == null){
+            //         selectData[i].alias =  //Floor ".concat(selectData[i].number.toString())
+            //     }
+            // }
+            
 
             $('#selReader').change(function(){
                 selectedData = $('#selReader').select2('data')[0];
@@ -168,88 +184,14 @@
         
         }
 
-        function addReaderZone() {
-            var valid = true;
-            //allFields.removeClass( "ui-state-error" );
-
-            if ( valid ) {
-            
-                console.log(location.val());
-                console.log(selectedData.mac_addr);
-                console.log(geoJson);
-                $.ajax({
-                        url: "{{ url('zones') }}",
-                        method: 'post',             
-                        data: {location: location.val(),
-                            mac_addr: selectedData.mac_addr,
-                            geoJson: geoJson
-                        },
-                        success: function(data){
-                            console.log("success");
-                            console.log(data);
-                            gatewayZones.push(data)[0];
-                            console.log(gatewayZones);
-                            drawMarkers(data);
-                            selectData = selectData.filter(reader => reader.mac_addr != selectedData.mac_addr);
-                            $("#selReader").empty();
-                            $("#selReader").select2({
-                                data: selectData.filter(gateway => gateway.alias == currentFloor)
-                            });
-                             selectedData = $('#selReader').select2('data')[0];
- 
-                        },
-                        headers: {
-                            'X-CSRF-Token': '{{ csrf_token() }}',
-                        },
-                        error: function(xhr, request, error){
-                            console.log('error');
-                            console.log(xhr.responseText);
-                        },
-                });
-                dialog.dialog( "close" );
-            }
-            return valid;
-        };
-
-        dialog = $( "#dialog-form" ).dialog({
-        autoOpen: false,
-        height: 400,
-        width: 350,
-        modal: true,
-        buttons: {
-            "Create Gateway": addReaderZone,
-            Cancel: function() {
-            dialog.dialog( "close" );
-            }
-        },
-        close: function() {
-            //form[ 0 ].reset();
-            //allFields.removeClass( "ui-state-error" );
-        }
-        });
-    
-        form = dialog.find( "form" ).on( "submit", function( event ) {
-        event.preventDefault();
-        //addReaderZone();
-        });
-    
-        $( "#create-user" ).button().on( "click", function() {
-        dialog.dialog( "open" );
-        });
-
-
         var map = L.map("map", {
             crs: L.CRS.Simple,
-            minZoom: -4,
+            minZoom: -3,
         }); //CRS simple referring to normal coordinate value
 
        
         //Map
-        var drawnLayers = new Object();
-        var drawnLayersArray = []
-        var floorIndex = new Object();
-        var baseLayer = new Object();
-        var bounds = new Object();
+    
         var drawControl;
         drawControlLayer = function(controlLayer){
             drawControl = new L.Control.Draw({
@@ -307,7 +249,7 @@
 
         //Filter reader data to only display current floor
         $("#selReader").select2({
-            data:selectData.filter(gateway => gateway.alias == currentFloor)
+            data:selectData.filter(gateway => gateway.alias == currentFloor || gateway.alias == null)
         });
         selectedData = $('#selReader').select2('data')[0];
 
@@ -320,7 +262,9 @@
                 layer = e.layer;
             console.log(layer);
             //drawnItems.addLayer(layer);
-            dialog.dialog('open');
+            //dialog.dialog('open');
+            showZoneModal();
+           // $('#createZoneModal').modal('show');
 
             console.log('On draw:created', e.target);
             console.log(e.type, e);
@@ -402,37 +346,20 @@
             drawControlLayer(drawnLayers[currentFloor]);
             
 
+            //Filter Gateway Selector for Floor
             $("#selReader").empty();
+            console.log(selectData);
             $("#selReader").select2({
-                data:selectData.filter(gateway => gateway.alias == currentFloor)
+                data:selectData.filter(gateway => gateway.alias == currentFloor || gateway.alias == null)
             });
 
             selectedData = $('#selReader').select2('data')[0];
-
-            // layercontrol.remove();
-            // layercontrol = L.control.layers(baseLayer).addTo(map);
-            // console.log(baseLayer);
+            //Redraw Location Table for current floor
+            locationTable.draw();
+        
+    
         });
 
     });
     </script>
-
-
-    <body>
-        <div id="dialog-form" title="Create new Gateway">
-      
-            <fieldset>
-        
-            <label for="selReader">Mac Address</label>
-            <select id='selReader' style='height: 200px; width: 295px;'></select>
-            <label for="location">Location</label>
-            <input type="text" name="location" id="location"  class="text ui-widget-content ui-corner-all" >
-        
-            <!-- Allow form submission with keyboard without duplicating the dialog button -->
-            <input type="submit" tabindex="-1" style="position:absolute; top:-90px">
-            </fieldset>
-        </form>
-        </div>
-    </body>
-
 @endsection

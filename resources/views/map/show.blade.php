@@ -54,7 +54,6 @@
             tips = $( ".validateTips" );
             gatewayZones = <?php echo $gatewayZones; ?>;
             currentFloor = "";
-            readers = <?php echo $readers; ?>;
             building = <?php echo $building; ?>;
             floors = <?php echo $floors; ?>;
            
@@ -106,6 +105,7 @@
                         var options = {
                             valueNames: [
                             'name', 
+                            //'location'
                             'tag',
                             { data: ['id'] }
                             ],
@@ -124,7 +124,10 @@
                                 getUserLocation(this.getAttribute("data-id"));    
                             })
                             for (var i = 0; i < data.length; ++i) {
-                                userList.add({name: data[i].user.name, tag: data[i].tag_mac, id: data[i].id});
+                                userList.add({name: data[i].user.name, 
+                                    //'location' : data[i].gateway.location.location_description
+                                    tag: data[i].tag_mac,
+                                     id: data[i].id});
                             }
                             listSet = true;
 

@@ -19,8 +19,8 @@
                 <div class="col-sm-7">
                     <div class="form-group{{ $errors->has('number') ? ' has-danger' : '' }}">
                         <input class="form-control{{ $errors->has('number') ? ' is-invalid' : '' }}"
-                        name="number" id="alias" type="number" placeholder="{{ __('Floor Number') }}"
-                        value="" required="true" aria-required="true" min="0"
+                        name="number" id="number" type="number" placeholder="{{ __('Floor Number') }}"
+                        value="" required="true" aria-required="true" min="0" 
                         />
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                     <div class="form-group{{ $errors->has('alias') ? ' has-danger' : '' }}">
                         <input class="form-control{{ $errors->has('alias') ? ' is-invalid' : '' }}"
                         name="alias" id="alias" type="text" placeholder="{{ __('Alias') }}"
-                        value="" required="true" aria-required="true"
+                        value="" required="true" aria-required="true" style="color: black"
                         />
                     </div>
                 </div>
@@ -41,7 +41,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="building">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <button type="submit" id="submit" class="btn btn-primary">Add Floor</button>
                 </div>
 

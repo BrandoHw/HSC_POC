@@ -29,6 +29,7 @@ use App\Http\Controllers\AlertController;
 use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\LocationController;
 
 use App\UserLastSeen;
 use Illuminate\Support\Facades\Route;
@@ -63,6 +64,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('gateways', ReaderController::class);
 
     Route::resource('map', MapController::class);
+    Route::resource('location', LocationController::class);
+    Route::get('map/form/data', [MapController::class, 'formdata'])->name('map.formdata');
+    Route::get('map/form/location', [MapController::class, 'locationdata'])->name('map.location');
     Route::resource('policy', PolicyController::class);
 
     Route::resource('zones', GatewayZoneController::class);

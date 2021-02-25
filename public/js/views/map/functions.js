@@ -44,7 +44,7 @@ function addTooltip(data, drawnLayers, gatewayZones, redIcon){
     for (i = 0; i < gatewayZones.length; i++) {
         readerZone = gatewayZones[i];
         var mac_addr_s = readerZone.mac_addr;
-        var location_s = readerZone.location;
+        var location_s = readerZone.gateway.location.location_description;
         var string = "<b>Mac</b>:".concat(mac_addr_s,"<br> <b>Location</b>: ",location_s);
         var floor = readerZone.alias;
 
@@ -73,6 +73,9 @@ function addTooltip(data, drawnLayers, gatewayZones, redIcon){
           var radius = readerZone.geoJson.radius;
           var circle = L.circle({lng: center[0],lat: center[1]}, {radius: radius});
           circle.id = readerZone.id;
+          // circle.setStyle({
+          //   color:'red'
+          // })
           circle.addTo(drawnLayers[floor]);
           var marker = L.marker(readerZone.geoJson.marker, {icon: btIcon}).bindTooltip(
               string

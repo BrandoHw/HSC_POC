@@ -14,7 +14,8 @@ function setupList(data, data_unassigned, drawnLayers, gatewayZones, floorIndex,
     //readerList.remove("name", "Name"); 
     readerList.clear();
     for (var i = 0; i < data.length; ++i) {
-        readerList.add({serial: data[i].serial, location: data[i].location, mac: data[i].mac_addr, id: data[i].id, assigned: data[i].assigned});
+        readerList.add({serial: data[i].serial, location: data[i].gateway.location.location_description.concat(" - ", data[i].gateway.location.floor_level.alias),
+           mac: data[i].mac_addr, id: data[i].id, assigned: data[i].assigned});
     }
 
     for (var i = 0; i < data_unassigned.length; ++i) {
@@ -51,7 +52,7 @@ function drawGatewayLocation(id, drawnLayers, gatewayZones, floorIndex, icon){
 
         //Programmatically go to required floor
         $('.leaflet-control-layers input').get(floorIndex[floor]).click();
-        var string = "<b>Location</b>: ".concat(result.location,"<br> <b>Mac</b>: ",result.mac_addr);
+        var string = "<b>Location</b>: ".concat(result.gateway.location.location_description,"<br> <b>Mac</b>: ",result.mac_addr);
         var marker = L.marker(result.geoJson.marker, {icon: icon}).bindPopup(
         string
         );
@@ -72,3 +73,6 @@ function drawGatewayLocation(id, drawnLayers, gatewayZones, floorIndex, icon){
       });
     }
   }
+
+    
+
