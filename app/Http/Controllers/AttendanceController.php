@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Alert;
 use App\Attendance;
+use App\Resident;
 use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
@@ -25,9 +27,8 @@ class AttendanceController extends Controller
     */
     public function index()
     {
-        $attendances = Attendance::latest()->paginate(5);
-        return view('attendances.index',compact('attendances'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+        $alerts= Alert::orderBy('occured_at', 'desc')->get();
+        return view('attendances.index',compact('alerts'));
     }
     
     /**

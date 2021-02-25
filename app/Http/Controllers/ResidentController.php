@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Resident;
+use App\Tag;
 use Illuminate\Http\Request;
 
 class ResidentController extends Controller
@@ -13,7 +15,8 @@ class ResidentController extends Controller
      */
     public function index()
     {
-        return view('residents.index');
+        $residents = Resident::orderBy('resident_id', 'asc')->get();
+        return view('residents.index', compact('residents'));
     }
 
     /**
@@ -51,12 +54,20 @@ class ResidentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Resident  $resident
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Resident $resident)
     {
-        //
+        $tagsNull = Tag::where('beacon_type', 2)
+            ->doesntHave('resident')
+            ->pluck('beacon_mac', 'id');
+        
+        if(!empty($resident->tag)){
+            $current = collect([$resident->tag->id => $resident->tag->beacon_mac]);
+            $tagsNull = $current->concat($tagsNull)->all();
+        }
+        return view('residents.edit', compact('resident', 'tagsNull'));
     }
 
     /**

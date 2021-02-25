@@ -8,12 +8,26 @@ class Reader extends Model
 {
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'gateways_table';
+
+    /**
+     * The primary key associated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'gateway_id';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'serial', 'uuid', 'mac_addr'
+        'mac_addr', 'reader_ip', 'reader_status', 'up_status', 'assigned', 'serial'
     ];
     
     /**
@@ -23,4 +37,5 @@ class Reader extends Model
 	{
 		return $this->belongsTo(Floor::class);
     }
+
 }

@@ -12,7 +12,7 @@
                             <a class="search-link" href="#"><i class="ri-search-line"></i></a>
                         </form>
                         <div class="col-4 row justify-content-end">
-                            <a class="btn btn-primary" href="{{ route('tags.create') }}" style="margin-right: 10px">Create</a>
+                            <a class="btn btn-primary" href="{{ route('beacons.create') }}" style="margin-right: 10px">Create</a>
                             <a class="btn btn-danger" href="#">Delete</a>
                         </div>
                     </div>
@@ -21,51 +21,28 @@
                         <thead>
                                 <tr>
                                     <th scope="col" style="width:10%">#</th>
-                                    <th scope="col" style="width:25%">ID</th>
-                                    <th scope="col" style="width:25%">Mac Address</th>
-                                    <th scope="col" style="width:40%">Resident</th>
+                                    <th scope="col" style="width:35%">Mac Address</th>
+                                    <th scope="col" style="width:25%">Type</th>
+                                    <th scope="col" style="width:30%">Assigned To</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($tags as $tag)
-                                    <tr>
+                                    <tr href="{{ route('beacons.edit',$tag->id) }}">
                                         <td>{{ $tag->id }}</td>
+                                        <td>{{ $tag->beacon_mac }}</td>
                                         <td>
-<<<<<<< HEAD
-                                            <a href="{{ route('tags.edit',$tag->id) }}">
-=======
-                                            <a href="{{ route('beacons.show',$tag->id) }}">
->>>>>>> cc5e049255bdcd02557b32a4116a603b3f8644c7
-                                                {{ $tag->serial }} 
-                                            </a>
+                                            <span class="badge badge-pill iq-bg-{{ ($tag->beacon_type == 1) ? 'primary':'success' }}">
+                                                {{ ($tag->beacon_type == 1) ? 'Card':'Wristband' }}
+                                            </span>
                                         </td>
-                                        <td>{{ $tag->mac_addr }} </td>
                                         <td>
-                                            @if(empty($tag->user))
-                                                <font color='gray'><em>Not Assigned</em></font>
+                                            @if($tag->beacon_type == 1)
+                                                {{ $tag->user->full_name ?? '-' }}
                                             @else
-                                                {{ $tag->user->name }}
+                                                {{ $tag->resident->full_name ?? '-' }}
                                             @endif
                                         </td>
-<<<<<<< HEAD
-=======
-                                        <td class="table-action">
-                                            <!-- <form action="{{ route('beacons.destroy',$tag->id) }}" method="POST">
-                                                @can('tag-edit')
-                                                    <a href="{{ route('beacons.edit',$tag->id) }}">
-                                                        @svg('edit-2', 'feather-edit-2 align-middle')
-                                                    </a>
-                                                @endcan
-                                                @csrf
-                                                @method('DELETE')
-                                                @can('tag-delete')
-                                                    <button type="submit">
-                                                        @svg('trash', 'feather-trash align-middle')
-                                                    </button>
-                                                @endcan
-                                            </form>
-                                        </td>
->>>>>>> cc5e049255bdcd02557b32a4116a603b3f8644c7
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -80,11 +57,17 @@
 
 @section("script")
 <script>
-    $(function () {
-        /* Initiate dataTable */
-        $('#tagTable').DataTable({
+    /* Initiate dataTable */
+    var dTable = $('#tagTable').DataTable({
             order: [[1, 'asc']],
         })
+
+    $('#myCustomSearchBox').keyup(function(){  
+        dTable.search($(this).val()).draw();   // this  is for customized searchbox with datatable search feature.
     })
+
+    $('#tagTable tbody tr td:not(:first-child)').click(function () {
+        window.location.href = $(this).parent('tr').attr('href');
+    });
 </script>
 @endsection
