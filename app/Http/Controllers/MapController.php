@@ -138,14 +138,6 @@ class MapController extends Controller
         ->with('location', 'location.floor_level:id,number,building_id,alias')
         ->get();
 
-        foreach($readers as $reader){
-            $reader->location_master_id = $reader->location->location_master_id;
-            $reader->location_type_id = $reader->location->location_type_id;
-            $reader->number = $reader->location->floor_level->number;
-            $reader->building_id= $reader->location->floor_level->building_id;
-            $reader->alias = $reader->location->floor_level->alias;
-        }
-
         $gatewayZones = GatewayZone::with(['gateway', 
         'gateway.location', 
         'gateway.location.floor_level' => function($q) use($id) {
@@ -209,6 +201,12 @@ class MapController extends Controller
         //
         $data = Location::with('type')->with('floor_level')->get();
         return compact('data');
+    }
+
+    public function listdata(Request $request){
+        // $list_data;
+        // return $list_data;
+
     }
 
     function console_log( $data ){

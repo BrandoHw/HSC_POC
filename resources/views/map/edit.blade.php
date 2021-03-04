@@ -18,23 +18,25 @@
 
     </head>
 
-    <body>
-
-    <div style="width:250px;height:400px;line-height:3em;overflow:scroll;padding:5px;background-color: #eee;display: inline-block;">
-        <div id="reader-list-holder">
-            <input type="text" class="search" placeholder="Search" />
-        
-            <ul id="reader-list" class="list" style="display: inline-block">
-                <li id = "first-item"><h3 class="serial">Serial</h3>
-                    <h3 class="location">Location</h3>
-                    <p class="mac">Mac</p>
-                    <p class="online">Online</p>
-                </li>
-            </ul> 
-            <ul class="pagination"></ul>
+  
+    <div style='display: flex; height: 80vh;'>
+        <div style="width:25%; line-height:3em;overflow:scroll;padding:5px;background-color: #eee;display: inline-block;">
+            <div id="reader-list-holder">
+                <input type="text" class="search" placeholder="Search" />
+            
+                <ul id="reader-list" class="list" style="display: inline-block">
+                    <li id = "first-item"><h3 class="serial">Serial</h3>
+                        <h3 class="location">Location</h3>
+                        <p class="mac">Mac</p>
+                        <p class="online">Online</p>
+                    </li>
+                </ul> 
+                <ul class="pagination"></ul>
+            </div>
         </div>
+
+        <div id="map" style="width: 75%; display: inline-block"></div>
     </div>
-    <div id="map" style="width: 60%; height: 400px; display: inline-block"></div>
 
             <!-- Create Zone Modal -->
     <div class="modal fade" id="createZoneModal" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
@@ -120,6 +122,8 @@
                     },   
                     success: function(data){
                         console.log(data);
+                        
+                        setupList(data['gatewayZones'], data['readers']);
                     },
                     headers: {
                         'X-CSRF-Token': '{{ csrf_token() }}',
@@ -196,10 +200,18 @@
         drawControlLayer = function(controlLayer){
             drawControl = new L.Control.Draw({
                 draw: {
-                    polygon: false,
                     marker: false,
                     polyline: false,
-                    circlemarker: false
+                    circlemarker: false,
+                    circle: {
+                        showRadius: false
+                    },
+                    rectangle: {
+                        showArea: false
+                    },
+                    polygon: {
+                        allowIntersection: false
+                    },
                 },
                 edit: {
                     featureGroup: controlLayer
@@ -245,7 +257,16 @@
         };
   
         //Setup list of gateways
-        setupList(gatewayZones, readers, drawnLayers, gatewayZones, floorIndex, btIcon);
+        $('#reader-list').on('click', 'li', function() {
+            //getUserLocation(this.getAttribute("data-id"));    
+            if(this.getAttribute("data-assigned") == 1){
+                drawGatewayLocation(this.getAttribute("data-id"),  drawnLayers, gatewayZones, floorIndex, btIcon)
+            //Find zone and create popup
+            }else{
+                alert("Gateway has not been assigned");
+            }
+        })
+        setupList(gatewayZones, readers);
 
         //Filter reader data to only display current floor
         $("#selReader").select2({
@@ -264,7 +285,6 @@
             //drawnItems.addLayer(layer);
             //dialog.dialog('open');
             showZoneModal();
-           // $('#createZoneModal').modal('show');
 
             console.log('On draw:created', e.target);
             console.log(e.type, e);
@@ -277,7 +297,26 @@
 
             newZone = e;
             geoJson = e.layer.toGeoJSON().geometry;
-
+            console.log(geoJson);
+            
+            if (e.layerType == "polygon"){
+                var center = function (arr)
+                {
+                    var minX, maxX, minY, maxY;
+                    for (var i = 0; i < arr.length; i++)
+                    {
+                        minX = (arr[i][0] < minX || minX == null) ? arr[i][0] : minX;
+                        maxX = (arr[i][0] > maxX || maxX == null) ? arr[i][0] : maxX;
+                        minY = (arr[i][1] < minY || minY == null) ? arr[i][1] : minY;
+                        maxY = (arr[i][1] > maxY || maxY == null) ? arr[i][1] : maxY;
+                    }
+                    return [(minX + maxX) / 2, (minY + maxY) / 2];
+                }
+                polygon_coord = JSON.parse(JSON.stringify(geoJson));
+                polygon_coord = polygon_coord.coordinates[0];
+                center_coord = center(polygon_coord)
+                geoJson.marker = {lng: center_coord[0], lat: center_coord[1]}
+            }
             if (e.layerType == "rectangle"){
                 corner1 = e.layer.toGeoJSON().geometry.coordinates[0][0];
                 corner2 = e.layer.toGeoJSON().geometry.coordinates[0][2];

@@ -73,7 +73,17 @@ class GatewayZoneController extends Controller
         ->first();
 
         $gatewayZoneEager->geoJson = json_decode($gatewayZoneEager->geoJson);
-        return $gatewayZoneEager;
+
+        $readers = Reader::where('assigned', '!=', 1)
+        ->with('location', 'location.floor_level:id,number,building_id,alias')
+        ->get();
+
+        $gatewayZones = GatewayZone::with(['gateway', 
+        'gateway.location', 
+        'gateway.location.floor_level'])
+        ->get();
+     
+        return compact('gatewayZoneEager', 'gatewayZones', 'readers');
        
     }
 
@@ -130,8 +140,20 @@ class GatewayZoneController extends Controller
     public function destroy($id)
     {
         //
+        $gatewayZone = GatewayZone::where('id', $id)->with('gateway')->first();
+        Reader::where('gateway_id', $gatewayZone->gateway->gateway_id)->update(['location_id' => null]);
 
-        return GatewayZone::destroy($id);
+        $readers = Reader::where('assigned', '!=', 1)
+        ->with('location', 'location.floor_level:id,number,building_id,alias')
+        ->get();
+
+        $gatewayZones = GatewayZone::with(['gateway', 
+        'gateway.location', 
+        'gateway.location.floor_level'])
+        ->get();
+       
+        $destroy = GatewayZone::destroy($id);
+        return compact('destroy', 'gatewayZones', 'readers');
         
     }
 
@@ -158,7 +180,22 @@ class GatewayZoneController extends Controller
     {
         //
         $id = $request->input('id');
-        return GatewayZone::destroy($id);
+        $gatewayZone = GatewayZone::where('id', $id)->with('gateway')->first();
+        Reader::where('gateway_id', $gatewayZone->gateway->gateway_id)->update(['location_id' => null]);
+
+        $destroy = GatewayZone::destroy($id);
+        
+        $readers = Reader::where('assigned', '!=', 1)
+        ->with('location', 'location.floor_level:id,number,building_id,alias')
+        ->get();
+
+        $gatewayZones = GatewayZone::with(['gateway', 
+        'gateway.location', 
+        'gateway.location.floor_level'])
+        ->get();
+       
+        return compact('destroy', 'gatewayZones', 'readers');
+        
     }
 
     /**

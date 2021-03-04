@@ -65,6 +65,7 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::resource('map', MapController::class);
     Route::resource('location', LocationController::class);
+    // Route::get('map/users/list', [MapController::class, 'listdata'])->name('map.listdata');
     Route::get('map/form/data', [MapController::class, 'formdata'])->name('map.formdata');
     Route::get('map/form/location', [MapController::class, 'locationdata'])->name('map.location');
     Route::resource('policy', PolicyController::class);
@@ -74,6 +75,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('gateway-zones/update', [GatewayZoneController::class, 'updateAjax'])->name('zone.update');
     Route::resource('user-position', UserLastSeenController::class);
     Route::get('user/get', [UserLastSeenController::class, 'get']);
+    Route::get('user/group', [UserLastSeenController::class, 'group']);
     
     Route::resource('residents', ResidentController::class);
     Route::resource('policies', PolicyController::class);

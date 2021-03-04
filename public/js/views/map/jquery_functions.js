@@ -122,38 +122,44 @@ function drawMarkers(data){
     };
   
     if (readerZone.geoJson.type == "Polygon"){
-      var corner1 = readerZone.geoJson.coordinates[0][0].reverse().map(Number);
-      var corner2 = readerZone.geoJson.coordinates[0][2].reverse().map(Number);
+    //   var corner1 = readerZone.geoJson.coordinates[0][0].reverse().map(Number);
+    //   var corner2 = readerZone.geoJson.coordinates[0][2].reverse().map(Number);
 
-      //Array is passed by reference so undo the reversal
-      readerZone.geoJson.coordinates[0][0].reverse();
-      readerZone.geoJson.coordinates[0][2].reverse();
+    //   //Array is passed by reference so undo the reversal
+    //   readerZone.geoJson.coordinates[0][0].reverse();
+    //   readerZone.geoJson.coordinates[0][2].reverse();
 
-      var rectangle = L.rectangle([corner1, corner2]);
-      rectangle.id = readerZone.id;
-      rectangle.addTo(drawnLayers[floor]);
-      var marker = L.marker(readerZone.geoJson.marker, {icon: btIcon}).bindTooltip(
-          string
-      );
-      marker.id = readerZone.id;
-      marker.addTo(drawnLayers[floor]);
+    //   var rectangle = L.rectangle([corner1, corner2]);
+    //   rectangle.id = readerZone.id;
+    //   rectangle.addTo(drawnLayers[floor]);
+
+        polygon = readerZone.geoJson.coordinates[0];
+        polygon.forEach( function (item, index){
+            item.reverse();
+        })
+        console.log(polygon);
+        L.polygon(polygon).addTo(drawnLayers[floor]);
+        var marker = L.marker(readerZone.geoJson.marker, {icon: btIcon}).bindTooltip(
+            string
+        );
+        marker.id = readerZone.id;
+        marker.addTo(drawnLayers[floor]);
     }else{
-      var center = readerZone.geoJson.coordinates;
-      var radius = readerZone.geoJson.radius;
-      var circle = L.circle({lng: center[0],lat: center[1]}, {radius: radius});
-      circle.id = readerZone.id;
-      circle.addTo(drawnLayers[floor]);
-      var marker = L.marker(readerZone.geoJson.marker, {icon: btIcon}).bindTooltip(
-          string
-      );
-      marker.id = readerZone.id;
-      marker.addTo(drawnLayers[floor]);
+        var center = readerZone.geoJson.coordinates;
+        var radius = readerZone.geoJson.radius;
+        var circle = L.circle({lng: center[0],lat: center[1]}, {radius: radius});
+        circle.id = readerZone.id;
+        circle.addTo(drawnLayers[floor]);
+        var marker = L.marker(readerZone.geoJson.marker, {icon: btIcon}).bindTooltip(
+            string
+        );
+        marker.id = readerZone.id;
+        marker.addTo(drawnLayers[floor]);
     }
 
 };
 
 function addGatewayZone() {
-
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -167,17 +173,20 @@ function addGatewayZone() {
                 geoJson: geoJson
             },
             success: function(data){
-                console.log("success");
                 console.log(data);
-                gatewayZones.push(data)[0];
-                console.log(gatewayZones);
-                drawMarkers(data);
+                gatewayZones.push(data['gatewayZoneEager']);
+                drawMarkers(data['gatewayZoneEager']);
                 selectData = selectData.filter(reader => reader.mac_addr != selectedData.mac_addr);
                 $("#selReader").empty();
                 $("#selReader").select2({
                     data: selectData.filter(gateway => gateway.alias == currentFloor || gateway.alias == null)
                 });
-                    selectedData = $('#selReader').select2('data')[0];
+
+                selectedData = $('#selReader').select2('data')[0];
+                setupList(data['gatewayZones'], data['readers']);
+
+                stepper.next();
+                // notyf.success(response['success']);
 
             },
             error: function(xhr, request, error){
@@ -319,7 +328,7 @@ $(function() {
     })
     $('#nextBtn-2').on('click', function(){
         addGatewayZone();
-        stepper.next();
+        // stepper.next();
     });
 
     $('#previousBtn-2').on('click', function(){

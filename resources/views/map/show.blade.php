@@ -30,26 +30,40 @@
         </div>
     </div>
     
-    <div style="width:250px;height:400px;line-height:3em;overflow:scroll;padding:5px;display: inline-block;">
-        <div id="user-list-holder">
-            <input type="text" class="fuzzy-search" placeholder="Search" />
-     
-        <ul id="user-list" class="list" style="display: inline-block">
-            <li id = "first-item"><h3 class="name">Name</h3>
-                <p class="tag">Tag</p>
-            </li>
-        </ul> 
-        <ul class="pagination"></ul>
+    <div style='display: flex; height: 72vh;'>
+
+        <div style="width:25%; line-height:3em;overflow:scroll;padding:5px;display: inline-block;">
+            <div id="user-list-holder">
+                <input type="text" class="fuzzy-search" placeholder="Search" />
+        
+            <ul id="user-list" class="list" style="display: inline-block">
+                <li id = "first-item"><h3 class="name">Name</h3>
+                    <h5 class="location">Location</h5>
+                    <p class="tag">Tag</p>
+                </li>
+            </ul> 
+            <ul class="pagination"></ul>
+            </div>
         </div>
+            <div id="map" style="width: 75%; display: inline-block"></div>
     </div>
-        <div id="map" style="width: 600px; height: 400px; display: inline-block"></div>
     </body>
 
 
     <script>
+        var imageUrl = "{{url('/css/images/')}}";
+        
         $( function() {
             var dialog, form,
 
+            dialog = $( "#dialog-form").dialog({
+                autoOpen: false,
+                height: 400,
+                width: 350,
+                modal: true,
+                close: function() {
+                }
+            });
             //allFields = $( [] ).add( name ).add( mac ).add( location ),
             tips = $( ".validateTips" );
             gatewayZones = <?php echo $gatewayZones; ?>;
@@ -62,7 +76,7 @@
                 iconSize: [25,25]
             });
 
-            var set_delay = 5000;
+            var set_delay = 15000;
             var dataSet;
 
             var listSet = false;
@@ -99,13 +113,14 @@
                     url: "{{ url('user-position') }}",
                     method: 'get',             
                     success: function(data){
-                        console.log(data);
-                        dataSet = data;
-                        
+                        var users = data['beacons'];
+                        var userCount = data['userCount'];
+                        var userRunningCount = data['userRunningCount'];
+                        console.log(data['beacons'])
                         var options = {
                             valueNames: [
                             'name', 
-                            //'location'
+                            'location',
                             'tag',
                             { data: ['id'] }
                             ],
@@ -113,6 +128,7 @@
                             pagination: true
                         };
 
+                        //ListSet not neccesary if the list needs to be redrawn every refresh
                         if (listSet === false){
                             //var 
                             userList = new List('user-list-holder', options);
@@ -121,30 +137,50 @@
                             userList.clear();
                     
                             $('#user-list').on('click', 'li', function() {
-                                getUserLocation(this.getAttribute("data-id"));    
+                                getUserLocation(this.getAttribute("data-id"));     
                             })
-                            for (var i = 0; i < data.length; ++i) {
-                                userList.add({name: data[i].user.name, 
-                                    //'location' : data[i].gateway.location.location_description
-                                    tag: data[i].tag_mac,
-                                     id: data[i].id});
+
+                            $('#user-list-marker').on('click', 'li', function() {
+                                alert(this.getAttribute("data-id"));    
+                            })
+                            for (var i = 0; i < users.length; ++i) {
+                                var full_name;
+                                if (users[i].hasOwnProperty('resident')){
+                                    full_name = users[i].resident.resident_fName.concat(" ", users[i].resident.resident_lName)
+                                }
+                                else if (users[i].hasOwnProperty('staff')){
+                                    full_name = users[i].staff.fName.concat(" ", users[i].staff.lName)
+                                }
+                                var location = "N/A"
+                                if (users[i].gateway !== null){
+                                    if (users[i].gateway.location !== null){
+                                        location = users[i].gateway.location.location_description
+                                    }else{
+                                        location = "Gateway: ".concat(users[i].gateway.mac_addr);
+                                    }
+                                }
+                                userList.add({name: full_name, 
+                                    location : location,
+                                    tag: users[i].beacon_mac,
+                                    id: users[i].beacon_id});
                             }
                             listSet = true;
 
                         }
-
                         removeAll(drawnLayersArray, 'tempall');
-                        for (var i = 0; i < data.length; ++i) {
+                        for (var i = 0; i < users.length; ++i) {
                             // userList.add({name: data[i].user.name, tag: data[i].tag_mac, id: data[i].id});
-
+                            var reader_mac = users[i].gateway.mac_addr
                             var redIcon = L.icon({
                                 iconUrl: "{{url('/css/images/redmarker.png')}}",
                                 iconSize: [50,50],
                                 className: 'blinking'
                                 });
-                                addTooltip(data[i], drawnLayers, gatewayZones, redIcon);
-                            }
-                        
+                            console.log(userRunningCount[reader_mac]);
+                            addTooltip(users[i], drawnLayers, gatewayZones, userCount[reader_mac], userRunningCount[reader_mac], dialog);
+                            userRunningCount[reader_mac] = userRunningCount[reader_mac] + 1;
+                        }
+                        console.log(userRunningCount);                
                     },
                     headers: {
                         'X-CSRF-Token': '{{ csrf_token() }}',
@@ -170,7 +206,7 @@
         var floorIndex = new Object();
         var baseLayer = new Object();
         var bounds = new Object();
-        
+
         //Add Empty Base Layer to map
         var layercontrol = L.control.layers(baseLayer).addTo(map);
 
@@ -225,4 +261,19 @@
     });
     </script>
 
+    <body>
+        <div id="dialog-form" title="Residents in Location: ">
+      
+            <div id="user-list-holder-marker">
+                <input type="text" class="fuzzy-search" placeholder="Search" />
+        
+            <ul id="user-list-marker" class="list" style="display: inline-block">
+                <li id = "first-item-marker"><h3 class="name">Name</h3>
+                    <p class="tag">Tag</p>
+                </li>
+            </ul> 
+            <ul class="pagination"></ul>
+            </div>
+        </div>
+    </body>
 @endsection

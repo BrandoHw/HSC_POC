@@ -12,12 +12,12 @@ class Tag extends Model
      *
      * @var array
      */
-    //protected $table = "beacons_table2";
+    protected $table = "beacons_table";
     // protected $fillable = [
     //     'serial', 'uuid', 'mac_addr'
     // ];
     protected $fillable = [
-        'beacon_type', 'beacon_mac', 'reader_mac'
+        'beacon_type', 'beacon_mac', 'reader_mac', 'current_loc'
     ];
     /**
      * Get the user that owns the tag
@@ -25,6 +25,20 @@ class Tag extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function staff()
+    {
+        return $this->hasOne(UserInfo::class, 'beacon_id', 'beacon_id');
+    }
+
+    public function resident()
+    {
+        return $this->hasOne(Resident::class, 'beacon_id', 'beacon_id');
+    }
+
+    public function gateway(){
+        return $this->hasOne(Reader::class, 'gateway_id', 'current_loc');
     }
 
     // public function staff()
