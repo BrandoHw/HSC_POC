@@ -14,34 +14,39 @@
                 <ol class="breadcrumb iq-bg-primary mb-0">
                     @switch(Request::segment(1))
                         @case('residents')
-                            <li class="breadcrumb-item active"><a href="#"><i class="ri-user-3-line mr-1 float-left"></i>Resident Management</a></li>
+                            <li class="breadcrumb-item active"><a href="{{ route('residents.index') }}"><i class="ri-user-3-line mr-1 float-left"></i>Resident Management</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Profile</li>
+                            @break
+                        @case('attendance')
+                            <li class="breadcrumb-item active"><a href="{{ route('residents.index') }}"><i class="ri-user-3-line mr-1 float-left"></i>Resident Management</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Attendance</li>
                             @break
                         @case('map')
-                            <li class="breadcrumb-item active"><a href="#"><i class="ri-map-2-line mr-1 float-left"></i>Location Management</a></li>
+                            <li class="breadcrumb-item active"><a href="{{ route('map.index') }}"><i class="ri-map-2-line mr-1 float-left"></i>Location Management</a></li>
                             @break
-                        @case('readers')
-                            <li class="breadcrumb-item active"><a href="#"><i class="ri-base-station-line mr-1 float-left"></i>Gateway Management</a></li>
+                        @case('gateways')
+                            <li class="breadcrumb-item active"><a href="{{ route('gateways.index') }}"><i class="ri-base-station-line mr-1 float-left"></i>Gateway Management</a></li>
                             @break
-                        @case('tags')
-                            <li class="breadcrumb-item active"><a href="#"><i class="ri-share-line mr-1 float-left"></i>Beacon Management</a></li>
+                        @case('beacons')
+                            <li class="breadcrumb-item active"><a href="{{ route('beacons.index') }}"><i class="ri-share-line mr-1 float-left"></i>Beacon Management</a></li>
                             @break
                         @case('policies')
                             <li class="breadcrumb-item active"><a href="{{ route('policies.index') }}"><i class="ri-message-line mr-1 float-left"></i>Policy Management</a></li>
                             @break
                         @case('alerts')
-                            <li class="breadcrumb-item active"><a href="#"><i class="ri-alarm-warning-line mr-1 float-left"></i>Alerts</a></li>
+                            <li class="breadcrumb-item active"><a href="{{ route('alerts.index') }}"><i class="ri-alarm-warning-line mr-1 float-left"></i>Alerts</a></li>
                             @break
                         @case('tracking')
-                            <li class="breadcrumb-item active"><a href="#"><i class="ri-map-pin-user-line mr-1 float-left"></i>Tracking</a></li>
+                            <li class="breadcrumb-item active"><a href="{{ route('tracking.index') }}"><i class="ri-map-pin-user-line mr-1 float-left"></i>Tracking</a></li>
                             @break
                         @case('reports')
-                            <li class="breadcrumb-item active"><a href="#"><i class="ri-file-chart-line mr-1 float-left"></i>Reports</a></li>
+                            <li class="breadcrumb-item active"><a href="{{ route('reports.index') }}"><i class="ri-file-chart-line mr-1 float-left"></i>Reports</a></li>
                             @break
                         @case('settings')
-                            <li class="breadcrumb-item active"><a href="#"><i class="ri-settings-4-line mr-1 float-left"></i>Settings</a></li>
+                            <li class="breadcrumb-item active"><a href="{{ route('settings.index') }}"><i class="ri-settings-4-line mr-1 float-left"></i>Settings</a></li>
                             @break
                         @default
-                            <li class="breadcrumb-item active"><a href="#"><i class="ri-home-4-line mr-1 float-left"></i>Dashboard</a></li>
+                            <li class="breadcrumb-item active"><a href="{{ route('home') }}"><i class="ri-home-4-line mr-1 float-left"></i>Dashboard</a></li>
                     @endswitch
 
                     @switch(Request::segment(2))

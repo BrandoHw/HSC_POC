@@ -29,10 +29,10 @@
                             <label for="name">Name:</label>
                             <input type="text" class="form-control" id="name">
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="detail">Description:</label>
                             <textarea class="form-control" id="detail" rows="5"></textarea>
-                        </div>
+                        </div> -->
                         <div class="form-group">
                             <label for="type">Policy Type:</label>
                             <select class="form-control" id="type">
@@ -42,7 +42,6 @@
                                 <option value="duress">Duress Button</option>
                                 <option value="fall">Fall</option>
                                 <option value="geofence">Geofence</option>
-                                <option value="motion">Motion</option>
                                 <option value="violence">Violence</option>
                             </select>
                         </div>
@@ -68,6 +67,15 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group" id="trigger-option-battery" hidden>
+                            <p><i class="ri-information-fill"></i> This policy will violate immediately when the battery level of the gateway or beacon is less than 20%.</p>
+                        </div>
+                        <div class="form-group" id="trigger-option-duress" hidden>
+                            <p><i class="ri-information-fill"></i> This policy will violate immediately when the duress button at the beacon is pressed.</p>
+                        </div>
+                        <div class="form-group" id="trigger-option-fall" hidden>
+                            <p><i class="ri-information-fill"></i> This policy will violate immediately when fall is detected.</p>
+                        </div>
                         <div class="form-group" id="trigger-option-geofence" hidden>
                             <label>Geofence Option:</label>
                             <div>
@@ -81,19 +89,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group" id="trigger-option-motion" hidden>
-                            <label>Motion Option:</label>
-                            <div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="in-motion" name="motion-option" class="custom-control-input">
-                                    <label class="custom-control-label" for="in-motion"> In Motion</label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="at-rest" name="motion-option" class="custom-control-input">
-                                    <label class="custom-control-label" for="at-rest"> At Rest</label>
-                                </div>
-                            </div>
-                        </div>
                         <div class="form-group" id="trigger-option-violence" hidden>
                             <label>Violence Parameters:</label>
                             <div class="row align-items-center mb-2">
@@ -103,17 +98,20 @@
                                         <label class="custom-control-label" for="x-axis">x-axis</label>
                                     </div>
                                 </div>
-                                <div class="col-4" id="x-axis-operator-div" hidden>
+                                <div class="col-4" id="x-axis-value-div" hidden>
+                                    <input txpe="text" class="form-control form-control-sm" name="x-value" id="x-value" placeholder="G-value">
+                                </div>
+                                <div class="col-4" id="x-axis-frequency-div" hidden>
+                                    <input txpe="text" class="form-control form-control-sm" name="x-frequency" id="x-frequency" placeholder="Frequency (seconds)">
+                                </div>
+                                <!-- <div class="col-4" id="x-axis-operator-div" hidden>
                                     <select class="form-control form-control-sm" id="x-axis-operator" name="duration-format">
                                         <option selected="" disabled="">Please select operator...</option>
                                         <option value=">">Greater</option>
                                         <option value=">=">Greater and Equal</option>
                                         <option value="==">Equals</option>
                                     </select>
-                                </div>
-                                <div class="col-4" id="x-axis-value-div" hidden>
-                                    <input type="text" class="form-control form-control-sm" name="duration-value" id="duration-value" placeholder="G-value">
-                                </div>
+                                </div> -->
                             </div>
                             <div class="row align-items-center mb-2">
                                 <div class="col-2 mt-1 mb-1">
@@ -122,17 +120,20 @@
                                         <label class="custom-control-label" for="y-axis">y-axis</label>
                                     </div>
                                 </div>
-                                <div class="col-4" id="y-axis-operator-div" hidden>
-                                    <select class="form-control form-control-sm" id="y-axis-operator" name="duration-format">
-                                        <option selected="" disabled="">Please select operator...</option>
+                                <div class="col-4" id="y-axis-value-div" hidden>
+                                    <input type="text" class="form-control form-control-sm" name="y-value" id="y-value" placeholder="G-value">
+                                </div>
+                                <div class="col-4" id="y-axis-frequency-div" hidden>
+                                    <input type="text" class="form-control form-control-sm" name="y-frequency" id="y-frequency" placeholder="Frequency (seconds)">
+                                </div>
+                                <!-- <div class="col-4" id="y-axis-frequency-div" hidden>
+                                    <select class="form-control form-control-sm" id="y-axis-frequency" name="duration-format">
+                                        <option selected="" disabled="">Please select frequency...</option>
                                         <option value=">">Greater</option>
                                         <option value=">=">Greater and Equal</option>
                                         <option value="==">Equals</option>
                                     </select>
-                                </div>
-                                <div class="col-4" id="y-axis-value-div" hidden>
-                                    <input type="text" class="form-control form-control-sm" name="duration-value" id="duration-value" placeholder="G-value">
-                                </div>
+                                </div> -->
                             </div>
                             <div class="row align-items-center mb-2">
                                 <div class="col-2 mt-1 mb-1">
@@ -141,20 +142,23 @@
                                         <label class="custom-control-label" for="z-axis">z-axis</label>
                                     </div>
                                 </div>
-                                <div class="col-4" id="z-axis-operator-div" hidden>
+                                <div class="col-4" id="z-axis-value-div" hidden>
+                                    <input tzpe="text" class="form-control form-control-sm" name="z-value" id="z-value" placeholder="G-value">
+                                </div>
+                                <div class="col-4" id="z-axis-frequency-div" hidden>
+                                    <input tzpe="text" class="form-control form-control-sm" name="z-frequency" id="z-frequency" placeholder="Frequency (seconds)">
+                                </div>
+                                <!-- <div class="col-4" id="z-axis-operator-div" hidden>
                                     <select class="form-control form-control-sm" id="z-axis-operator" name="duration-format">
                                         <option selected="" disabled="">Please select operator...</option>
                                         <option value=">">Greater</option>
                                         <option value=">=">Greater and Equal</option>
                                         <option value="==">Equals</option>
                                     </select>
-                                </div>
-                                <div class="col-4" id="z-axis-value-div" hidden>
-                                    <input type="text" class="form-control form-control-sm" name="duration-value" id="duration-value" placeholder="G-value">
-                                </div>
+                                </div> -->
                             </div>
                         </div>
-                        <div class="form-group" id="trigger-duration" hidden>
+                        <!-- <div class="form-group" id="trigger-duration" hidden>
                             <labe><span class="text-dark"> Duration: </span><span class="font-italic text-secondary" id="duration-label">(Detected)</span></label>
                             <a href="#" data-toggle="tooltip" id="duration-tooltip" data-placement="right" title="The amount of time allowed before a violation is triggered." style="cursor: pointer;">
                                 <i class="ri-information-line"></i>
@@ -171,11 +175,18 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="form-group" id="trigger-specific-time" hidden>
-                            <div class="custom-control custom-checkbox custom-control-inline">
-                                <input type="checkbox" class="custom-control-input" id="specific-time" name="specific-time-check">
-                                <label class="custom-control-label" for="specific-time">Only within specific time</label>
+                            <label>Time Option:</label>
+                            <div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="all-day" name="time-option" class="custom-control-input">
+                                    <label class="custom-control-label" for="all-day"> All day</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="specific-time" name="time-option" class="custom-control-input">
+                                    <label class="custom-control-label" for="specific-time"> Only within specific time</label>
+                                </div>
                             </div>
                             <div class="row mt-2" id="specific-time-config" hidden>
                                 <div class="col">
@@ -200,59 +211,7 @@
                         </div>
                     </form>
                 </div>
-                <hr class="mt-0 mb-0">
-                <div class="iq-card-body" id="scope-setting">
-                    <p class="iq-bg-primary pl-3 pr-3 pt-2 pb-2 rounded">Scope Setting</p>
-                    <form>
-                        <div class="form-group" id="scope-device">
-                            <label>Device Option:</label>
-                            <div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="beacon" name="device-option" class="custom-control-input">
-                                    <label class="custom-control-label" for="beacon"> Beacon</label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="gateway" name="device-option" class="custom-control-input">
-                                    <label class="custom-control-label" for="gateway"> Gateway</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group" id="scope-option">
-                            <label for="zone">Scope:</label>
-                            <div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="all-device" name="scope-option" class="custom-control-input">
-                                    <label class="custom-control-label" for="all-device"> All Devices</label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="custom-device" name="scope-option" class="custom-control-input">
-                                    <label class="custom-control-label" for="custom-device"> Select Individual Devices</label>
-                                </div>
-                            </div>
-                            <div class="table-responsive" style="margin-top: 15px" id="deviceTable-div" hidden>
-                                <table id="deviceTable" class="table table-stripe table-bordered hover">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>Name</th>
-                                            <th>Beacon</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($residents as $resident)
-                                        <tr>
-                                            <td>{{ $resident['id'] }}</td>
-                                            <td>{{ $resident['name'] }}</td>
-                                            <td>{{ $resident['beacon'] }}</td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <hr class="mt-0 mb-0">
+                <hr class="mt-0 mb-0" id="line">
                 <div class="iq-card-body" id="location-setting" hidden>
                     <p class="iq-bg-primary pl-3 pr-3 pt-2 pb-2 rounded">Location Setting</p>
                     <form>
@@ -272,29 +231,6 @@
                         <div class="form-group">
                             <label for="zone">Zone:</label>
                             <select class="form-control" id="zone">
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <hr class="mt-0 mb-0">
-                <div class="iq-card-body" id="action-setting">
-                    <p class="iq-bg-primary pl-3 pr-3 pt-2 pb-2 rounded">Action Setting</p>
-                    <form>
-                        <div class="form-group">
-                            <label for="action">Action Type:</label>
-                            <select class="form-control" id="action">
-                                <option selected="" disabled="">Please select ...</option>
-                                <option value="alert">Send Alert Only</option>
-                                <option value="notif">Send Notification Only</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="action-to">Subject to:</label>
-                            <select class="form-control" id="action">
-                                <option selected="" disabled="">Please select ...</option>
-                                <option value="dashboard">Dashboard Only</option>
-                                <option value="nurse">Staff Only</option>
-                                <option value="all">Both Dashboard & Staff</option>
                             </select>
                         </div>
                     </form>
@@ -328,14 +264,6 @@
                 dateFormat: "H:i",
             }
         );
-        dTable = $('#deviceTable').DataTable({
-            order: [[1, 'asc']],
-			scrollY: 400,
-			scrollCollapse: true,
-			paging:true,
-            scroller: true,
-            info: false
-        });
     });
 
     // Display different configuration for different policy type
@@ -345,118 +273,93 @@
         }
         var option = {
             attendance: false,
+            battery: false,
+            duress: false,
+            fall: false,
             geofence: false,
-            motion: false,
             violence: false,
-            duration: true,
-            specific: true,
-            device: "all",
-            location: true,
+            duration: false,
+            specific: false,
+            location: false,
         };
 
         $('#duration-label').html('(After detection)');
         $('#duration-tooltip').attr('title', 'The amount of time allowed before a violation is triggered.');
+        $('#line').prop('hidden', true);
         switch($(this).val()){
             case "attendance":
                 option['attendance'] = true;
-                option['device'] = 'beacon';
+                option['specific'] = true;
+                option['location'] = true;
                 break;
             case "battery":
-                option['specific_time'] = false;
-                option['location'] = false;
+                option['battery'] = true;
                 break;
             case "duress":
-                option['specific'] = false;
-                option['device'] = 'beacon';
-                option['location'] = false;
+                option['duress'] = true;
                 $('#duration-label').html('(To be ignored)');
                 $('#duration-tooltip').attr('title', 'The amount of time after which the violations will be ignored.');
                 break;
             case "fall":
-                option['specific'] = false;
-                option['device'] = 'beacon';
-                option['location'] = false;
+                option['fall'] = true;
                 break;
             case "geofence":
                 option['geofence'] = true;
-                option['device'] = 'beacon';
-                break;
-            case "motion":
-                option['motion'] = true;
-                option['device'] = 'beacon';
+                option['specific'] = true;
+                option['location'] = true;
+                $('#line').prop('hidden', false);
                 break;
             case "violence":
                 option['violence'] = true;
-                option['specific'] = false;
-                option['device'] = 'beacon';
+                option['location'] = true;
                 break;
         }
-        console.log(!option["attendance"]);
         $('#trigger-option-attendance').prop('hidden', !option['attendance']);
+        $('#trigger-option-battery').prop('hidden', !option['battery']);
+        $('#trigger-option-duress').prop('hidden', !option['duress']);
+        $('#trigger-option-fall').prop('hidden', !option['fall']);
         $('#trigger-option-geofence').prop('hidden', !option['geofence']);
-        $('#trigger-option-motion').prop('hidden', !option['motion']);
         $('#trigger-option-violence').prop('hidden', !option['violence']);
         $('#trigger-duration').prop('hidden', !option['duration']);
         $('#trigger-specific-time').prop('hidden', !option['specific']);
         $('#location-setting').prop('hidden', !option['location']);
 
-        switch(option['device']){
-            case "all":
-                $('#beacon').prop('checked', false).prop('disabled', false);
-                $('#gateway').prop('checked', false).prop('disabled', false);
-                break;
-            case 'beacon':
-                $('#beacon').prop('checked', true).prop('disabled', true);
-                $('#gateway').prop('checked', false).prop('disabled', true);
-                break;
-            case 'gateway':
-                $('#beacon').prop('checked', false).prop('disabled', true);
-                $('#gateway').prop('checked', true).prop('disabled', true);
-                break;
-        }
     })
 
     // Select violence axis
     $('#x-axis').on('change', function(){
         if ($(this).is(':checked')){
-            $('#x-axis-operator-div').prop('hidden', false);
+            // $('#x-axis-operator-div').prop('hidden', false);
             $('#x-axis-value-div').prop('hidden', false);
+            $('#x-axis-frequency-div').prop('hidden', false);
         } else{
-            $('#x-axis-operator-div').prop('hidden', true);
+            // $('#x-axis-operator-div').prop('hidden', true);
             $('#x-axis-value-div').prop('hidden', true);
+            $('#x-axis-frequency-div').prop('hidden', true);
         }
     });
 
     $('#y-axis').on('change', function(){
         if ($(this).is(':checked')){
-            $('#y-axis-operator-div').prop('hidden', false);
+            // $('#y-axis-operator-div').prop('hidden', false);
             $('#y-axis-value-div').prop('hidden', false);
+            $('#y-axis-frequency-div').prop('hidden', false);
         } else{
-            $('#y-axis-operator-div').prop('hidden', true);
+            // $('#y-axis-operator-div').prop('hidden', true);
             $('#y-axis-value-div').prop('hidden', true);
+            $('#y-axis-frequency-div').prop('hidden', true);
         }
     });
 
     $('#z-axis').on('change', function(){
         if ($(this).is(':checked')){
-            $('#z-axis-operator-div').prop('hidden', false);
+            // $('#z-axis-operator-div').prop('hidden', false);
             $('#z-axis-value-div').prop('hidden', false);
+            $('#z-axis-frequency-div').prop('hidden', false);
         } else{
-            $('#z-axis-operator-div').prop('hidden', true);
+            // $('#z-axis-operator-div').prop('hidden', true);
             $('#z-axis-value-div').prop('hidden', true);
-        }
-    });
-
-    // Display table if custom-device selected
-    $('#custom-device').on('change', function(){
-        if ($(this).is(':checked')){
-            $('#deviceTable-div').prop('hidden', false);
-            dTable.columns.adjust().draw();
-        }
-    });
-    $('#all-device').on('change', function(){
-        if ($(this).is(':checked')){
-            $('#deviceTable-div').prop('hidden', true);
+            $('#z-axis-frequency-div').prop('hidden', true);
         }
     });
 
@@ -582,6 +485,14 @@
             $('#specific-time-config').prop('hidden', false);
         } else{
             $('#specific-time-config').prop('hidden', true);
+        }
+    });
+
+    $('#all-day').on('change', function(){
+        if ($(this).is(':checked')){
+            $('#specific-time-config').prop('hidden', true);
+        } else{
+            $('#specific-time-config').prop('hidden', false);
         }
     });
 

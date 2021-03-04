@@ -13,7 +13,7 @@
                      <div class="dropdown">
                            <span class="dropdown-toggle btn mb-1 iq-bg-danger" id="dropdownMenuButton1" data-toggle="dropdown">
                               Unresolved
-                              <span class="badge badge-danger ml-2" id="alert_num">4</span>
+                              <span class="badge badge-danger ml-2" id="alert_num">6</span>
                            </span>
                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton1" style="">
                               <a class="dropdown-item" href="#"><i class="ri-eye-fill mr-2"></i>View</a>
@@ -501,7 +501,7 @@
          $('#activity li:last-child').remove();
       };
 
-      // var timer = setInterval(prependActivity, 5000);
+      var timer = setInterval(prependActivity, 5000);
    });
 
    $(document).on('click','.li-alert', function(){

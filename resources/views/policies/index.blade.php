@@ -17,32 +17,30 @@
                         </div>
                     </div>
                     <div class="table-responsive" style="margin-top: 15px">
-                        <table id="policyTable" class="table table-stripe table-bordered hover">
-                            <thead>
+                        <table class="table table-stripe table-bordered hover" id="policyTable">
+                        <thead>
                                 <tr>
-                                    <th></th>
-                                    <th>Name</th>
-                                    <th>ID</th>
-                                    <th>Type</th>
-                                    <th>Applied To</th>
-                                    <th>Created At</th>
-                                    <th>State</th>
+                                    <th scope="col" style="width:10%">#</th>
+                                    <th scope="col" style="width:35%">Name</th>
+                                    <th scope="col" style="width:25%">Type</th>
+                                    <th scope="col" style="width:30%">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($policies as $policy)
-                                <tr href="{{ route('policies.edit', $policy['id']) }}">
-                                    <td>{{ $policy['id'] }}</td>
-                                    <td>{{ $policy['name'] }}</td>
-                                    <td>{{ $policy['id'] }}</td>
-                                    <td>{{ $policy['type'] }}</td>
-                                    <td>{{ $policy['applied_to'] }}</td>
-                                    <td>{{ $policy['created_at'] }}</td>
-                                    <td><span class="badge badge-pill badge-{{ ($policy['state'] == 'Active') ? 'success':'secondary' }}">{{ $policy['state'] }}</span></td>
-                                </tr>
+                                @foreach ($policies as $policy)
+                                    <tr href="{{ route('policies.edit',$policy->rules_id) }}">
+                                        <td>{{ $policy->rules_id }}</td>
+                                        <td>{{ $policy->description }}</td>
+                                        <td>{{ $policy->policyType->rules_type_desc }}</td>
+                                        <td>
+                                            <span class="badge badge-pill iq-bg-{{ ($policy->alert_option == 1) ? 'success':'secondary' }}">
+                                                {{ ($policy->alert_option == 1) ? 'Active':'Inactive' }}
+                                            </span>
+                                        </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
-                        </table>
+                        </table> 
                     </div>
                 </div>
             </div>
@@ -51,12 +49,13 @@
 </div>
 @endsection 
 
-@section('script')
-<script type="text/javascript">
-   dTable = $('#policyTable').DataTable({
-        order: [[5, 'asc']],
-   });
-   
+@section("script")
+<script>
+    /* Initiate dataTable */
+    var dTable = $('#policyTable').DataTable({
+            order: [[1, 'asc']],
+        })
+
     $('#myCustomSearchBox').keyup(function(){  
         dTable.search($(this).val()).draw();   // this  is for customized searchbox with datatable search feature.
     })
@@ -64,6 +63,5 @@
     $('#policyTable tbody tr td:not(:first-child)').click(function () {
         window.location.href = $(this).parent('tr').attr('href');
     });
-
 </script>
 @endsection

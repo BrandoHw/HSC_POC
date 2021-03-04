@@ -13,12 +13,27 @@ class User extends Authenticatable
     use HasRoles;
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'users_table';
+
+    /**
+     * The primary key associated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = "user_id";
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'username', 'email', 'password', 'tag_id'
+        'fName', 'lName', 'phone_number',
+        'username', 'email', 'password'
     ];
 
     /**
@@ -26,28 +41,31 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
-	
+    protected $hidden = ['password'];
     
     /**
-     * Get the tag record associated with the user
+     * Get the userRight that owns the user
+     */
+    public function userRight()
+    {
+        return $this->belongsTo(userRight::class, 'right_id', 'user_right_id');
+    }
+
+    /**
+     * Get the userType that owns the user
+     */
+    public function userType()
+    {
+        return $this->belongsTo(userType::class, 'type_id', 'user_type_id');
+    }
+
+    /**
+     * Get the tag that owns the user
      */
     public function tag()
     {
-        return $this->hasOne(Tag::class);
+        return $this->belongsTo(Tag::class, 'beacon_id', 'id');
     }
-    
 
       /**
      * Get the record of the last time the user was seen
@@ -55,6 +73,16 @@ class User extends Authenticatable
     public function lastSeen()
     {
         return $this->hasOne(UserLastSeen::class);
+    }
+
+    /**
+     * Get the user's full name.
+     *
+     * @return string
+     */
+    public function getFullNameAttribute()
+    {
+        return ucfirst($this->fName)." ".ucfirst($this->lName);
     }
     
 }

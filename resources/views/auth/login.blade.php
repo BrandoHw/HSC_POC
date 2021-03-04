@@ -22,7 +22,6 @@
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <a href="{{ route('password.request') }}" class="float-right">Forgot password?</a>
                             <input type="password" class="form-control mb-0 @error('password') is-invalid @enderror" name="password" id="password" placeholder="Password" required autocomplete="current-password">
                             @error('password')
                                 <span class="invalid-feedback" role="alert">
@@ -31,10 +30,7 @@
                             @enderror
                         </div>
                         <div class="d-inline-block w-100">
-                            <div class="custom-control custom-checkbox d-inline-block mt-2 pt-1">
-                                <input type="checkbox" class="custom-control-input" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                                <label class="custom-control-label" for="remember">Remember Me</label>
-                            </div>
+                            <a href="{{ route('password.request') }}" class="float-left">Forgot password?</a>
                             <button type="submit" class="btn btn-primary float-right">Sign in</button>
                         </div>
                     </form>
@@ -42,22 +38,18 @@
             </div>
             <div class="col-sm-6 text-center">
                 <div class="sign-in-detail text-white">
-                    <a class="sign-in-logo mb-5" href="#"><img src="{{ asset('template/images/logo-white.png') }}" class="img-fluid" alt="logo"></a>
+                    <a class="sign-in-logo mb-5" href="#"><img src="{{ asset('img/icons/wecare-white.png') }}" class="img-fluid" alt="logo"><span class="text-white h3"> WECare</span></a>
                     <div class="owl-carousel" data-autoplay="true" data-loop="true" data-nav="false" data-dots="true" data-items="1" data-items-laptop="1" data-items-tab="1" data-items-mobile="1" data-items-mobile-sm="1" data-margin="0">
-                        <div class="item">
-                            <img src="{{ asset('template/images/login/1.png') }}" class="img-fluid mb-4" alt="logo">
-                            <h4 class="mb-1 text-white">Manage your orders</h4>
-                            <p>It is a long established fact that a reader will be distracted by the readable content.</p>
+                        <div class="item d-flex justify-content-center">
+                            <img src="{{ asset('img/login/data.eps') }}" class="img-fluid mb-4 rounded-circle" style="width: 70% !important; height: 70%; !important" alt="logo">
+                            <!-- <h4 class="mb-1 text-white">Manage your orders</h4>
+                            <p>It is a long established fact that a reader will be distracted by the readable content.</p> -->
                         </div>
-                        <div class="item">
-                            <img src="{{ asset('template/images/login/1.png') }}" class="img-fluid mb-4" alt="logo">
-                            <h4 class="mb-1 text-white">Manage your orders</h4>
-                            <p>It is a long established fact that a reader will be distracted by the readable content.</p>
+                        <div class="item d-flex justify-content-center">
+                            <img src="{{ asset('img/login/data.eps') }}" class="img-fluid mb-4 rounded-circle" style="width: 70% !important; height: 70%; !important" alt="logo">
                         </div>
-                        <div class="item">
-                            <img src="{{ asset('template/images/login/1.png') }}" class="img-fluid mb-4" alt="logo">
-                            <h4 class="mb-1 text-white">Manage your orders</h4>
-                            <p>It is a long established fact that a reader will be distracted by the readable content.</p>
+                        <div class="item d-flex justify-content-center">
+                            <img src="{{ asset('img/login/data.eps') }}" class="img-fluid mb-4 rounded-circle" style="width: 70% !important; height: 70%; !important" alt="logo">
                         </div>
                     </div>
                 </div>

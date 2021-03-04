@@ -1,95 +1,125 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid p-0">
-    <!-- Display alert -->
-    @if ($message = Session::get('success'))
-
-        <div class="alert alert-success alert-dismissible" attendance="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <div class="alert-message">
-                <strong>Hello there!</strong> {{ $message }}
-            </div>
-        </div>
-    @endif
-
-    <!-- Title & Add-Button -->
-    <div class="row mb-2 mb-xl-3">
-        <div class="col-auto d-none d-sm-block">
-            <h3><strong>Attendance</strong> Management</h3>
-        </div>
-        <div class="col-auto ml-auto text-right mt-n1">
-            @can('attendance-list')
-                <a class="btn btn-primary" href="#">
-                    @svg('plus', 'feather-plus align-middle')  
-                    <span class="align-middle">Export</span>
-                </a>
-            @endcan
-        </div>
-	</div>
-    
-    <!-- Table -->
+<div class="container-fluid relative">
     <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title"><strong>Filters</strong></h3>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="row">
-                                <label class="col-form-label col-sm-4 text-sm-right">
-                                    Group:
-                                </label>
-                                <div class="col-sm-7" id="createNameField">
-                                    {!! Form::text('group', null, array('placeholder' => 'Group','class' => 'form-control')) !!}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="row">
-                                <label class="col-form-label col-sm-3 text-sm-right">
-                                    User:
-                                </label>
-                                <div class="col-sm-7" id="createNameField">
-                                    {!! Form::text('group', null, array('placeholder' => 'User','class' => 'form-control')) !!}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="row">
-                                <label class="col-form-label col-sm-5 text-sm-right">
-                                    Date Range:
-                                </label>
-                                <div class="col-sm-7" id="createNameField">
-                                    {!! Form::text('group', null, array('placeholder' => 'Date','class' => 'form-control')) !!}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            @can('attendance-list')
-                                <a class="btn btn-primary" href="#">
-                                    <span class="align-middle">Apply</span>
-                                </a>
-                            @endcan
+        <div class="col-lg-3">
+            <div class="iq-card" style="height: 500px">
+                <div class="iq-card-body">
+                <div class="">
+                    <div class="iq-email-list">
+                        <div class="iq-email-ui nav flex-column nav-pills">
+                            <li class="nav-link active" role="tab" data-toggle="pill" href="#breakfast"><a href="#"><i class="ri-timer-2-line"></i>Breakfast</a></li>
+                            <li class="nav-link" role="tab" data-toggle="pill" href="#lunch"><a href="#"><i class="ri-timer-2-line"></i>Lunch</a></li>
+                            <li class="nav-link" role="tab" data-toggle="pill" href="#dinner"><a href="#"><i class="ri-timer-2-line"></i>Dinner</a></li>
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover nowrap" id="attendanceTable">
-                            <thead>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9 mail-box-detail">
+            <div class="iq-card" style="height: 500px">
+                <div class="iq-card-body p-0">
+                    <div class="">
+                        <div class="iq-email-to-list p-3">
+                            <div class="d-flex justify-content-between">
+                                <ul>
+                                <li>
+                                    <a href="#" id="navbarDropdown" data-toggle="dropdown">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                            <label class="custom-control-label" for="customCheck1"><i class="ri-arrow-down-s-line"></i></label>
+                                        </div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="#">Action</a>
+                                        <a class="dropdown-item" href="#">Another action</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="#">Something else here</a>
+                                    </div>
+                                </li>
+                                </ul>
+                                <div class="iq-email-search d-flex">
+                                <form class="mr-3 position-relative">
+                                    <div class="form-group mb-0">
+                                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Search">
+                                        <a class="search-link" href="#"><i class="ri-search-line"></i></a>
+                                    </div>
+                                </form>
+                                <a class="btn btn-primary" href="#">Export</a>
+                                <div class="col-2 row justify-content-end">
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="iq-email-listbox">
+                            <div class="tab-content">
+                                <div class="tab-pane fade show active row justify-content-between" id="breakfast" role="tabpanel">
+                                    <div class="col-6">
+                                        <div id="am-3dpie-chart" style="height: 400px;"></div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="lunch" role="tabpanel">
+                                </div>
+                                <div class="tab-pane fade" id="dinner" role="tabpanel">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="iq-card">
+                <div class="iq-card-body">
+                    <div class="iq-search-bar row justify-content-between">
+                        <form action="#" class="searchbox">
+                            <input type="text" id="myCustomSearchBox" class="text search-input" placeholder="Type here to search...">
+                            <a class="search-link" href="#"><i class="ri-search-line"></i></a>
+                        </form>
+                        <!-- <div class="input-group input-group-sm mb-0 date">
+                            <input type="text" class="form-control" id="time-range" name="time-range" style="background-color: white"/>
+                            <div class="input-group-append mb-1">
+                                <div class="input-group-text"><i class="fa fa-clock-o"></i></div>
+                            </div>
+                        </div> -->
+                        <div class="col-6 row justify-content-end">
+                            <div class="col-8 input-group input-group-sm mb-0 date">
+                                <input type="text" class="form-control" id="time-range" name="time-range" style="background-color: white"/>
+                                <div class="input-group-append mb-1">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                            </div>
+                            <div class="col-2 row justify-content-end">
+                                <a class="btn btn-primary" href="#">Export</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive" style="margin-top: 15px">
+                        <table class="table table-stripe table-bordered hover" id="alertTable">
+                        <thead>
                                 <tr>
-                                    <th scope="col" style="width:5%">#</th>
-                                    <th scope="col" >Date</th>
-                                    <th scope="col" >Name</th>
-                                    <th scope="col" >Group</th>
-                                    <th scope="col" >Clock In</th>
-                                    <th scope="col" >Clock Out</th>
-                                    <th scope="col" >Total Time</th>
+                                    <th scope="col" style="width:10%">#</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Attendance</th>
+                                    <th scope="col">Last updated at</th>
                                 </tr>
                             </thead>
+                            <tbody>
+                                @foreach ($alerts as $alert)
+                                    @if($alert->policy->policyType->rules_type_id == 1)
+                                    <tr href="{{ route('alerts.edit',$alert->alert_id) }}">
+                                        <td>{{ $alert->tag->resident->alert_id }}</td>
+                                        <td>{{ $alert->tag->resident->full_name }}</td>
+                                        <td>3/4</td>
+                                        <td>{{ $alert->occured_at }}</td>
+                                    </tr>
+                                    @endif
+                                @endforeach
+                            </tbody>
                         </table> 
                     </div>
                 </div>
@@ -101,22 +131,32 @@
 
 @section("script")
 <script>
-    $(function () {
-
-        /* Initiate dataTable */
-        $('#attendanceTable').DataTable({
-            dom: '<fl<t>ip>',
-            searching: false,
-            paging: false,
-            responsive: true,
-            stateSave: true,
-            'lengthMenu': [[10, 25, 50, -1], [10, 25, 50, "All"]],
-            orders: [],
-            "columnDefs": [ {
-                "targets"  : 'noSort',
-                "orderable": false,
-            }]
-        })
+    $(function(){
+        $('#time-range').flatpickr(
+            {
+                mode: "range",
+                minDate: "2021-1-1",
+                maxDate: "today",
+                dateFormat: "Y-m-d",
+                defaultDate: "today"
+            }
+        );
     })
+    /* Initiate dataTable */
+    var dTable = $('#alertTable').DataTable({
+        order: [[1, 'asc']],
+    })
+    
+    var d2Table = $('#alert2Table').DataTable({
+        order: [[1, 'asc']],
+    })
+
+    $('#myCustomSearchBox').keyup(function(){  
+        dTable.search($(this).val()).draw();   // this  is for customized searchbox with datatable search feature.
+    })
+
+    $('#alertTable tbody tr td:not(:first-child)').click(function () {
+        window.location.href = $(this).parent('tr').attr('href');
+    });
 </script>
 @endsection

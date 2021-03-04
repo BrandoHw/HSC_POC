@@ -8,24 +8,50 @@ class Tag extends Model
 {
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'beacons_table';
+
+    /**
+     * The primary key associated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $table = "beacons_table";
     // protected $fillable = [
     //     'serial', 'uuid', 'mac_addr'
     // ];
     protected $fillable = [
         'beacon_type', 'beacon_mac', 'reader_mac', 'current_loc'
     ];
+ 
     /**
-     * Get the user that owns the tag
+     * Get the tagType that owns the tag
+     */
+    public function tagType()
+    {
+        return $this->belongsTo(TagType::class, 'beacon_type', 'beacon_type_id');
+    }
+
+    /**
+     * Get the user record associated with the tag
      */
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasOne(User::class, 'beacon_id', 'id');
     }
+
+    /**
+     * Get the resident record associated with the tag
+     */
 
     public function staff()
     {
@@ -40,19 +66,5 @@ class Tag extends Model
     public function gateway(){
         return $this->hasOne(Reader::class, 'gateway_id', 'current_loc');
     }
-
-    // public function staff()
-    // {
-    //     return $this->hasOne(Staff Class)
-    // }
-
-    // public function patient()
-    // {
-    //     return $this->hasOne(Patient Class)
-    // }
-
-    // public function type(){
-    //     return $this->hasOne(Beacon Type)
-    // }
 
 }

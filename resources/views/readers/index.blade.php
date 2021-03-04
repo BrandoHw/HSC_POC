@@ -1,82 +1,46 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid p-0">
-    <!-- Display alert -->
-    @if ($message = Session::get('success'))
-
-        <div class="alert alert-success alert-dismissible" reader="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <div class="alert-message">
-                <strong>Hello there!</strong> {{ $message }}
-            </div>
-        </div>
-    @endif
-
-    <!-- Title & Add-Button -->
-    <div class="row mb-2 mb-xl-3">
-        <div class="col-auto d-none d-sm-block">
-            <h3><strong>Gateways</strong> Management</h3>
-        </div>
-        <div class="col-auto ml-auto text-right mt-n1">
-            @can('reader-create')
-                <a class="btn btn-primary" href="{{ route('gateways.create') }}">
-                    @svg('plus', 'feather-plus align-middle')  
-                    <span class="align-middle">Add Gateway</span>
-                </a>
-            @endcan 
-        </div>
-	</div>
-    
-    <!-- Table -->
+<div class="container-fluid">
     <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover nowrap" id="readerTable">
-                            <thead>
+        <div class="col-sm-12">
+            <div class="iq-card">
+                <div class="iq-card-body">
+                    <div class="iq-search-bar row justify-content-between">
+                        <form action="#" class="searchbox">
+                            <input type="text" id="myCustomSearchBox" class="text search-input" placeholder="Type here to search...">
+                            <a class="search-link" href="#"><i class="ri-search-line"></i></a>
+                        </form>
+                        <div class="col-4 row justify-content-end">
+                            <a class="btn btn-primary" href="{{ route('gateways.create') }}" style="margin-right: 10px">Create</a>
+                            <a class="btn btn-danger" href="#">Delete</a>
+                        </div>
+                    </div>
+                    <div class="table-responsive" style="margin-top: 15px">
+                        <table class="table table-stripe table-bordered hover" id="readerTable">
+                        <thead>
                                 <tr>
                                     <th scope="col" style="width:5%">#</th>
-                                    <th scope="col" style="width:30%">ID</th>
-                                    <th scope="col" style="width:30%">MAC</th>
-                                    <th scope="col" style="width:25%">Floor</th>
-                                    <th scope="col" class="noSort">Actions</th>
+                                    <th scope="col">Serial Number</th>
+                                    <th scope="col">Mac Address</th>
+                                    <th scope="col">IP Address</th>
+                                    <th scope="col">Location</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Last Active</th>
+                                    <th scope="col">Last Inactive</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($readers as $reader)
-                                    <tr id="trReader-{{ $reader->id }}">
-                                        <td>{{ $reader->id }}</td>
-                                        <td id="tdReaderSerial-{{ $reader->id }}">
-                                            <a href="{{ route('gateways.show',$reader->id) }}">
-                                                {{ $reader->serial }} 
-                                            </a>
-                                        </td>
-                                        <td id="tdReaderMacAdd-{{ $reader->id }}">
-                                            {{ $reader->mac_addr }}
-                                        </td>
-                                        <td id="tdReaderFloor-{{ $reader->id }}"d>
-                                            @if(empty($reader->floor))
-                                                <font color='gray'><em>Not Assigned</em></font>
-                                            @else
-                                                {{ $reader->floor->number }}
-                                            @endif
-                                        </td>
-                                        <td class="table-action row" style="margin:0px">
-                                            @can('reader-edit')
-                                                <a href="{{ route('gateways.edit',$reader->id) }}">
-                                                    @svg('edit-2', 'feather-edit-2 align-middle')  
-                                                </a>
-                                            @endcan
-                                            @can('reader-delete')
-                                                <a href="#">
-                                                    @svg("trash", "feather-trash align-middle")
-                                                </a>
-                                            @endcan 
-                                        </td>
+                                    <tr href="{{ route('gateways.edit',$reader->gateway_id) }}">
+                                        <td>{{ $reader->gateway_id }}</td>
+                                        <td>{{ $reader->serial }}</td>
+                                        <td>{{ $reader->mac_addr }}</td>
+                                        <td>{{ $reader->reader_ip }}</td>
+                                        <td>{{ $reader->location_id }}</td>
+                                        <td>{{ $reader->reader_status  }}</td>
+                                        <td>{{ $reader->up_status }}</td>
+                                        <td>{{ $reader->down_status }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -87,35 +51,21 @@
         </div>
     </div>
 </div>
-   <!-- Create Reader Modal -->
-   <div class="modal fade" id="createReaderModal" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            @include('readers.create')
-        </div>
-    </div>
-@endsection
+@endsection 
 
-@section('script')
-<script type="text/javascript">
-    $(function () {
-        /* Initiate tooltip */
-        $('[data-toggle="tooltip"]').tooltip()
-
-        /* Initiate popover */
-        $('[data-toggle="popover"]').popover()
-
-        /* Initiate dataTable */
-        $('#readerTable').DataTable({
-            dom: '<fl<t>ip>',
-            responsive: true,
-            stateSave: true,
-            'lengthMenu': [[10, 25, 50, -1], [10, 25, 50, "All"]],
-            orders: [],
-            "columnDefs": [ {
-                "targets"  : 'noSort',
-                "orderable": false,
-            }]
+@section("script")
+<script>
+    /* Initiate dataTable */
+    var dTable = $('#readerTable').DataTable({
+            order: [[1, 'asc']],
         })
+
+    $('#myCustomSearchBox').keyup(function(){  
+        dTable.search($(this).val()).draw();   // this  is for customized searchbox with datatable search feature.
     })
+
+    $('#readerTable tbody tr td:not(:first-child)').click(function () {
+        window.location.href = $(this).parent('tr').attr('href');
+    });
 </script>
 @endsection

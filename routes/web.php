@@ -2,6 +2,7 @@
 
 use App\Building;
 use App\Http\Controllers\AwsController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\BuildingController;
 use App\Http\Controllers\BuildingsManagmentController;
 use App\Http\Controllers\CompanyController;
@@ -56,12 +57,20 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('dashboard', DashboardController::class);
 
     Route::resource('roles', RoleController::class);
-    Route::resource('users', UserController::class);
+    Route::resource('users', UserController::class)
+        ->except(['show']);
+
     Route::resource('buildings', BuildingController::class);
     Route::resource('floors', FloorController::class);
     Route::get('floors/destroy/{id}', [FloorController::class, 'destroyHref'])->name('floor.destroy');
     Route::resource('beacons', TagController::class);
     Route::resource('gateways', ReaderController::class);
+
+    Route::resource('beacons', TagController::class)
+        ->parameters(['beacons' => 'tag'])
+        ->except(['show']);
+
+    Route::resource('gateways', ReaderController::class)->parameters(['gateways' => 'reader']);
 
     Route::resource('map', MapController::class);
     Route::resource('location', LocationController::class);
@@ -77,10 +86,20 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('user/get', [UserLastSeenController::class, 'get']);
     Route::get('user/group', [UserLastSeenController::class, 'group']);
     
-    Route::resource('residents', ResidentController::class);
-    Route::resource('policies', PolicyController::class);
-    Route::resource('alerts', AlertController::class);
+    Route::resource('residents', ResidentController::class)
+        ->only(['index', 'edit', 'update']);
+    
+    Route::resource('attendance', AttendanceController::class)
+        ->only(['index', 'show']);
+
+    Route::resource('policies', PolicyController::class)
+        ->except(['show']);
+
+    Route::resource('alerts', AlertController::class)
+        ->only(['index', 'edit', 'update']);
+
     Route::resource('tracking', TrackingController::class);
     Route::resource('reports', ReportController::class);
-    Route::resource('settings', SettingController::class);
+    Route::resource('settings', SettingController::class)
+        ->except(['show']);
 });
