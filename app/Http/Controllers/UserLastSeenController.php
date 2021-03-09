@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Tag;
 use App\UserLastSeen;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class UserLastSeenController extends Controller
 {
@@ -18,7 +19,7 @@ class UserLastSeenController extends Controller
         $userCount = array();
         $userRunningCount =  array();
         //The threshold at which multiple markers conver into one large clickable marker
-        $threshold = 4;
+        $threshold = 5;
         //Convert from object to array, (array) typecasting unsuitable, it returns associative array, 
         //need numerical array for array_merge
 
@@ -32,7 +33,7 @@ class UserLastSeenController extends Controller
             }else{
                 $userCount[$user->gateway->mac_addr] = 1;
                 $userRunningCount[$user->gateway->mac_addr] = 0;
-            }
+            };
         }
         foreach ($userCount as  $key => $value){
             if ($value >= $threshold){
@@ -145,6 +146,11 @@ class UserLastSeenController extends Controller
                 ->get()
         ));
         $beacons = array_merge((array) $beacons, (array) $beacons_r);
+
+        
+        foreach ($beacons as $user){
+            $user->updated_at = Carbon::parse($user->updated_at, )->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
+        }
         return $beacons;
     }
 

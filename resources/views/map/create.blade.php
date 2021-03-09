@@ -31,11 +31,14 @@
             </div>
             <div class="bs-stepper-content">
                 <div id="test-l-1" role="tabpanel" class="bs-stepper-pane active dstepper-block" aria-labelledby="steppertrigger1">
-                    <div class="form-group row">
+                    <p class="text-left" id="selectGatewayMessage">
+                        <span style="color: red; display:block; float:left"> *</span>
+                        <em>Please select a gateway to proceed.</em>
+                    </p>
+                    <div class="form-group row" id="selReaderHolder">
                         <label class="col-form-label col-sm-3 text-sm-right" for="selReader">Mac Address</label>
                         <select id='selReader' class="col-sm-8"  style='height: 200px; width: 295px;'></select>
                     </div>
-                    
                     <button style="float:right" class="btn btn-primary" id="nextBtn-1">Next</button>
                 </div>
                 <div id="test-l-2" role="tabpanel" class="bs-stepper-pane" aria-labelledby="steppertrigger2">

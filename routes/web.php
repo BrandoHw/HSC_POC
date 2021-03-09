@@ -63,8 +63,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('buildings', BuildingController::class);
     Route::resource('floors', FloorController::class);
     Route::get('floors/destroy/{id}', [FloorController::class, 'destroyHref'])->name('floor.destroy');
-    Route::resource('beacons', TagController::class);
-    Route::resource('gateways', ReaderController::class);
+    // Route::resource('beacons', TagController::class);
+    // Route::resource('gateways', ReaderController::class);
 
     Route::resource('beacons', TagController::class)
         ->parameters(['beacons' => 'tag'])
@@ -77,6 +77,7 @@ Route::group(['middleware' => ['auth']], function() {
     // Route::get('map/users/list', [MapController::class, 'listdata'])->name('map.listdata');
     Route::get('map/form/data', [MapController::class, 'formdata'])->name('map.formdata');
     Route::get('map/form/location', [MapController::class, 'locationdata'])->name('map.location');
+    Route::get('map/view/dashboard', [MapController::class, 'dashboard'])->name('map.dashboard');
     Route::resource('policy', PolicyController::class);
 
     Route::resource('zones', GatewayZoneController::class);

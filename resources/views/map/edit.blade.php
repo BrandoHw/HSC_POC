@@ -8,7 +8,9 @@
         <link href="{{ asset('css/map/map.css') }}" rel="stylesheet">
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         
-        <script src="{{ asset('js/app.js') }}"></script>
+        
+        <script src="{{ asset('js/jquery.js') }}"></script>
+        <script src="{{ asset('js/leaflet.js') }}"></script>
         <script src="{{ asset('js/views/map/functions.js')}}"></script>
         
         <script src="{{ asset('js/views/map/edit_functions.js')}}"></script>
@@ -17,14 +19,13 @@
       <title>A Leaflet map!</title>
 
     </head>
-
+    
   
     <div style='display: flex; height: 80vh;'>
-        <div style="width:25%; line-height:3em;overflow:scroll;padding:5px;background-color: #eee;display: inline-block;">
+        <div class ="scroller" style="width:25%; line-height:3em;overflow:scroll;padding:5px;background-color: rgb(255, 255, 255);display: inline-block;">
             <div id="reader-list-holder">
-                <input type="text" class="search" placeholder="Search" />
-            
-                <ul id="reader-list" class="list" style="display: inline-block">
+                <input type="text" class="search form-control round" placeholder="Search" />
+                <ul id="reader-list" class="list iq-chat-ui nav flex-column nav-pills" style="display: inline-block">
                     <li id = "first-item"><h3 class="serial">Serial</h3>
                         <h3 class="location">Location</h3>
                         <p class="mac">Mac</p>
@@ -122,8 +123,16 @@
                     },   
                     success: function(data){
                         console.log(data);
-                        
                         setupList(data['gatewayZones'], data['readers']);
+
+                        selectData = $.map(data['readers'], function (obj) {
+                            obj.text = obj.text || obj.serial.concat(" - ", obj.mac_addr); // replace name with the property used for the text
+                            obj.id = obj.gateway_id;
+                            return obj;
+                        });
+                        $("#selReader").select2({
+                            data:selectData.filter(gateway => gateway.alias == currentFloor || gateway.alias == null)
+                        });
                     },
                     headers: {
                         'X-CSRF-Token': '{{ csrf_token() }}',
@@ -190,12 +199,12 @@
 
         var map = L.map("map", {
             crs: L.CRS.Simple,
-            minZoom: -3,
+            minZoom: -2,
+            maxBoundsViscosity: 1.0,
         }); //CRS simple referring to normal coordinate value
 
        
         //Map
-    
         var drawControl;
         drawControlLayer = function(controlLayer){
             drawControl = new L.Control.Draw({
@@ -395,6 +404,9 @@
             selectedData = $('#selReader').select2('data')[0];
             //Redraw Location Table for current floor
             locationTable.draw();
+
+            console.log(bounds);
+            map.setMaxBounds(bounds[currentFloor]);
         
     
         });

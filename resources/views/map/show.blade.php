@@ -32,11 +32,11 @@
     
     <div style='display: flex; height: 72vh;'>
 
-        <div style="width:25%; line-height:3em;overflow:scroll;padding:5px;display: inline-block;">
+        <div class ="scroller" style="width:25%; line-height:3em;overflow:scroll;padding:5px;background-color: rgb(255, 255, 255);display: inline-block;">
             <div id="user-list-holder">
-                <input type="text" class="fuzzy-search" placeholder="Search" />
+                <input type="text" class="search form-control round" placeholder="Search" />
         
-            <ul id="user-list" class="list" style="display: inline-block">
+            <ul id="user-list" class="list iq-chat-ui nav flex-column nav-pills" style="display: inline-block">
                 <li id = "first-item"><h3 class="name">Name</h3>
                     <h5 class="location">Location</h5>
                     <p class="tag">Tag</p>
@@ -45,7 +45,7 @@
             <ul class="pagination"></ul>
             </div>
         </div>
-            <div id="map" style="width: 75%; display: inline-block"></div>
+        <div id="map" style="width: 75%; display: inline-block"></div>
     </div>
     </body>
 
@@ -61,6 +61,7 @@
                 height: 400,
                 width: 350,
                 modal: true,
+                dialogClass: 'dialogTitleClass',
                 close: function() {
                 }
             });
@@ -88,7 +89,7 @@
                     iconSize: [50,50],
                     className: 'blinking'
                 });
-                console.log(id);
+                // console.log(id);
                 $.ajax({
                     url: "{{ url('user/get') }}",
                     method: 'get',        
@@ -96,7 +97,7 @@
                         id: id 
                     },   
                     success: function(data){
-                        console.log(data);
+                        // console.log(data);
                         removeAll(drawnLayersArray, 'temp');
                         drawUserLocation(data, drawnLayers, gatewayZones, floorIndex, redIcon);
                     },
@@ -116,7 +117,7 @@
                         var users = data['beacons'];
                         var userCount = data['userCount'];
                         var userRunningCount = data['userRunningCount'];
-                        console.log(data['beacons'])
+                        // console.log(data['beacons'])
                         var options = {
                             valueNames: [
                             'name', 
@@ -176,11 +177,11 @@
                                 iconSize: [50,50],
                                 className: 'blinking'
                                 });
-                            console.log(userRunningCount[reader_mac]);
+                            // console.log(userRunningCount[reader_mac]);
                             addTooltip(users[i], drawnLayers, gatewayZones, userCount[reader_mac], userRunningCount[reader_mac], dialog);
                             userRunningCount[reader_mac] = userRunningCount[reader_mac] + 1;
                         }
-                        console.log(userRunningCount);                
+                        // console.log(userRunningCount);                
                     },
                     headers: {
                         'X-CSRF-Token': '{{ csrf_token() }}',
@@ -197,9 +198,10 @@
 
         var map = L.map("map", {
             crs: L.CRS.Simple,
-            minZoom: -4,
+            minZoom: -2,
+            maxBoundsViscosity: 1.0,
         }); //CRS simple referring to normal coordinate value
-       
+
         //Map
         var drawnLayers = new Object();
         var drawnLayersArray = []
@@ -255,6 +257,8 @@
             }
             map.addLayer(drawnLayers[e.name]);
             currentFloor = e.name;
+
+            map.setMaxBounds(bounds[currentFloor]);
          
         });
 
@@ -269,6 +273,7 @@
         
             <ul id="user-list-marker" class="list" style="display: inline-block">
                 <li id = "first-item-marker"><h3 class="name">Name</h3>
+                    <p class="last_seen">Last Seen</p>
                     <p class="tag">Tag</p>
                 </li>
             </ul> 

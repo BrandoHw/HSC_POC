@@ -87,13 +87,14 @@ function fillMarkerList(mac_addr, max_count, dialog){
     method: 'get',             
     data: { mac_addr: mac_addr},
     success: function(data){
-        console.log("success");
-        console.log(data);
+        // console.log("success");
+        // console.log(data);
         users = data;
         var options = {
           valueNames: [
           'name', 
           'tag',
+          'last_seen',
           { data: ['id'] }
           ],
           page: 10,
@@ -115,6 +116,7 @@ function fillMarkerList(mac_addr, max_count, dialog){
           }
           userListMarker.add({name: full_name, 
             tag: users[i].beacon_mac,
+            last_seen: users[i].updated_at,
             id: users[i].beacon_id});
         }
         $( "#dialog-form" ).dialog({ title: max_count.toString().concat(" Residents in ", users[0].gateway.location.location_description) });
@@ -132,54 +134,55 @@ function drawZones(gatewayZones, drawnLayers, btIcon){
   console.log(gatewayZones);
 
   for (i = 0; i < gatewayZones.length; i++) {
-      readerZone = gatewayZones[i];
-      var mac_addr_s = readerZone.mac_addr;
-      var location_s = readerZone.gateway.location.location_description;
+      gatewayZone = gatewayZones[i];
+      var mac_addr_s = gatewayZone.mac_addr;
+      var location_s = gatewayZone.gateway.location.location_description;
       var string = "<b>Mac</b>:".concat(mac_addr_s,"<br> <b>Location</b>: ",location_s);
-      var floor = readerZone.alias;
+      var floor = gatewayZone.alias;
 
       if (floor == null){
-          floor = "Floor ".concat( readerZone.number.toString());
+          floor = "Floor ".concat( gatewayZone.number.toString());
       };
     
-      if (readerZone.geoJson.type == "Polygon"){
-        // var corner1 = readerZone.geoJson.coordinates[0][0].reverse().map(Number);
-        // var corner2 = readerZone.geoJson.coordinates[0][2].reverse().map(Number);
+      if (gatewayZone.geoJson.type == "Polygon"){
+        // var corner1 = gatewayZone.geoJson.coordinates[0][0].reverse().map(Number);
+        // var corner2 = gatewayZone.geoJson.coordinates[0][2].reverse().map(Number);
 
         // //Array is passed by reference so undo the reversal
-        // readerZone.geoJson.coordinates[0][0].reverse();
-        // readerZone.geoJson.coordinates[0][2].reverse();
+        // gatewayZone.geoJson.coordinates[0][0].reverse();
+        // gatewayZone.geoJson.coordinates[0][2].reverse();
 
         // var rectangle = L.rectangle([corner1, corner2]);
-        // rectangle.id = readerZone.id;
+        // rectangle.id = gatewayZone.id;
         // rectangle.addTo(drawnLayers[floor]);
-        polygon = readerZone.geoJson.coordinates[0];
-        polygon.forEach( function (item, index){
+        polygon_coord = gatewayZone.geoJson.coordinates[0];
+        polygon_coord .forEach( function (item, index){
             item.reverse();
         })
-        console.log(polygon);
-        L.polygon(polygon).addTo(drawnLayers[floor]);
-        var marker = L.marker(readerZone.geoJson.marker, {icon: btIcon}).bindTooltip(
+        polygon_s = L.polygon(polygon_coord);
+        polygon_s.id = gatewayZone.id;
+        polygon_s.addTo(drawnLayers[floor]);
+        var marker = L.marker(gatewayZone.geoJson.marker, {icon: btIcon}).bindTooltip(
             string
         );
-        var marker = L.marker(readerZone.geoJson.marker, {icon: btIcon}).bindTooltip(
+        var marker = L.marker(gatewayZone.geoJson.marker, {icon: btIcon}).bindTooltip(
             string
         );
-        marker.id = readerZone.id;
+        marker.id = gatewayZone.id;
         marker.addTo(drawnLayers[floor]);
       }else{
-        var center = readerZone.geoJson.coordinates;
-        var radius = readerZone.geoJson.radius;
+        var center = gatewayZone.geoJson.coordinates;
+        var radius = gatewayZone.geoJson.radius;
         var circle = L.circle({lng: center[0],lat: center[1]}, {radius: radius});
-        circle.id = readerZone.id;
+        circle.id = gatewayZone.id;
         // circle.setStyle({
         //   color:'red'
         // })
         circle.addTo(drawnLayers[floor]);
-        var marker = L.marker(readerZone.geoJson.marker, {icon: btIcon}).bindTooltip(
+        var marker = L.marker(gatewayZone.geoJson.marker, {icon: btIcon}).bindTooltip(
             string
         );
-        marker.id = readerZone.id;
+        marker.id = gatewayZone.id;
         marker.addTo(drawnLayers[floor]);
       }
   }  
@@ -218,7 +221,7 @@ function drawUserLocation(data, drawnLayers, gatewayZones, floorIndex, redIcon){
                                         "<br> <b>Last Seen</b>: ", last_seen);
     var x= Number(result.geoJson.marker.lng);
     var y= Number(result.geoJson.marker.lat);
-    var marker = L.marker({lng: x,lat: (y-15)}, {icon: redIcon}).bindPopup(
+    var marker = L.marker({lng: x,lat: (y+25)}, {icon: redIcon}).bindPopup(
       string
     );
 

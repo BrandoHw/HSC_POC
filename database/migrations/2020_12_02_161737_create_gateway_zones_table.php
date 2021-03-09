@@ -23,28 +23,29 @@ class CreateGatewayZonesTable extends Migration
             $table->foreign('mac_addr')
                 ->references('mac_addr')
                 ->on('readers')
+                //->on('gateways_table)
                 ->onDelete('cascade');
 
             $table->string('image_id')->nullable();
         });
 
             DB::unprepared(' 
-            CREATE TRIGGER assign_reader
+            CREATE TRIGGER assign_gateway
                 AFTER INSERT
                 ON gateway_zones FOR EACH ROW
                 BEGIN
-                    UPDATE readers
+                    UPDATE gateways_table
                     SET assigned = true
                     WHERE mac_addr = NEW.mac_addr;
                END
           ');
   
           DB::unprepared(' 
-            CREATE TRIGGER unassign_reader
+            CREATE TRIGGER unassign_gateway
                 AFTER DELETE
                 ON gateway_zones FOR EACH ROW
                 BEGIN
-                    UPDATE readers
+                    UPDATE gateways_table
                     SET assigned = false
                     WHERE mac_addr = OLD.mac_addr;
                 END

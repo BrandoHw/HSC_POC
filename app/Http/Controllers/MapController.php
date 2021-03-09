@@ -33,14 +33,29 @@ class MapController extends Controller
     public function index()
     {
         //
-        
-        $readers = Reader::where('assigned', '!=' , 1)->get();
-        $gatewayZones = GatewayZone::all();
-
+        $id = 1;
+        $gatewayZones = GatewayZone::with(['gateway', 
+        'gateway.location', 
+        'gateway.location.floor_level' => function($q) use($id) {
+            // Query the name field in status table
+                $q->where('building_id', '=', $id);}])
+        ->get();
         foreach ($gatewayZones as $gatewayZone){
             $gatewayZone->geoJson = json_decode($gatewayZone->geoJson);
+            $gatewayZone->mac_addr = $gatewayZone->gateway->mac_addr;
+            $gatewayZone->floor = $gatewayZone->gateway->location->floor_level->id;
+            $gatewayZone->serial = $gatewayZone->gateway->serial;
+            $gatewayZone->assigned = $gatewayZone->gateway->assigned;
+            $gatewayZone->number = $gatewayZone->gateway->location->floor_level->number;
+            $gatewayZone->building_id= $gatewayZone->gateway->location->floor_level->building_id;
+            $gatewayZone->alias = $gatewayZone->gateway->location->floor_level->alias;
         }
-        return view('map.show', compact('readers', 'gatewayZones'));
+
+        $building = Building::where('id', $id)->get();
+     
+        $floors = Floor::where('building_id', $id)->with('map')->orderBy('number', 'asc')->get();
+        //TODO: check map url whether image exists then change to greyimage/noimage found
+        return view('map.show', compact('gatewayZones', 'building', 'floors'));
     }
 
     /**
@@ -207,6 +222,34 @@ class MapController extends Controller
         // $list_data;
         // return $list_data;
 
+    }
+    
+    public function dashboard()
+    {
+        //
+        $id = 1;
+        $gatewayZones = GatewayZone::with(['gateway', 
+        'gateway.location', 
+        'gateway.location.floor_level' => function($q) use($id) {
+            // Query the name field in status table
+                $q->where('building_id', '=', $id);}])
+        ->get();
+        foreach ($gatewayZones as $gatewayZone){
+            $gatewayZone->geoJson = json_decode($gatewayZone->geoJson);
+            $gatewayZone->mac_addr = $gatewayZone->gateway->mac_addr;
+            $gatewayZone->floor = $gatewayZone->gateway->location->floor_level->id;
+            $gatewayZone->serial = $gatewayZone->gateway->serial;
+            $gatewayZone->assigned = $gatewayZone->gateway->assigned;
+            $gatewayZone->number = $gatewayZone->gateway->location->floor_level->number;
+            $gatewayZone->building_id= $gatewayZone->gateway->location->floor_level->building_id;
+            $gatewayZone->alias = $gatewayZone->gateway->location->floor_level->alias;
+        }
+
+        $building = Building::where('id', $id)->get();
+     
+        $floors = Floor::where('building_id', $id)->with('map')->orderBy('number', 'asc')->get();
+        //TODO: check map url whether image exists then change to greyimage/noimage found
+        return view('map.dashboard', compact('gatewayZones', 'building', 'floors'));
     }
 
     function console_log( $data ){

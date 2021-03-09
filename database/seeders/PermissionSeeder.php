@@ -71,9 +71,31 @@ class PermissionSeeder extends Seeder
             'floor-list',
             'floor-view',
             'floor-edit',
-            'floor-delete'      
+            'floor-delete',
+            // Alert
+            'alert-list',
+            'alert-create',
+            'alert-edit',
+            'alert-delete',
+            // Tracking
+            'tracking-list',
+            'tracking-create',
+            'tracking-edit',
+            'tracking-delete',
+            // Report
+            'report-list',
+            'report-create',
+            'report-edit',
+            'report-delete',
+            // Setting
+            'setting-list',
+            'setting-create',
+            'setting-edit',
+            'setting-delete'    
+            
         ];
 
+       
         foreach ($permissions as $permission){
             Permission::firstOrCreate(['name' => $permission]);
         }

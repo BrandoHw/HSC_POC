@@ -61,7 +61,7 @@ class ResidentController extends Controller
     {
         $tagsNull = Tag::where('beacon_type', 2)
             ->doesntHave('resident')
-            ->pluck('beacon_mac', 'id');
+            ->pluck('beacon_mac', 'beacon_id');
         
         if(!empty($resident->tag)){
             $current = collect([$resident->tag->id => $resident->tag->beacon_mac]);
