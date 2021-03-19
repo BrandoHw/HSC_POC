@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class LocationType extends Model
 {
     use HasFactory;
-    protected $table = 'locations_type_table2';
+    protected $table = 'locations_type_table';
     public $timestamps = false;
     protected $fillable = [
         'type_id', 'location_type'

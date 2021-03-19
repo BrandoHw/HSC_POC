@@ -49,9 +49,9 @@
     @endif
     <!-- Title & Add-Button -->
     <div class="row mb-2 mb-xl-3">
-        <div class="col-auto d-none d-sm-block">
+        {{-- <div class="col-auto d-none d-sm-block">
             <h3><strong>Floors</strong> Management</h3>
-        </div>
+        </div> --}}
         <div class="col-auto ml-auto text-right mt-n1">
             @can('floor-create')
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createFloorModal">
@@ -69,8 +69,8 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover nowrap" id="floorTable">
+                    <div class="table-responsive" style="margin-top: 15px">
+                        <table class="table table-stripe table-bordered hover" id="floorTable">
                             <thead>
                                 <tr>
                                     <th scope="col" style="width:20%">Floor Number</th>
@@ -119,7 +119,7 @@
 
                                                         <!-- Title -->
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title">Create <strong>New</strong> Gateway</h5>
+                                                            <h5 class="modal-title">Edit Floor</h5>
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">×</span>
                                                             </button>

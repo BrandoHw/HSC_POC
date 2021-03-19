@@ -39,13 +39,12 @@ function createLocation(){
     console.log(data.location_type_id);
     console.log(data.floor);
     $.ajax({
-        url: '/location',
+        url: '/locations',
         type: "POST",
         data: data,
         success:function(response){
             if($.isEmptyObject(response['success'])){
                 var errors = response['errors'];
-
                 Object.keys(errors).forEach(function(key){
                     switch(key) {
                         case 'name':
@@ -75,34 +74,11 @@ function createLocation(){
                             //     .prepend('<div class="alert-danger" id="createBuildingOtherAlert">' + errors[key][0] + '</div>');
                     }
                  })
-                
             } else {
-                notyf.success(response['success']);
-                console.log("RESPONSE")
-                // var building = response['building'];
-                // var id = building['id'];
-
-                // companyBuildingTable.row.add([
-                //     id,
-                //     building['name'],
-                //     building['address'],
-                //     building['floor_num'],
-                //     '<a href="#" id="'+ id + '" onClick="deleteBuilding(this.id)">@svg("trash", "feather-trash align-middle")</a>'
-                // ]).node().id = 'trBuilding-' + id;
-                // companyBuildingTable.draw(false);
-
-                // $('#trBuilding-' + id +' td:eq(1)').attr('id', 'tdBuildingName-'+id);
-                // $('#trBuilding-' + id +' td:eq(2)').attr('id', 'tdBuildingAddress-'+id);
-                // $('#trBuilding-' + id +' td:eq(3)').attr('id', 'tdBuildingFloor-'+id); 
-                // $('#trBuilding-' + id +' td:eq(4)').attr('id', 'tdBuildingAction-'+id); 
-                // $('#trBuilding-' + id +' td:eq(4)').attr('class', 'table-action'); 
-                // $('#trBuilding-' + id +' td:eq(4)').css('margin', '0px'); 
-
+                notyf.success(response['success']);  
                 locationTable.ajax.reload();
                 $('#locationTableCollapsible').collapse('show');
                 $('#locationForm').collapse('hide');
-
-                // buildingsId.push(id);
             }
             
         },

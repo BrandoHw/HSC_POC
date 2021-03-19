@@ -14612,3 +14612,7 @@ body.tempusdominus-bootstrap-datetimepicker-widget-day-click {
   border-color: #5897fb;
 }
 
+div#notif-bell { height: 30px; width: 30px; }
+div#notif-bell svg path { stroke: var(--iq-primary); }
+
+

@@ -3,7 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Location;
+use App\Floor;
+use App\GatewayZone;
+use App\LocationType;
+use App\Reader;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class LocationController extends Controller
@@ -16,6 +22,10 @@ class LocationController extends Controller
     public function index()
     {
         //
+        $locations = Location::with(['type', 'floor_level'])->get()->sortBy('floor');
+        $floors = Floor::orderBy('number','asc')->get();
+        $types = LocationType::all();
+        return view('locations.index',compact('locations', 'floors', 'types'));
     }
 
     /**
@@ -37,23 +47,31 @@ class LocationController extends Controller
     public function store(Request $request)
     {
         //
-        // $validator = Validator::make($request->all(), [
-        //     'location_description' => 'required',
-        //     'location_Type' => 'required',
-        //     'floor' => 'required',
-        // ]);
+        $validator = Validator::make($request->all(), [
+            'location_description' => 'required',
+            'location_type_id' => 'required',
+            'floor' => 'required',
+        ]);
         
-        // if($validator->fails()){
-        //     return response()->json([
-        //         "errors" => $validator->errors()]);
-        // }
+        if($validator->fails()){
+            return response()->json([
+                "errors" => $validator->errors()]);
+        }
 
         $location = Location::create($request->all());
-
-        return response()->json([
-            'success'=>'Location added succesfully.',
-            "location" => "location"], 
-        200);
+        $location_w = Location::with(['type', 'floor_level'])->where('location_master_id', $location->location_master_id)->first();
+        if ($location->location_master_id){
+            return response()->json([
+                'success'=>'Location added succesfully.',
+                "location" => $location_w], 
+            200);
+        } 
+        else{
+            return response()->json([
+                'failure'=>'Failed to create location',
+                'location' => $location_w],
+            200);
+        }
     }
 
     /**
@@ -76,6 +94,10 @@ class LocationController extends Controller
     public function edit($id)
     {
         //
+        $location = Location::where('location_master_id', $id)->get()[0];
+        $floors = Floor::orderBy('number','asc')->get();
+        $types = LocationType::all();
+        return view('locations.edit',compact('location', 'floors', 'types'));
     }
 
     /**
@@ -88,17 +110,74 @@ class LocationController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $location = Location::where('location_master_id', $id)->first();
+        // request()->validate([
+        //     'location_description' => 'required|unique:location,location_description,'.$location->location_master_id,
+        //     'location_type' => 'required|unique:readers,location_type,'.$location->location_master_id,
+        //     'floor' => 'required|unique:readers,mac_addr,'.$location->location_master_id,
+        // ]);
+        
+        $location->update(['location_description' => $request->get('location_description'),
+                            'location_type' => $request->get('location_type'),
+                            'floor' => $request->get('floor')]);
+        return redirect()->route('locations.index')
+            ->with('success',$request->all());
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resources from storage.
      *
-     * @param  int  $id
+     *@param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
         //
+        $ids = $request['ids'];
+        $this->console_log($ids);
+
+        return response()->json([
+            'success'=>'Location added succesfully.',
+        ],
+        200);
+
+    }
+    /**
+     * Remove the specified resources from storage.
+     *
+     *@param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function delete(Request $request)
+    {
+        //
+        $ids = $request['ids'];
+        // $this->console_log($ids);
+
+        //Find Gateways where location = ids
+        $gateways = Reader::whereIn('location_id', $ids)->get();
+        $gatewayMacs = $gateways->pluck('mac_addr');
+        $gatewayZones = GatewayZone::whereIn('mac_addr', $gatewayMacs)->get();
+        foreach($gatewayZones as $gatewayZone){
+            $gatewayZone->delete();
+        }
+        foreach($gateways as $gateway){
+            $gateway->update(['location_id' => null]);
+        }
+        $deletedRows = Location::whereIn('location_master_id', $ids)->delete();
+
+        $locations = Location::with(['type', 'floor_level'])->get()->sortBy('floor');
+        //notyf method for ajax
+        return response()->json([
+            'success'=>'Location removed succesfully.',
+            'gateways' => $gateways,
+            'gatewayMac' => $gatewayMacs,
+            'gatewayZones' => $gatewayZones,
+            'ids' => $ids,
+            'deletedRows' => $deletedRows,
+            'locations' => $locations,
+        ],
+        200);
     }
 
     function console_log( $data ){

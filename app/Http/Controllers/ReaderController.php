@@ -32,10 +32,6 @@ class ReaderController extends Controller
         $readers = Reader::orderBy('gateway_id', 'asc')
                     ->get();
 
-        foreach ($readers as $reader){
-            $reader->id = $reader->gateway_id;
-        }
-
         return view('readers.index',compact('readers'));
     }
     
@@ -89,7 +85,7 @@ class ReaderController extends Controller
     */
     public function edit($id)
     {
-        $reader = Reader::where('id', $id)->get()[0];
+        $reader = Reader::where('gateway_id', $id)->get()[0];
         $this->console_log($reader);
         return view('readers.edit',compact('reader'));
     }

@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Location extends Model
 {
     use HasFactory;
-    protected $table ='locations_master_table2';
+    protected $table ='locations_master_table';
     protected $fillable = [
         'location_type_id', 'location_description', 'floor'
     ];
+    protected $primaryKey = 'location_master_id';
     public $timestamps = false;
     public function floor_level()
 	{

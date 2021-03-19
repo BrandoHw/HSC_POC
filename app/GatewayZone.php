@@ -13,7 +13,7 @@ class GatewayZone extends Model
     ];
 
     //
-    protected $table ='gateway_zones2';
+    protected $table ='gateway_zones';
 
     public function gateway(){
         return $this->belongsTo(Reader::class, 'mac_addr', 'mac_addr');

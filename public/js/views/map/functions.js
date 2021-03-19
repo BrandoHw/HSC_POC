@@ -238,7 +238,7 @@ function drawUserLocation(data, drawnLayers, gatewayZones, floorIndex, redIcon){
     container.append($('<span class="bold">').append(string))
 
     var link = $('<a href="#" class="speciallink">TestLink</a>').on('click', function() {
-      alert("test");
+      // alert("test");
     })[0];
     marker.bindPopup(container[0]);
     marker.id = "temp";

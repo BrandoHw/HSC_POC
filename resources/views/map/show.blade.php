@@ -19,7 +19,7 @@
     <body>
 
     <!-- Title & Add-Button -->
-    <div class="row mb-2 mb-xl-3">
+    {{-- <div class="row mb-2 mb-xl-3">
         <div class="col-auto d-none d-sm-block">
             <h3><strong>Maps</strong> Management</h3>
         </div>
@@ -28,9 +28,9 @@
             <a href="{{ url('map/1/edit') }}"class="btn btn-primary">Edit Map</a>
             @endcan
         </div>
-    </div>
+    </div> --}}
     
-    <div style='display: flex; height: 72vh;'>
+    <div style='display: flex; height: 76vh;'>
 
         <div class ="scroller" style="width:25%; line-height:3em;overflow:scroll;padding:5px;background-color: rgb(255, 255, 255);display: inline-block;">
             <div id="user-list-holder">
@@ -77,7 +77,7 @@
                 iconSize: [25,25]
             });
 
-            var set_delay = 15000;
+            var set_delay = 30000;
             var dataSet;
 
             var listSet = false;
@@ -117,7 +117,8 @@
                         var users = data['beacons'];
                         var userCount = data['userCount'];
                         var userRunningCount = data['userRunningCount'];
-                        // console.log(data['beacons'])
+                        console.log(data['beacons'])
+                        console.log("running");
                         var options = {
                             valueNames: [
                             'name', 

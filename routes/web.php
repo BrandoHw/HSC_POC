@@ -73,7 +73,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('gateways', ReaderController::class)->parameters(['gateways' => 'reader']);
 
     Route::resource('map', MapController::class);
-    Route::resource('location', LocationController::class);
+    Route::resource('locations', LocationController::class);
+    Route::post('location/delete', [LocationController::class, 'delete'])->name('locations.delete');
     // Route::get('map/users/list', [MapController::class, 'listdata'])->name('map.listdata');
     Route::get('map/form/data', [MapController::class, 'formdata'])->name('map.formdata');
     Route::get('map/form/location', [MapController::class, 'locationdata'])->name('map.location');
@@ -96,10 +97,11 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('policies', PolicyController::class)
         ->except(['show']);
 
-    Route::resource('alerts', AlertController::class)
-        ->only(['index', 'edit', 'update']);
+    Route::resource('alerts', AlertController::class);
 
-    Route::resource('tracking', TrackingController::class);
+    // Route::resource('tracking', TrackingController::class);
+    Route::resource('tracking', MapController::class);
+    
     Route::resource('reports', ReportController::class);
     Route::resource('settings', SettingController::class)
         ->except(['show']);

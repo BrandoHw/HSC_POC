@@ -25,7 +25,7 @@
                                     <th scope="col" style="width:25%">Type</th>
                                     <th scope="col" style="width:30%">Status</th>
                                 </tr>
-                            </thead>
+                        </thead>
                             <tbody>
                                 @foreach ($alerts as $alert)
                                     <tr href="{{ route('alerts.edit',$alert->rules_id) }}">

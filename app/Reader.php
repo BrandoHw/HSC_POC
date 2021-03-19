@@ -13,7 +13,7 @@ class Reader extends Model
      * @var string
      */
     // protected $table = 'gateways_table';
-    protected $table = 'gateways_table2';
+    protected $table = 'gateways_table';
     /**
      * The primary key associated with the table.
      *

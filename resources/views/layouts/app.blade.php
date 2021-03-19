@@ -33,6 +33,7 @@
 
         <!-- Developer Defined Style -->
         <link href="{{ asset('css/custom/datatable.css') }}" rel="stylesheet">
+
         @yield('style')
         
     </head>
@@ -103,6 +104,8 @@
         <!-- Custom JavaScript -->
         <script src="{{ asset('template/js/custom.js') }}"></script>
 
+        <!-- Header Js -->
+        <script src="{{ asset('js/views/header/header.js')}}"></script>
         <script>
             // Notyf Intial Setting
             var notyf = new Notyf({

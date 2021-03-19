@@ -87,17 +87,6 @@ class MapController extends Controller
      */
     public function show($id)
     {
-        // $gatewayZones = GatewayZone::join('gateways_table2', 'gateway_zones2.mac_addr', '=', 'gateways_table2.mac_addr')
-        // ->join('locations_master_table2', 'gateways_table2.location_id', '=', 'locations_master_table2.location_master_id')
-        // ->join('floors', 'locations_master_table2.floor', '=', 'floors.id')
-        // ->where('floors.building_id', $id)
-        // ->select('gateway_zones2.*', 'gateways_table2.mac_addr', 'locations_master_table2.floor',
-        //          'gateways_table2.serial', 'gateways_table2.assigned', 'floors.number', 'floors.building_id', 'floors.alias')
-        // ->get();
-        // foreach ($gatewayZones as $gatewayZone){
-        //     $gatewayZone->geoJson = json_decode($gatewayZone->geoJson);
-        // }
-
         $gatewayZones = GatewayZone::with(['gateway', 
         'gateway.location', 
         'gateway.location.floor_level' => function($q) use($id) {
@@ -130,25 +119,6 @@ class MapController extends Controller
      */
     public function edit($id)
     {
-        //
-        // $readers = Reader::where('assigned', '!=', 1)
-        // ->leftJoin('locations_master_table2', 'gateways_table2.location_id', '=', 'locations_master_table2.location_master_id')
-        // ->leftJoin('floors', 'locations_master_table2.floor', '=', 'floors.id')
-        // ->select('gateways_table2.*', 'locations_master_table2.*',
-        //         'floors.number', 'floors.building_id', 'floors.alias')
-        // ->get();
-
-        
-        // $gatewayZones = GatewayZone::join('gateways_table2', 'gateway_zones2.mac_addr', '=', 'gateways_table2.mac_addr')
-        // ->join('locations_master_table2', 'gateways_table2.location_id', '=', 'locations_master_table2.location_master_id')
-        // ->join('floors', 'locations_master_table2.floor', '=', 'floors.id')
-        // ->where('floors.building_id', $id)
-        // ->select('gateway_zones2.*', 'gateways_table2.mac_addr', 'locations_master_table2.floor',
-        //          'gateways_table2.serial', 'gateways_table2.assigned', 'floors.number', 'floors.building_id', 'floors.alias')
-        // ->get();
-        // foreach ($gatewayZones as $gatewayZone){
-        //     $gatewayZone->geoJson = json_decode($gatewayZone->geoJson);
-        // }
         $readers = Reader::where('assigned', '!=', 1)
         ->with('location', 'location.floor_level:id,number,building_id,alias')
         ->get();

@@ -259,12 +259,13 @@ Index Of Script
                     jQuery('.navbar-list li').removeClass('iq-show');
                     jQuery('.navbar-list li .search-toggle').removeClass('active');
                 }
-
                 selector.toggleClass('iq-show');
                 mainElement.toggleClass('active');
 
                 e.preventDefault();
-            } else if (jQuery(myTargetElement).is('.search-input')) {} else {
+            } else if (jQuery(myTargetElement).is('.search-input')) {
+            } else if (myTargetElement.tagName === 'path'){
+            }else {
                 jQuery('.navbar-list li').removeClass('iq-show');
                 jQuery('.navbar-list li .search-toggle').removeClass('active');
             }

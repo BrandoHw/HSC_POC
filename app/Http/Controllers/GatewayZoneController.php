@@ -45,29 +45,10 @@ class GatewayZoneController extends Controller
 
         $gatewayZone = GatewayZone::create($input);
         $id = $gatewayZone->id;
-  
-        // $gatewayZoneEager = GatewayZone::join('readers', 'gateway_zones.mac_addr', '=', 'readers.mac_addr')
-        // ->join('floors', 'readers.floor_id', '=', 'floors.id')
-        // ->where('gateway_zones.id', $id)
-        // ->select('gateway_zones.*', 'readers.mac_addr', 'readers.floor_id',
-        //          'readers.serial', 'readers.assigned', 'floors.number', 'floors.building_id', 'floors.alias')
-        // ->first();
-
-
         //
         $gateway = Reader::where('mac_addr', $input['mac_addr'])
                          ->update(['location_id' => $input['location']]);
 
-
-        // $gatewayZoneEager = GatewayZone::join('gateways_table2', 'gateway_zones2.mac_addr', '=', 'gateways_table2.mac_addr')
-        // ->join('locations_master_table2', 'gateways_table2.location_id', '=', 'locations_master_table2.location_master_id')
-        // ->join('floors', 'locations_master_table2.floor', '=', 'floors.id')
-        // ->where('gateway_zones2.id', $id)
-        // ->select('gateway_zones2.*', 'gateways_table2.mac_addr', 'locations_master_table2.floor',
-        // 'gateways_table2.serial', 'gateways_table2.assigned', 'floors.number', 'floors.building_id', 'floors.alias')
-        // ->first();
-
-        
         $gatewayZoneEager = GatewayZone::with('gateway', 'gateway.location', 'gateway.location.floor_level')
         ->where('id', '=', $id)
         ->first();

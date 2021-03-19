@@ -59,47 +59,68 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
             </div>
             <ul class="navbar-list">
-                <li>
-                <a href="#" class="search-toggle iq-waves-effect d-flex align-items-center bg-primary rounded">
-                    <img src="{{ asset('template/images/user/1.jpg') }}" class="img-fluid rounded mr-3" alt="user">
-                    <div class="caption">
-                        <h6 class="mb-0 line-height text-white">Nik jone</h6>
+                <li id ="notif-li" class="nav-item">
+                    <a href="#" id = "notif-a" class="search-toggle iq-waves-effect">
+                       <div id="notif-bell"></div>
+                       <span id ="notif-danger-dots"class="bg-danger dots"></span>
+                    </a>
+                    <div class="iq-sub-dropdown">
+                       <div class="iq-card shadow-none m-0">
+                          <div id ="notification-card" class="iq-card-body p-0 ">
+                             <div class="bg-primary p-3">
+                                <h5 class="mb-0 text-white">All Notifications<small id = "notif-count" class="badge  badge-light float-right pt-1"></small></h5>
+                             </div>
+                          </div>
+                       </div>
                     </div>
-                </a>
-                <div class="iq-sub-dropdown iq-user-dropdown">
-                    <div class="iq-card shadow-none m-0">
-                        <div class="iq-card-body p-0 ">
-                            <div class="bg-primary p-3">
-                            <h5 class="mb-0 text-white line-height">Hello Nik jone</h5>
-                            </div>
-                            <a href="profile.html" class="iq-sub-card iq-bg-primary-hover">
-                            <div class="media align-items-center">
-                                <div class="rounded iq-card-icon iq-bg-primary">
-                                    <i class="ri-file-user-line"></i>
+                 </li>
+            
+                <li>
+                    <a href="#" class="search-toggle iq-waves-effect d-flex align-items-center bg-primary rounded">
+                        <img src="{{ asset('template/images/user/1.jpg') }}" class="img-fluid rounded mr-3" alt="user">
+                        <div class="caption">
+                            <h6 class="mb-0 line-height text-white">Nik jone</h6>
+                        </div>
+                    </a>
+                    <div class="iq-sub-dropdown iq-user-dropdown">
+                        <div class="iq-card shadow-none m-0">
+                            <div class="iq-card-body p-0 ">
+                                <div class="bg-primary p-3">
+                                <h5 class="mb-0 text-white line-height">Hello Nik jone</h5>
                                 </div>
-                                <div class="media-body ml-3">
-                                    <h6 class="mb-0 ">My Profile</h6>
-                                    <p class="mb-0 font-size-12">View personal profile details.</p>
+                                <a href="profile.html" class="iq-sub-card iq-bg-primary-hover">
+                                <div class="media align-items-center">
+                                    <div class="rounded iq-card-icon iq-bg-primary">
+                                        <i class="ri-file-user-line"></i>
+                                    </div>
+                                    <div class="media-body ml-3">
+                                        <h6 class="mb-0 ">My Profile</h6>
+                                        <p class="mb-0 font-size-12">View personal profile details.</p>
+                                    </div>
                                 </div>
-                            </div>
-                            </a>
-                            <div class="d-inline-block w-100 text-center p-3">
-                            <a class="bg-primary iq-sign-btn" href="{{ route('logout') }}" 
-                                onclick="event.preventDefault();
-                                    document.getElementById('logout-form').submit();">
-                                    Sign out
-                                    <i class="ri-login-box-line ml-2"></i>
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
+                                </a>
+                                <div class="d-inline-block w-100 text-center p-3">
+                                <a class="bg-primary iq-sign-btn" href="{{ route('logout') }}" 
+                                    onclick="event.preventDefault();
+                                        document.getElementById('logout-form').submit();">
+                                        Sign out
+                                        <i class="ri-login-box-line ml-2"></i>
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 </li>
             </ul>
         </nav>
     </div>
     </div>
     <!-- TOP Nav Bar END -->
+
+    <script>
+        // "global" vars, built using blade
+        var imagesUrl = "{{ asset("template/images/user/") }}" + "/02.jpg";
+    </script>
