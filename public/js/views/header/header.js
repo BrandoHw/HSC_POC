@@ -881,46 +881,44 @@ $(function() {
                 var rule = "Rule Triggered";
                 var location = data[i].reader.location.location_description;
 
+                function getRandomInt(min, max) {
+                    min = Math.ceil(min);
+                    max = Math.floor(max);
+                    return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+                  }
+                var imageNum = "/0".concat(getRandomInt(1, 9), ".jpg");
 
+                if (data.length > 5){
+                    $("#notif-danger-dots").show();
+                    anim.play();
+                }else if(data.length > ){
+
+                }else{
+                    $("#notif-danger-dots").hide();
+                    anim.stop();
+                }
                 var container2 = $('<a/>', {'class': 'iq-sub-card', 'id': 'notif-'.concat(i)}).append(
                         $('<div/>', {'class': 'media align-items-center'}).append(
                             $('<div/>', {class: ''}).append(
-                                $('<img/>', {class: 'avatar-40 rounded', src: imagesUrl, alt: ''})
+                                $('<img/>', {class: 'avatar-40 rounded', src: imagesUrl + imageNum, alt: ''})
                             )
-                        )
+                        ).append(
+                            $('<div/>', {'class': 'media-body ml-3'}).append(
+                                $('<h6/>', {class: 'mb-0', text: full_name})
+                            ).append(
+                                $('<small/>', {class: 'float-right font-size-12', text: date})
+                            ).append(
+                                $('<p/>', {class:'mb-0', text: rule})
+                            )
                     )
-                    .append(
-                        $('<div/>', {'class': 'media-body ml-3'}).append(
-                            $('<h6/>', {class: 'mb-0', text: 'Other text'})
-                        ).append(
-                            $('<small/>', {class: 'float-right font-size-12', text: 'Other text'})
-                        ).append(
-                            $('<p/>', {class:'mb-0', text: 'Other text'})
-                        )
+                  
                     )
                     container2.on('click', function(event) {
                         var contentPanelId = $(this).attr("id");
                         alert(contentPanelId);
                 });
                 $("#notification-card").append(container2);
-                $("#notif-danger-dots").hide();
-                console.log(imagesUrl);
-                var container = $(`<a id="notif-10" href="#" class="iq-sub-card" >  
-                                    <div class="media align-items-center">
-                                        <div class="">
-                                            <img class="avatar-40 rounded" src=` + imagesUrl + `alt="">
-                                        </div> 
-                                        <div class="media-body ml-3">
-                                            <h6 class="mb-0 ">Two customer have left</h6>
-                                            <small class="float-right font-size-12">2 days ago</small>
-                                            <p class="mb-0">Jond Nik</p>
-                                        </div>
-                                    </div>
-                                </a>`);
-                container.on('click', function() {
-                    alert("test");
-                });
-                $("#notification-card").append(container);
+
     
             }
         },

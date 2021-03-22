@@ -122,5 +122,5 @@
 
     <script>
         // "global" vars, built using blade
-        var imagesUrl = "{{ asset("template/images/user/") }}" + "/02.jpg";
+        var imagesUrl = "{{ asset("template/images/user/") }}";
     </script>
