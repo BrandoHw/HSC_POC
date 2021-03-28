@@ -19,7 +19,7 @@
                             @error('beacon_mac')
                                 <div class="alert-danger">{{ $message }}</div>
                             @enderror
-                        </div>
+                        </div> 
                         <div class="form-group">
                             <label for="createTagType">Type:</label>
                             {!! Form::select('beacon_type', $tagTypes, null, ['placeholder' => 'Please select...', 'class' => 'form-control form-control', 'id' => 'createTagType']) !!}
