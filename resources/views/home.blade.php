@@ -343,13 +343,8 @@
             </div>
             <div class="col-lg-12">
                <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
-                  <div class="iq-card-header d-flex justify-content-between border-none">
-                     <div class="iq-header-title">
-                        <h5 class="card-title">Current Location</h5>
-                     </div>
-                  </div>
                   <div class="iq-card-body">
-                     <div id="world-map" style="height: 200px; position: relative;"></div>
+                     @include ("map.dashboard")
                   </div>
                </div>
             </div>
@@ -357,6 +352,11 @@
       </div>
    </div>
 </div>
+
+{{-- <div class="col-md-8 col-xl-9">    
+@include ("map.dashboard")
+</div> --}}
+
 @endsection
 
 @section('script')

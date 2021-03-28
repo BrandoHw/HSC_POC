@@ -32,6 +32,11 @@ class TagController extends Controller
     public function index()
     {
         $tags = Tag::latest()->get();
+
+        foreach ($tags as $tag){
+            $tag->id = $tag->beacon_id;
+        }
+
         return view('tags.index',compact('tags'));
     }
     
@@ -189,5 +194,10 @@ class TagController extends Controller
         $tag->delete();
         return redirect()->route('tags.index')
           ->with('success','Tag deleted successfully');
+    }
+
+    public function userLastSeen(){
+        // $userLastSeen = UserLastSeen::with('user')->get();
+        // return $userLastSeen;
     }
 }

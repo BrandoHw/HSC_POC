@@ -12,7 +12,7 @@
     </div>
 
     <!-- Form -->
-    {!! Form::model($reader, ['method' => 'PATCH','route' => ['gateways.update', $reader->id]]) !!}
+    {!! Form::model($reader, ['method' => 'PATCH','route' => ['gateways.update', $reader->gateway_id]]) !!}
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <!-- Basic Information -->

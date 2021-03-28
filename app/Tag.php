@@ -21,13 +21,22 @@ class Tag extends Model
      */
     protected $primaryKey = 'beacon_id';
 
+   /**
+     * The storage format of the model's date columns.
+     *
+     * @var string
+     */
+    protected $dateFormat = 'Y-m-d H:i:s';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['beacon_mac'];
-
+    protected $fillable = [
+        'beacon_type', 'beacon_mac', 'reader_mac', 'current_loc'
+    ];
+ 
     /**
      * Get the tagType that owns the tag
      */
@@ -47,9 +56,19 @@ class Tag extends Model
     /**
      * Get the resident record associated with the tag
      */
+
+    public function staff()
+    {
+        return $this->hasOne(UserInfo::class, 'beacon_id', 'beacon_id');
+    }
+
     public function resident()
     {
         return $this->hasOne(Resident::class, 'beacon_id', 'beacon_id');
+    }
+
+    public function gateway(){
+        return $this->hasOne(Reader::class, 'gateway_id', 'current_loc');
     }
 
 }

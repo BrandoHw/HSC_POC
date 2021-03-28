@@ -28,6 +28,23 @@ class CreateReadersTable extends Migration
                 ->onDelete('cascade');
         });
 
+        // Schema::dropIfExists('gateways_table');
+        // Schema::create('gateways_table', function (Blueprint $table) {
+        //     $table->bigIncrements('gateway_id');
+        //     $table->string('serial')->unique()->default(null);
+        //     $table->macAddress('mac_addr')->unique()->default(null);
+        //     $table->ipAddress('reader_ip')->default(null);
+        //     $table->bigInteger('location_id')->unsigned()->default(null);
+        //     $table->tinyInteger(4, false, false)->default(null);
+        //     $table->boolean('assigned')->default(false);
+
+        //     $table->timestamps();
+
+        //     $table->foreign('location_id')
+        //         ->references('location_master_id')
+        //         ->on('locations_master_table')
+        //         ->onDelete('cascade');
+        // });
     }
 
     /**

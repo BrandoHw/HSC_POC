@@ -48,6 +48,39 @@ class AlertController extends Controller
     public function show($id)
     {
         //
+         //Get all Tag where gateway's mac is equal to the request mac_addr and which have an associated resident/staff
+         if ($id === 'unresolved'){
+            $alert_s = 
+                Alert::whereHas('tag', function($q){
+                    $q->whereHas('staff');})
+                    ->with(['tag', 'tag.staff', 'reader', 'reader.location',  'policy'])
+                    ->where('action', '==', 0)
+                    ->get()
+            ;
+
+            foreach($alert_s as $alert){
+                $alert->full_name = $alert->tag->staff->fName." ".$alert->tag->staff->lName;
+            }
+
+            $alert_r =
+                Alert::whereHas('tag', function($q){
+                    $q->whereHas('resident');})
+                    ->with(['tag', 'tag.resident', 'reader', 'reader.location',  'policy'])
+                    ->get()
+            ;
+
+            foreach($alert_r as $alert){
+                $alert->full_name = $alert->tag->resident->resident_fName." ".$alert->tag->resident->resident_lName;
+            }
+
+            $alert_s = json_decode(json_encode($alert_s));
+            $alert_r = json_decode(json_encode($alert_r));
+            $alerts = array_merge((array) $alert_s, (array) $alert_r);
+        }else{
+            $alerts = Alert::where('alert_id', '==', $id)->get();
+        }
+
+        return $alerts;//[$alerts, $alert_c];
     }
 
     /**
@@ -59,6 +92,7 @@ class AlertController extends Controller
     public function edit($id)
     {
         //
+
     }
 
     /**

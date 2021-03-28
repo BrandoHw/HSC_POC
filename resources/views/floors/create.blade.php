@@ -2,7 +2,7 @@
 
     <!-- Title -->
     <div class="modal-header">
-        <h5 class="modal-title">Create <strong>New</strong> Gateway</h5>
+        <h5 class="modal-title">Add <strong>New</strong> Floor</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
         </button>
@@ -19,8 +19,8 @@
                 <div class="col-sm-7">
                     <div class="form-group{{ $errors->has('number') ? ' has-danger' : '' }}">
                         <input class="form-control{{ $errors->has('number') ? ' is-invalid' : '' }}"
-                        name="number" id="alias" type="number" placeholder="{{ __('Floor Number') }}"
-                        value="" required="true" aria-required="true" min="0"
+                        name="number" id="number" type="number" placeholder="{{ __('Floor Number') }}"
+                        value="" required="true" aria-required="true" min="0" 
                         />
                     </div>
                 </div>
@@ -30,18 +30,18 @@
                     <div class="form-group{{ $errors->has('alias') ? ' has-danger' : '' }}">
                         <input class="form-control{{ $errors->has('alias') ? ' is-invalid' : '' }}"
                         name="alias" id="alias" type="text" placeholder="{{ __('Alias') }}"
-                        value="" required="true" aria-required="true"
+                        value="" required="true" aria-required="true" style="color: black"
                         />
                     </div>
                 </div>
-                <label for="image" class="col-sm-6 col-form-label">Floor Plan Image</label>
+                <label for="image-input" class="col-sm-6 col-form-label">Floor Plan Image</label>
                 <div class="col-sm-7">
                     <input id="image-input" type="file" class="form-control" name="image-input">
                     <img src="#" alt = "" id="img-preview" width="200px" />   <!--for preview purpose -->
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="building">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <button type="submit" id="submit" class="btn btn-primary">Add Floor</button>
                 </div>
 

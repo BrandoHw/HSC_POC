@@ -1,4 +1,4 @@
-function setupList(data, data_unassigned, drawnLayers, gatewayZones, floorIndex, icon){
+function setupList(data, data_unassigned){
     var options = {
         valueNames: [
         'serial',
@@ -14,23 +14,14 @@ function setupList(data, data_unassigned, drawnLayers, gatewayZones, floorIndex,
     //readerList.remove("name", "Name"); 
     readerList.clear();
     for (var i = 0; i < data.length; ++i) {
-        readerList.add({serial: data[i].serial, location: data[i].location, mac: data[i].mac_addr, id: data[i].id, assigned: data[i].assigned});
+        readerList.add({serial: data[i].gateway.serial, location: data[i].gateway.location.location_description.concat(" - ", data[i].gateway.location.floor_level.alias),
+           mac: data[i].gateway.mac_addr, id: data[i].id, assigned: data[i].gateway.assigned});
     }
 
     for (var i = 0; i < data_unassigned.length; ++i) {
         readerList.add({serial: data_unassigned[i].serial, location: "Unassigned", 
                         mac: data_unassigned[i].mac_addr, id: data_unassigned[i].id, assigned: data_unassigned[i].assigned});
     }
-
-    $('#reader-list').on('click', 'li', function() {
-        //getUserLocation(this.getAttribute("data-id"));    
-        if(this.getAttribute("data-assigned") == 1){
-            drawGatewayLocation(this.getAttribute("data-id"),  drawnLayers, gatewayZones, floorIndex, icon)
-        //Find zone and create popup
-        }else{
-            alert("Not assigned to a location");
-        }
-    })
     
 }
 
@@ -51,7 +42,7 @@ function drawGatewayLocation(id, drawnLayers, gatewayZones, floorIndex, icon){
 
         //Programmatically go to required floor
         $('.leaflet-control-layers input').get(floorIndex[floor]).click();
-        var string = "<b>Location</b>: ".concat(result.location,"<br> <b>Mac</b>: ",result.mac_addr);
+        var string = "<b>Location</b>: ".concat(result.gateway.location.location_description,"<br> <b>Mac</b>: ",result.mac_addr);
         var marker = L.marker(result.geoJson.marker, {icon: icon}).bindPopup(
         string
         );
@@ -61,14 +52,17 @@ function drawGatewayLocation(id, drawnLayers, gatewayZones, floorIndex, icon){
     }else{
       alert("No Location Data or Valid Zone for this User");
     }
-  }
+}
 
-  function removeAllReaders(drawnLayers, id){
-    for (var key in drawnLayers){
-      drawnLayers[key].eachLayer(function (layer) {
-        if (layer.id === id){
-          drawnLayers[key].removeLayer(layer);
-        } 
-      });
-    }
+function removeAllReaders(drawnLayers, id){
+  for (var key in drawnLayers){
+    drawnLayers[key].eachLayer(function (layer) {
+      if (layer.id === id){
+        drawnLayers[key].removeLayer(layer);
+      } 
+    });
   }
+}
+
+    
+

@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Resident extends Model
 {
+    use HasFactory;
+   
+  
     /**
      * The table associated with the model.
      *
@@ -34,11 +37,11 @@ class Resident extends Model
      * @var array
      */
     protected $fillable = [
-        'resident_fName', 'resident_lName', 'residnet_age',
+        'beacon_id', 
+        'resident_fName', 'resident_lName', 'resident_age', 
         'wheelchair', 'walking_cane',
         'x_value', 'y_value', 'z_value'
     ];
-
     /**
      * Get the tag that owns the resident
      */
@@ -47,6 +50,10 @@ class Resident extends Model
         return $this->belongsTo(Tag::class, 'beacon_id', 'beacon_id');
     }
 
+    public function beacon()
+    {
+        return $this->belongsTo(Tag::class, 'beacon_id', 'beacon_id');
+    }
     /**
      * Get the resident's full name.
      *

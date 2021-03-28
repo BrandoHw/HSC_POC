@@ -12,7 +12,7 @@
                             <a class="search-link" href="#"><i class="ri-search-line"></i></a>
                         </form>
                         <div class="col-4 row justify-content-end">
-                            <a class="btn btn-danger" href="#">Archieve</a>
+                            <a class="btn btn-danger" href="#">Archive</a>
                         </div>
                     </div>
                     <div class="table-responsive" style="margin-top: 15px">

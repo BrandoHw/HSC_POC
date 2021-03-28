@@ -42,7 +42,7 @@ class Alert extends Model
      */
     public function reader()
     {
-        return $this->belongsTo(Reader::class, 'reader_id', 'gateways_id');
+        return $this->belongsTo(Reader::class, 'reader_id', 'gateway_id');
     }
 
     /**
@@ -58,7 +58,7 @@ class Alert extends Model
      */
     public function tag()
     {
-        return $this->belongsTo(Tag::class, 'beacon_id', 'id');
+        return $this->belongsTo(Tag::class, 'beacon_id', 'beacon_id');
     }
 
     /**

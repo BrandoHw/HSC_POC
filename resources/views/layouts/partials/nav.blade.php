@@ -1,7 +1,7 @@
 <!-- Sidebar -->
 <div class="iq-sidebar">
     <div class="iq-sidebar-logo d-flex justify-content-between">
-        <a href="../index.html">
+        <a href="../">
             <img src="{{ asset('img/icons/wecare.png') }}" alt="logo">
             <span>WECare</span>
         </a>
@@ -46,7 +46,7 @@
                     </ul>
                 </li>
                 @endif
-                <li class="{{ Request::segment(1) === 'map' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('map.index') }}" class="iq-waves-effect"><i class="ri-map-2-fill"></i><span>Locations</span></a></li>
+                <li class="{{ Request::segment(1) === 'locations' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('locations.index') }}" class="iq-waves-effect"><i class="ri-map-2-fill"></i><span>Locations</span></a></li>
                 <li class="{{ Request::segment(1) === 'gateways' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('gateways.index') }}" class="iq-waves-effect"><i class="ri-base-station-fill"></i><span>Gateways</span></a></li>
                 <li class="{{ Request::segment(1) === 'beacons' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('beacons.index') }}" class="iq-waves-effect"><i class="ri-share-fill"></i><span>Beacons</span></a></li>
                 <li class="{{ Request::segment(1) === 'policies' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('policies.index') }}" class="iq-waves-effect"><i class="ri-message-fill"></i><span>Policies</span></a></li>

@@ -81,29 +81,39 @@
                                 <div class="rounded iq-card-icon iq-bg-primary">
                                     <i class="ri-file-user-line"></i>
                                 </div>
-                                <div class="media-body ml-3">
-                                    <h6 class="mb-0 ">My Profile</h6>
-                                    <p class="mb-0 font-size-12">View personal profile details.</p>
+                                <a href="profile.html" class="iq-sub-card iq-bg-primary-hover">
+                                <div class="media align-items-center">
+                                    <div class="rounded iq-card-icon iq-bg-primary">
+                                        <i class="ri-file-user-line"></i>
+                                    </div>
+                                    <div class="media-body ml-3">
+                                        <h6 class="mb-0 ">My Profile</h6>
+                                        <p class="mb-0 font-size-12">View personal profile details.</p>
+                                    </div>
                                 </div>
-                            </div>
-                            </a>
-                            <div class="d-inline-block w-100 text-center p-3">
-                            <a class="bg-primary iq-sign-btn" href="{{ route('logout') }}" 
-                                onclick="event.preventDefault();
-                                    document.getElementById('logout-form').submit();">
-                                    Sign out
-                                    <i class="ri-login-box-line ml-2"></i>
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
+                                </a>
+                                <div class="d-inline-block w-100 text-center p-3">
+                                <a class="bg-primary iq-sign-btn" href="{{ route('logout') }}" 
+                                    onclick="event.preventDefault();
+                                        document.getElementById('logout-form').submit();">
+                                        Sign out
+                                        <i class="ri-login-box-line ml-2"></i>
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 </li>
             </ul>
         </nav>
     </div>
     </div>
     <!-- TOP Nav Bar END -->
+
+    <script>
+        // "global" vars, built using blade
+        var imagesUrl = "{{ asset("template/images/user/") }}";
+    </script>
