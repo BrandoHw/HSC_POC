@@ -45,5 +45,4 @@ class Reader extends Model
     {
         return $this->belongsTo(Location::class, 'location_id', 'location_master_id');
     }
-
 }

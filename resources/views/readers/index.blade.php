@@ -23,24 +23,18 @@
                                     <th scope="col" style="width:5%">#</th>
                                     <th scope="col">Serial Number</th>
                                     <th scope="col">Mac Address</th>
-                                    <!-- <th scope="col">IP Address</th> -->
                                     <th scope="col">Location</th>
                                     <th scope="col">Status</th>
-                                    <!-- <th scope="col">Last Active</th> -->
-                                    <!-- <th scope="col">Last Inactive</th> -->
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($readers as $reader)
                                     <tr href="{{ route('gateways.edit',$reader->gateway_id) }}">
                                         <td>{{ $reader->gateway_id }}</td>
-                                        <td>{{ $reader->serial }}</td>
+                                        <td>{{ isset($reader->serial) ? $reader->serial : "N/A" }} </td>
                                         <td>{{ $reader->mac_addr }}</td>
-                                        <!-- <td>{{ $reader->reader_ip }}</td> -->
-                                        <td>{{ $reader->location_id }}</td>
-                                        <td>{{ $reader->reader_status  }}</td>
-                                        <!-- <td>{{ $reader->up_status }}</td> -->
-                                        <!-- <td>{{ $reader->down_status }}</td> -->
+                                        <td>{{ isset($reader->location) ? $reader->location->location_description : "N/A"  }}</td>
+                                        <td>{{ isset($reader->reader_status) ? $reader->reader_status : "N/A"  }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
