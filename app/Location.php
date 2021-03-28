@@ -16,7 +16,7 @@ class Location extends Model
     public $timestamps = false;
     public function floor_level()
 	{
-		return $this->belongsTo(Floor::class, 'floor', 'id');
+		return $this->belongsTo(Floor::class, 'floor', 'floor_id');
     }
 
 	public function type()

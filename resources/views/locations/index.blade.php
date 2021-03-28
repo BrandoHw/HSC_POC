@@ -42,7 +42,7 @@
                                         <td>{{ $location->location_master_id }}</td>
                                         <td>{{ $location->location_description }}</td>
                                         <td>{{ $location->type->location_type}}</td>
-                                        <td>{{ $location->floor_level->alias}}</td>
+                                        <td>{{ $location->floor_level->name}}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
