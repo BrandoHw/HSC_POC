@@ -21,18 +21,26 @@
 @section('content')
 <div class="container-fluid relative">
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-lg-6">
             <div class="iq-card">
+                <div class="iq-card-header d-flex justify-content-between">
+                    <div class="iq-header-title">
+                        <h4 class="card-title">Create New Policy:</h4>
+                    </div>
+                </div>
                 <div class="iq-card-body">
                     <form>
                         <div class="form-group">
                             <label for="name">Name:</label>
                             <input type="text" class="form-control" id="name">
                         </div>
-                        <!-- <div class="form-group">
-                            <label for="detail">Description:</label>
-                            <textarea class="form-control" id="detail" rows="5"></textarea>
-                        </div> -->
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="alert-check" name="alert-check">
+                                <label class="custom-control-label" for="alert-check">Enabled</label>
+                            </div>
+                        </div>
+                        <hr>
                         <div class="form-group">
                             <label for="type">Policy Type:</label>
                             <select class="form-control" id="type">
@@ -45,13 +53,117 @@
                                 <option value="violence">Violence</option>
                             </select>
                         </div>
+                        <div class="form-group" id="trigger-option-attendance" hidden>
+                            <label>Attendance Option:</label>
+                            <div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="present" name="attendance-option" class="custom-control-input">
+                                    <label class="custom-control-label" for="present"> Present</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="absent" name="attendance-option" class="custom-control-input">
+                                    <label class="custom-control-label" for="absent"> Absent</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="trigger-option-battery" hidden>
+                            <p><i class="ri-information-fill"></i> This policy will violate immediately when the battery level of the gateway or beacon is less than 20%.</p>
+                        </div>
+                        <div class="form-group" id="trigger-option-duress" hidden>
+                            <p><i class="ri-information-fill"></i> This policy will violate immediately when the duress button at the beacon is pressed.</p>
+                        </div>
+                        <div class="form-group" id="trigger-option-fall" hidden>
+                            <p><i class="ri-information-fill"></i> This policy will violate immediately when fall is detected.</p>
+                        </div>
+                        <div class="form-group" id="trigger-option-geofence" hidden>
+                            <label>Geofence Option:</label>
+                            <div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="enter-zone" name="geofence-option" class="custom-control-input">
+                                    <label class="custom-control-label" for="enter-zone"> Entering Zone</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="leave-zone" name="geofence-option" class="custom-control-input">
+                                    <label class="custom-control-label" for="leave-zone"> Leaving Zone</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="trigger-option-violence" hidden>
+                            <label>Violence Parameters:</label>
+                            <div class="row align-items-center mb-2">
+                                <div class="col-2 mt-1 mb-1">
+                                    <div class="custom-control custom-checkbox custom-control">
+                                        <input type="checkbox" class="custom-control-input" id="x-axis" name="x-axis-check">
+                                        <label class="custom-control-label" for="x-axis">x-axis</label>
+                                    </div>
+                                </div>
+                                <div class="col-5 input-group input-group-sm" id="x-axis-value-div" hidden>
+                                    <span class="input-group-text" style="font-size: 0.80rem !important"id="x-axis-threshold-prepand">Threshold</span>
+                                    <input type="text" class="form-control" name="x-value" id="x-value" placeholder="G-value" aria-describedby="x-axis-threshold-prepand">
+                                </div>
+                                <div class="col-5 input-group input-group-sm" id="x-axis-frequency-div" hidden>
+                                    <span class="input-group-text" style="font-size: 0.80rem !important"id="x-axis-frequency-prepand">Frequency</span>
+                                    <input type="text" class="form-control" name="x-frequency" id="x-frequency" placeholder="Seconds" aria-describedby="x-axis-frequency-prepand">
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-2">
+                                <div class="col-2 mt-1 mb-1">
+                                    <div class="custom-control custom-checkbox custom-control">
+                                        <input type="checkbox" class="custom-control-input" id="y-axis" name="y-axis-check">
+                                        <label class="custom-control-label" for="y-axis">y-axis</label>
+                                    </div>
+                                </div>
+                                <div class="col-5 input-group input-group-sm" id="y-axis-value-div" hidden>
+                                    <span class="input-group-text" style="font-size: 0.80rem !important"id="y-axis-threshold-prepand">Threshold</span>
+                                    <input type="text" class="form-control" name="y-value" id="y-value" placeholder="G-value" aria-describedby="y-axis-threshold-prepand">
+                                </div>
+                                <div class="col-5 input-group input-group-sm" id="y-axis-frequency-div" hidden>
+                                    <span class="input-group-text" style="font-size: 0.80rem !important"id="y-axis-frequency-prepand">Frequency</span>
+                                    <input type="text" class="form-control" name="y-frequency" id="y-frequency" placeholder="Seconds" aria-describedby="y-axis-frequency-prepand">
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-2">
+                                <div class="col-2 mt-1 mb-1">
+                                    <div class="custom-control custom-checkbox custom-control">
+                                        <input type="checkbox" class="custom-control-input" id="z-axis" name="z-axis-check">
+                                        <label class="custom-control-label" for="z-axis">z-axis</label>
+                                    </div>
+                                </div>
+                                <div class="col-5 input-group input-group-sm" id="z-axis-value-div" hidden>
+                                    <span class="input-group-text" style="font-size: 0.80rem !important"id="z-axis-threshold-prepand">Threshold</span>
+                                    <input type="text" class="form-control" name="z-value" id="z-value" placeholder="G-value" aria-describedby="z-axis-threshold-prepand">
+                                </div>
+                                <div class="col-5 input-group input-group-sm" id="z-axis-frequency-div" hidden>
+                                    <span class="input-group-text" style="font-size: 0.80rem !important"id="z-axis-frequency-prepand">Frequency</span>
+                                    <input type="text" class="form-control" name="z-frequency" id="z-frequency" placeholder="Seconds" aria-describedby="z-axis-frequency-prepand">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="form-group" id="trigger-duration" hidden>
+                            <labe><span class="text-dark"> Duration: </span><span class="font-italic text-secondary" id="duration-label">(Detected)</span></label>
+                            <a href="#" data-toggle="tooltip" id="duration-tooltip" data-placement="right" title="The amount of time allowed before a violation is triggered." style="cursor: pointer;">
+                                <i class="ri-information-line"></i>
+                            </a>
+                            <div class="row" id="duration-config">
+                                <div class="col">
+                                    <input type="text" class="form-control" name="duration-value" id="duration-value" placeholder="Value">
+                                </div>
+                                <div class="col">
+                                    <select class="form-control" id="duration-format" name="duration-format">
+                                        <option value="second">Second(s)</option>
+                                        <option value="hour">Minute(s)</option>
+                                        <option value="day">Hour(s)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div> -->
                     </form>
                 </div>
             </div>
         </div>
-        <div class="col-lg-8">
+        <div class="col-lg-6">
             <div class="email-app-details iq-card" id='config'>
-                <div class="iq-card-body" id="trigger-setting">
+                <!-- <div class="iq-card-body" id="trigger-setting">
                     <p class="iq-bg-primary pl-3 pr-3 pt-2 pb-2 rounded">Trigger Setting</p>
                     <form>
                         <div class="form-group" id="trigger-option-attendance" hidden>
@@ -104,14 +216,6 @@
                                 <div class="col-4" id="x-axis-frequency-div" hidden>
                                     <input txpe="text" class="form-control form-control-sm" name="x-frequency" id="x-frequency" placeholder="Frequency (seconds)">
                                 </div>
-                                <!-- <div class="col-4" id="x-axis-operator-div" hidden>
-                                    <select class="form-control form-control-sm" id="x-axis-operator" name="duration-format">
-                                        <option selected="" disabled="">Please select operator...</option>
-                                        <option value=">">Greater</option>
-                                        <option value=">=">Greater and Equal</option>
-                                        <option value="==">Equals</option>
-                                    </select>
-                                </div> -->
                             </div>
                             <div class="row align-items-center mb-2">
                                 <div class="col-2 mt-1 mb-1">
@@ -126,14 +230,6 @@
                                 <div class="col-4" id="y-axis-frequency-div" hidden>
                                     <input type="text" class="form-control form-control-sm" name="y-frequency" id="y-frequency" placeholder="Frequency (seconds)">
                                 </div>
-                                <!-- <div class="col-4" id="y-axis-frequency-div" hidden>
-                                    <select class="form-control form-control-sm" id="y-axis-frequency" name="duration-format">
-                                        <option selected="" disabled="">Please select frequency...</option>
-                                        <option value=">">Greater</option>
-                                        <option value=">=">Greater and Equal</option>
-                                        <option value="==">Equals</option>
-                                    </select>
-                                </div> -->
                             </div>
                             <div class="row align-items-center mb-2">
                                 <div class="col-2 mt-1 mb-1">
@@ -148,34 +244,8 @@
                                 <div class="col-4" id="z-axis-frequency-div" hidden>
                                     <input tzpe="text" class="form-control form-control-sm" name="z-frequency" id="z-frequency" placeholder="Frequency (seconds)">
                                 </div>
-                                <!-- <div class="col-4" id="z-axis-operator-div" hidden>
-                                    <select class="form-control form-control-sm" id="z-axis-operator" name="duration-format">
-                                        <option selected="" disabled="">Please select operator...</option>
-                                        <option value=">">Greater</option>
-                                        <option value=">=">Greater and Equal</option>
-                                        <option value="==">Equals</option>
-                                    </select>
-                                </div> -->
                             </div>
                         </div>
-                        <!-- <div class="form-group" id="trigger-duration" hidden>
-                            <labe><span class="text-dark"> Duration: </span><span class="font-italic text-secondary" id="duration-label">(Detected)</span></label>
-                            <a href="#" data-toggle="tooltip" id="duration-tooltip" data-placement="right" title="The amount of time allowed before a violation is triggered." style="cursor: pointer;">
-                                <i class="ri-information-line"></i>
-                            </a>
-                            <div class="row" id="duration-config">
-                                <div class="col">
-                                    <input type="text" class="form-control" name="duration-value" id="duration-value" placeholder="Value">
-                                </div>
-                                <div class="col">
-                                    <select class="form-control" id="duration-format" name="duration-format">
-                                        <option value="second">Second(s)</option>
-                                        <option value="hour">Minute(s)</option>
-                                        <option value="day">Hour(s)</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div> -->
                         <div class="form-group" id="trigger-specific-time" hidden>
                             <label>Time Option:</label>
                             <div>
@@ -210,7 +280,7 @@
                             </div>
                         </div>
                     </form>
-                </div>
+                </div> -->
                 <hr class="mt-0 mb-0" id="line">
                 <div class="iq-card-body" id="location-setting" hidden>
                     <p class="iq-bg-primary pl-3 pr-3 pt-2 pb-2 rounded">Location Setting</p>
@@ -241,6 +311,7 @@
                 </div>
             </div>
         </div>
+        {!! Form::close() !!}
     </div>
 </div>
 @endsection 

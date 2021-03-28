@@ -23,11 +23,11 @@
                                     <th scope="col" style="width:5%">#</th>
                                     <th scope="col">Serial Number</th>
                                     <th scope="col">Mac Address</th>
-                                    <th scope="col">IP Address</th>
+                                    <!-- <th scope="col">IP Address</th> -->
                                     <th scope="col">Location</th>
                                     <th scope="col">Status</th>
-                                    <th scope="col">Last Active</th>
-                                    <th scope="col">Last Inactive</th>
+                                    <!-- <th scope="col">Last Active</th> -->
+                                    <!-- <th scope="col">Last Inactive</th> -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -36,11 +36,11 @@
                                         <td>{{ $reader->gateway_id }}</td>
                                         <td>{{ $reader->serial }}</td>
                                         <td>{{ $reader->mac_addr }}</td>
-                                        <td>{{ $reader->reader_ip }}</td>
+                                        <!-- <td>{{ $reader->reader_ip }}</td> -->
                                         <td>{{ $reader->location_id }}</td>
                                         <td>{{ $reader->reader_status  }}</td>
-                                        <td>{{ $reader->up_status }}</td>
-                                        <td>{{ $reader->down_status }}</td>
+                                        <!-- <td>{{ $reader->up_status }}</td> -->
+                                        <!-- <td>{{ $reader->down_status }}</td> -->
                                     </tr>
                                 @endforeach
                             </tbody>

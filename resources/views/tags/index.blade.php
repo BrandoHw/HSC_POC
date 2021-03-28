@@ -28,16 +28,16 @@
                             </thead>
                             <tbody>
                                 @foreach ($tags as $tag)
-                                    <tr href="{{ route('beacons.edit',$tag->id) }}">
-                                        <td>{{ $tag->id }}</td>
+                                    <tr href="{{ route('beacons.edit',$tag->beacon_id) }}">
+                                        <td>{{ $tag->beacon_id }}</td>
                                         <td>{{ $tag->beacon_mac }}</td>
                                         <td>
                                             <span class="badge badge-pill iq-bg-{{ ($tag->beacon_type == 1) ? 'primary':'success' }}">
-                                                {{ ($tag->beacon_type == 1) ? 'Card':'Wristband' }}
+                                                {{ ($tag->beacon_type == 2) ? 'Card':'Wristband' }}
                                             </span>
                                         </td>
                                         <td>
-                                            @if($tag->beacon_type == 1)
+                                            @if($tag->beacon_type == 2)
                                                 {{ $tag->user->full_name ?? '-' }}
                                             @else
                                                 {{ $tag->resident->full_name ?? '-' }}

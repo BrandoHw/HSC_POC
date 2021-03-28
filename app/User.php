@@ -33,7 +33,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'fName', 'lName', 'phone_number',
-        'username', 'email', 'password'
+        'username', 'password'
     ];
 
     /**
@@ -64,7 +64,7 @@ class User extends Authenticatable
      */
     public function tag()
     {
-        return $this->belongsTo(Tag::class, 'beacon_id', 'id');
+        return $this->belongsTo(Tag::class, 'beacon_id', 'beacon_id');
     }
 
       /**

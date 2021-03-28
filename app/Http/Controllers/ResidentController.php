@@ -59,12 +59,12 @@ class ResidentController extends Controller
      */
     public function edit(Resident $resident)
     {
-        $tagsNull = Tag::where('beacon_type', 2)
+        $tagsNull = Tag::where('beacon_type', 1)
             ->doesntHave('resident')
             ->pluck('beacon_mac', 'id');
         
         if(!empty($resident->tag)){
-            $current = collect([$resident->tag->id => $resident->tag->beacon_mac]);
+            $current = collect([$resident->tag->beacon_id => $resident->tag->beacon_mac]);
             $tagsNull = $current->concat($tagsNull)->all();
         }
         return view('residents.edit', compact('resident', 'tagsNull'));

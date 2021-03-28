@@ -19,7 +19,7 @@ class Tag extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'beacon_id';
 
     /**
      * The attributes that are mass assignable.
@@ -41,7 +41,7 @@ class Tag extends Model
      */
     public function user()
     {
-        return $this->hasOne(User::class, 'beacon_id', 'id');
+        return $this->hasOne(User::class, 'beacon_id', 'beacon_id');
     }
 
     /**
@@ -49,7 +49,7 @@ class Tag extends Model
      */
     public function resident()
     {
-        return $this->hasOne(Resident::class, 'beacon_id', 'id');
+        return $this->hasOne(Resident::class, 'beacon_id', 'beacon_id');
     }
 
 }

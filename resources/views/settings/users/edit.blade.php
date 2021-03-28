@@ -1,4 +1,3 @@
-{!! Form::open(array('route' => 'beacons.store','method'=>'POST')) !!}
 @extends('layouts.app')
 
 @section('content')
@@ -8,35 +7,35 @@
             <div class="iq-card">
                 <div class="iq-card-header d-flex justify-content-between">
                     <div class="iq-header-title">
-                        <h4 class="card-title">Create New Beacon:</h4>
+                        <h4 class="card-title">Beacon ID: {{ $tag->id }}</h4>
                     </div>
                 </div>
                 <div class="iq-card-body">
-                    {!! Form::open(array('route' => 'beacons.store','method'=>'POST')) !!}
+                    {!! Form::model($tag, ['method' => 'PATCH', 'route' => ['beacons.update', $tag->id]]) !!}
                         <div class="form-group">
-                            <label for="createMacAdd">Mac Address:</label>
-                            {!! Form::text('beacon_mac', null, array('placeholder' => 'XX:XX:XX:XX','class' => "form-control", 'id' => 'createMacAdd')) !!}
+                            <label for="editMacAdd">Mac Address:</label>
+                            {!! Form::text('beacon_mac', null, array('placeholder' => 'XX:XX:XX:XX','class' => "form-control", 'id' => 'editMacAdd')) !!}
                             @error('beacon_mac')
                                 <div class="alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="createTagType">Type:</label>
-                            {!! Form::select('beacon_type', $tagTypes, null, ['placeholder' => 'Please select...', 'class' => 'form-control form-control', 'id' => 'createTagType']) !!}
+                            <label for="editTagType">Type:</label>
+                            {!! Form::select('beacon_type', $tagTypes, null, ['placeholder' => 'Please select...', 'class' => 'form-control form-control', 'id' => 'editTagType']) !!}
                             @error('beacon_type')
                                 <div class="alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="form-group" id="user-div" hidden>
-                            <label for="createUser">User:</label>
-                            {!! Form::select('user_id', $usersNull, null, ['placeholder' => 'Please select...', 'class' => 'form-control form-control', 'id' => 'createUser']) !!}
+                        <div class="form-group" id="user-div" {{ ($tag->beacon_type == 1) ? '':'hidden' }}>
+                            <label for="editUser">User:</label>
+                            {!! Form::select('user_id', $usersNull, $tag->user->user_id ?? null, ['placeholder' => 'Please select...', 'class' => 'form-control form-control', 'id' => 'editUser']) !!}
                             @error('user_id')
                                 <div class="alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="form-group" id="resident-div" hidden>
-                            <label for="createResident">Resident:</label>
-                            {!! Form::select('resident_id', $residentsNull, null, ['placeholder' => 'Please select...', 'class' => 'form-control form-control', 'id' => 'createResident']) !!}
+                        <div class="form-group" id="resident-div" {{ ($tag->beacon_type == 2) ? '':'hidden' }}>
+                            <label for="editResident">Resident:</label>
+                            {!! Form::select('resident_id', $residentsNull, $tag->resident->resident_id ?? null, ['placeholder' => 'Please select...', 'class' => 'form-control form-control', 'id' => 'editResident']) !!}
                             @error('resident_id')
                                 <div class="alert-danger">{{ $message }}</div>
                             @enderror
@@ -54,37 +53,37 @@
 @endsection
 
 @section('script')
-    @error('beacon_mac')<script>$('#createMacAdd').css("border", "1px solid red");</script>@enderror
-    @error('beacon_type')<script>$('#createTagType').attr('style', 'border: 1px solid red !important');</script>@enderror
+    @error('beacon_mac')<script>$('#editMacAdd').css("border", "1px solid red");</script>@enderror
+    @error('beacon_type')<script>$('#editTagType').attr('style', 'border: 1px solid red !important');</script>@enderror
 
     <script>
         $(function(){
-            $('#createTagType').select2({
+            $('#editTagType').select2({
                 placeholder: "Please select ..."
             });
 
-            $('#createUser').select2({
+            $('#editUser').select2({
                 placeholder: "Please select ..."
             });
             
-            $('#createResident').select2({
+            $('#editResident').select2({
                 placeholder: "Please select ..."
             });
         })
 
-        $('#createTagType').on('change', function(){
+        $('#editTagType').on('change', function(){
             switch($(this).val()){
-                case "2":
+                case "1":
                     $('#user-div').prop('hidden', false);
                     $('#resident-div').prop('hidden', true);
-                    $('#createUser').select2({
+                    $('#editUser').select2({
                         placeholder: "Please select ..."
                     });
                     break;
-                case "1":
+                case "2":
                     $('#user-div').prop('hidden', true);
                     $('#resident-div').prop('hidden', false);
-                    $('#createResident').select2({
+                    $('#editResident').select2({
                         placeholder: "Please select ..."
                     });
                     break;

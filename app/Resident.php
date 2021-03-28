@@ -44,7 +44,7 @@ class Resident extends Model
      */
     public function tag()
     {
-        return $this->belongsTo(Tag::class, 'beacon_id', 'id');
+        return $this->belongsTo(Tag::class, 'beacon_id', 'beacon_id');
     }
 
     /**

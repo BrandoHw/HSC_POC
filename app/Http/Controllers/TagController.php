@@ -44,7 +44,7 @@ class TagController extends Controller
     {
         /** Get tag type id and combine with their name, ['id' => 'type_name']*/
         $tagTypes = TagType::pluck('beacon_type_id');
-        $tagTypes = $tagTypes->combine(['Card', 'Wristband'])->all();
+        $tagTypes = $tagTypes->combine(['Wristband', 'Card'])->all();
 
         /** Get users & residents that doesnt have tag() ['id' => 'full_name'] */
         $usersNull = User::doesntHave('tag')->get()->pluck('full_name', 'user_id');
@@ -73,7 +73,7 @@ class TagController extends Controller
         $tag->tagType()->associate($tagType)->save();
 
         /** If beacon is card, save user. If beacon is wristband, save resident*/
-        if($request['beacon_type'] == "1"){
+        if($request['beacon_type'] == "2"){
             if(!empty($request['user_id'])){
                 $user = User::find($request['user_id']);
                 $user->tag()->associate($tag)->save();
@@ -110,7 +110,7 @@ class TagController extends Controller
     {
         /** Get tag type id and combine with their name, ['id' => 'type_name']*/
         $tagTypes = TagType::pluck('beacon_type_id');
-        $tagTypes = $tagTypes->combine(['Card', 'Wristband'])->all();
+        $tagTypes = $tagTypes->combine(['Wristband', 'Card'])->all();
 
         /** Get users & residents that doesnt have tag() ['id' => 'full_name'] */
         $usersNull = User::doesntHave('tag')->get()->pluck('full_name', 'user_id');
@@ -140,7 +140,7 @@ class TagController extends Controller
     public function update(Request $request, Tag $tag)
     {
         request()->validate([
-            'beacon_mac' => 'required|unique:beacons_table,beacon_mac,'.$tag->id,
+            'beacon_mac' => 'required|unique:beacons_table,beacon_mac,'.$tag->beacon_id,
             'beacon_type' => 'required',
         ]);
         $tag->update($request->all());
@@ -162,7 +162,7 @@ class TagController extends Controller
         }
 
         /** If beacon is card, save user. If beacon is wristband, save resident*/
-        if($request['beacon_type'] == "1"){
+        if($request['beacon_type'] == "2"){
             if(!empty($request['user_id'])){
                 $user = User::find($request['user_id']);
                 $user->tag()->associate($tag)->save();

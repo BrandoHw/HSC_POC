@@ -179,7 +179,7 @@
       </div>
       <div class="col-lg-8">
          <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                <div class="iq-card iq-card-block iq-card-stretch">
                   <div class="iq-card-body">
                      <div class="d-flex align-items-center justify-content-between mb-2">
@@ -195,23 +195,7 @@
                   <div id="service-chart-01"></div>
                </div>
             </div>
-            <div class="col-lg-4">
-               <div class="iq-card iq-card-block iq-card-stretch">
-                  <div class="iq-card-body">
-                     <div class="d-flex align-items-center justify-content-between mb-2">
-                        <div class="ml-2">
-                           <h5 class="mb-1">Total Notifs</h5>
-                           <span class="h4 text-dark mb-0 counter d-inline-block w-100">48,625</span>
-                        </div>
-                        <div class="icon iq-icon-box bg-success rounded-circle m-0" data-wow-delay="0.2s">
-                           <i class="ri-user-fill"></i>
-                        </div>
-                     </div>
-                  </div>
-                  <div id="service-chart-02"></div>
-               </div>
-            </div>
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                <div class="iq-card iq-card-block iq-card-stretch">
                   <div class="iq-card-body">
                      <div class="d-flex align-items-center justify-content-between mb-2">

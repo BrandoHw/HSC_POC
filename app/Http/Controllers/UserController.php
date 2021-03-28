@@ -7,6 +7,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\User;
+use App\UserType;
 use App\Tag;
 use Spatie\Permission\Models\Role;
 use DB;
@@ -21,7 +22,7 @@ class UserController extends Controller
     */
     function __construct()
     {
-        $this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index','store']]);
+        $this->middleware('permission:user-list|user-view|user-create|user-edit|user-delete', ['only' => ['index','show']]);
         $this->middleware('permission:user-create', ['only' => ['create','store']]);
         $this->middleware('permission:user-edit', ['only' => ['edit','update']]);
         $this->middleware('permission:user-delete', ['only' => ['destroy']]);
@@ -49,8 +50,12 @@ class UserController extends Controller
     */
     public function create()
     {
-        return response()->json([],
-            200);
+        $tagsNull = Tag::where('beacon_type', 2)
+            ->doesntHave('user')
+            ->pluck('beacon_mac', 'beacon_id');
+
+        $userTypes = UserType::pluck('type', 'user_type_id')->all();
+        return view('settings.users.create', compact('tagsNull', 'userTypes'));
     }
     
     /**

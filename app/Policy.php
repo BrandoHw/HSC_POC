@@ -38,7 +38,7 @@ class Policy extends Model
         'description',
         'x-threshold', 'y_threshold', 'z_threshold',
         'x_frequency', 'y_frequency', 'z_frequency',
-        'alert_option', 'attendance', 'geofence'
+        'alert_action', 'attendance', 'geofence'
     ];
 
     /**
