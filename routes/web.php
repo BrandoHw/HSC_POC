@@ -105,4 +105,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('reports', ReportController::class);
     Route::resource('settings', SettingController::class)
         ->except(['show']);
+
+    // Route::get('/foo', function () {
+    //     Artisan::call('storage:link');
+    // });
 });

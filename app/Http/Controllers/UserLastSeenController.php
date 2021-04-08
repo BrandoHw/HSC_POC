@@ -18,7 +18,7 @@ class UserLastSeenController extends Controller
     {
         $userCount = array();
         $userRunningCount =  array();
-        //The threshold at which multiple markers conver into one large clickable marker
+        //The threshold at which multiple markers converge into one large clickable marker
         $threshold = 5;
         //Convert from object to array, (array) typecasting unsuitable, it returns associative array, 
         //need numerical array for array_merge
@@ -27,7 +27,9 @@ class UserLastSeenController extends Controller
         $beacons_r = json_decode(json_encode(Tag::with(['resident', 'gateway', 'gateway.location'])->has('resident')->get()));
         $beacons = array_merge((array) $beacons, (array) $beacons_r);
 
+
         foreach ($beacons as $user){
+            $user->updated_at = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
             if (array_key_exists($user->gateway->mac_addr, $userCount)){
                 $userCount[$user->gateway->mac_addr] = $userCount[$user->gateway->mac_addr] + 1;
             }else{
@@ -149,7 +151,7 @@ class UserLastSeenController extends Controller
 
         
         foreach ($beacons as $user){
-            $user->updated_at = Carbon::parse($user->updated_at, )->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
+            $user->updated_at = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
         }
         return $beacons;
     }

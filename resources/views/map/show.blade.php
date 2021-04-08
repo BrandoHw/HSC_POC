@@ -38,7 +38,7 @@
         
             <ul id="user-list" class="list iq-chat-ui nav flex-column nav-pills" style="display: inline-block">
                 <li id = "first-item"><h3 class="name">Name</h3>
-                    <h5 class="location">Location</h5>
+                    {{-- <h5 class="location">Location</h5> --}}
                     <p class="tag">Tag</p>
                 </li>
             </ul> 
@@ -233,9 +233,16 @@
             baseLayer[alias] =  L.imageOverlay("storage/greyimage.png", [[0,0], [36, 35]]);;
             img.onload = (function (alias, url) {
                 return function() {
-                    bounds[alias] =  [[0,0], [this.height, this.width]];
+
+                    if (this.height === 0 || this.width === 0){
+                        bounds[alias] =  [[0,0], [2339, 3309]];
+                    }else{
+                        bounds[alias] =  [[0,0], [this.height, this.width]];
+                    }
+                    console.log(url);
+                    console.log(bounds[alias]);
                     baseLayer[alias] = L.imageOverlay(url, bounds[alias]);
-                 
+               
                     // for (var key in drawnLayers){
                     //     map.removeLayer(drawnLayers[key]);
                     // }

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Alert;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+
 
 class AlertController extends Controller
 {
@@ -49,36 +51,50 @@ class AlertController extends Controller
     {
         //
          //Get all Tag where gateway's mac is equal to the request mac_addr and which have an associated resident/staff
+
+
          if ($id === 'unresolved'){
             $alert_s = 
                 Alert::whereHas('tag', function($q){
                     $q->whereHas('staff');})
                     ->with(['tag', 'tag.staff', 'reader', 'reader.location',  'policy'])
                     ->where('action', '==', 0)
-                    ->get()
-            ;
+                    ->orderBy('occured_at', 'desc')
+                    ->get();
 
             foreach($alert_s as $alert){
                 $alert->full_name = $alert->tag->staff->fName." ".$alert->tag->staff->lName;
+                $alert->duration = Carbon::parse($alert->occured_at)->diffForHumans();//gmdate('H:i:s', Carbon::now()->diffInSeconds(Carbon::parse($alert->occured_at)));
             }
 
             $alert_r =
                 Alert::whereHas('tag', function($q){
                     $q->whereHas('resident');})
                     ->with(['tag', 'tag.resident', 'reader', 'reader.location',  'policy'])
-                    ->get()
-            ;
+                    ->get();
 
             foreach($alert_r as $alert){
                 $alert->full_name = $alert->tag->resident->resident_fName." ".$alert->tag->resident->resident_lName;
+                $alert->duration = Carbon::parse($alert->occured_at)->diffForHumans();
             }
 
             $alert_s = json_decode(json_encode($alert_s));
             $alert_r = json_decode(json_encode($alert_r));
             $alerts = array_merge((array) $alert_s, (array) $alert_r);
+
+            foreach($alert_r as $alert){
+                $alert->full_name = $alert->tag->resident->resident_fName." ".$alert->tag->resident->resident_lName;
+                $alert->duration = Carbon::parse($alert->occured_at)->diffForHumans();
+            }
+            usort($alerts, function($a, $b) {
+                return strtotime($b->occured_at) - strtotime($a->occured_at);
+            });
+
         }else{
             $alerts = Alert::where('alert_id', '==', $id)->get();
         }
+
+    
 
         return $alerts;//[$alerts, $alert_c];
     }

@@ -191,7 +191,11 @@
             baseLayer[alias] =  L.imageOverlay("storage/greyimage.png", [[0,0], [36, 35]]);;
             img.onload = (function (alias, url) {
                 return function() {
-                    bounds[alias] =  [[0,0], [this.height, this.width]];
+                    if (this.height === 0 || this.width === 0){
+                        bounds[alias] =  [[0,0], [2339, 3309]];
+                    }else{
+                        bounds[alias] =  [[0,0], [this.height, this.width]];
+                    }
                     baseLayer[alias] = L.imageOverlay(url, bounds[alias]);
                  
                     // for (var key in drawnLayers){

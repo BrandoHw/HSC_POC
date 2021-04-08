@@ -1,3 +1,11 @@
+/*
+data = Beacon info/position
+drawnLayers = The Map Layers which hold the markers
+gatewayZones = The information of each blue gatewayzone
+max_count = The total number of people in a given zone
+current_count = The number of people that have been drawn so far for a given zone
+dialog = Dialog holder to contain the list that appears when multiple markers have converged into one big marker
+*/
 function addTooltip(data, drawnLayers, gatewayZones, max_count, current_count, dialog){
     var mac_addr = data.gateway.mac_addr;
     var full_name;

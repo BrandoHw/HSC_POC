@@ -11,6 +11,8 @@ class Building extends Model
    *
    * @var array
    */
+
+  protected $table ='buildings_table';
   protected $fillable = [
       'name', 'detail', 'floor_num', 'address', 'lat', 'lng',
   ];

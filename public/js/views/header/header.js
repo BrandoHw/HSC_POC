@@ -857,75 +857,82 @@ $(function() {
     };
     anim = lottie.loadAnimation(params);
     anim.pause();
-
+    $("#notif-danger-dots").hide();
     $("#notif-bell").on('click', function(){
         $(this).parent().parent().toggleClass('iq-show');
         $(this).parent().toggleClass('active');
     });
 
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-    $.ajax({
-        url: "/alerts/unresolved",
-        method: 'get',             
-        success: function(data){
-             console.log("NOTIFICATION BAR");
-             console.log(data);
-            $('#notif-count').text(data.length);
-            for (var i = 0; i < data.length; ++i) {
-                var full_name = data[i].full_name;
-                var date = data[i].occured_at;
-                var rule = "Rule Triggered";
-                var location = data[i].reader.location.location_description;
-
-                function getRandomInt(min, max) {
-                    min = Math.ceil(min);
-                    max = Math.floor(max);
-                    return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
-                  }
-                var imageNum = "/0".concat(getRandomInt(1, 9), ".jpg");
-
-                if (data.length > 5){
-                    $("#notif-danger-dots").show();
-                    anim.play();
-                }else if(data.length > ){
-
-                }else{
-                    $("#notif-danger-dots").hide();
-                    anim.stop();
-                }
-                var container2 = $('<a/>', {'class': 'iq-sub-card', 'id': 'notif-'.concat(i)}).append(
-                        $('<div/>', {'class': 'media align-items-center'}).append(
-                            $('<div/>', {class: ''}).append(
-                                $('<img/>', {class: 'avatar-40 rounded', src: imagesUrl + imageNum, alt: ''})
-                            )
-                        ).append(
-                            $('<div/>', {'class': 'media-body ml-3'}).append(
-                                $('<h6/>', {class: 'mb-0', text: full_name})
-                            ).append(
-                                $('<small/>', {class: 'float-right font-size-12', text: date})
-                            ).append(
-                                $('<p/>', {class:'mb-0', text: rule})
-                            )
-                    )
-                  
-                    )
-                    container2.on('click', function(event) {
-                        var contentPanelId = $(this).attr("id");
-                        alert(contentPanelId);
-                });
-                $("#notification-card").append(container2);
-
-    
+    getAlerts = function(){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
-        },
-        error: function(xhr, request, error){
-            console.log('error');
-            console.log(xhr.responseText);
-        },
-    });
+        });
+        $.ajax({
+            url: "/alerts/unresolved",
+            method: 'get',             
+            success: function(data){
+                console.log("NOTIFICATION BAR");
+                console.log(data);
+                $('#notif-count').text(data.length);
+                $("#notification-card").children('.iq-sub-card').remove();
+                for (var i = 0; i < data.length; ++i) {
+                    var full_name = data[i].full_name;
+                    var date = data[i].occured_at;
+                    var rule = "Rule Triggered";
+                    var duration = data[i].duration;
+                    var location = data[i].reader.location.location_description;
 
+                    function getRandomInt(min, max) {
+                        min = Math.ceil(min);
+                        max = Math.floor(max);
+                        return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+                    }
+                    var imageNum = "/0".concat(getRandomInt(1, 9), ".jpg");
+
+                    if (data.length > 5){
+                        $("#notif-danger-dots").show();
+                        anim.play();
+                    }else if(data.length > 0){
+
+                    }else{
+                        $("#notif-danger-dots").hide();
+                        anim.stop();
+                    }
+                    var container2 = $('<a/>', {'class': 'iq-sub-card', 'id': 'notif-'.concat(i)}).append(
+                            $('<div/>', {'class': 'media align-items-center'}).append(
+                                $('<div/>', {class: ''}).append(
+                                    $('<img/>', {class: 'avatar-40 rounded', src: imagesUrl + imageNum, alt: ''})
+                                )
+                            ).append(
+                                $('<div/>', {'class': 'media-body ml-3'}).append(
+                                    $('<h6/>', {class: 'mb-0', text: full_name})
+                                ).append(
+                                    $('<small/>', {class: 'float-right font-size-12', text: duration})
+                                ).append(
+                                    $('<p/>', {class:'mb-0', text: rule})
+                                )
+                            )
+                        )
+                        container2.on('click', function(event) {
+                            var contentPanelId = $(this).attr("id");
+                            alert(contentPanelId);
+                    });
+                    $("#notification-card").append(container2);
+
+        
+                }
+            },
+            error: function(xhr, request, error){
+                console.log('error');
+                console.log(xhr.responseText);
+            },
+        })
+        .always(function () {
+            setTimeout(getAlerts, 60000);
+        });
+    }
+
+    getAlerts()
 });

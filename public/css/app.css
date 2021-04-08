@@ -14614,5 +14614,6 @@ body.tempusdominus-bootstrap-datetimepicker-widget-day-click {
 
 div#notif-bell { height: 30px; width: 30px; }
 div#notif-bell svg path { stroke: var(--iq-primary); }
+.iq-sub-card { cursor: pointer;}
 
 
