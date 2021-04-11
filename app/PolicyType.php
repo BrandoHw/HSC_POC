@@ -19,7 +19,7 @@ class PolicyType extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'rule_type_id';
+    protected $primaryKey = 'rules_type_id';
 
      /**
      * Indicates if the model should be timestamped.

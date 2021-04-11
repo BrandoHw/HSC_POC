@@ -10,6 +10,9 @@ import "./modules/moment";
 // Jquery
 import 'jquery-ui/ui/widgets/dialog.js';
 
+// Input-Spinner
+import "./modules/input-spinner";
+
 // Select2
 import "./modules/select2";
 

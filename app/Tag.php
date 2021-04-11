@@ -71,4 +71,11 @@ class Tag extends Model
         return $this->hasOne(Reader::class, 'gateway_id', 'current_loc');
     }
 
+    /**
+     * Get the scopes associated with the tag
+     */
+    public function scopes()
+    {
+        return $this->belongsToMany(Scope::class, 'scope_beacons_table', 'beacon_id', 'scope_id');
+    }
 }

@@ -24,6 +24,14 @@ class Location extends Model
 		return $this->belongsTo(LocationType::class, 'location_type_id', 'type_id');
     }
 
+    /**
+     * Get the scopes associated with the location
+     */
+    public function scopes()
+    {
+        return $this->belongsToMany(Scope::class, 'scope_locations_master_table', 'location_id', 'scope_id');
+    }
+
 
 }
 

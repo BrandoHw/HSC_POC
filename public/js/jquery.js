@@ -116,7 +116,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var jque
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\WECare-POS-map\resources\js\modules\jquery.js */"./resources/js/modules/jquery.js");
+module.exports = __webpack_require__(/*! /Applications/XAMPP/xamppfiles/htdocs/HSC_POC/resources/js/modules/jquery.js */"./resources/js/modules/jquery.js");
 
 
 /***/ })

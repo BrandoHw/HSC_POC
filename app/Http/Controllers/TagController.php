@@ -31,11 +31,7 @@ class TagController extends Controller
     */
     public function index()
     {
-        $tags = Tag::latest()->get();
-
-        foreach ($tags as $tag){
-            $tag->id = $tag->beacon_id;
-        }
+        $tags = Tag::orderBy('beacon_id', 'asc')->get();
 
         return view('tags.index',compact('tags'));
     }

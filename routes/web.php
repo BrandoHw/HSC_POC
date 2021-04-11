@@ -95,6 +95,8 @@ Route::group(['middleware' => ['auth']], function() {
         ->only(['index', 'show']);
 
     Route::resource('policies', PolicyController::class)
+        ->name('*', 'policies');
+    Route::resource('policies', PolicyController::class)
         ->except(['show']);
 
     Route::resource('alerts', AlertController::class);
