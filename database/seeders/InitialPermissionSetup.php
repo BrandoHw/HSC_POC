@@ -69,14 +69,8 @@ class InitialPermissionSetup extends Seeder
         $admin->syncPermissions($permission_admin);
 
         /* Admin User */
-        $user = User::create([
-            'fName' => 'Super',
-            'lName' => 'Admin',
-            'phone_number' => '601112341234',
-            'username' => 'admin',
-            'password' => bcrypt(env('ADMIN_PASSWORD'))
-        ]);
-        $tag = Tag::find(211);
+        $user = User::find(1);
+        $tag = Tag::find(201);
         $tag->user()->save($user);
 
         $userType = UserType::find(1);
