@@ -50,7 +50,7 @@ class Floor extends Model
      */
 	public function map()
 	{
-		return $this->hasOne(MapFile::class);
+		return $this->hasOne(MapFile::class, 'floor_id', 'floor_id');
      }
      
        /**

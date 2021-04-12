@@ -31,9 +31,9 @@
                                 @foreach ($policies as $policy)
                                     <tr href="{{ route('policies.edit',$policy->rules_id) }}">
                                         <td>{{ $policy->rules_id }}</td>
-                                        <td>{{ $policy->description }}</td>
-                                        <td>{{ $policy->policyType->rules_type_desc }}</td>
-                                        <td>
+                                        <td class="info">{{ $policy->description }}</td>
+                                        <td class="info">{{ $policy->policyType->rules_type_desc }}</td>
+                                        <td class="info">
                                             @switch($policy->policyType->rules_type_id)
                                                 @case(1)
                                                     {{ ($policy->attendance) ? 'Present':'Absent' }}
@@ -53,7 +53,7 @@
                                                     @break  
                                             @endswitch
                                         </td>
-                                        <td>
+                                        <td class="info">
                                             <span class="badge badge-pill iq-bg-{{ ($policy->alert_action == 1) ? 'success':'secondary' }}">
                                                 {{ ($policy->alert_action == 1) ? 'Active':'Inactive' }}
                                             </span>
@@ -81,7 +81,7 @@
         dTable.search($(this).val()).draw();   // this  is for customized searchbox with datatable search feature.
     })
 
-    $('#policyTable tbody tr td:not(:first-child)').click(function () {
+    $('#policyTable').on('click', '.info', function () {
         window.location.href = $(this).parent('tr').attr('href');
     });
 </script>
