@@ -129,6 +129,9 @@
                         setupList(data['gatewayZones'], data['readers']);
 
                         selectData = $.map(data['readers'], function (obj) {
+                            if (obj.serial === null){
+                                obj.serial = "N/A";
+                            }
                             obj.text = obj.text || obj.serial.concat(" - ", obj.mac_addr); // replace name with the property used for the text
                             obj.id = obj.gateway_id;
                             return obj;
@@ -136,12 +139,15 @@
                         $("#selReader").select2({
                             data:selectData.filter(gateway => gateway.alias == currentFloor || gateway.alias == null)
                         });
+
+                        notyf.success("Sucessful Deletion");  
                     },
                     headers: {
                         'X-CSRF-Token': '{{ csrf_token() }}',
                     },
                     error: function(xhr, request, error){
                         console.log(xhr.responseText);
+                        notyf.error("Failed To Delete. Please Refresh Page And Try Again");  
                     },
                 })
             }
@@ -156,12 +162,14 @@
                     },   
                     success: function(data){
                         console.log(data);
+                        notyf.success("Sucessful Update");  
                     },
                     headers: {
                         'X-CSRF-Token': '{{ csrf_token() }}',
                     },
                     error: function(xhr, request, error){
                         console.log(xhr.responseText);
+                        notyf.error("Failed To Update. Please Refresh Page And Try Again");  
                     },
                 })
             }
@@ -364,14 +372,17 @@
                     result[0].geoJson.coordinates = layer.toGeoJSON().geometry.coordinates;
                     result[0].geoJson.radius = layer.getRadius();
                 }
-
+                if (layer instanceof L.Polygon) {
+                    result[0].geoJson.coordinates = layer.toGeoJSON().geometry.coordinates;
+                }
                 if (layer instanceof L.Marker) {
                     result[0].geoJson.marker = {lat: layer.getLatLng().lat.toString(), lng: layer.getLatLng().lng.toString() };
                 }
-                //console.log(layer);
+                console.log("EDIT");
+                console.log(layer.toGeoJSON().geometry.coordinates);
                 result2.push(result[0])
             });
-            editGatewayZones(result2);
+           editGatewayZones(result2);
         });
 
         map.on('draw:deleted', function (e) {

@@ -25,7 +25,6 @@ class Floor extends Model
      *
      * @var array
      */
-//     protected $table ='floors_table';
     protected $fillable = [
           'number', 'alias', 'building_id'
      ];
@@ -35,7 +34,7 @@ class Floor extends Model
      */
 	public function building()
 	{
-		return $this->belongsTo(Building::class);
+		return $this->belongsTo(Building::class, 'building_id', 'building_id');
     }
 
     /**
@@ -51,7 +50,7 @@ class Floor extends Model
      */
 	public function map()
 	{
-		return $this->hasOne(MapFile::class);
+		return $this->hasOne(MapFile::class, 'floor_id', 'floor_id');
      }
      
        /**
