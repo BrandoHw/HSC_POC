@@ -268,8 +268,8 @@
                     </form>
                 </div>
                 <div class="iq-card-body d-flex justify-content-center">
-                    <button type="button" class="btn btn-primary m-1" onClick="updatePolicy()">Submit</button>
-                    <a href='{{ route("policies.index") }}' class="btn btn-secondary m-1">Cancel</a>
+                    <button type="button" class="btn btn-primary m-1" id="update-btn" onClick="updatePolicy()">Update</button>
+                    <a href='{{ route("policies.index") }}' id="cancel-btn" class="btn btn-secondary m-1">Cancel</a>
                 </div>
             </div>
         </div>
@@ -527,6 +527,9 @@
         console.log(result);
 
         if(!invalid_exist){
+            $('#cancel-btn').prop('hidden', true);
+            $('#update-btn').prop('disabled', true);
+            $('#update-btn').html('<i class="fa fa-circle-o-notch fa-spin"></i>Updating');
             $.ajax({
                 url: '{{ route("policies.update", $policy->rules_id) }}',
                 type: "PATCH",
@@ -544,7 +547,12 @@
                             }
                         })
                     } else {
-                        window.location.href = '{{ route("policies.index") }}';
+                        $('#update-btn').css('background', 'var(--iq-success)');
+                        $('#update-btn').css('border-color', 'var(--iq-success)');
+                        $('#update-btn').html('<i class="fa fa-check"></i>Updated');
+                        setTimeout(function() {
+                            window.location.href = '{{ route("policies.index") }}';
+                        }, 500);
                     }
                 },
                 error:function(error){

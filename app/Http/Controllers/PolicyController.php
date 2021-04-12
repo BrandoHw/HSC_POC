@@ -423,11 +423,26 @@ class PolicyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  array  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyMulti(Request $request)
+    {
+        $ids = $request->policies_id;
+        $policies = Policy::destroy($ids);
+        return response()->json([
+            "success" => "success"
+        ], 200);
     }
 }

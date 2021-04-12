@@ -220,8 +220,8 @@
                     </form>
                 </div>
                 <div class="iq-card-body d-flex justify-content-center">
-                    <button type="button" class="btn btn-primary m-1" onClick="savePolicy()">Submit</button>
-                    <a href='{{ route("policies.index") }}' class="btn btn-secondary m-1">Cancel</a>
+                    <button type="button" id="save-btn" class="btn btn-primary m-1" onClick="savePolicy()">Save</button>
+                    <a href='{{ route("policies.index") }}' id="cancel-btn" class="btn btn-secondary m-1">Cancel</a>
                 </div>
             </div>
         </div>
@@ -464,6 +464,9 @@
         console.log(result);
 
         if(!invalid_exist){
+            $('#cancel-btn').prop('hidden', true);
+            $('#save-btn').prop('disabled', true);
+            $('#save-btn').html('<i class="fa fa-circle-o-notch fa-spin"></i>Saving');
             $.ajax({
                 url: '{{ route("policies.store") }}',
                 type: "POST",
@@ -481,7 +484,12 @@
                             }
                         })
                     } else {
-                        window.location.href = '{{ route("policies.index") }}';
+                        $('#save-btn').css('background', 'var(--iq-success)');
+                        $('#save-btn').css('border-color', 'var(--iq-success)');
+                        $('#save-btn').html('<i class="fa fa-check"></i>Saved');
+                        setTimeout(function() {
+                            window.location.href = '{{ route("policies.index") }}';
+                        }, 500);
                     }
                 },
                 error:function(error){
