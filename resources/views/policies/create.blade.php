@@ -472,7 +472,7 @@
                     if($.isEmptyObject(response['success'])){
                         console.log(response);
                     } else {
-                        // window.location.href = '{{ route("policies.index") }}';
+                        window.location.href = '{{ route("policies.index") }}';
                     }
                 },
                 error:function(error){
