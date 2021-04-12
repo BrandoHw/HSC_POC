@@ -14,15 +14,16 @@ class CreateFloorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('floors', function (Blueprint $table) {
-            $table->id();
+        Schema::create('floors_table', function (Blueprint $table) {
+            $table->id('floor_id');
+            $table->integer('id');
             $table->integer('number');
             $table->string('alias')->nullable();
             $table->unsignedBigInteger('building_id')->nullable();
             $table->timestamps();
 
             $table->foreign('building_id')
-                ->references('id')
+                ->references('building_id')
                 ->on('buildings')
                 ->onDelete('cascade');
         });
