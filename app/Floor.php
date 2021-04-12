@@ -11,7 +11,7 @@ class Floor extends Model
      *
      * @var array
      */
-    protected $table ='floors_table';
+//     protected $table ='floors_table';
     protected $fillable = [
           'number', 'alias', 'building_id'
      ];
