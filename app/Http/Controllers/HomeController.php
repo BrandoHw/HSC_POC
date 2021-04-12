@@ -47,7 +47,7 @@ class HomeController extends Controller
             $gatewayZone->alias = $gatewayZone->gateway->location->floor_level->alias;
         }
 
-        $building = Building::where('id', $id)->get();
+        $building = Building::find($id)->get();
      
         $floors = Floor::where('building_id', $id)->with('map')->orderBy('number', 'asc')->get();
         return view('home', compact('gatewayZones', 'building', 'floors'));

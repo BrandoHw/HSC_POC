@@ -16,12 +16,20 @@ class Location extends Model
     public $timestamps = false;
     public function floor_level()
 	{
-		return $this->belongsTo(Floor::class, 'floor', 'id');
+		return $this->belongsTo(Floor::class, 'floor', 'floor_id');
     }
 
 	public function type()
 	{
 		return $this->belongsTo(LocationType::class, 'location_type_id', 'type_id');
+    }
+
+    /**
+     * Get the scopes associated with the location
+     */
+    public function scopes()
+    {
+        return $this->belongsToMany(Scope::class, 'scope_locations_master_table', 'location_id', 'scope_id');
     }
 
 

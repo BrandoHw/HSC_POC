@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Tag;
+use App\User;
+use App\UserType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SettingController extends Controller
 {
@@ -13,7 +17,19 @@ class SettingController extends Controller
      */
     public function index()
     {
-        return view('settings.index');
+        $user = Auth::user();
+        $users = User::orderBy('user_id', 'asc')->get();
+        $userTypes = UserType::pluck('type', 'user_type_id')->all();
+
+        $tagsNull = Tag::where('beacon_type', 2)
+            ->doesntHave('user')
+            ->pluck('beacon_mac', 'beacon_id');
+        
+        if(!empty($user->tag)){
+            $current = collect([$user->tag->beacon_id => $user->tag->beacon_mac]);
+            $tagsNull = $current->concat($tagsNull)->all();
+        }
+        return view('settings.index', compact('user', 'users', 'userTypes', 'tagsNull'));
     }
 
     /**

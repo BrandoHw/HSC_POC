@@ -21,59 +21,6 @@
         <div class="col-lg-9 mail-box-detail">
             <div class="iq-card" style="height: 500px">
                 <div class="iq-card-body p-0">
-                    <div class="">
-                        <div class="iq-email-to-list p-3">
-                            <div class="d-flex justify-content-between">
-                                <ul>
-                                <li>
-                                    <a href="#" id="navbarDropdown" data-toggle="dropdown">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                            <label class="custom-control-label" for="customCheck1"><i class="ri-arrow-down-s-line"></i></label>
-                                        </div>
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                    </div>
-                                </li>
-                                </ul>
-                                <div class="iq-email-search d-flex">
-                                <form class="mr-3 position-relative">
-                                    <div class="form-group mb-0">
-                                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Search">
-                                        <a class="search-link" href="#"><i class="ri-search-line"></i></a>
-                                    </div>
-                                </form>
-                                <a class="btn btn-primary" href="#">Export</a>
-                                <div class="col-2 row justify-content-end">
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="iq-email-listbox">
-                            <div class="tab-content">
-                                <div class="tab-pane fade show active row justify-content-between" id="breakfast" role="tabpanel">
-                                    <div class="col-6">
-                                        <div id="am-3dpie-chart" style="height: 400px;"></div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="lunch" role="tabpanel">
-                                </div>
-                                <div class="tab-pane fade" id="dinner" role="tabpanel">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="iq-card">
                 <div class="iq-card-body">
                     <div class="iq-search-bar row justify-content-between">
                         <form action="#" class="searchbox">

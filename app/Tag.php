@@ -19,21 +19,20 @@ class Tag extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'beacon_id';
+
    /**
      * The storage format of the model's date columns.
      *
      * @var string
      */
     protected $dateFormat = 'Y-m-d H:i:s';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    // protected $fillable = [
-    //     'serial', 'uuid', 'mac_addr'
-    // ];
     protected $fillable = [
         'beacon_type', 'beacon_mac', 'reader_mac', 'current_loc'
     ];
@@ -51,7 +50,7 @@ class Tag extends Model
      */
     public function user()
     {
-        return $this->hasOne(User::class, 'beacon_id', 'id');
+        return $this->hasOne(User::class, 'beacon_id', 'beacon_id');
     }
 
     /**
@@ -72,4 +71,11 @@ class Tag extends Model
         return $this->hasOne(Reader::class, 'gateway_id', 'current_loc');
     }
 
+    /**
+     * Get the scopes associated with the tag
+     */
+    public function scopes()
+    {
+        return $this->belongsToMany(Scope::class, 'scope_beacons_table', 'beacon_id', 'scope_id');
+    }
 }

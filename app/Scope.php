@@ -34,14 +34,30 @@ class Scope extends Model
      * @var array
      */
     protected $fillable = [
-        'start_time', 'end_time'
+        'gateway_dwell_time', 'days', 'start_time', 'duration'
     ];
 
     /**
      * Get the policy records associated with the scope
      */
-    public function policies()
+    public function policy()
     {
-        return $this->hasMany(Policy::class, 'scope_id', 'scope_id');
+        return $this->hasOne(Policy::class, 'scope_id', 'scope_id');
+    }
+
+    /**
+     * Get the tags associated with the scope
+     */
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'scope_beacons_table', 'scope_id', 'beacon_id');
+    }
+
+    /**
+     * Get the locations associated with the scope
+     */
+    public function locations()
+    {
+        return $this->belongsToMany(Location::class, 'scope_locations_master_table', 'scope_id', 'location_id');
     }
 }

@@ -15,7 +15,7 @@ class FloorController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:floor-list|floor-create|floor-edit|floor-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:floor-list|floor-create|floor-edit|floor-delete', ['only' => ['index','show', 'edit']]);
         $this->middleware('permission:floor-create', ['only' => ['create','store']]);
         $this->middleware('permission:floor-edit', ['only' => ['edit','update']]);
         $this->middleware('permission:floor-delete', ['only' => ['destroy']]);

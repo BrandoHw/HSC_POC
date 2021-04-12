@@ -21,14 +21,6 @@ class Policy extends Model
      */
     protected $primaryKey = 'rules_id';
 
-
-     /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
       /**
      * The attributes that are mass assignable.
      *
@@ -36,9 +28,9 @@ class Policy extends Model
      */
     protected $fillable = [
         'description',
-        'x-threshold', 'y_threshold', 'z_threshold',
+        'x_threshold', 'y_threshold', 'z_threshold',
         'x_frequency', 'y_frequency', 'z_frequency',
-        'alert_option', 'attendance', 'geofence'
+        'alert_action', 'attendance', 'geofence',
     ];
 
     /**

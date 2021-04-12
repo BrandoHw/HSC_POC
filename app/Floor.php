@@ -7,6 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 class Floor extends Model
 {
      /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'floors_table';
+
+    /**
+     * The primary key associated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'floor_id';
+
+     /**
      * The attributes that are mass assignable.
      *
      * @var array

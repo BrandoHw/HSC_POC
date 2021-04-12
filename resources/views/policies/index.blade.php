@@ -23,6 +23,7 @@
                                     <th scope="col" style="width:10%">#</th>
                                     <th scope="col" style="width:35%">Name</th>
                                     <th scope="col" style="width:25%">Type</th>
+                                    <th scope="col" style="width:25%">Parameters</th>
                                     <th scope="col" style="width:30%">Status</th>
                                 </tr>
                             </thead>
@@ -33,8 +34,28 @@
                                         <td>{{ $policy->description }}</td>
                                         <td>{{ $policy->policyType->rules_type_desc }}</td>
                                         <td>
-                                            <span class="badge badge-pill iq-bg-{{ ($policy->alert_option == 1) ? 'success':'secondary' }}">
-                                                {{ ($policy->alert_option == 1) ? 'Active':'Inactive' }}
+                                            @switch($policy->policyType->rules_type_id)
+                                                @case(1)
+                                                    {{ ($policy->attendance) ? 'Present':'Absent' }}
+                                                    @break  
+                                                @case(2)
+                                                @case(3)
+                                                @case(4)
+                                                    -
+                                                    @break  
+                                                @case(5)
+                                                    {{ ($policy->geofence) ? 'Entering Zone':'Leaving Zone' }}
+                                                    @break  
+                                                @case(6)
+                                                    x-axis: {{ ($policy->x_threshold) ?:'-' }}<br>
+                                                    y-axis: {{ ($policy->y_threshold) ?:'-' }}<br>
+                                                    z-axis: {{ ($policy->z_threshold) ?:'-' }}
+                                                    @break  
+                                            @endswitch
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-pill iq-bg-{{ ($policy->alert_action == 1) ? 'success':'secondary' }}">
+                                                {{ ($policy->alert_action == 1) ? 'Active':'Inactive' }}
                                             </span>
                                         </td>
                                     </tr>

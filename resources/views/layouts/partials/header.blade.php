@@ -5,7 +5,7 @@
             <div class="top-logo">
                 <a href="index.html" class="logo">
                     <img src="{{ asset('img/icons/wecare.png') }}" alt="logo">
-                <span>vito</span>
+                <span>WECare</span>
                 </a>
             </div>
         </div>
@@ -45,6 +45,10 @@
                         @case('settings')
                             <li class="breadcrumb-item active"><a href="{{ route('settings.index') }}"><i class="ri-settings-4-line mr-1 float-left"></i>Settings</a></li>
                             @break
+                        @case('users')
+                            <li class="breadcrumb-item active"><a href="{{ route('settings.index') }}"><i class="ri-settings-4-line mr-1 float-left"></i>Settings</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Members</li>
+                            @break
                         @default
                             <li class="breadcrumb-item active"><a href="{{ route('home') }}"><i class="ri-home-4-line mr-1 float-left"></i>Dashboard</a></li>
                     @endswitch
@@ -59,34 +63,23 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
             </div>
             <ul class="navbar-list">
-                <li id ="notif-li" class="nav-item">
-                    <a href="#" id = "notif-a" class="search-toggle iq-waves-effect">
-                       <div id="notif-bell"></div>
-                       <span id ="notif-danger-dots"class="bg-danger dots"></span>
-                    </a>
-                    <div class="iq-sub-dropdown">
-                       <div class="iq-card shadow-none m-0">
-                          <div id ="notification-card" class="iq-card-body p-0 ">
-                             <div class="bg-primary p-3">
-                                <h5 class="mb-0 text-white">All Notifications<small id = "notif-count" class="badge  badge-light float-right pt-1"></small></h5>
-                             </div>
-                          </div>
-                       </div>
-                    </div>
-                 </li>
-            
                 <li>
-                    <a href="#" class="search-toggle iq-waves-effect d-flex align-items-center bg-primary rounded">
-                        <img src="{{ asset('template/images/user/1.jpg') }}" class="img-fluid rounded mr-3" alt="user">
-                        <div class="caption">
-                            <h6 class="mb-0 line-height text-white">Nik jone</h6>
-                        </div>
-                    </a>
-                    <div class="iq-sub-dropdown iq-user-dropdown">
-                        <div class="iq-card shadow-none m-0">
-                            <div class="iq-card-body p-0 ">
-                                <div class="bg-primary p-3">
-                                <h5 class="mb-0 text-white line-height">Hello Nik jone</h5>
+                <a href="#" class="search-toggle iq-waves-effect d-flex align-items-center bg-primary rounded">
+                    <img src="{{ asset('template/images/user/1.jpg') }}" class="img-fluid rounded mr-3" alt="user">
+                    <div class="caption">
+                        <h6 class="mb-0 line-height text-white">{{ Auth::user()->full_name }}</h6>
+                    </div>
+                </a>
+                <div class="iq-sub-dropdown iq-user-dropdown">
+                    <div class="iq-card shadow-none m-0">
+                        <div class="iq-card-body p-0 ">
+                            <div class="bg-primary p-3">
+                            <h5 class="mb-0 text-white line-height">Hello {{ Auth::user()->full_name }}</h5>
+                            </div>
+                            <a href="{{ route('settings.index') }}" class="iq-sub-card iq-bg-primary-hover">
+                            <div class="media align-items-center">
+                                <div class="rounded iq-card-icon iq-bg-primary">
+                                    <i class="ri-file-user-line"></i>
                                 </div>
                                 <a href="profile.html" class="iq-sub-card iq-bg-primary-hover">
                                 <div class="media align-items-center">

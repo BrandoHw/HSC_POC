@@ -182,10 +182,9 @@ class CreatePermissionTablesAWS extends Migration
             'lName' => 'Admin',
             'phone_number' => '601112341234',
             'username' => 'admin',
-            'email' => 'admin@example.com',
             'password' => bcrypt(env('ADMIN_PASSWORD'))
         ]);
-        $tag = Tag::find(1);
+        $tag = Tag::find(211);
         $tag->user()->save($user);
 
         $userType = UserType::find(1);

@@ -19,7 +19,7 @@
                             @error('beacon_mac')
                                 <div class="alert-danger">{{ $message }}</div>
                             @enderror
-                        </div>
+                        </div> 
                         <div class="form-group">
                             <label for="createTagType">Type:</label>
                             {!! Form::select('beacon_type', $tagTypes, null, ['placeholder' => 'Please select...', 'class' => 'form-control form-control', 'id' => 'createTagType']) !!}
@@ -74,14 +74,14 @@
 
         $('#createTagType').on('change', function(){
             switch($(this).val()){
-                case "1":
+                case "2":
                     $('#user-div').prop('hidden', false);
                     $('#resident-div').prop('hidden', true);
                     $('#createUser').select2({
                         placeholder: "Please select ..."
                     });
                     break;
-                case "2":
+                case "1":
                     $('#user-div').prop('hidden', true);
                     $('#resident-div').prop('hidden', false);
                     $('#createResident').select2({

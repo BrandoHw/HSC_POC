@@ -7,11 +7,11 @@
             <div class="iq-card">
                 <div class="iq-card-header d-flex justify-content-between">
                     <div class="iq-header-title">
-                        <h4 class="card-title">Beacon ID: {{ $tag->id }}</h4>
+                        <h4 class="card-title">Beacon ID: {{ $tag->beacon_id }}</h4>
                     </div>
                 </div>
                 <div class="iq-card-body">
-                    {!! Form::model($tag, ['method' => 'PATCH', 'route' => ['beacons.update', $tag->id]]) !!}
+                    {!! Form::model($tag, ['method' => 'PATCH', 'route' => ['beacons.update', $tag->beacon_id]]) !!}
                         <div class="form-group">
                             <label for="editMacAdd">Mac Address:</label>
                             {!! Form::text('beacon_mac', null, array('placeholder' => 'XX:XX:XX:XX','class' => "form-control", 'id' => 'editMacAdd')) !!}
