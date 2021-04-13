@@ -43,7 +43,7 @@
                                                 {{ $alert->tag->resident->full_name ?? '-' }}
                                             @endif
                                         </td>
-                                        <td>{{ $alert->reader ?? "-" }}</td>
+                                        <td>{{ $alert->reader->location->location_description ?? "-" }}</td>
                                         <td>{{ $alert->occured_at }}</td>
                                         <td>
                                             <span class="badge badge-pill iq-bg-{{ ($alert->action == 1) ? 'success':'danger' }}">
