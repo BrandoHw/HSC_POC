@@ -144,6 +144,8 @@
     $('#confirmation-modal').on('hidden.bs.modal', function (e) {
         $('#cancel-btn').prop('hidden', false);
         $('#delete-btn').prop('disabled', false);
+        $('#delete-btn').css('background-color', 'var(--iq-danger)');
+        $('#delete-btn').css('border-color', 'var(--iq-danger)');
         $('#delete-btn').html('Yes, delete it');
     })
 
