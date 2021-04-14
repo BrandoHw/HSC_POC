@@ -19,6 +19,6 @@ class MapFile extends Model
 	public function floor()
 	{
 		return $this->belongsTo(Floor::class, 'floor_id', 'floor_id');
-  }
+    }
 
 }

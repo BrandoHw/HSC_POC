@@ -7,18 +7,18 @@
             <div class="iq-card">
                 <div class="iq-card-header d-flex justify-content-between">
                     <div class="iq-header-title">
-                        <h4 class="card-title">Create New Policy:</h4>
+                        <h4 class="card-title">Policy: {{ $policy->rules_id }} </h4>
                     </div>
                 </div>
                 <div class="iq-card-body">
                     <form id="form">
                         <div class="form-group">
                             <label for="name">Name:</label>
-                            <input type="text" class="form-control" id="name" onInput="validatePolicyInput(this.id)" placeholder="Enter name">
+                            <input type="text" class="form-control" value="{{ $policy->description }}" id="name" onInput="validatePolicyInput(this.id)" placeholder="Enter name">
                         </div>
                         <div class="form-group">
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="alert" name="alert">
+                                <input type="checkbox" class="custom-control-input" id="alert" name="alert" checked="{{ $policy->alert_action }}">
                                 <label class="custom-control-label" for="alert">Enabled</label>
                             </div>
                         </div>
@@ -27,94 +27,122 @@
                             <label for="type">Policy Type:</label>
                             <select class="form-control" id="type" onChange="validatePolicyInput(this.id)">
                                 <option selected="" disabled="">Please select...</option>
-                                <option value="1">Attendance</option>
-                                <option value="2">Battery</option>
-                                <option value="3">Duress Button</option>
-                                <option value="4">Fall</option>
-                                <option value="5">Geofence</option>
-                                <option value="6">Violence</option>
+                                <option {{ ($policy->rules_type_id == "1") ? 'selected':'' }} value="1">Attendance</option>
+                                <option {{ ($policy->rules_type_id == "2") ? 'selected':'' }} value="2">Battery</option>
+                                <option {{ ($policy->rules_type_id == "3") ? 'selected':'' }} value="3">Duress Button</option>
+                                <option {{ ($policy->rules_type_id == "4") ? 'selected':'' }} value="4">Fall</option>
+                                <option {{ ($policy->rules_type_id == "5") ? 'selected':'' }} value="5">Geofence</option>
+                                <option {{ ($policy->rules_type_id == "6") ? 'selected':'' }} value="6">Violence</option>
                             </select>
                         </div>
-                        <div class="form-group" id="trigger-option-attendance" hidden>
+                        <div class="form-group" id="trigger-option-attendance" {{ ($policy->rules_type_id == '1') ? '':'hidden' }}>
                             <label>Attendance Option:</label>
                             <div id="radio-attendance">
                                 <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="present" value="1" name="attendance-option" class="custom-control-input" onChange="validatePolicyInput(this.name)">
+                                    <input type="radio" id="present" value="1" name="attendance-option" class="custom-control-input" 
+                                        onChange="validatePolicyInput(this.name)" 
+                                        {{ isset($policy->attendance) ? (($policy->attendance) ? 'checked': ''):'' }}>
                                     <label class="custom-control-label" for="present"> Present</label>
                                 </div>
                                 <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="absent" value="0" name="attendance-option" class="custom-control-input" onChange="validatePolicyInput(this.name)">
+                                    <input type="radio" id="absent" value="0" name="attendance-option" class="custom-control-input" 
+                                        onChange="validatePolicyInput(this.name)" 
+                                        {{ isset($policy->attendance) ? (($policy->attendance) ? '': 'checked'):'' }}>
                                     <label class="custom-control-label" for="absent"> Absent</label>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group" id="trigger-option-battery" hidden>
+                        <div class="form-group" id="trigger-option-battery" {{ ($policy->rules_type_id == '2') ? '':'hidden' }}>
                             <p><i class="ri-information-fill"></i> This policy will violate immediately when the battery level of the gateway or beacon is less than 20%.</p>
                         </div>
-                        <div class="form-group" id="trigger-option-duress" hidden>
+                        <div class="form-group" id="trigger-option-duress" {{ ($policy->rules_type_id == '3') ? '':'hidden' }}>
                             <p><i class="ri-information-fill"></i> This policy will violate immediately when the duress button at the beacon is pressed.</p>
                         </div>
-                        <div class="form-group" id="trigger-option-fall" hidden>
+                        <div class="form-group" id="trigger-option-fall" {{ ($policy->rules_type_id == '4') ? '':'hidden' }}>
                             <p><i class="ri-information-fill"></i> This policy will violate immediately when fall is detected.</p>
                         </div>
-                        <div class="form-group" id="trigger-option-geofence" hidden>
+                        <div class="form-group" id="trigger-option-geofence" {{ ($policy->rules_type_id == '5') ? '':'hidden' }}>
                             <label>Geofence Option:</label>
                             <div id="radio-geofence">
                                 <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="enter-zone" value="1" name="geofence-option" class="custom-control-input" onChange="validatePolicyInput(this.name)">
+                                    <input type="radio" id="enter-zone" value="1" name="geofence-option" class="custom-control-input" 
+                                        onChange="validatePolicyInput(this.name)"
+                                        {{ isset($policy->geofence) ? (($policy->geofence) ? 'checked': ''):'' }}>
                                     <label class="custom-control-label" for="enter-zone"> Entering Zone</label>
                                 </div>
                                 <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="leave-zone" value="0" name="geofence-option" class="custom-control-input" onChange="validatePolicyInput(this.name)">
+                                    <input type="radio" id="leave-zone" value="0" name="geofence-option" class="custom-control-input" 
+                                        onChange="validatePolicyInput(this.name)"
+                                        {{ isset($policy->geofence) ? (($policy->geofence) ? '': 'checked'):'' }}>
                                     <label class="custom-control-label" for="leave-zone"> Leaving Zone</label>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group" id="trigger-option-violence-param" hidden>
+                        <div class="form-group" id="trigger-option-violence-param" {{ ($policy->rules_type_id == '6') ? '':'hidden' }}>
                             <label>Violence Parameters:</label>
                             <a href="#" data-toggle="tooltip" data-placement="right" title="" style="cursor: pointer; left-padding:0" data-original-title="The policy will violate according to the G-value threashold set at the selected x, y, z-axis">
                                 <i class="ri-information-fill"></i>
                             </a>
                             <div class="form-group row align-items-center ml-3" id="x-axis-row">
                                 <div class="custom-control custom-checkbox custom-control col-sm-2 mt-2 mb-2">
-                                    <input type="checkbox" class="custom-control-input" id="x-axis" name="x-axis-check" onChange="validatePolicyInput('violence')">
+                                    <input type="checkbox" class="custom-control-input" id="x-axis" name="x-axis-check" 
+                                        onChange="validatePolicyInput('violence')"
+                                        {{ isset($policy->x_threshold) ? 'checked':'' }}>
                                     <label class="custom-control-label" for="x-axis">x-axis</label>
                                 </div>
-                                <div class="col-sm-6" id="x-axis-div" hidden>
-                                    <input type="number" min="0" max="2" data-decimals="1" step="0.1" class="form-control form-control-sm" id="x-value" placeholder="Enter g-value" onInput="validatePolicyInput(this.id)">
+                                <div class="col-sm-6" id="x-axis-div" {{ isset($policy->x_threshold) ? '':'hidden' }}>
+                                    <input type="number" min="0" max="2" data-decimals="1" step="0.1" class="form-control form-control-sm" id="x-value" placeholder="Enter g-value" 
+                                        onInput="validatePolicyInput(this.id)"
+                                        value="{{ isset($policy->x_threshold) ? $policy->x_threshold:'' }}">
                                 </div>
                             </div>
                             <div class="form-group row align-items-center ml-3" id="y-axis-row">
                                 <div class="custom-control custom-checkbox custom-control col-sm-2 mt-2 mb-2">
-                                    <input type="checkbox" class="custom-control-input" id="y-axis" name="y-axis-check" onChange="validatePolicyInput('violence')">
+                                    <input type="checkbox" class="custom-control-input" id="y-axis" name="y-axis-check" 
+                                        onChange="validatePolicyInput('violence')"
+                                        {{ isset($policy->y_threshold) ? 'checked':'' }}>
                                     <label class="custom-control-label" for="y-axis">y-axis</label>
                                 </div>
-                                <div class="col-sm-6" id="y-axis-div" hidden>
-                                    <input type="number" min="0" max="2" data-decimals="1" step="0.1" class="form-control form-control-sm" id="y-value" placeholder="Enter g-value" onInput="validatePolicyInput(this.id)">
+                                <div class="col-sm-6" id="y-axis-div" {{ isset($policy->y_threshold) ? '':'hidden' }}>
+                                    <input type="number" min="0" max="2" data-decimals="1" step="0.1" class="form-control form-control-sm" id="y-value" placeholder="Enter g-value" 
+                                        onInput="validatePolicyInput(this.id)"
+                                        value="{{ isset($policy->y_threshold) ? $policy->y_threshold:'' }}">
                                 </div>
                             </div>
                             <div class="form-group row align-items-center ml-3" id="z-axis-row">
                                 <div class="custom-control custom-checkbox custom-control col-sm-2 mt-2 mb-2">
-                                    <input type="checkbox" class="custom-control-input" id="z-axis" name="z-axis-check" onChange="validatePolicyInput('violence')">
+                                    <input type="checkbox" class="custom-control-input" id="z-axis" name="z-axis-check" 
+                                        onChange="validatePolicyInput('violence')"
+                                        {{ isset($policy->z_threshold) ? 'checked':'' }}>
                                     <label class="custom-control-label" for="z-axis">z-axis</label>
                                 </div>
-                                <div class="col-sm-6" id="z-axis-div" hidden>
-                                    <input type="number" min="0" max="2" data-decimals="1" step="0.1" class="form-control form-control-sm" id="z-value" placeholder="Enter g-value" onInput="validatePolicyInput(this.id)">
+                                <div class="col-sm-6" id="z-axis-div" {{ isset($policy->z_threshold) ? '':'hidden' }}>
+                                    <input type="number" min="0" max="2" data-decimals="1" step="0.1" class="form-control form-control-sm" id="z-value" placeholder="Enter g-value" 
+                                        onInput="validatePolicyInput(this.id)"
+                                        value="{{ isset($policy->z_threshold) ? $policy->z_threshold:'' }}">
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group" id="trigger-option-violence-frequency" hidden>
+                        <div class="form-group" id="trigger-option-violence-frequency" {{ ($policy->rules_type_id == '6') ? '':'hidden' }}>
                             <label>Violence Frequency:</label>
                             <a href="#" data-toggle="tooltip" data-placement="right" title="" style="cursor: pointer; left-padding:0" data-original-title="The policy will violate after it fulfill the parameters set for this frequency of time.">
                                 <i class="ri-information-fill"></i>
                             </a>
                             <select class="form-control" id="frequency" onChange="validatePolicyInput(this.id)">
                                 <option value="" selected="" disabled="">Please select ...</option>
-                                <option value=1>1 second</option>
-                                <option value=5>5 seconds</option>
-                                <option value=10>10 seconds</option>
-                                <option value=15>15 seconds</option>
-                                <option value=20>20 seconds</option>
+                                @if(isset($policy->frequency))
+                                    <option {{ ($policy->frequency == "1") ? 'selected':'' }} value=1>1 second</option>
+                                    <option {{ ($policy->frequency == "5") ? 'selected':'' }} value=5>5 seconds</option>
+                                    <option {{ ($policy->frequency == "10") ? 'selected':'' }} value=10>10 seconds</option>
+                                    <option {{ ($policy->frequency == "15") ? 'selected':'' }} value=15>15 seconds</option>
+                                    <option {{ ($policy->frequency == "20") ? 'selected':'' }} value=20>20 seconds</option>
+                                @else
+                                    <option value=1>1 second</option>
+                                    <option value=5>5 seconds</option>
+                                    <option value=10>10 seconds</option>
+                                    <option value=15>15 seconds</option>
+                                    <option value=20>20 seconds</option>
+                                @endif
                             </select>
                         </div>
                     </form>
@@ -130,22 +158,24 @@
                             <label for="target">Target(s):</label>
                             <select class="form-control" id="target" onChange="validatePolicyInput(this.id)">
                                 <option selected="" disabled="">Please select...</option>
-                                <option value="all">Everyone</option>
-                                <option value="user-only">User Only</option>
-                                <option value="resident-only">Resident Only</option>
-                                <option value="custom">Custom</option>
+                                <option {{ ($policy->target_type == 'all') ? 'selected':'' }} value="all">Everyone</option>
+                                <option {{ ($policy->target_type == 'user-only') ? 'selected':'' }} value="user-only">User Only</option>
+                                <option {{ ($policy->target_type == 'resident-only') ? 'selected':'' }} value="resident-only">Resident Only</option>
+                                <option {{ ($policy->target_type == 'custom') ? 'selected':'' }} value="custom">Custom</option>
                             </select>
                         </div>
-                        <div class="form-group" id="custom-target-div" hidden>
+                        <div class="form-group" id="custom-target-div" {{ ($policy->target_type == "custom") ? "":"hidden" }}>
                             <label for="custom-target">Custom Target(s):</label>
                             <select class="form-control" id="custom-target" onInput="validatePolicyInput(this.id)">
                                 @foreach($residents as $resident)
                                     <option value="R-{{ $resident->resident_id }}">
-                                    R{{ $resident->resident_id }} - {{ $resident->full_name }}</option>
+                                        R{{ $resident->resident_id }} - {{ $resident->full_name }}
+                                    </option>
                                 @endforeach
                                 @foreach($users as $user)
                                     <option value="U-{{ $user->user_id }}">
-                                    U{{ $user->user_id }} - {{ $user->full_name }}</option>
+                                        U{{ $user->user_id }} - {{ $user->full_name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -153,41 +183,55 @@
                             <label for="day">Day(s):</label>
                             <select class="form-control" id="day" onChange="validatePolicyInput(this.id)">
                                 <option selected="" disabled="">Please select...</option>
-                                <option value="daily">Daily</option>
-                                <option value="weekdays">Monday to Friday</option>
-                                <option value="weekend">Saturday to Sunday</option>
-                                <option value="custom">Custom</option>
+                                <option {{ ($policy->day_type == "daily") ? 'selected':'' }} value="daily">Daily</option>
+                                <option {{ ($policy->day_type == "weekdays") ? 'selected':'' }} value="weekdays">Monday to Friday</option>
+                                <option {{ ($policy->day_type == "weekends") ? 'selected':'' }} value="weekends">Saturday to Sunday</option>
+                                <option {{ ($policy->day_type == "custom") ? 'selected':'' }} value="custom">Custom</option>
                             </select>
                         </div>
-                        <div class="form-group" id="custom-day-div" hidden>
+                        <div class="form-group" id="custom-day-div" >
                             <label for="custom-day">Custom Day(s):</label>
                             <div class="row align-items-center ml-2" id="custom-day-row">
                                 <div class="custom-control custom-checkbox mr-3">
-                                    <input type="checkbox" class="custom-control-input" id="sun" name="sun" onInput="validatePolicyInput('custom-day')">
+                                    <input type="checkbox" class="custom-control-input" id="sun" name="sun" 
+                                        onInput="validatePolicyInput('custom-day')"
+                                        {{ ($policy->day[0]) ? 'checked':'' }}>
                                     <label class="custom-control-label" for="sun">Sun</label>
                                 </div>
                                 <div class="custom-control custom-checkbox mr-3">
-                                    <input type="checkbox" class="custom-control-input" id="mon" name="mon" onInput="validatePolicyInput('custom-day')">
+                                    <input type="checkbox" class="custom-control-input" id="mon" name="mon" 
+                                        onInput="validatePolicyInput('custom-day')"
+                                        {{ ($policy->day[1]) ? 'checked':'' }}>
                                     <label class="custom-control-label" for="mon">Mon</label>
                                 </div>
                                 <div class="custom-control custom-checkbox mr-3">
-                                    <input type="checkbox" class="custom-control-input" id="tue" name="tue" onInput="validatePolicyInput('custom-day')">
+                                    <input type="checkbox" class="custom-control-input" id="tue" name="tue" 
+                                        onInput="validatePolicyInput('custom-day')"
+                                        {{ ($policy->day[2]) ? 'checked':'' }}>
                                     <label class="custom-control-label" for="tue">Tue</label>
                                 </div>
                                 <div class="custom-control custom-checkbox mr-3">
-                                    <input type="checkbox" class="custom-control-input" id="wed" name="wed" onInput="validatePolicyInput('custom-day')">
+                                    <input type="checkbox" class="custom-control-input" id="wed" name="wed" 
+                                        onInput="validatePolicyInput('custom-day')"
+                                        {{ ($policy->day[3]) ? 'checked':'' }}>
                                     <label class="custom-control-label" for="wed">Wed</label>
                                 </div>
                                 <div class="custom-control custom-checkbox mr-3">
-                                    <input type="checkbox" class="custom-control-input" id="thurs" name="thurs" onInput="validatePolicyInput('custom-day')">
+                                    <input type="checkbox" class="custom-control-input" id="thurs" name="thurs" 
+                                        onInput="validatePolicyInput('custom-day')"
+                                        {{ ($policy->day[4]) ? 'checked':'' }}>
                                     <label class="custom-control-label" for="thurs">Thurs</label>
                                 </div>
                                 <div class="custom-control custom-checkbox mr-3">
-                                    <input type="checkbox" class="custom-control-input" id="fri" name="fri" onInput="validatePolicyInput('custom-day')">
+                                    <input type="checkbox" class="custom-control-input" id="fri" name="fri" 
+                                        onInput="validatePolicyInput('custom-day')"
+                                        {{ ($policy->day[5]) ? 'checked':'' }}>
                                     <label class="custom-control-label" for="fri">Fri</label>
                                 </div>
                                 <div class="custom-control custom-checkbox mr-3">
-                                    <input type="checkbox" class="custom-control-input" id="sat" name="sat" onInput="validatePolicyInput('custom-day')">
+                                    <input type="checkbox" class="custom-control-input" id="sat" name="sat" 
+                                        onInput="validatePolicyInput('custom-day')"
+                                        {{ ($policy->day[6]) ? 'checked':'' }}>
                                     <label class="custom-control-label" for="sat">Sat</label>
                                 </div>
                             </div>
@@ -195,7 +239,9 @@
                         <div class="form-group">
                             <label for="start-time">Start Time:</label>
                             <div class="input-group date">
-                                <input type="text" class="form-control" id="start-time" name="start-time" style="background-color: white" onInput="validatePolicyInput(this.id)" placeholder="Click to select time"/>
+                                <input type="text" class="form-control" id="start-time" name="start-time" style="background-color: white" 
+                                    onInput="validatePolicyInput(this.id)" placeholder="Click to select time"
+                                    value="{{ $policy->scope->start_time }}"/>
                                 <div class="input-group-append">
                                     <div class="input-group-text"><i class="fa fa-clock-o"></i></div>
                                 </div>
@@ -206,7 +252,9 @@
                             <a href="#" data-toggle="tooltip" data-placement="right" title="The duration of this rule being active since start time. [1 - 24 hrs]" style="cursor: pointer; left-padding:0">
                                 <i class="ri-information-fill"></i>
                             </a>
-                            <input type="number" min="1" max="24" class="form-control" name="duration" id="duration" step="1" onInput="validatePolicyInput(this.id)" placeholder="Enter duration">
+                            <input type="number" min="1" max="24" class="form-control" name="duration" id="duration" step="1" 
+                                onInput="validatePolicyInput(this.id)" placeholder="Enter duration"
+                                value="{{ $policy->scope->duration }}">
                         </div>
                         <div class="form-group mt-2">
                             <label for="location">Location(s):</label>
@@ -220,7 +268,7 @@
                     </form>
                 </div>
                 <div class="iq-card-body d-flex justify-content-center">
-                    <button type="button" id="save-btn" class="btn btn-primary m-1" onClick="savePolicy()">Save</button>
+                    <button type="button" class="btn btn-primary m-1" id="update-btn" onClick="updatePolicy()">Update</button>
                     <a href='{{ route("policies.index") }}' id="cancel-btn" class="btn btn-secondary m-1">Cancel</a>
                 </div>
             </div>
@@ -251,15 +299,30 @@
             placeholder: "Please select..."
         });
 
-        /* Reset input */
-        $('#location').val('').trigger('change');
+        let selected_location = new Array(@json($policy->all_locations));
+        $('#location').select2('val', selected_location);
         
         /* Initialise inputSpinner for number input*/
         $('#x-value').inputSpinner();
         $('#y-value').inputSpinner();
         $('#z-value').inputSpinner();
         $('#duration').inputSpinner();
-        
+
+        @if($policy->target_type == "custom")
+            /* Initialise custom-target select2 */
+            if($('#target').val() == "custom"){
+                $('#custom-target').select2({
+                    multiple: true,
+                    closeOnSelect: false,
+                    scrollAfterSelect: false,
+                    allowClear: true,
+                    selectionCssClass: 'form-control',
+                    placeholder: "Please select target..."
+                });
+                let selected_target = new Array(@json($policy->all_targets));
+                $('#custom-target').select2('val', selected_target)
+            }
+        @endif
     });
 
     /* If target is custom, show custom target */
@@ -397,7 +460,7 @@
     
 
     /* Save this policy */
-    function savePolicy(){
+    function updatePolicy(){
         let items = [
             'name', 
             'type', 
@@ -465,11 +528,11 @@
 
         if(!invalid_exist){
             $('#cancel-btn').prop('hidden', true);
-            $('#save-btn').prop('disabled', true);
-            $('#save-btn').html('<i class="fa fa-circle-o-notch fa-spin"></i>Saving');
+            $('#update-btn').prop('disabled', true);
+            $('#update-btn').html('<i class="fa fa-circle-o-notch fa-spin"></i>Updating');
             $.ajax({
-                url: '{{ route("policies.store") }}',
-                type: "POST",
+                url: '{{ route("policies.update", $policy->rules_id) }}',
+                type: "PATCH",
                 data: result,
                 success:function(response){
                     let errors = response['errors'];
@@ -484,9 +547,9 @@
                             }
                         })
                     } else {
-                        $('#save-btn').css('background', 'var(--iq-success)');
-                        $('#save-btn').css('border-color', 'var(--iq-success)');
-                        $('#save-btn').html('<i class="fa fa-check"></i>Saved');
+                        $('#update-btn').css('background', 'var(--iq-success)');
+                        $('#update-btn').css('border-color', 'var(--iq-success)');
+                        $('#update-btn').html('<i class="fa fa-check"></i>Updated');
                         setTimeout(function() {
                             window.location.href = '{{ route("policies.index") }}';
                         }, 500);
@@ -603,7 +666,7 @@
                         return 127
                     case "weekdays":
                         return 62
-                    case "weekend": 
+                    case "weekends": 
                         return 65
                     case "custom":
                         return -1

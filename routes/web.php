@@ -95,9 +95,9 @@ Route::group(['middleware' => ['auth']], function() {
         ->only(['index', 'show']);
 
     Route::resource('policies', PolicyController::class)
-        ->name('*', 'policies');
-    Route::resource('policies', PolicyController::class)
-        ->except(['show']);
+        ->name('*', 'policies')->except(['show', 'destroy']);
+    Route::delete('policies/destroy-multi', [PolicyController::class, 'destroyMulti'])
+        ->name('policies.destroy-multi');
 
     Route::resource('alerts', AlertController::class);
 
