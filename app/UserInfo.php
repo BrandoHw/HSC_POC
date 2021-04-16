@@ -4,11 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UserInfo extends Model
 {
-    protected $table = "users_table";
     use HasFactory;
+    use SoftDeletes;
+
+    protected $table = "users_table";
     protected $fillable = [
         'beacon_id', 'type_id', 'right_id', 'fName', 'lName', 'phone_number',
     ];

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -111,7 +112,7 @@ class Policy extends Model
     }
 
     /**
-     * Get the policy's day.
+     * Get the policy's day type.
      *
      * @return string
      */
@@ -187,7 +188,7 @@ class Policy extends Model
     }
 
     /**
-     * Get the users associated with this policy.
+     * Get the all targets associated with this policy.
      *
      * @return string
      */
@@ -207,5 +208,33 @@ class Policy extends Model
     {
         return $this->scope->locations->pluck('location_master_id')->all();
 
+    }
+
+    /**
+     * Convert created_at to Asia/Kuala_Lumpur timezone.
+     *
+     * @return string
+     */
+    public function getCreatedAtTzAttribute()
+    {
+        $date = Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at, 'UTC');
+        $date->setTimezone('Asia/Kuala_Lumpur');
+        return $date->format('Y-m-d g:i:s A');
+    }
+
+    /**
+     * Convert updated_at to Asia/Kuala_Lumpur timezone.
+     *
+     * @return string
+     */
+    public function getUpdatedAtTzAttribute()
+    {
+        if(isset($this->updated_at)){
+            $date = Carbon::createFromFormat('Y-m-d H:i:s', $this->updated_at, 'UTC');
+            $date->setTimezone('Asia/Kuala_Lumpur');
+            return $date->format('Y-m-d g:i:s A');
+        } else {
+            return "-";
+        }
     }
 }

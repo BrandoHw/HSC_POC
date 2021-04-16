@@ -135,7 +135,8 @@
                         last: '<i class="las la-angle-double-right">',
                     }
                 },
-                lengthMenu: [[10, 30, 50, -1], [10, 30, 50, "All"]],
+                lengthMenu: [[15, 30, 50, 100], [15, 30, 50, 100]],
+                pageLength: 100,
                 dom:'rtlpi', //to hide default searchbox but search feature is not disabled hence customised searchbox can be made.
                 columnDefs: [{
                     targets: 0,

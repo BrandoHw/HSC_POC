@@ -21,10 +21,12 @@
                         <thead>
                                 <tr>
                                     <th scope="col" style="width:10%">#</th>
-                                    <th scope="col" style="width:35%">Name</th>
-                                    <th scope="col" style="width:25%">Type</th>
-                                    <th scope="col" style="width:25%">Parameters</th>
-                                    <th scope="col" style="width:30%">Status</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Parameters</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Created</th>
+                                    <th scope="col">Updated</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -55,9 +57,11 @@
                                         </td>
                                         <td class="info">
                                             <span class="badge badge-pill iq-bg-{{ ($policy->alert_action == 1) ? 'success':'secondary' }}">
-                                                {{ ($policy->alert_action == 1) ? 'Active':'Inactive' }}
+                                                {{ ($policy->alert_action == 1) ? 'Enabled':'Disabled' }}
                                             </span>
                                         </td>
+                                        <td class="info">{{ $policy->created_at_tz }}</td>
+                                        <td class="info">{{ $policy->updated_at_tz }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -77,10 +81,10 @@
                             <i class="ri-error-warning-fill text-primary" style="font-size: 85px; margin: -15px"></i>
                         </div>
                         <div class="row mt-3 justify-content-center mt-2">
-                            <div class="h4 font-weight-bold">Policy not found!</div>
+                            <div class="h4 font-weight-bold">Policy not selected!</div>
                         </div>
                         <div class="row justify-content-center">
-                            <div class="">Select at laeast one policy to delete.</div>
+                            <div class="">Select at least one policy to delete.</div>
                         </div>
                         <div class="row mt-5 justify-content-center">
                             <button type="button" class="btn btn-secondary m-1" data-dismiss="modal">Dismiss</button>
@@ -100,10 +104,10 @@
                             <i class="ri-error-warning-fill text-danger" style="font-size: 85px; margin: -15px"></i>
                         </div>
                         <div class="row mt-3 justify-content-center mt-2">
-                            <div class="h4 font-weight-bold">Delete these policies?</div>
+                            <div class="h4 font-weight-bold" id="delete-message">Delete these policies?</div>
                         </div>
                         <div class="row justify-content-center">
-                            <div class="">You will not be able to recover it.</div>
+                            <div class="" id="delete-submessage">You will not be able to recover it.</div>
                         </div>
                         <div class="row mt-5 justify-content-center">
                             <button type="button" class="btn btn-secondary m-1" id="cancel-btn" data-dismiss="modal">Cancel</button>
@@ -121,7 +125,7 @@
 <script>
     /* Initiate dataTable */
     let dTable = $('#policyTable').DataTable({
-        order: [[1, 'asc']],
+        order: [[5, 'asc']],
     })
 
     $('#myCustomSearchBox').keyup(function(){  
@@ -137,6 +141,18 @@
         if(_.isEmpty(policy_selected)){
             $('#empty-modal').modal('toggle');
         } else {
+            if(policy_selected.length == 1){
+                console.log('yes length 1');
+                $('#delete-message').html('Delete this policy?');
+                $('#delete-submessage').html('You will not be able to recover it.');
+                $('#delete-btn').html('Yes, delete it');
+                
+            } else {
+                console.log('no length not 1');
+                $('#delete-message').html('Delete these policies?');
+                $('#delete-submessage').html('You will not be able to recover them.');
+                $('#delete-btn').html('Yes, delete them');
+            }
             $('#confirmation-modal').modal('toggle');
         }
     })
@@ -146,7 +162,6 @@
         $('#delete-btn').prop('disabled', false);
         $('#delete-btn').css('background-color', 'var(--iq-danger)');
         $('#delete-btn').css('border-color', 'var(--iq-danger)');
-        $('#delete-btn').html('Yes, delete it');
     })
 
     $('#delete-btn').on('click', function(){
@@ -158,7 +173,6 @@
         let selected_row = dTable.column(0).checkboxes.selected();
 
         let policies_id = [];
-
         $.each(selected_row, function(index, value){
             let data = dTable.rows('#policy-'+value).data()[0];
             policies_id.push(data[0]);

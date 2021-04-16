@@ -24,7 +24,7 @@
                                     <th scope="col">Policy Name</th>
                                     <th scope="col">Subject</th>
                                     <th scope="col">Location</th>
-                                    <th scope="col">Created at</th>
+                                    <th scope="col">Occured at</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Resolved by</th>
                                     <th scope="col">Resolved at</th>
@@ -38,20 +38,20 @@
                                         <td>{{ $alert->policy->description }}</td>
                                         <td>
                                             @if($alert->tag->beacon_type == 1)
-                                                {{ $alert->tag->user->full_name ?? '-' }}
-                                            @else
                                                 {{ $alert->tag->resident->full_name ?? '-' }}
+                                            @else
+                                                {{ $alert->tag->user->full_name ?? '-' }}
                                             @endif
                                         </td>
                                         <td>{{ $alert->reader->location->location_description ?? "-" }}</td>
-                                        <td>{{ $alert->occured_at }}</td>
+                                        <td>{{ $alert->occured_at_tz }}</td>
                                         <td>
                                             <span class="badge badge-pill iq-bg-{{ ($alert->action == 1) ? 'success':'danger' }}">
                                                 {{ ($alert->action == 1) ? 'Resolved':'Unresolved' }}
                                             </span>
                                         </td>
                                         <td>{{ $alert->user->full_name ?? "-" }}</td>
-                                        <td>{{ $alert->resolved_at ?? "-" }}</td>
+                                        <td>{{ $alert->resolved_at_tz }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -68,7 +68,7 @@
 <script>
     /* Initiate dataTable */
     var dTable = $('#alertTable').DataTable({
-            order: [[5, 'asc']],
+            order: [[5, 'desc']],
         })
 
     $('#myCustomSearchBox').keyup(function(){  

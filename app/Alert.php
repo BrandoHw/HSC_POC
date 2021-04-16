@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -70,5 +71,33 @@ class Alert extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'user_id')->withTrashed();
+    }
+
+    /**
+     * Convert occured_at to Asia/Kuala_Lumpur timezone.
+     *
+     * @return string
+     */
+    public function getOccuredAtTzAttribute()
+    {
+        $date = Carbon::createFromFormat('Y-m-d H:i:s', $this->occured_at, 'UTC');
+        $date->setTimezone('Asia/Kuala_Lumpur');
+        return $date->format('Y-m-d g:i:s A');
+    }
+
+    /**
+     * Convert resolved_at to Asia/Kuala_Lumpur timezone.
+     *
+     * @return string
+     */
+    public function getResolvedAtTzAttribute()
+    {
+        if(isset($this->resolved_at)){
+            $date = Carbon::createFromFormat('Y-m-d H:i:s', $this->resolved_at, 'UTC');
+            $date->setTimezone('Asia/Kuala_Lumpur');
+            return $date->format('Y-m-d g:i:s A');
+        } else {
+            return "-";
+        }
     }
 }
