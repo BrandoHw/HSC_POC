@@ -72,14 +72,14 @@ class InitialPermissionSetup extends Seeder
 
         /* Admin User */
         $user = User::find(1);
-        $tag = Tag::find(201);
-        $tag->user()->save($user);
+        // $tag = Tag::find(201);
+        // $tag->user()->save($user);
 
-        $userType = UserType::find(1);
-        $userType->user()->save($user);
+        // $userType = UserType::find(1);
+        // $userType->user()->save($user);
 
-        $userRight = UserRight::find(1);
-        $userRight->user()->save($user);
+        // $userRight = UserRight::find(1);
+        // $userRight->user()->save($user);
 
         $user->assignRole('Admin');
     }

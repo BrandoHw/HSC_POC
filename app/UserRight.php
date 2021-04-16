@@ -4,9 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UserRight extends Model
 {
+    use SoftDeletes;
+     
     /**
      * The table associated with the model.
      *
@@ -42,6 +45,6 @@ class UserRight extends Model
      */
     public function user()
     {
-        return $this->hasMany(User::class, 'right_id', 'user_right_id');
+        return $this->hasMany(User::class, 'right_id', 'user_right_id')->withTrashed();
     }
 }

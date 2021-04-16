@@ -3,10 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Reader extends Model
 {
-
+    use SoftDeletes;
+    
     /**
      * The table associated with the model.
      *
@@ -43,6 +45,6 @@ class Reader extends Model
      */
     public function location()
     {
-        return $this->belongsTo(Location::class, 'location_id', 'location_master_id');
+        return $this->belongsTo(Location::class, 'location_id', 'location_master_id')->withTrashed();
     }
 }

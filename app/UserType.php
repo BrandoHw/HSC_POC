@@ -4,9 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UserType extends Model
 {
+    use SoftDeletes;
+     
     /**
      * The table associated with the model.
      *
@@ -42,7 +45,7 @@ class UserType extends Model
      */
     public function user()
     {
-        return $this->hasMany(User::class, 'type_id', 'user_type_id');
+        return $this->hasMany(User::class, 'type_id', 'user_type_id')->withTrashed();
     }
 
 }

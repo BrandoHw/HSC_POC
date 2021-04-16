@@ -325,6 +325,15 @@
         $('#z-axis-div').prop('hidden', true);
         $('#frequency').val('');
 
+        let previous_target = $('#target').val();
+        let previous_day = $('#day').val();
+        let previous_start_time = $('#start-time').val();
+        let previous_duration = $('#duration').val();
+        let previous_location = [];
+        $('#location').select2('data').forEach(function(item){
+            previous_location.push(item['id']);
+        });
+
         /* Toggle hidden */
         var option = {
             attendance: false,
@@ -341,6 +350,16 @@
                 break;
             case "2":
                 option['battery'] = true;
+                $('#day').val("daily");
+                $('#start-time').val("00:00");
+                $('#duration').val(24);
+                $('#location').val(@json($locations->pluck('location_master_id')->all())).trigger('change');
+
+                $('#day').prop('disabled', true);
+                $('#start-time').prop('disabled', true);
+                $('#duration').prop('disabled', true);
+                $('#location').prop('disabled', true);
+                
                 break;
             case "3":
                 option['duress'] = true;

@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -11,6 +13,7 @@ class User extends Authenticatable
 {
     use Notifiable;
     use HasRoles;
+    use SoftDeletes;
 
     /**
      * The table associated with the model.
@@ -48,7 +51,7 @@ class User extends Authenticatable
      */
     public function userRight()
     {
-        return $this->belongsTo(userRight::class, 'right_id', 'user_right_id');
+        return $this->belongsTo(userRight::class, 'right_id', 'user_right_id')->withTrashed();
     }
 
     /**
@@ -56,7 +59,7 @@ class User extends Authenticatable
      */
     public function userType()
     {
-        return $this->belongsTo(userType::class, 'type_id', 'user_type_id');
+        return $this->belongsTo(userType::class, 'type_id', 'user_type_id')->withTrashed();
     }
 
     /**
@@ -64,7 +67,7 @@ class User extends Authenticatable
      */
     public function tag()
     {
-        return $this->belongsTo(Tag::class, 'beacon_id', 'beacon_id');
+        return $this->belongsTo(Tag::class, 'beacon_id', 'beacon_id')->withTrashed();
     }
 
       /**

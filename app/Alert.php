@@ -4,9 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Alert extends Model
 {
+    use SoftDeletes;
+    
     /**
      * The table associated with the model.
      *
@@ -42,7 +45,7 @@ class Alert extends Model
      */
     public function reader()
     {
-        return $this->belongsTo(Reader::class, 'reader_id', 'gateway_id');
+        return $this->belongsTo(Reader::class, 'reader_id', 'gateway_id')->withTrashed();
     }
 
     /**
@@ -50,7 +53,7 @@ class Alert extends Model
      */
     public function policy()
     {
-        return $this->belongsTo(Policy::class, 'rules_id', 'rules_id');
+        return $this->belongsTo(Policy::class, 'rules_id', 'rules_id')->withTrashed();
     }
 
     /**
@@ -58,7 +61,7 @@ class Alert extends Model
      */
     public function tag()
     {
-        return $this->belongsTo(Tag::class, 'beacon_id', 'beacon_id');
+        return $this->belongsTo(Tag::class, 'beacon_id', 'beacon_id')->withTrashed();
     }
 
     /**
@@ -66,6 +69,6 @@ class Alert extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'user_id')->withTrashed();
     }
 }

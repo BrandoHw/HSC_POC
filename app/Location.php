@@ -4,10 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Location extends Model
 {
     use HasFactory;
+    use SoftDeletes;
+     
     protected $table ='locations_master_table';
     protected $fillable = [
         'location_type_id', 'location_description', 'floor'
@@ -29,7 +32,7 @@ class Location extends Model
      */
     public function scopes()
     {
-        return $this->belongsToMany(Scope::class, 'scope_locations_master_table', 'location_id', 'scope_id');
+        return $this->belongsToMany(Scope::class, 'scope_locations_master_table', 'location_id', 'scope_id')->withTrashed();
     }
 
 

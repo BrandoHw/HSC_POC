@@ -3,10 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Tag extends Model
 {
-
+    use SoftDeletes;
+     
     /**
      * The table associated with the model.
      *
@@ -50,7 +52,7 @@ class Tag extends Model
      */
     public function user()
     {
-        return $this->hasOne(User::class, 'beacon_id', 'beacon_id');
+        return $this->hasOne(User::class, 'beacon_id', 'beacon_id')->withTrashed();
     }
 
     /**
@@ -59,16 +61,16 @@ class Tag extends Model
 
     public function staff()
     {
-        return $this->hasOne(UserInfo::class, 'beacon_id', 'beacon_id');
+        return $this->hasOne(UserInfo::class, 'beacon_id', 'beacon_id')->withTrashed();
     }
 
     public function resident()
     {
-        return $this->hasOne(Resident::class, 'beacon_id', 'beacon_id');
+        return $this->hasOne(Resident::class, 'beacon_id', 'beacon_id')->withTrashed();
     }
 
     public function gateway(){
-        return $this->hasOne(Reader::class, 'gateway_id', 'current_loc');
+        return $this->hasOne(Reader::class, 'gateway_id', 'current_loc')->withTrashed();
     }
 
     /**

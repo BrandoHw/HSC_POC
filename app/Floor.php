@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Floor extends Model
 {
+     use SoftDeletes;
+     
      /**
      * The table associated with the model.
      *
@@ -34,7 +37,7 @@ class Floor extends Model
      */
 	public function building()
 	{
-		return $this->belongsTo(Building::class, 'building_id', 'building_id');
+		return $this->belongsTo(Building::class, 'building_id', 'building_id')->withTrashed();
     }
 
     /**

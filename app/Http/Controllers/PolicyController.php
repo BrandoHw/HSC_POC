@@ -350,21 +350,28 @@ class PolicyController extends Controller
             $policy->policyType()->associate($policy_type)->save();
             
             /* Remove previous scope */
-            $previous_scope = $policy->scope;
-            $policy->scope()->dissociate()->save();
+            // $previous_scope = $policy->scope;
+            // $policy->scope()->dissociate()->save();
 
             /* Detach locations and tags from previous scope */
-            $previous_scope->locations()->detach();
-            $previous_scope->tags()->detach();
-            $previous_scope->delete();
+            // $previous_scope->locations()->detach();
+            // $previous_scope->tags()->detach();
+            // $previous_scope->delete();
 
+            /* Update scope */
+            $scope = $policy->scope;
+            $scope->days = (int)$request['day'];
+            $scope->start_time = date('h:i', strtotime($request['start_time']));
+            $scope->duration = (int)$request['duration'];
+            $scope->save();
+            
             /* Link new scope */
-            $scope = Scope::create([
-                'days' => (int)$request['day'],
-                'start_time' => date('h:i', strtotime($request['start_time'])),
-                'duration' => (int)$request['duration'],
-            ]);
-            $policy->scope()->associate($scope)->save();
+            // $scope = Scope::create([
+            //     'days' => (int)$request['day'],
+            //     'start_time' => date('h:i', strtotime($request['start_time'])),
+            //     'duration' => (int)$request['duration'],
+            // ]);
+            // $policy->scope()->associate($scope)->save();
     
             /* Get target data */
             $residents = [];
@@ -440,7 +447,18 @@ class PolicyController extends Controller
     public function destroyMulti(Request $request)
     {
         $ids = $request->policies_id;
-        $policies = Policy::destroy($ids);
+
+        // $policies = Policy::whereIn('rules_id', $ids)->get();
+        // foreach($policies as $policy){
+        //     $scope = $policy->scope;
+        //     $scope->tags()->detach();
+        //     $scope->locations()->detach();
+        //     $policy->scope()->dissociate()->save();
+        //     $scope->delete();
+        // }
+
+        Policy::destroy($ids);
+
         return response()->json([
             "success" => "success"
         ], 200);
