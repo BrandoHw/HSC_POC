@@ -35,12 +35,7 @@ class UserController extends Controller
     */
     public function index(Request $request)
     {
-        $users = User::orderBy('id','asc')->get();
-
-        // users.create
-        $roles = Role::pluck('name', 'id')->all();
-
-        return view('users.index',compact('users','roles'));
+        //
     }
 
     /**
@@ -67,32 +62,34 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
+            'fName' => 'required',
+            'lName' => 'required',
+            'phone_number' => 'required',
+            'user_type' => 'required',
             'username' => 'required|unique:users,username',
-            'email' => 'required|email|unique:users,email',
             'password' => 'required
                 |min:6
                 |same:confirmPassword',
             'role_id' => 'required',
         ]);
         
-        if($validator->fails()){
-            return response()->json([
-                "errors" => $validator->errors()]);
-        }
+        // if($validator->fails()){
+        //     return response()->json([
+        //         "errors" => $validator->errors()]);
+        // }
 
-        $request['password'] = Hash::make($request['password']);
-        $user = User::create($request->all());
-        $user->assignRole([$request['role_id']]);
-        $userId = $user->id;
-        $userRole = $user->roles[0];
-        $userTagSerial = $user->tag->serial ?? "Not Assigned";
-        return response()->json([
-            'success'=> '<strong>'.$user->name.'</strong> created.',
-            "userId" => $userId,
-            "userRole" => $userRole,
-            "userTagSerial" => $userTagSerial],
-            200);
+        // $request['password'] = Hash::make($request['password']);
+        // $user = User::create($request->all());
+        // $user->assignRole([$request['role_id']]);
+        // $userId = $user->id;
+        // $userRole = $user->roles[0];
+        // $userTagSerial = $user->tag->serial ?? "Not Assigned";
+        // return response()->json([
+        //     'success'=> '<strong>'.$user->name.'</strong> created.',
+        //     "userId" => $userId,
+        //     "userRole" => $userRole,
+        //     "userTagSerial" => $userTagSerial],
+        //     200);
     }
     
     /**
@@ -103,15 +100,15 @@ class UserController extends Controller
     */
     public function edit(User $user)
     {   
-        $userRole = $user->roles[0];
-        $userTagSerial = $user->tag->serial ?? "Not Assigned";
-        // $tagsNull = Tag::doesntHave('user')->get();
-        return response()->json([
-            "user" => $user,
-            "userRole" => $userRole,
-            "userTagSerial" => $userTagSerial],
-            // "tagsNull" => $tagsNull],
-            200);
+        // $userRole = $user->roles[0];
+        // $userTagSerial = $user->tag->serial ?? "Not Assigned";
+        // // $tagsNull = Tag::doesntHave('user')->get();
+        // return response()->json([
+        //     "user" => $user,
+        //     "userRole" => $userRole,
+        //     "userTagSerial" => $userTagSerial],
+        //     // "tagsNull" => $tagsNull],
+        //     200);
     }
     
     /**
@@ -122,13 +119,13 @@ class UserController extends Controller
     */
     public function show(Request $request , User $user)
     {   
-        $userRole = $user->roles[0];
-        $userTag = $user->tag;
-        return response()->json([
-            "user" => $user,
-            "userRole" => $userRole,
-            "userTag" => $userTag],
-            200);
+        // $userRole = $user->roles[0];
+        // $userTag = $user->tag;
+        // return response()->json([
+        //     "user" => $user,
+        //     "userRole" => $userRole,
+        //     "userTag" => $userTag],
+        //     200);
     }
     
     /**
@@ -140,48 +137,48 @@ class UserController extends Controller
     */
     public function update(Request $request, User $user)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:users,name,'.$user->id,
-            'username' => 'required|unique:users,username,'.$user->id,
-            'email' => 'required|email|unique:users,email,'.$user->id,
-            'password' => 'same:confirmPassword',
-            'role_id' => 'required',
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'name' => 'required|unique:users,name,'.$user->id,
+        //     'username' => 'required|unique:users,username,'.$user->id,
+        //     'email' => 'required|email|unique:users,email,'.$user->id,
+        //     'password' => 'same:confirmPassword',
+        //     'role_id' => 'required',
+        // ]);
 
-        if ($validator->fails()){
-            return response()->json([
-                "errors" => $validator->errors()]);
-        }
+        // if ($validator->fails()){
+        //     return response()->json([
+        //         "errors" => $validator->errors()]);
+        // }
 
-        if(empty($request['password'])){
-            $request = Arr::except($request,array('password'));
-        }
-        else{
-            $passwordValidator = Validator::make($request->all(),['password' => 'min:6']);
+        // if(empty($request['password'])){
+        //     $request = Arr::except($request,array('password'));
+        // }
+        // else{
+        //     $passwordValidator = Validator::make($request->all(),['password' => 'min:6']);
             
-            if($passwordValidator->fails())
-            {
-                // $validator->errors()->add('password', 'The password must be at least 6 characters');
-                return response()->json([
-                    "errors" => $passwordValidator->errors()]);
-            }
-            else
-            {
-                $request['password'] = Hash::make($request['password']);
-            }
-        }
+        //     if($passwordValidator->fails())
+        //     {
+        //         // $validator->errors()->add('password', 'The password must be at least 6 characters');
+        //         return response()->json([
+        //             "errors" => $passwordValidator->errors()]);
+        //     }
+        //     else
+        //     {
+        //         $request['password'] = Hash::make($request['password']);
+        //     }
+        // }
         
-        $user->update($request->all());
-        DB::table('model_has_roles')->where('model_id',$user->id)->delete();
-        $user->assignRole([$request['role_id']]);
-        $userRole = $user->roles[0];
-        $userTag = $user->tag->serial ?? "Not Assigned";
-        return response()->json([
-            'success'=> '<strong>'.$user->name.'</strong> updated.',
-            "userRole" => $userRole,
-            "userTag" => $userTag],
-            200);
-        }
+        // $user->update($request->all());
+        // DB::table('model_has_roles')->where('model_id',$user->id)->delete();
+        // $user->assignRole([$request['role_id']]);
+        // $userRole = $user->roles[0];
+        // $userTag = $user->tag->serial ?? "Not Assigned";
+        // return response()->json([
+        //     'success'=> '<strong>'.$user->name.'</strong> updated.',
+        //     "userRole" => $userRole,
+        //     "userTag" => $userTag],
+        //     200);
+    }
         
     /**
     * Remove the specified resource from storage.

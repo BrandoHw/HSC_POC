@@ -32,7 +32,7 @@ class Policy extends Model
      * @var array
      */
     protected $fillable = [
-        'description',
+        'description', 'battery_threshold',
         'x_threshold', 'y_threshold', 'z_threshold',
         'x_frequency', 'y_frequency', 'z_frequency',
         'alert_action', 'attendance', 'geofence',

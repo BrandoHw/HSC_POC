@@ -53,11 +53,12 @@
                             <li class="breadcrumb-item active"><a href="{{ route('home') }}"><i class="ri-home-4-line mr-1 float-left"></i>Dashboard</a></li>
                     @endswitch
 
-                    @switch(Request::segment(2))
-                        @case('create')
-                            <li class="breadcrumb-item active" aria-current="page">Create</li>
-                            @break
-                    @endswitch
+                    @if(Request::segment(2) == 'create')
+                        <li class="breadcrumb-item active" aria-current="page">Create</li>
+                    @elseif ((int)Request::segment(2) > 0)
+                        <li class="breadcrumb-item active" aria-current="page">Update</li>
+                    @else
+                    @endif
                 </ol>
             </nav>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">

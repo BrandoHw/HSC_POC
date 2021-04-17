@@ -7,7 +7,7 @@
             <div class="iq-card">
                 <div class="iq-card-header d-flex justify-content-between">
                     <div class="iq-header-title">
-                        <h4 class="card-title">Policy: {{ $policy->rules_id }} </h4>
+                        <h4 class="card-title">Policy: {{ $policy->rules_id }}</h4>
                     </div>
                 </div>
                 <div class="iq-card-body">
@@ -53,7 +53,11 @@
                             </div>
                         </div>
                         <div class="form-group" id="trigger-option-battery" {{ ($policy->rules_type_id == '2') ? '':'hidden' }}>
-                            <p><i class="ri-information-fill"></i> This policy will violate immediately when the battery level of the gateway or beacon is less than 20%.</p>
+                            <label for="duration">Battery Level:</label>
+                            <a href="#" data-toggle="tooltip" data-placement="right" title="This policy will violate immediately when the battery level (%) of beacon(s) is lower than this threshold." style="cursor: pointer; left-padding:0">
+                                <i class="ri-information-fill"></i>
+                            </a>
+                            <input type="battery" data-suffix="%" min="10" max="90" class="form-control" value="{{ ($policy->battery_threshold) ? : '' }}" name="battery" id="battery" step="10" onInput="validatePolicyInput(this.id)" placeholder="Enter battery threshold">
                         </div>
                         <div class="form-group" id="trigger-option-duress" {{ ($policy->rules_type_id == '3') ? '':'hidden' }}>
                             <p><i class="ri-information-fill"></i> This policy will violate immediately when the duress button at the beacon is pressed.</p>
@@ -164,7 +168,7 @@
                                 <option {{ ($policy->target_type == 'custom') ? 'selected':'' }} value="custom">Custom</option>
                             </select>
                         </div>
-                        <div class="form-group" id="custom-target-div" {{ ($policy->target_type == "custom") ? "":"hidden" }}>
+                        <div class="form-group" id="custom-target-div" {{ ($policy->target_type == 'custom') ? '':'hidden' }}>
                             <label for="custom-target">Custom Target(s):</label>
                             <select class="form-control" id="custom-target" onInput="validatePolicyInput(this.id)">
                                 @foreach($residents as $resident)
@@ -181,7 +185,7 @@
                         </div>
                         <div class="form-group">
                             <label for="day">Day(s):</label>
-                            <select class="form-control" id="day" onChange="validatePolicyInput(this.id)">
+                            <select class="form-control" id="day" onChange="validatePolicyInput(this.id)" {{ ($policy->rules_type_id == '2') ? 'disabled':'' }}>
                                 <option selected="" disabled="">Please select...</option>
                                 <option {{ ($policy->day_type == "daily") ? 'selected':'' }} value="daily">Daily</option>
                                 <option {{ ($policy->day_type == "weekdays") ? 'selected':'' }} value="weekdays">Monday to Friday</option>
@@ -189,7 +193,7 @@
                                 <option {{ ($policy->day_type == "custom") ? 'selected':'' }} value="custom">Custom</option>
                             </select>
                         </div>
-                        <div class="form-group" id="custom-day-div" >
+                        <div class="form-group" id="custom-day-div" {{ ($policy->day_type == 'custom') ? '':'hidden' }}>
                             <label for="custom-day">Custom Day(s):</label>
                             <div class="row align-items-center ml-2" id="custom-day-row">
                                 <div class="custom-control custom-checkbox mr-3">
@@ -241,7 +245,8 @@
                             <div class="input-group date">
                                 <input type="text" class="form-control" id="start-time" name="start-time" style="background-color: white" 
                                     onInput="validatePolicyInput(this.id)" placeholder="Click to select time"
-                                    value="{{ $policy->scope->start_time }}"/>
+                                    value="{{ $policy->scope->start_time }}"
+                                    {{ ($policy->rules_type_id == '2') ? 'disabled':'' }}/>
                                 <div class="input-group-append">
                                     <div class="input-group-text"><i class="fa fa-clock-o"></i></div>
                                 </div>
@@ -254,11 +259,12 @@
                             </a>
                             <input type="number" min="1" max="24" class="form-control" name="duration" id="duration" step="1" 
                                 onInput="validatePolicyInput(this.id)" placeholder="Enter duration"
-                                value="{{ $policy->scope->duration }}">
+                                value="{{ $policy->scope->duration }}"
+                                {{ ($policy->rules_type_id == '2') ? 'disabled':'' }}>
                         </div>
                         <div class="form-group mt-2">
                             <label for="location">Location(s):</label>
-                            <select class="form-control" id="location" onInput="validatePolicyInput(this.id)">
+                            <select class="form-control" id="location" onInput="validatePolicyInput(this.id)" {{ ($policy->rules_type_id == '2') ? 'disabled':'' }}>
                                 @foreach($locations as $location)
                                     <option value="{{ $location->location_master_id }}">
                                     {{ $location->floor }}F - {{ $location->location_description }}</option>
@@ -303,6 +309,7 @@
         $('#location').select2('val', selected_location);
         
         /* Initialise inputSpinner for number input*/
+        $('#battery').inputSpinner();
         $('#x-value').inputSpinner();
         $('#y-value').inputSpinner();
         $('#z-value').inputSpinner();
@@ -376,6 +383,7 @@
         inputs.forEach(removeInvalid);
 
         $('input[name="attendance-option"]').prop('checked', false);
+        $('#battery').val('');
         $('input[name="geofence-option"]').prop('checked', false);
         $('#x-axis').prop('checked', false);
         $('#y-axis').prop('checked', false);
@@ -398,12 +406,26 @@
             violence: false,
         };
 
+        $('#day').prop('disabled', false);
+        $('#start-time').prop('disabled', false);
+        $('#duration').prop('disabled', false);
+        $('#location').prop('disabled', false);
+
         switch($('#type').val()){
             case "1":
                 option['attendance'] = true;
                 break;
             case "2":
                 option['battery'] = true;
+                $('#day').val("daily");
+                $('#start-time').val("00:00");
+                $('#duration').val(24);
+                $('#location').val(@json($locations->pluck('location_master_id')->all())).trigger('change');
+
+                $('#day').prop('disabled', true);
+                $('#start-time').prop('disabled', true);
+                $('#duration').prop('disabled', true);
+                $('#location').prop('disabled', true);
                 break;
             case "3":
                 option['duress'] = true;
@@ -479,6 +501,9 @@
             case "1":
                 result['attendance-option'] = validatePolicyInput('attendance-option');
                 break;
+            case "2":
+                result['battery'] = validatePolicyInput('battery');
+                break
             case "5":
                 result['geofence-option'] = validatePolicyInput('geofence-option');
                 break;
@@ -786,6 +811,12 @@
                         case "type":
                             obj.after('<div class="invalid-feedback" id="invalid-' + id +'">Please select a policy type.</div>');
                             break;
+                        case "battery":
+                            $('#battery').siblings('.input-group').find('.input-group-prepend .btn').css('border-color', '#dc3545');
+                            $('#battery').siblings('.input-group').find('.input-group-append .btn').css('border-color', '#dc3545');
+                            $('#battery').siblings('.input-group').find('.input-group-append .input-group-text').css('border', '1px solid #dc3545');
+                            $('#battery').siblings('.input-group').after('<div class="invalid-feedback" id="invalid-' + id +'">Please select the battery level threshold for this policy.</div>');
+                            break;
                         case "x-value":
                             $('#x-value').siblings('.input-group').find('.input-group-prepend .btn').css('border-color', '#dc3545');
                             $('#x-value').siblings('.input-group').find('.input-group-append .btn').css('border-color', '#dc3545');
@@ -879,6 +910,11 @@
                     $('#invalid-' + id).remove();
 
                     switch(id){
+                        case 'battery':
+                            $('#battery').siblings('.input-group').find('.input-group-prepend .btn').css('border-color', 'var(--iq-secondary)');
+                            $('#battery').siblings('.input-group').find('.input-group-append .btn').css('border-color', 'var(--iq-secondary)');
+                            $('#battery').siblings('.input-group').find('.input-group-append .input-group-text').css('border', '');
+                            break;
                         case 'start-time':
                             $('.date .input-group-append .input-group-text').css('border', '');
                             break;

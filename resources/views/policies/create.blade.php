@@ -49,7 +49,11 @@
                             </div>
                         </div>
                         <div class="form-group" id="trigger-option-battery" hidden>
-                            <p><i class="ri-information-fill"></i> This policy will violate immediately when the battery level of the gateway or beacon is less than 20%.</p>
+                            <label for="duration">Battery Level:</label>
+                            <a href="#" data-toggle="tooltip" data-placement="right" title="This policy will violate immediately when the battery level (%) of beacon(s) is lower than this threshold." style="cursor: pointer; left-padding:0">
+                                <i class="ri-information-fill"></i>
+                            </a>
+                            <input type="battery" data-suffix="%" min="10" max="90" class="form-control" name="battery" id="battery" step="10" onInput="validatePolicyInput(this.id)" placeholder="Enter battery threshold">
                         </div>
                         <div class="form-group" id="trigger-option-duress" hidden>
                             <p><i class="ri-information-fill"></i> This policy will violate immediately when the duress button at the beacon is pressed.</p>
@@ -255,6 +259,7 @@
         $('#location').val('').trigger('change');
         
         /* Initialise inputSpinner for number input*/
+        $('#battery').inputSpinner();
         $('#x-value').inputSpinner();
         $('#y-value').inputSpinner();
         $('#z-value').inputSpinner();
@@ -313,6 +318,7 @@
         inputs.forEach(removeInvalid);
 
         $('input[name="attendance-option"]').prop('checked', false);
+        $('#battery').val('');
         $('input[name="geofence-option"]').prop('checked', false);
         $('#x-axis').prop('checked', false);
         $('#y-axis').prop('checked', false);
@@ -325,15 +331,6 @@
         $('#z-axis-div').prop('hidden', true);
         $('#frequency').val('');
 
-        let previous_target = $('#target').val();
-        let previous_day = $('#day').val();
-        let previous_start_time = $('#start-time').val();
-        let previous_duration = $('#duration').val();
-        let previous_location = [];
-        $('#location').select2('data').forEach(function(item){
-            previous_location.push(item['id']);
-        });
-
         /* Toggle hidden */
         var option = {
             attendance: false,
@@ -343,6 +340,11 @@
             geofence: false,
             violence: false,
         };
+
+        $('#day').prop('disabled', false);
+        $('#start-time').prop('disabled', false);
+        $('#duration').prop('disabled', false);
+        $('#location').prop('disabled', false);
 
         switch($('#type').val()){
             case "1":
@@ -435,6 +437,9 @@
             case "1":
                 result['attendance-option'] = validatePolicyInput('attendance-option');
                 break;
+            case "2":
+                result['battery'] = validatePolicyInput('battery');
+                break
             case "5":
                 result['geofence-option'] = validatePolicyInput('geofence-option');
                 break;
@@ -742,6 +747,12 @@
                         case "type":
                             obj.after('<div class="invalid-feedback" id="invalid-' + id +'">Please select a policy type.</div>');
                             break;
+                        case "battery":
+                            $('#battery').siblings('.input-group').find('.input-group-prepend .btn').css('border-color', '#dc3545');
+                            $('#battery').siblings('.input-group').find('.input-group-append .btn').css('border-color', '#dc3545');
+                            $('#battery').siblings('.input-group').find('.input-group-append .input-group-text').css('border', '1px solid #dc3545');
+                            $('#battery').siblings('.input-group').after('<div class="invalid-feedback" id="invalid-' + id +'">Please select the battery level threshold for this policy.</div>');
+                            break;
                         case "x-value":
                             $('#x-value').siblings('.input-group').find('.input-group-prepend .btn').css('border-color', '#dc3545');
                             $('#x-value').siblings('.input-group').find('.input-group-append .btn').css('border-color', '#dc3545');
@@ -835,6 +846,11 @@
                     $('#invalid-' + id).remove();
 
                     switch(id){
+                        case 'battery':
+                            $('#battery').siblings('.input-group').find('.input-group-prepend .btn').css('border-color', 'var(--iq-secondary)');
+                            $('#battery').siblings('.input-group').find('.input-group-append .btn').css('border-color', 'var(--iq-secondary)');
+                            $('#battery').siblings('.input-group').find('.input-group-append .input-group-text').css('border', '');
+                            break;
                         case 'start-time':
                             $('.date .input-group-append .input-group-text').css('border', '');
                             break;

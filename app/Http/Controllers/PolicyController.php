@@ -83,6 +83,9 @@ class PolicyController extends Controller
             case "1":
                 $params = ['attendance-option' => 'required|string'];
                 break;
+            case "2":
+                $params = ['battery' => 'required|string'];
+                break;
             case "5":
                 $params = ['geofence-option' => 'required|string'];
                 break;
@@ -121,6 +124,9 @@ class PolicyController extends Controller
             case '1':
                 $add_on = ["attendance" => (int)$request['attendance-option']];
                 break;
+            case '2':
+                $add_on = ["battery_threshold" => (int)$request['battery']];
+                break;
             case '5':
                 $add_on = ["geofence" => (int)$request['geofence-option']];
                 break;
@@ -155,7 +161,7 @@ class PolicyController extends Controller
         /* Link scope */
         $scope = Scope::create([
             'days' => (int)$request['day'],
-            'start_time' => date('h:i', strtotime($request['start_time'])),
+            'start_time' => date('H:i', strtotime($request['start_time'])),
             'duration' => (int)$request['duration'],
         ]);
         $scope->policy()->save($policy);
@@ -274,6 +280,9 @@ class PolicyController extends Controller
                 case "1":
                     $params = ['attendance-option' => 'required|string'];
                     break;
+                case "2":
+                    $params = ['battery' => 'required|string'];
+                    break;
                 case "5":
                     $params = ['geofence-option' => 'required|string'];
                     break;
@@ -305,6 +314,7 @@ class PolicyController extends Controller
             $data = [
                 'description' => $request['name'],
                 'alert_action' => (int)$request['alert'],
+                'battery_threshold' => null,
                 'attendance' => null,
                 'geofence' => null,
                 'x_threshold' => null,
@@ -315,10 +325,12 @@ class PolicyController extends Controller
                 'z_frequency' => null,
             ];
     
-            $add_on = null;
             switch($request['type']){
                 case '1':
                     $data['attendance'] = (int)$request['attendance-option'];
+                    break;
+                case '2':
+                    $data['battery_threshold'] = (int)$request['battery'];
                     break;
                 case '5':
                     $data['geofence'] = (int)$request['geofence-option'];
@@ -349,30 +361,13 @@ class PolicyController extends Controller
             $policy_type = PolicyType::find((int)$request['type']);
             $policy->policyType()->associate($policy_type)->save();
             
-            /* Remove previous scope */
-            // $previous_scope = $policy->scope;
-            // $policy->scope()->dissociate()->save();
-
-            /* Detach locations and tags from previous scope */
-            // $previous_scope->locations()->detach();
-            // $previous_scope->tags()->detach();
-            // $previous_scope->delete();
-
             /* Update scope */
             $scope = $policy->scope;
             $scope->days = (int)$request['day'];
-            $scope->start_time = date('h:i', strtotime($request['start_time']));
+            $scope->start_time = date('H:i', strtotime($request['start_time']));
             $scope->duration = (int)$request['duration'];
             $scope->save();
             
-            /* Link new scope */
-            // $scope = Scope::create([
-            //     'days' => (int)$request['day'],
-            //     'start_time' => date('h:i', strtotime($request['start_time'])),
-            //     'duration' => (int)$request['duration'],
-            // ]);
-            // $policy->scope()->associate($scope)->save();
-    
             /* Get target data */
             $residents = [];
             $users = [];
@@ -447,15 +442,6 @@ class PolicyController extends Controller
     public function destroyMulti(Request $request)
     {
         $ids = $request->policies_id;
-
-        // $policies = Policy::whereIn('rules_id', $ids)->get();
-        // foreach($policies as $policy){
-        //     $scope = $policy->scope;
-        //     $scope->tags()->detach();
-        //     $scope->locations()->detach();
-        //     $policy->scope()->dissociate()->save();
-        //     $scope->delete();
-        // }
 
         Policy::destroy($ids);
 

@@ -41,6 +41,8 @@
                                                     {{ ($policy->attendance) ? 'Present':'Absent' }}
                                                     @break  
                                                 @case(2)
+                                                    < {{ $policy->battery_threshold }}%
+                                                    @break
                                                 @case(3)
                                                 @case(4)
                                                     -
