@@ -40,7 +40,7 @@ class Resident extends Model
     protected $fillable = [
         'beacon_id', 
         'resident_fName', 'resident_lName', 'resident_age', 
-        'wheelchair', 'walking_cane',
+        'gender', 'wheelchair', 'walking_cane',
         'x_value', 'y_value', 'z_value'
     ];
     /**

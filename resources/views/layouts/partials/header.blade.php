@@ -80,44 +80,39 @@
                     </div>
                  </li>
                 <li>
-                <a href="#" class="search-toggle iq-waves-effect d-flex align-items-center bg-primary rounded">
-                    <img src="{{ asset('template/images/user/1.jpg') }}" class="img-fluid rounded mr-3" alt="user">
-                    <div class="caption">
-                        <h6 class="mb-0 line-height text-white">{{ Auth::user()->full_name }}</h6>
-                    </div>
-                </a>
-                <div class="iq-sub-dropdown iq-user-dropdown">
-                    <div class="iq-card shadow-none m-0">
-                        <div class="iq-card-body p-0 ">
-                            <div class="bg-primary p-3">
-                            <h5 class="mb-0 text-white line-height">Hello {{ Auth::user()->full_name }}</h5>
-                            </div>
-                            <a href="{{ route('settings.index') }}" class="iq-sub-card iq-bg-primary-hover">
-                            <div class="media align-items-center">
-                                <div class="rounded iq-card-icon iq-bg-primary">
-                                    <i class="ri-file-user-line"></i>
+                    <a href="#" class="search-toggle iq-waves-effect d-flex align-items-center bg-primary rounded">
+                        <img src="{{ asset('template/images/user/1.jpg') }}" class="img-fluid rounded mr-3" alt="user">
+                        <div class="caption">
+                            <h6 class="mb-0 line-height text-white">{{ Auth::user()->full_name }}</h6>
+                        </div>
+                    </a>
+                    <div class="iq-sub-dropdown iq-user-dropdown">
+                        <div class="iq-card shadow-none m-0">
+                            <div class="iq-card-body p-0 ">
+                                <div class="bg-primary p-3">
+                                    <h5 class="mb-0 text-white line-height">Hello {{ Auth::user()->full_name }}</h5>
                                 </div>
-                                <a href="profile.html" class="iq-sub-card iq-bg-primary-hover">
-                                <div class="media align-items-center">
-                                    <div class="rounded iq-card-icon iq-bg-primary">
-                                        <i class="ri-file-user-line"></i>
+                                <a href="{{ route('settings.index') }}" class="iq-sub-card iq-bg-primary-hover">
+                                    <div class="media align-items-center">
+                                        <div class="rounded iq-card-icon iq-bg-primary">
+                                            <i class="ri-file-user-line"></i>
+                                        </div>
+                                        <div class="media-body ml-3">
+                                            <h6 class="mb-0 ">My Profile</h6>
+                                            <p class="mb-0 font-size-12">View personal profile details.</p>
+                                        </div>
                                     </div>
-                                    <div class="media-body ml-3">
-                                        <h6 class="mb-0 ">My Profile</h6>
-                                        <p class="mb-0 font-size-12">View personal profile details.</p>
-                                    </div>
-                                </div>
                                 </a>
                                 <div class="d-inline-block w-100 text-center p-3">
-                                <a class="bg-primary iq-sign-btn" href="{{ route('logout') }}" 
-                                    onclick="event.preventDefault();
-                                        document.getElementById('logout-form').submit();">
-                                        Sign out
-                                        <i class="ri-login-box-line ml-2"></i>
-                                </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                    @csrf
-                                </form>
+                                    <a class="bg-primary iq-sign-btn" href="{{ route('logout') }}" 
+                                        onclick="event.preventDefault();
+                                            document.getElementById('logout-form').submit();">
+                                            Sign out
+                                            <i class="ri-login-box-line ml-2"></i>
+                                    </a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
                                 </div>
                             </div>
                         </div>

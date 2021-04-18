@@ -55,6 +55,14 @@ class Policy extends Model
     }
 
     /**
+     * Get the scope that owns the policy
+     */
+    public function alerts()
+    {
+        return $this->hasMany(Alert::class, 'rules_id', 'rules_id')->withTrashed();
+    }
+
+    /**
      * Get the policy's violence frequency.
      *
      * @return string
@@ -200,6 +208,24 @@ class Policy extends Model
     }
 
     /**
+     * Get the all targets raw ids associated with this policy.
+     *
+     * @return string
+     */
+    public function getAllTargetsRawIdsAttribute()
+    {
+        
+        $targets_id = $this->all_targets;
+        $targets_id_raw = [];
+        foreach($targets_id as $id){
+            $id_raw = explode('-', $id)[1];
+            array_push($targets_id_raw, $id_raw);
+        }
+        return $targets_id_raw;
+
+    }
+
+    /**
      * Get the users associated with this policy.
      *
      * @return string
@@ -236,5 +262,20 @@ class Policy extends Model
         } else {
             return "-";
         }
+    }
+
+    /**
+     * Convert updated_at to Asia/Kuala_Lumpur timezone.
+     *
+     * @return string
+     */
+    public function getDatetimeAtUtcAttribute()
+    {
+        $datetime = Carbon::today('Asia/Kuala_Lumpur');
+        $time = explode(":", $this->scope->start_time);
+        $datetime->hour = $time[0];
+        $datetime->minute = $time[1];
+        $datetime->setTimezone('UTC');
+        return $datetime->format('Y-m-d H:i:s');
     }
 }

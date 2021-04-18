@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Alert;
 use App\Attendance;
+use App\Policy;
 use App\Resident;
+use App\Tag;
 use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
@@ -27,8 +29,12 @@ class AttendanceController extends Controller
     */
     public function index()
     {
-        $alerts= Alert::orderBy('occured_at', 'desc')->get();
-        return view('attendances.index',compact('alerts'));
+        $attendance_policies = Policy::where('rules_type_id', '1')->orderBy('description', 'asc')->get();
+        $attendance_alerts= Alert::orderBy('occured_at', 'asc')->whereIn('rules_id', $attendance_policies)->get();
+        $targets = Tag::get();
+        $minDate = $attendance_alerts->first()->occured_at_tz;
+        $maxDate = $attendance_alerts->last()->occured_at_tz;
+        return view('attendances.index',compact('attendance_alerts', 'attendance_policies', 'targets', 'minDate', 'maxDate'));
     }
     
     /**

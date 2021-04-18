@@ -80,4 +80,37 @@ class Tag extends Model
     {
         return $this->belongsToMany(Scope::class, 'scope_beacons_table', 'beacon_id', 'scope_id');
     }
+
+    /**
+     * Get the tag's current location.
+     *
+     * @return string
+     */
+    public function getCurrentLocationAttribute()
+    {
+        $location = $this->gateway->location;
+        return $location->floor."F - ".$location->location_description;
+    }
+
+    /**
+     * Check whether tag is assigned.
+     *
+     * @return string
+     */
+    public function getIsAssignedAttribute()
+    {
+        if($this->beacon_type == 1){
+            if(isset($this->resident->full_name)){
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if(isset($this->user->full_name)){
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
 }

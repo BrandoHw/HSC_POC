@@ -19,9 +19,9 @@
                         <thead>
                                 <tr>
                                     <th scope="col" style="width:10%">#</th>
-                                    <th scope="col">First Name</th>
-                                    <th scope="col">Last Name</th>
+                                    <th scope="col">Name</th>
                                     <th scope="col">Age</th>
+                                    <th scope="col">Gender</th>
                                     <th scope="col">Wheelchair</th>
                                     <th scope="col">Walking Cane</th>
                                     <th scope="col">Wristband</th>
@@ -30,13 +30,13 @@
                             <tbody>
                                 @foreach ($residents as $resident)
                                     <tr href="{{ route('residents.edit',$resident->resident_id) }}">
-                                        <td>{{ $resident->resident_id }}</td>
-                                        <td>{{ $resident->resident_fName }}</td>
-                                        <td>{{ $resident->resident_lName }}</td>
-                                        <td>{{ $resident->resident_age }}</td>
-                                        <td>{{ ($resident->wheelchair) ? "Yes":"No" }}</td>
-                                        <td>{{ ($resident->walking_cane) ? "Yes":"No" }}</td>
-                                        <td>{{ $resident->tag->beacon_mac ?? "-" }}</td>
+                                        <td class='align-middle'>{{ $resident->resident_id }}</td>
+                                        <td class='align-middle'><img class="rounded-circle img-fluid avatar-40" src="{{ asset('img/avatars/default-profile-m.jpg') }}" alt="profile"> {{ $resident->full_name }}</td>
+                                        <td class='align-middle'>{{ $resident->resident_age }}</td>
+                                        <td class='align-middle'>{{ $resident->gender ?? '-' }}</td>
+                                        <td class='align-middle'>{{ ($resident->wheelchair) ? "Yes":"No" }}</td>
+                                        <td class='align-middle'>{{ ($resident->walking_cane) ? "Yes":"No" }}</td>
+                                        <td class='align-middle'>{{ $resident->tag->beacon_mac ?? "-" }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
