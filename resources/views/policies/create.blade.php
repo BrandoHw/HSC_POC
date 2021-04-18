@@ -230,6 +230,29 @@
             </div>
         </div>
     </div>
+    <!-- Error-->
+    <div class="modal fade" id="error-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body" style="margin-left: -15px; margin-right: -15px; margin-top: -15px">
+                    <div class="container-fluid bd-example-row">
+                        <div class="row justify-content-center iq-bg-danger">
+                            <i class="ri-error-warning-fill text-danger" style="font-size: 85px; margin: -15px"></i>
+                        </div>
+                        <div class="row mt-3 justify-content-center mt-2">
+                            <div class="h4 font-weight-bold" id="delete-message">An error has occured!</div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="" id="delete-submessage">Contact support team or try again later.</div>
+                        </div>
+                        <div class="row mt-5 justify-content-center">
+                            <button type="button" class="btn btn-secondary m-1" data-dismiss="modal">Dismiss</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection 
 
@@ -242,7 +265,7 @@
             {
                 enableTime: true,
                 noCalendar: true,
-                dateFormat: "H:i",
+                dateFormat: "G:i K",
             }
         );
 
@@ -504,9 +527,14 @@
                                     addInvalid('unique-name');
                                     break;
                                 default:
+                                    $('#error-modal').modal('toggle');
                                     break;
                             }
                         })
+                        $('#cancel-btn').prop('hidden', false);
+                        $('#save-btn').prop('disabled', false);
+                        $('#save-btn').html('Save');
+
                     } else {
                         $('#save-btn').css('background', 'var(--iq-success)');
                         $('#save-btn').css('border-color', 'var(--iq-success)');
@@ -518,6 +546,10 @@
                 },
                 error:function(error){
                     console.log(error);
+                    $('#cancel-btn').prop('hidden', false);
+                    $('#save-btn').prop('disabled', false);
+                    $('#save-btn').html('Save');
+                    $('#error-modal').modal('toggle');
                 }
             });
         }

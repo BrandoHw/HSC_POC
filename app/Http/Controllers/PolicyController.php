@@ -9,6 +9,7 @@ use App\Resident;
 use App\Scope;
 use App\Tag;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -63,7 +64,7 @@ class PolicyController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|unique:rules_table,description',
+            'name' => 'required|string|unique:rules_table,description,NULL,rules_id,deleted_at,NULL',
             'alert' => 'required|string',
             'type' => 'required|string',
             'target' => 'required|string',
@@ -161,7 +162,7 @@ class PolicyController extends Controller
         /* Link scope */
         $scope = Scope::create([
             'days' => (int)$request['day'],
-            'start_time' => date('H:i', strtotime($request['start_time'])),
+            'start_time' => Carbon::createFromFormat('g:i A', $request['start-time'])->format('H:i:s'),
             'duration' => (int)$request['duration'],
         ]);
         $scope->policy()->save($policy);
@@ -255,12 +256,7 @@ class PolicyController extends Controller
     {
         {
             $validator = Validator::make($request->all(), [
-                'name' => [
-                    'required',
-                    'string',
-                    Rule::unique('rules_table', 'description')
-                        ->ignore($policy->rules_id, 'rules_id')
-                ],
+                'name' => 'required|string|unique:rules_table,description,'.$policy->rules_id.',rules_id,deleted_at,NULL',
                 'alert' => 'required|string',
                 'type' => 'required|string',
                 'target' => 'required|string',
@@ -364,7 +360,7 @@ class PolicyController extends Controller
             /* Update scope */
             $scope = $policy->scope;
             $scope->days = (int)$request['day'];
-            $scope->start_time = date('H:i', strtotime($request['start_time']));
+            $scope->start_time = Carbon::createFromFormat('g:i A', $request['start-time'])->format('H:i:s');
             $scope->duration = (int)$request['duration'];
             $scope->save();
             
