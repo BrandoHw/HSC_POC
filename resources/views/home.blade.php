@@ -171,72 +171,6 @@
                      @endforeach
                   </div>
                </div>
-               <!-- <div class="table-responsive">
-                  <table class="table mb-0 table-borderless">
-                     <tbody>
-                        <tr>
-                           <td class="text-center">
-                              <img class="rounded-circle img-fluid avatar-40" src="images/user/01.jpg" alt="profile">
-                           </td>
-                           <td>Anna Sthesia</td>
-                           <td>
-                              <div class="badge badge-pill badge-cyan">Frontend Developer</div>
-                           </td>
-                           <td>600 Courses</td>
-                           <td>200 Followers</td>
-                           <td><i class="ri-star-s-fill text-warning"></i> 5.0</td>
-                        </tr>
-                        <tr>
-                           <td class="text-center">
-                              <img class="rounded-circle img-fluid avatar-40" src="images/user/02.jpg" alt="profile">
-                           </td>
-                           <td>Brock Lee</td>
-                           <td>
-                              <div class="badge badge-pill badge-cobalt-blue text-white">UI/UX Design</div>
-                           </td>
-                           <td>800 Courses</td>
-                           <td>780 Followers</td>
-                           <td><i class="ri-star-s-fill text-warning"></i> 4.5</td>
-                        </tr>
-                        <tr>
-                           <td class="text-center">
-                              <img class="rounded-circle img-fluid avatar-40" src="images/user/03.jpg" alt="profile">
-                           </td>
-                           <td>Dan Druff</td>
-                           <td>
-                              <div class="badge badge-pill badge-spring-green">Backend Developer</div>
-                           </td>
-                           <td>300 Courses</td>
-                           <td>800 Followers</td>
-                           <td><i class="ri-star-s-fill text-warning"></i> 3.8</td>
-                        </tr>
-                        <tr>
-                           <td class="text-center">
-                              <img class="rounded-circle img-fluid avatar-40" src="images/user/04.jpg" alt="profile">
-                           </td>
-                           <td>Lynn Guini</td>
-                           <td>
-                              <div class="badge badge-pill badge-amber">Wordpress Developer</div>
-                           </td>
-                           <td>550 Courses</td>
-                           <td>300 Followers</td>
-                           <td><i class="ri-star-s-fill text-warning"></i> 4.8</td>
-                        </tr>
-                        <tr>
-                           <td class="text-center">
-                              <img class="rounded-circle img-fluid avatar-40" src="images/user/05.jpg" alt="profile">
-                           </td>
-                           <td>Eric Shun</td>
-                           <td>
-                              <div class="badge badge-pill badge-pink">Web designer</div>
-                           </td>
-                           <td>690 Courses</td>
-                           <td>480 Followers</td>
-                           <td><i class="ri-star-s-fill text-warning"></i> 5.0</td>
-                        </tr>
-                     </tbody>
-                  </table>
-               </div> -->
             </div>
          </div>
       </div>
@@ -275,17 +209,43 @@
          @else
             <ul class="iq-timeline" id="activity">
                @foreach($alerts as $alert)
+                  @switch($alert->policy->rules_type_id)
+                  @case(1)
+                     @php($color = $alert->policy->attendance ? "success":"warning")
+                     @php($desc = $alert->policy->attendance ? "Present":"Absent")
+                     @break
+                  @case(2)
+                     @php($color = "warning")
+                     @php($desc = "<".$alert->policy->battery_threshold."%")
+                     @break
+                  @case(3)
+                     @php($color = "danger")
+                     @php($desc = "SOS")
+                     @break
+                  @case(4)
+                     @php($color = "danger")
+                     @php($desc = "Fall")
+                     @break
+                  @case(5)
+                     @php($color = "warning")
+                     @php($desc = $alert->policy->geofence ? "Entered":"Left")
+                     @break
+                  @case(6)
+                     @php($color = "danger")
+                     @php($color = "Violence")
+                     @break
+                  @endswitch
                   <li class="li-alert active">
-                     <div class="timeline-dots border-danger"></div>
-                        <h6 class="float-left mb-1 text-danger">{{ $alert->policy->description }}</h6>
+                     <div class="timeline-dots border-{{ $color }}"></div>
+                        <h6 class="float-left mb-1 text-{{ $color }}">{{ $alert->policy->description }}</h6>
                         <small class="float-right mt-1">{{ $alert->occured_at_tz }}</small>
                         <div class="d-flex w-100 mb-1 align-items-center">
                            <div class="user-img img-fluid"><img src="{{ asset('img/avatars/default-profile-m.jpg') }}" alt="story-img" class="rounded-circle avatar-40"></div>
                            <div class="media-support-info ml-3">
                               <h6>{{ ($alert->tag->beacon_type == 1) ? $alert->tag->resident->full_name:$alert->tag->user->full_name }}</h6>
-                              <p class="badge bagde-pill badge-danger mb-0 font-size-12">{{ $alert->reader->location_full }}</p>
+                              <p class="badge bagde-pill badge-{{ $color }} mb-0 font-size-12">{{ $alert->reader->location_full }}</p>
                            </div>
-                           <div class="text-danger small"><i class="ri-alert-fill"></i>{{ $alert->policy->policyType->rules_type_desc }}</div>
+                           <div class="text-{{ $color }} small algin-middle"><i class="ri-spam-2-fill"></i> {{ $desc }}</div>
                         </div>
                   </li>
                @endforeach
