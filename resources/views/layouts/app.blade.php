@@ -35,9 +35,11 @@
         <link href="{{ asset('css/custom/datatable.css') }}" rel="stylesheet">
 
         @yield('style')
+
+        <script src="{{ asset('js/app.js') }}"></script>
         
     </head>
-    <body>
+    <body id="body">
         <!-- loader Start -->
         <div id="loading">
             <div id="loading-center" class='loader'>
@@ -51,12 +53,13 @@
             <div id="content-page" class="content-page">
                 @yield('content')
             </div>
+            @yield('extra')
         </div>
         @include('layouts.partials.footer')
         
         <!-- Optional JavaScript -->
         <!-- Developer Defined Script -->
-        <script src="{{ asset('js/app.js') }}"></script>
+        <!-- <script src="{{ asset('js/app.js') }}"></script> -->
 
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <!-- <script src="{{ asset('template/js/jquery.min.js') }}"></script>

@@ -93,7 +93,7 @@
                                             </div>
                                        </div>
                                        <div class="text-right">
-                                            <button type="submit" class="btn btn-primary">Save</button>
+                                            <button type="submit" class="btn btn-primary" disabled>Save</button>
                                             <a href="{{ route('beacons.index') }}" class="btn iq-bg-danger">Cancel</a>
                                         </div>
                                     {!! Form::close() !!}
@@ -111,8 +111,8 @@
                                                         <a class="search-link" href="#"><i class="ri-search-line"></i></a>
                                                     </form>
                                                     <div class="col-4 row justify-content-end">
-                                                        <a class="btn btn-primary" href="{{ route('users.create') }}" style="margin-right: 10px">Add Member</a>
-                                                        <a class="btn btn-danger" href="#">Delete</a>
+                                                        <a class="btn btn-primary" href="{{ route('users.create') }}" style="margin-right: 10px;">Add Member</a>
+                                                        <a class="btn btn-danger" href="#" style="opacity:.65" disabled >Delete</a>
                                                     </div>
                                                 </div>
                                                 <div class="table-responsive" style="margin-top: 15px">
@@ -164,8 +164,8 @@
         dTable.search($(this).val()).draw();   // this  is for customized searchbox with datatable search feature.
     })
 
-    $('#userTable tbody tr td:not(:first-child)').click(function () {
-        window.location.href = $(this).parent('tr').attr('href');
-    });
+    // $('#userTable tbody tr td:not(:first-child)').click(function () {
+    //     window.location.href = $(this).parent('tr').attr('href');
+    // });
 </script>
 @endsection

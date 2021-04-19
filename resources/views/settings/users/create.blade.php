@@ -81,7 +81,7 @@
                             </div>
                         </div>
                         <div class="text-right">
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit" class="btn btn-primary" disabled>Save</button>
                             <a href="{{ route('settings.index') }}" class="btn iq-bg-danger">Cancel</a>
                         </div>
                     {!! Form::close() !!}

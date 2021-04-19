@@ -1,33 +1,33 @@
 
-<html>
-    <head>
+<!-- <html>
+    <head> -->
         <link href="{{ asset('css/map/leaflet.css') }}" rel="stylesheet">
         <link href="{{ asset('css/map/leaflet.draw.css') }}" rel="stylesheet">
         <link href="{{ asset('css/map/map.css') }}" rel="stylesheet">
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> -->
         
-        <script src="{{ asset('js/jquery.js') }}"></script>
+        <!-- <script src="{{ asset('js/jquery.js') }}"></script> -->
         <script src="{{ asset('js/leaflet.js') }}"></script>
-        <script src="{{ asset('js/app.js') }}"></script>
+        <!-- <script src="{{ asset('js/app.js') }}"></script> -->
         <script src="{{ asset('js/views/map/functions.js')}}"></script>
-      <meta charset="utf-8" />
+      <!-- <meta charset="utf-8" />
 
       <title>A Leaflet map!</title>
 
-    </head>
+    </head> -->
 
-    <body>
+    <!-- <body> -->
     <div>
         <div class="form-group row" id="selUserHolder">
             <label class="col-form-label col-sm-3 text-sm-right" for="selUser"></label>
-            <select id='selUser' class="col-sm-8"  style='height: 50px; width: 100%;'></select>
+            <select id='selUser' class="form-control col-sm-8"  style='height: 50px; width: 100%;'></select>
         </div>
        
-        <div id= 'flex-list-container' style='display: flex; height: 40vh;'>
+        <div id= 'flex-list-container' style='display: flex; height: 80vh;'>
             <div id="map" style="width: 100%;"></div>
         </div>
     </div>
-    </body>
+    <!-- </body> -->
 
 
     <script>
@@ -64,6 +64,7 @@
             var userList;
 
             $("#selUser").select2({
+                selectionCssClass: 'form-control',
             });
             $('#user-list-marker').on('click', 'li', function() {
                 alert(this.getAttribute("data-id"));    

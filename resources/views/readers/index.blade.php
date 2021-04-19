@@ -12,8 +12,8 @@
                             <a class="search-link" href="#"><i class="ri-search-line"></i></a>
                         </form>
                         <div class="col-4 row justify-content-end">
-                            <a class="btn btn-primary" href="{{ route('gateways.create') }}" style="margin-right: 10px">Create</a>
-                            <a class="btn btn-danger" href="#">Delete</a>
+                            <a class="btn btn-primary" href="{{ route('gateways.create') }}" style="margin-right: 10px; opacity:.65;" disabled>Create</a>
+                            <a class="btn btn-danger" href="#" style="opacity:.65;" disabled>Delete</a>
                         </div>
                     </div>
                     <div class="table-responsive" style="margin-top: 15px">

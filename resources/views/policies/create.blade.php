@@ -376,7 +376,7 @@
             case "2":
                 option['battery'] = true;
                 $('#day').val("daily");
-                $('#start-time').val("00:00");
+                $('#start-time').val("12:00 AM");
                 $('#duration').val(24);
                 $('#location').val(@json($locations->pluck('location_master_id')->all())).trigger('change');
 
@@ -520,6 +520,7 @@
                 data: result,
                 success:function(response){
                     let errors = response['errors'];
+                    console.log(response);
                     if($.isEmptyObject(response['success'])){
                         Object.keys(errors).forEach(function(key){
                             switch(key) {

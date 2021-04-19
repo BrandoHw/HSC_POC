@@ -12,7 +12,7 @@
                             <a class="search-link" href="#"><i class="ri-search-line"></i></a>
                         </form>
                         <div class="col-4 row justify-content-end">
-                            <a class="btn btn-danger" href="#">Archive</a>
+                            <a class="btn btn-danger" href="#" style="opacity:.65;" disabled >Archive</a>
                         </div>
                     </div>
                     <div class="table-responsive" style="margin-top: 15px">
@@ -34,8 +34,16 @@
                                 @foreach ($alerts as $alert)
                                     <tr href="{{ route('alerts.edit',$alert->rules_id) }}">
                                         <td>{{ $alert->alert_id }}</td>
-                                        <td>{{ $alert->policy->policyType->rules_type_desc }}</td>
-                                        <td>{{ $alert->policy->description }}</td>
+                                        <td>
+                                            {{ $alert->policy->policyType->rules_type_desc }}
+                                        </td>
+                                        <td>
+                                            @if($alert->policy->trashed())
+                                                <span class="text-secondary"><em>{{ $alert->policy->description }} <span class="small text-secondary">[deleted]</span></em></span>
+                                            @else
+                                                {{ $alert->policy->description }}
+                                            @endif
+                                        </td>
                                         <td>
                                             @if($alert->tag->beacon_type == 1)
                                                 {{ $alert->tag->resident->full_name ?? '-' }}

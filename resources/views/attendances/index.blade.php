@@ -4,9 +4,8 @@
 <div class="container-fluid relative">
     <div class="row">
         <div class="col-lg-3">
-            <div class="iq-card" style="height: 500px">
+            <div class="iq-card">
                 <div class="iq-card-body">
-                <div class="">
                     <div class="iq-email-list">
                         <div class="iq-email-ui nav flex-column nav-pills" id="attendance-nav">
                             @foreach($attendance_policies as $policy)
@@ -37,13 +36,14 @@
                                        <div class="col-7">{{ $policy->scope->duration }} hr(s)</div>
                                        <div class="col-5">Target:</div>
                                        <div class="col-7">{{ $policy->target_type }}</div>
+                                       <div class="col-5">Day:</div>
+                                       <div class="col-7">{{ $policy->day_type }}</div>
                                     </div>
                                     <hr class="mb-0">
                                 </div>
                             @endforeach
                         </div>
                     </div>
-                </div>
                 </div>
             </div>
         </div>
@@ -90,7 +90,7 @@
                                         <div class="iq-card-body">
                                             <div class="table-responsive">
                                                 <table class="table table-stripe table-bordered hover" id="table-{{ $policy->rules_id }}">
-                                                <thead>
+                                                    <thead>
                                                         <tr>
                                                             <th scope="col" style="width:10%">#</th>
                                                             <th scope="col">Name</th>

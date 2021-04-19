@@ -53,7 +53,7 @@
     <!-- Button -->
     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
         <a href="{{ route('gateways.index') }}" class="btn btn-secondary">Cancel</a>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary" disabled>Submit</button>
     </div>
     {!! Form::close() !!}
 </div>
