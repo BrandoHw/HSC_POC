@@ -31,7 +31,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($policies as $policy)
-                                    <tr id="policy-{{ $policy->rules_id }}"href="{{ route('policies.edit',$policy->rules_id) }}">
+                                    <tr id="policy-{{ $policy->rules_id }}" href="{{ route('policies.edit',$policy->rules_id) }}">
                                         <td>{{ $policy->rules_id }}</td>
                                         <td class="info">{{ $policy->description }}</td>
                                         <td class="info">{{ $policy->policyType->rules_type_desc }}</td>
@@ -83,7 +83,7 @@
                             <i class="ri-error-warning-fill text-primary" style="font-size: 85px; margin: -15px"></i>
                         </div>
                         <div class="row mt-3 justify-content-center mt-2">
-                            <div class="h4 font-weight-bold">Policy not selected!</div>
+                            <div class="h4 font-weight-bold">No policy selected!</div>
                         </div>
                         <div class="row justify-content-center">
                             <div class="">Select at least one policy to delete.</div>
@@ -96,7 +96,7 @@
             </div>
         </div>
     </div>
-    <!-- Delete: Confirmation -->
+    <!-- Delete: Confirmation for 1 -->
     <div class="modal fade" id="confirmation-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -106,14 +106,38 @@
                             <i class="ri-error-warning-fill text-danger" style="font-size: 85px; margin: -15px"></i>
                         </div>
                         <div class="row mt-3 justify-content-center mt-2">
-                            <div class="h4 font-weight-bold" id="delete-message">Delete these policies?</div>
+                            <div class="h4 font-weight-bold">Delete this policy?</div>
                         </div>
                         <div class="row justify-content-center">
-                            <div class="" id="delete-submessage">You will not be able to recover it.</div>
+                            <div class="">You will not be able to recover it.</div>
                         </div>
                         <div class="row mt-5 justify-content-center">
                             <button type="button" class="btn btn-secondary m-1" id="cancel-btn" data-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn btn-danger m-1" id="delete-btn">Yes, delete it</button>
+                            <button type="button" class="btn btn-danger m-1" id="delete-btn" onClick="confirmDeletePolicy(this.id)">Yes, delete it</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Delete: Confirmation for multiple-->
+    <div class="modal fade" id="confirmation-multiple-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body" style="margin-left: -15px; margin-right: -15px; margin-top: -15px">
+                    <div class="container-fluid bd-example-row">
+                        <div class="row justify-content-center iq-bg-danger">
+                            <i class="ri-error-warning-fill text-danger" style="font-size: 85px; margin: -15px"></i>
+                        </div>
+                        <div class="row mt-3 justify-content-center mt-2">
+                            <div class="h4 font-weight-bold">Delete these policies?</div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="">You will not be able to recover them.</div>
+                        </div>
+                        <div class="row mt-5 justify-content-center">
+                            <button type="button" class="btn btn-secondary m-1" id="cancel-multiple-btn" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger m-1" id="delete-multiple-btn" onClick="confirmDeletePolicy(this.id)">Yes, delete them</button>
                         </div>
                     </div>
                 </div>
@@ -144,34 +168,39 @@
             $('#empty-modal').modal('toggle');
         } else {
             if(policy_selected.length == 1){
-                console.log('yes length 1');
-                $('#delete-message').html('Delete this policy?');
-                $('#delete-submessage').html('You will not be able to recover it.');
+                $('#cancel-btn').prop('hidden', false);
                 $('#delete-btn').html('Yes, delete it');
+                $('#delete-btn').prop('disabled', false);
+                $('#delete-btn').css('background-color', 'var(--iq-danger)');
+                $('#delete-btn').css('border-color', 'var(--iq-danger)');
+                $('#confirmation-modal').modal('toggle');
                 
             } else {
-                console.log('no length not 1');
-                $('#delete-message').html('Delete these policies?');
-                $('#delete-submessage').html('You will not be able to recover them.');
-                $('#delete-btn').html('Yes, delete them');
+                $('#cancel-multipl-btn').prop('hidden', false);
+                $('#delete-multipl-btn').html('Yes, delete them');
+                $('#delete-multipl-btn').prop('disabled', false);
+                $('#delete-multipl-btn').css('background-color', 'var(--iq-danger)');
+                $('#delete-multipl-btn').css('border-color', 'var(--iq-danger)');
+                $('#confirmation-multiple-modal').modal('toggle');
             }
-            $('#confirmation-modal').modal('toggle');
         }
     })
 
-    $('#confirmation-modal').on('hidden.bs.modal', function (e) {
-        $('#cancel-btn').prop('hidden', false);
-        $('#delete-btn').prop('disabled', false);
-        $('#delete-btn').css('background-color', 'var(--iq-danger)');
-        $('#delete-btn').css('border-color', 'var(--iq-danger)');
-    })
+    function confirmDeletePolicy(id){
+        let cancel_btn = $('#cancel-btn');
+        let delete_btn = $('#delete-btn');
+        let modal = $('#confirmation-modal');
 
-    $('#delete-btn').on('click', function(){
-        console.log('inside deletePolicy');
-        $('#cancel-btn').prop('hidden', true);
-        $('#delete-btn').prop('disabled', true);
-        $('#delete-btn').html('<i class="fa fa-circle-o-notch fa-spin"></i>Deleting');
+        if(id != "delete-btn"){
+            cancel_btn = $('#cancel-multiple-btn');
+            delete_btn = $('#delete-multiple-btn');
+            modal = $('#confirmation-multiple-modal');
+        }
         
+        cancel_btn.prop('hidden', true);
+        delete_btn.prop('disabled', true);
+        delete_btn.html('<i class="fa fa-circle-o-notch fa-spin"></i>Deleting');
+
         let selected_row = dTable.column(0).checkboxes.selected();
 
         let policies_id = [];
@@ -186,7 +215,7 @@
         };
         
         $.ajax({
-            url: '{{ route("policies.destroy-multi") }}',
+            url: '{{ route("policies.destroys") }}',
             type: "DELETE",
             data: result,
             success:function(response){
@@ -194,12 +223,11 @@
                 if($.isEmptyObject(response['success'])){
                     console.log(errors);
                 } else {
-                    console.log(response);
-                    $('#delete-btn').css('background-color', 'var(--iq-success)');
-                    $('#delete-btn').css('border-color', 'var(--iq-success)');
-                    $('#delete-btn').html('<i class="fa fa-check"></i>Deleted');
+                    delete_btn.css('background-color', 'var(--iq-success)');
+                    delete_btn.css('border-color', 'var(--iq-success)');
+                    delete_btn.html('<i class="fa fa-check"></i>Deleted');
                     setTimeout(function() {
-                        $('#confirmation-modal').modal('toggle');
+                        modal.modal('toggle');
                     }, 500);
 
                     policies_id.forEach(function(item){
@@ -208,13 +236,13 @@
                             .remove()
                             .draw();
                     })
-				    // notyf.success(response['success']);
+				    notyf.success(response['success']);
                 }
             },
             error:function(error){
                 console.log(error);
             }
         });
-    })
+    };
 </script>
 @endsection

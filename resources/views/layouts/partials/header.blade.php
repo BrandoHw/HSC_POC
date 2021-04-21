@@ -21,8 +21,16 @@
                             <li class="breadcrumb-item active"><a href="{{ route('residents.index') }}"><i class="ri-user-3-line mr-1 float-left"></i>Resident Management</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Attendance</li>
                             @break
+                        @case('locations')
+                            <li class="breadcrumb-item active"><a href="{{ route('locations.index') }}"><i class="ri-map-2-line mr-1 float-left"></i>Location Management</a></li>
+                            @break
                         @case('map')
-                            <li class="breadcrumb-item active"><a href="{{ route('map.index') }}"><i class="ri-map-2-line mr-1 float-left"></i>Location Management</a></li>
+                            <li class="breadcrumb-item active"><a href="{{ route('locations.index') }}"><i class="ri-map-2-line mr-1 float-left"></i>Location Management</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Map & Zoning</li>
+                            @break
+                        @case('floors')
+                            <li class="breadcrumb-item active"><a href="{{ route('locations.index') }}"><i class="ri-map-2-line mr-1 float-left"></i>Location Management</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Floor</li>
                             @break
                         @case('gateways')
                             <li class="breadcrumb-item active"><a href="{{ route('gateways.index') }}"><i class="ri-base-station-line mr-1 float-left"></i>Gateway Management</a></li>
@@ -38,6 +46,7 @@
                             @break
                         @case('tracking')
                             <li class="breadcrumb-item active"><a href="{{ route('tracking.index') }}"><i class="ri-map-pin-user-line mr-1 float-left"></i>Tracking</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Current Location</li>
                             @break
                         @case('reports')
                             <li class="breadcrumb-item active"><a href="{{ route('reports.index') }}"><i class="ri-file-chart-line mr-1 float-left"></i>Reports</a></li>
@@ -47,17 +56,18 @@
                             @break
                         @case('users')
                             <li class="breadcrumb-item active"><a href="{{ route('settings.index') }}"><i class="ri-settings-4-line mr-1 float-left"></i>Settings</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Members</li>
+                            <li class="breadcrumb-item active" aria-current="page">Staffs</li>
                             @break
                         @default
                             <li class="breadcrumb-item active"><a href="{{ route('home') }}"><i class="ri-home-4-line mr-1 float-left"></i>Dashboard</a></li>
                     @endswitch
 
-                    @if(Request::segment(2) == 'create')
-                        <li class="breadcrumb-item active" aria-current="page">Create</li>
-                    @elseif ((int)Request::segment(2) > 0)
-                        <li class="breadcrumb-item active" aria-current="page">Update</li>
-                    @else
+                    @if(Request::segment(1) != 'map')
+                        @if(Request::segment(2) == 'create')
+                            <li class="breadcrumb-item active" aria-current="page">Add New</li>
+                        @elseif ((int)Request::segment(2) > 0)
+                            <li class="breadcrumb-item active" aria-current="page">Edit</li>
+                        @endif
                     @endif
                 </ol>
             </nav>

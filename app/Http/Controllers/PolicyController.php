@@ -216,7 +216,7 @@ class PolicyController extends Controller
         }
 
         return response()->json([
-            "success" => "success"
+            "success" => "Policy added successfully."
         ], 200);
     }
 
@@ -413,7 +413,7 @@ class PolicyController extends Controller
             }
     
             return response()->json([
-                "success" => "success"
+                "success" => "Policy updated successfully."
             ], 200);
         }
     }
@@ -430,19 +430,25 @@ class PolicyController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resources from storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function destroyMulti(Request $request)
+    public function destroys(Request $request)
     {
         $ids = $request->policies_id;
 
         Policy::destroy($ids);
 
-        return response()->json([
-            "success" => "success"
-        ], 200);
+        if(count($ids) > 1){
+            return response()->json([
+                "success" => "Policies deleted successfully."
+            ], 200);
+        } else {
+            return response()->json([
+                "success" => "Policy deleted successfully."
+            ], 200);
+        }
     }
 }

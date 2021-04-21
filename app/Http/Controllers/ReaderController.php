@@ -16,10 +16,10 @@ class ReaderController extends Controller
     */
     function __construct()
     {
-        $this->middleware('permission:reader-list|reader-create|reader-edit|reader-delete', ['only' => ['index','show']]);
-        $this->middleware('permission:reader-create', ['only' => ['create','store']]);
-        $this->middleware('permission:reader-edit', ['only' => ['edit','update']]);
-        $this->middleware('permission:reader-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:gateway-list|gateway-create|gateway-edit|gateway-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:gateway-create', ['only' => ['create','store']]);
+        $this->middleware('permission:gateway-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:gateway-delete', ['only' => ['destroy']]);
     }
     
     /**
@@ -42,8 +42,7 @@ class ReaderController extends Controller
     */
     public function create()
     {
-        $buildings = Building::pluck('name', 'id')->all();
-        return view('readers.create', compact('buildings'));
+        return view('readers.create');
     }
     
     /**
@@ -55,15 +54,14 @@ class ReaderController extends Controller
     public function store(Request $request)
     {
         request()->validate([
-            'serial' => 'required|unique:readers,serial',
-            'uuid' => 'required|unique:readers,uuid',
-            'mac_addr' => 'required|unique:readers,mac_addr',
+            'serial' => 'required|unique:gateways_table,serial',
+            'mac_addr' => 'required|string|min:12|max:12|unique:gateways_table,mac_addr',
         ]);
         
         $reader = Reader::create($request->all());
         
-        return redirect()->route('readers.index')
-            ->with('success','Reader created successfully.');
+        return redirect()->route('gateways.index')
+            ->with('success','Gateway added successfully.');
     }
     
     /**
@@ -74,7 +72,7 @@ class ReaderController extends Controller
     */
     public function show(Reader $reader)
     {
-        return view('readers.show',compact('reader'));
+        //
     }
     
     /**
@@ -100,12 +98,12 @@ class ReaderController extends Controller
     public function update(Request $request, Reader $reader)
     {
         request()->validate([
-            'serial' => 'required|unique:readers,serial,'.$reader->id,
-            'mac_addr' => 'required|unique:readers,mac_addr,'.$reader->id,
+            'serial' => 'required|unique:gateways_table,serial,'.$reader->gateway_id.',gateway_id',
+            'mac_addr' => 'required|string|min:12|max:12|unique:gateways_table,mac_addr,'.$reader->gateway_id.',gateway_id',
         ]);
         $reader->update($request->all());
-        return redirect()->route('readers.index')
-            ->with('success','Reader updated successfully');
+        return redirect()->route('gateways.index')
+            ->with('success','Gateway updated successfully');
     }
    
     /**
@@ -121,6 +119,28 @@ class ReaderController extends Controller
           ->with('success','Reader deleted successfully');
     }
 
+    /**
+     * Remove the specified resources from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function destroys(Request $request)
+    {
+        $ids = $request->gateways_id;
+
+        Reader::destroy($ids);
+
+        if(count($ids) > 1){
+            return response()->json([
+                "success" => "Gateways deleted successfully."
+            ], 200);
+        } else {
+            return response()->json([
+                "success" => "Gateway deleted successfully."
+            ], 200);
+        }
+    }
     
     function console_log( $data ){
         echo '<script>';

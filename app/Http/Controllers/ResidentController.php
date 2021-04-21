@@ -8,6 +8,13 @@ use Illuminate\Http\Request;
 
 class ResidentController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:resident-list|resident-create|resident-edit|resident-delete', ['only' => ['index','store']]);
+        $this->middleware('permission:resident-create', ['only' => ['create','store']]);
+        $this->middleware('permission:resident-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:resident-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -59,27 +66,39 @@ class ResidentController extends Controller
      */
     public function edit(Resident $resident)
     {
-        $tagsNull = Tag::where('beacon_type', 1)
-            ->doesntHave('resident')
+        $tags = Tag::doesntHave('resident')
+            ->doesntHave('user')
             ->pluck('beacon_mac', 'beacon_id');
         
         if(!empty($resident->tag)){
             $current = collect([$resident->tag->beacon_id => $resident->tag->beacon_mac]);
-            $tagsNull = $current->concat($tagsNull)->all();
+            $tags= $current->concat($tags)->all();
         }
-        return view('residents.edit', compact('resident', 'tagsNull'));
+        return view('residents.edit', compact('resident', 'tags'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Tag  $resident
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Resident $resident)
     {
-        //
+        request()->validate([
+            'beacon_id' => 'required|',
+        ]);
+
+        if(!empty($resident->tag)){
+            $resident->tag()->dissociate()->save();
+        }
+
+        $tag = Tag::find($request['beacon_id']);
+        $resident->tag()->associate($tag)->save();
+
+        return redirect()->route('residents.index')
+            ->with('success','Resident updated successfully');
     }
 
     /**

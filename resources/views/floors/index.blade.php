@@ -1,74 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
-<script src="{{ asset('js/notyf.js') }}"></script>
-<script src="{{ asset('js/jquery.js') }}"></script>
-<div class="container-fluid p-0">
-    <!-- Display alert -->
-    @if ($message = Session::get('success'))
-
-        <script>
-             var notyf2 = new Notyf({
-                position:{
-                    x: 'center',
-                    y: 'top',
-                },
-            });
-            
-            const notification = notyf2.success("Floor added");
-         </script>
-
-    @endif
-    @if ($message = Session::get('success-destroy'))
-
-        <script>
-            var notyf2 = new Notyf({
-                position:{
-                    x: 'center',
-                    y: 'top',
-                },
-            });
-            
-            const notification = notyf2.success("Floor deleted");
-        </script>
-
-    @endif
-    @if ($message = Session::get('failure'))
-
-        <script>
-            var notyf2 = new Notyf({
-                position:{
-                    x: 'center',
-                    y: 'top',
-                },
-            });
-            
-            const notification = notyf2.error("Failed to add floor");
-        </script>
-
-    @endif
-    <!-- Title & Add-Button -->
-    <div class="row mb-2 mb-xl-3">
-        {{-- <div class="col-auto d-none d-sm-block">
-            <h3><strong>Floors</strong> Management</h3>
-        </div> --}}
-        <div class="col-auto ml-auto text-right mt-n1">
-            @can('floor-create')
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createFloorModal">
-                    @svg('plus', 'feather-plus align-middle')  
-                    <span class="align-middle">Add Floor</span>
-                </button>
-
-            @endcan 
-        </div>
-	</div>
-    
-
-    <!-- Table -->
+<div class="container-fluid">
     <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
+        <div class="col-sm-12">
+            <div class="iq-card">
+                <div class="iq-card-body">
+                    <div class="iq-search-bar row justify-content-between">
+                        <form action="#" class="searchbox">
+                            <input type="text" id="myCustomSearchBox" class="text search-input" placeholder="Type here to search...">
+                            <a class="search-link" href="#"><i class="ri-search-line"></i></a>
+                        </form>
+                        <div class="col-4 row justify-content-end mb-3">
+                            @can('floor-create')
+                                <a class="btn btn-primary aligh" href="#" id="createFloorButton"><i class="ri-add-line"></i>Add Floor</a>
+                            @endcan 
+                        </div>
+                    </div>
                     <div class="table-responsive" style="margin-top: 15px">
                         <table class="table table-stripe table-bordered hover" id="floorTable">
                             <thead>
@@ -158,8 +106,8 @@
                                                                     </div>
                                                     
                                                                     <div class="modal-footer">
+                                                                        <button type="submit" id="submit-edit-{{ $floor->id }}" class="btn btn-primary">Update Floor</button>
                                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal" >Cancel</button>
-                                                                        <button type="submit" id="submit-edit-{{ $floor->id }}" class="btn btn-primary">Edit Floor</button>
                                                                     </div>
                                                     
                                                                 </div>
@@ -196,24 +144,62 @@
             </div>
         </div>
     </div>
-</div>
    <!-- Create Floor Modal -->
    <div class="modal fade" id="createFloorModal" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             @include('floors.create')
         </div>
     </div>
+</div>
 @endsection
 
 @section('script')
+<!-- Display alert -->
+@if ($message = Session::get('success'))
+
+<script>
+     var notyf2 = new Notyf({
+        position:{
+            x: 'center',
+            y: 'top',
+        },
+    });
+    
+    const notification = notyf2.success("Floor added");
+ </script>
+
+@endif
+@if ($message = Session::get('success-destroy'))
+
+<script>
+    var notyf2 = new Notyf({
+        position:{
+            x: 'center',
+            y: 'top',
+        },
+    });
+    
+    const notification = notyf2.success("Floor deleted");
+</script>
+
+@endif
+@if ($message = Session::get('failure'))
+
+<script>
+    var notyf2 = new Notyf({
+        position:{
+            x: 'center',
+            y: 'top',
+        },
+    });
+    
+    const notification = notyf2.error("Failed to add floor");
+</script>
+
+@endif
 <script type="text/javascript">
 
     $(function () {
-        /* Initiate tooltip */
-        $('[data-toggle="tooltip"]').tooltip()
-
-        /* Initiate popover */
-        $('[data-toggle="popover"]').popover()
 
         /* Initiate dataTable */
         $('#readerTable').DataTable({
@@ -227,6 +213,10 @@
                 "orderable": false,
             }]
         })
+
+        $( "#createFloorButton" ).click(function() {
+            $('#createFloorModal').modal('show');
+        });
     })
 
     //Preview Floor Plan in datatable

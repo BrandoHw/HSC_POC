@@ -14,6 +14,14 @@ use Illuminate\Support\Facades\Validator;
 
 class LocationController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:location-list|location-create|location-edit|location-delete', ['only' => ['index','show', 'edit']]);
+        $this->middleware('permission:location-create', ['only' => ['create','store']]);
+        $this->middleware('permission:location-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:location-delete', ['only' => ['destroy', 'delete']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -95,8 +103,8 @@ class LocationController extends Controller
     {
         //
         $location = Location::where('location_master_id', $id)->get()[0];
-        $floors = Floor::orderBy('number','asc')->get();
-        $types = LocationType::all();
+        $floors = Floor::orderBy('number','asc')->pluck('alias', 'floor_id')->all();
+        $types = LocationType::pluck('location_type', 'type_id')->all();
         return view('locations.edit',compact('location', 'floors', 'types'));
     }
 

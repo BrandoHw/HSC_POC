@@ -3,46 +3,85 @@
 @section('content')
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-12 col-lg-6">
+        <div class="col-sm-12 col-lg-9">
             <div class="iq-card">
                 <div class="iq-card-header d-flex justify-content-between">
                     <div class="iq-header-title">
-                        <h4 class="card-title">Beacon ID: {{ $tag->id }}</h4>
+                        <h4 class="card-title">Member ID: {{ $user->user_id }}</h4>
                     </div>
                 </div>
                 <div class="iq-card-body">
-                    {!! Form::model($tag, ['method' => 'PATCH', 'route' => ['beacons.update', $tag->id]]) !!}
-                        <div class="form-group">
-                            <label for="editMacAdd">Mac Address:</label>
-                            {!! Form::text('beacon_mac', null, array('placeholder' => 'XX:XX:XX:XX','class' => "form-control", 'id' => 'editMacAdd')) !!}
-                            @error('beacon_mac')
+                    {!! Form::model($user, ['method' => 'PATCH', 'route' => ['users.update', $user->user_id]]) !!}
+                        <div class=" row align-items-center">
+                            <div class="form-group col-sm-6">
+                            <label for="fname">First Name:</label>
+                            {!! Form::text('fName', null, array('class' => "form-control", 'id' => 'editFName')) !!}
+                            @error('fName')
                                 <div class="alert-danger">{{ $message }}</div>
                             @enderror
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="lname">Last Name:</label>
+                                {!! Form::text('lName', null, array('class' => "form-control", 'id' => 'editLName')) !!}
+                                @error('lName')
+                                    <div class="alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="uname">Phone Number:</label>
+                                {!! Form::text('phone_number', null, array('class' => "form-control", 'id' => 'editPhoneNum')) !!}
+                                @error('phone_number')
+                                    <div class="alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="editTag">Role:</label>
+                                {!! Form::select('user_type', $userTypes, null, ['placeholder' => 'Please select...', 'class' => 'form-control form-control', 'id' => 'editUserType']) !!}
+                                @error('user_type')
+                                    <div class="alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="editTagType">Type:</label>
-                            {!! Form::select('beacon_type', $tagTypes, null, ['placeholder' => 'Please select...', 'class' => 'form-control form-control', 'id' => 'editTagType']) !!}
-                            @error('beacon_type')
-                                <div class="alert-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group" id="user-div" {{ ($tag->beacon_type == 1) ? '':'hidden' }}>
-                            <label for="editUser">User:</label>
-                            {!! Form::select('user_id', $usersNull, $tag->user->user_id ?? null, ['placeholder' => 'Please select...', 'class' => 'form-control form-control', 'id' => 'editUser']) !!}
-                            @error('user_id')
-                                <div class="alert-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group" id="resident-div" {{ ($tag->beacon_type == 2) ? '':'hidden' }}>
-                            <label for="editResident">Resident:</label>
-                            {!! Form::select('resident_id', $residentsNull, $tag->resident->resident_id ?? null, ['placeholder' => 'Please select...', 'class' => 'form-control form-control', 'id' => 'editResident']) !!}
-                            @error('resident_id')
-                                <div class="alert-danger">{{ $message }}</div>
-                            @enderror
+                        <hr>
+                        <div class=" row align-items-center">
+                            <div class="form-group col-sm-6">
+                                <label for="uname">Username:</label>
+                                {!! Form::text('username', null, array('class' => "form-control", 'id' => 'editUsername')) !!}
+                                @error('username')
+                                    <div class="alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="cname">Password: </label>
+                                <a href="#" data-toggle="tooltip" data-placement="right" title="Leave blank if do not wish to change password..." style="cursor: pointer; left-padding:0">
+                                <i class="ri-information-fill"></i>
+                                </a>
+                                    {!! Form::password('password', array('class' => 'form-control', 'id'=>'editPassword')) !!}
+                                @error('password')
+                                    <div class="alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="editTag">Card:</label>
+                                {!! Form::select('beacon_id', $tagsNull, null, ['placeholder' => 'Please select...', 'class' => 'form-control form-control', 'id' => 'editTag']) !!}
+                                @error('beacon_id')
+                                    <div class="alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="cname">Permission: </label>
+                                <a href="#" data-toggle="tooltip" data-placement="right" title="Tick to allow this member to make changes to the project" style="cursor: pointer; left-padding:0">
+                                <i class="ri-information-fill"></i>
+                                </a>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="user_right">
+                                    <label class="custom-control-label" for="user_right">Administrator</label>
+                                 </div>
+                            </div>
                         </div>
                         <div class="text-right">
-                            <button type="submit" class="btn btn-primary">Save</button>
-                            <a href="{{ route('beacons.index') }}" class="btn iq-bg-danger">Cancel</a>
+                            <button type="submit" class="btn btn-primary" disabled>Save</button>
+                            <a href="{{ route('settings.index') }}" class="btn iq-bg-danger">Cancel</a>
                         </div>
                     {!! Form::close() !!}
                 </div>
@@ -53,41 +92,5 @@
 @endsection
 
 @section('script')
-    @error('beacon_mac')<script>$('#editMacAdd').css("border", "1px solid red");</script>@enderror
-    @error('beacon_type')<script>$('#editTagType').attr('style', 'border: 1px solid red !important');</script>@enderror
 
-    <script>
-        $(function(){
-            $('#editTagType').select2({
-                placeholder: "Please select ..."
-            });
-
-            $('#editUser').select2({
-                placeholder: "Please select ..."
-            });
-            
-            $('#editResident').select2({
-                placeholder: "Please select ..."
-            });
-        })
-
-        $('#editTagType').on('change', function(){
-            switch($(this).val()){
-                case "1":
-                    $('#user-div').prop('hidden', false);
-                    $('#resident-div').prop('hidden', true);
-                    $('#editUser').select2({
-                        placeholder: "Please select ..."
-                    });
-                    break;
-                case "2":
-                    $('#user-div').prop('hidden', true);
-                    $('#resident-div').prop('hidden', false);
-                    $('#editResident').select2({
-                        placeholder: "Please select ..."
-                    });
-                    break;
-            }
-        });
-    </script>
 @endsection

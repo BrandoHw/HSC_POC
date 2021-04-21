@@ -30,7 +30,7 @@ class Reader extends Model
      */
 
     protected $fillable = [
-        'serial', 'mac_address', 'reader_ip', 'location_id', 'reader_status', 'up_status', 'down_status', 'assigned'
+        'serial', 'mac_addr', 'reader_ip', 'location_id', 'reader_status', 'up_status', 'down_status', 'assigned'
     ];
     /**
      * Get the floor records associated with the reader.

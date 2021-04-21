@@ -12,7 +12,12 @@
                             <a class="search-link" href="#"><i class="ri-search-line"></i></a>
                         </form>
                         <div class="col-4 row justify-content-end">
-                            <a class="btn btn-danger" href="#" style="opacity:.65;" disabled >Archive</a>
+                            <a class="btn iq-bg-primary" href="#" data-toggle="tooltip" data-placement="top" 
+                                title="Mark As Resolved" style="margin-right: 10px; font-size:20px; heigh:40px"><i class="ml-0 mr-0 ri-checkbox-line"></i></a>
+                            <a class="btn iq-bg-danger" href="#" data-toggle="tooltip" data-placement="top" 
+                                title="Archieve" style="margin-right: 10px"><i class="ri-archive-line"></i></a>
+                            <a class="btn iq-bg-info" href="#" data-toggle="tooltip" data-placement="top" 
+                                title="Refresh"><i class="ri-restart-line"></i></a>
                         </div>
                     </div>
                     <div class="table-responsive" style="margin-top: 15px">
@@ -32,7 +37,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($alerts as $alert)
-                                    <tr href="{{ route('alerts.edit',$alert->rules_id) }}">
+                                    <tr>
                                         <td>{{ $alert->alert_id }}</td>
                                         <td>
                                             {{ $alert->policy->policyType->rules_type_desc }}
@@ -83,8 +88,8 @@
         dTable.search($(this).val()).draw();   // this  is for customized searchbox with datatable search feature.
     })
 
-    $('#alertTable tbody tr td:not(:first-child)').click(function () {
-        window.location.href = $(this).parent('tr').attr('href');
-    });
+    // $('#alertTable tbody tr td:not(:first-child)').click(function () {
+    //     window.location.href = $(this).parent('tr').attr('href');
+    // });
 </script>
 @endsection

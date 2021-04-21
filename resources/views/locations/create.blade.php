@@ -31,8 +31,8 @@
             
             <!-- Button -->
             <div style="float:right; margin-top:0.5em">
+                <button class="btn btn-primary" id="saveLocationBtn" onClick="createLocation()">Save Location</button>
                 <button class="btn btn-secondary quitLocationCreate">Cancel</button>
-                <button class="btn btn-primary" id="saveLocationBtn" onClick="createLocation()">Save</button>
             </div>
     </div>
 </div>

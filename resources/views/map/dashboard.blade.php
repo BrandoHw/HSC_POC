@@ -18,10 +18,11 @@
 
     <!-- <body> -->
     <div>
-        <div class="form-group row" id="selUserHolder">
-            <label class="col-form-label col-sm-3 text-sm-right" for="selUser"></label>
-            <select id='selUser' class="form-control col-sm-8"  style='height: 50px; width: 100%;'></select>
-        </div>
+        <form>
+            <div class="form-group" id="selUserHolder">
+                <select id='selUser' class="form-control"></select>
+            </div>
+        </form>
        
         <div id= 'flex-list-container' style='display: flex; height: 80vh;'>
             <div id="map" style="width: 100%;"></div>

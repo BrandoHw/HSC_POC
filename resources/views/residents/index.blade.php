@@ -24,7 +24,7 @@
                                     <th scope="col">Gender</th>
                                     <th scope="col">Wheelchair</th>
                                     <th scope="col">Walking Cane</th>
-                                    <th scope="col">Wristband</th>
+                                    <th scope="col">Beacon</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -51,6 +51,10 @@
 
 @section("script")
 <script>
+    @if ($message = Session::get('success'))
+        notyf.success(@json($message));
+    @endif
+
     /* Initiate dataTable */
     var dTable = $('#residentTable').DataTable({
             order: [[1, 'asc']],

@@ -18,10 +18,10 @@ class TagController extends Controller
     */
     function __construct()
     {
-        $this->middleware('permission:tag-list|tag-create|tag-edit|tag-delete', ['only' => ['index','show']]);
-        $this->middleware('permission:tag-create', ['only' => ['create','store']]);
-        $this->middleware('permission:tag-edit', ['only' => ['edit','update']]);
-        $this->middleware('permission:tag-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:beacon-list|beacon-create|beacon-edit|beacon-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:beacon-create', ['only' => ['create','store']]);
+        $this->middleware('permission:beacon-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:beacon-delete', ['only' => ['destroy']]);
     }
     
     /**
@@ -43,15 +43,14 @@ class TagController extends Controller
     */
     public function create()
     {
-        /** Get tag type id and combine with their name, ['id' => 'type_name']*/
-        $tagTypes = TagType::pluck('beacon_type_id');
-        $tagTypes = $tagTypes->combine(['Wristband', 'Card'])->all();
-
-        /** Get users & residents that doesnt have tag() ['id' => 'full_name'] */
-        $usersNull = User::doesntHave('tag')->get()->pluck('full_name', 'user_id');
-        $residentsNull = Resident::doesntHave('tag')->get()->pluck('full_name', 'resident_id');
-
-        return view('tags.create',compact('tagTypes', 'usersNull', 'residentsNull'));
+        $users = User::doesntHave('tag')->orderBy('fName', 'asc')->get();
+        $residents = Resident::doesntHave('tag')->orderBy('resident_fName', 'asc')->get();
+        
+        $available = true;
+        if($users->isEmpty() && $residents->isEmpty()){
+            $available = false;
+        }
+        return view('tags.create',compact('users', 'residents', 'available'));
     }
     
     /**
@@ -62,32 +61,38 @@ class TagController extends Controller
     */
     public function store(Request $request)
     {
-        request()->validate([
-            'beacon_mac' => 'required|unique:beacons_table,beacon_mac,',
-            'beacon_type' => 'required',
-        ]);
+        if($request['assign'] == '1'){
+            request()->validate([
+                'beacon_mac' => 'required|string|min:12|max:12|unique:beacons_table,beacon_mac',
+                'target' => 'required'
+            ]);
+        } else {
+            request()->validate([
+                'beacon_mac' => 'required|string|min:12|max:12|unique:beacons_table,beacon_mac',
+            ]);
+        }
         
         $tag = Tag::create($request->all());
 
-        /** Save the tag type */
-        $tagType = TagType::find($request['beacon_type']);
-        $tag->tagType()->associate($tagType)->save();
+        /** Save the wristband tag type */
+        $tag_type = TagType::find(1);
+        $tag->tagType()->associate($tag_type)->save();
 
-        /** If beacon is card, save user. If beacon is wristband, save resident*/
-        if($request['beacon_type'] == "2"){
-            if(!empty($request['user_id'])){
-                $user = User::find($request['user_id']);
-                $user->tag()->associate($tag)->save();
-            }
-        } else {
-            if(!empty($request['resident_id'])){
-                $resident = Resident::find($request['resident_id']);
+        if(!empty($request['target'])){
+            $target_type = explode('-', $request['target'])[0];
+            $target_id = explode('-', $request['target'])[1];
+
+            if($target_type == "R"){
+                $resident = Resident::find($target_id);
                 $resident->tag()->associate($tag)->save();
+            } else {
+                $user = User::find($target_id);
+                $user->tag()->associate($tag)->save();
             }
         }
         
         return redirect()->route('beacons.index')
-            ->with('success','Tag created successfully.');
+            ->with('success','Beacon added successfully.');
     }
     
     /**
@@ -98,7 +103,7 @@ class TagController extends Controller
     */
     public function show(Tag $tag)
     {
-        return view('tags.show',compact('tag'));
+        //
     }
     
     /**
@@ -109,26 +114,28 @@ class TagController extends Controller
     */
     public function edit(Tag $tag)
     {
-        /** Get tag type id and combine with their name, ['id' => 'type_name']*/
-        $tagTypes = TagType::pluck('beacon_type_id');
-        $tagTypes = $tagTypes->combine(['Wristband', 'Card'])->all();
+        $users = User::doesntHave('tag')->get();
+        $residents = Resident::doesntHave('tag')->get();
 
-        /** Get users & residents that doesnt have tag() ['id' => 'full_name'] */
-        $usersNull = User::doesntHave('tag')->get()->pluck('full_name', 'user_id');
-        $residentsNull = Resident::doesntHave('tag')->get()->pluck('full_name', 'resident_id');
-
+        $current = null;
         /** Concat the current user of this tag, if exist */
         if(!empty($tag->user)){
-            $current = collect([$tag->user->user_id => $tag->user->full_name." [Current]"]);
-            $usersNull = $current->concat($usersNull)->all();
+            $current = $tag->user;
+            $users->push($current);
         }
 
         /** Concat the current resident of this tag, if exist */
         if(!empty($tag->resident)){
-            $current = collect([$tag->resident->resident_id => $tag->resident->full_name." [Current]"]);
-            $residentsNull = $current->concat($residentsNull)->all();
+            $current = $tag->resident;
+            $residents->push($current)->all();
         }
-        return view('tags.edit',compact('tag', 'tagTypes', 'usersNull', 'residentsNull'));
+
+        $available = true;
+        if($users->isEmpty() && $residents->isEmpty()){
+            $available = false;
+        }
+
+        return view('tags.edit',compact('tag', 'users', 'current', 'residents', 'available'));
     }
     
     /**
@@ -140,19 +147,19 @@ class TagController extends Controller
     */
     public function update(Request $request, Tag $tag)
     {
-        request()->validate([
-            'beacon_mac' => 'required|unique:beacons_table,beacon_mac,'.$tag->beacon_id,
-            'beacon_type' => 'required',
-        ]);
-        $tag->update($request->all());
-        
-        /** Save the tag type */
-        if(!empty($tag->tagType)){
-            $tag->tagType()->dissociate()->save();
-            $tagType = TagType::find($request['beacon_type']);
-            $tag->tagType()->associate($tagType)->save();
+        if($request['assign'] == '1'){
+            request()->validate([
+                'beacon_mac' => 'required|string|min:12|max:12|unique:beacons_table,beacon_mac,'.$tag->beacon_id.',beacon_id',
+                'target' => 'required'
+            ]);
+        } else {
+            request()->validate([
+                'beacon_mac' => 'required|string|min:12|max:12|unique:beacons_table,beacon_mac,'.$tag->beacon_id.',beacon_id',
+            ]);
         }
-        
+
+        $tag->update($request->all());
+
         /** Remove the user/resident associated with this tag */
         if(!empty($tag->user)){
             $tag->user->tag()->dissociate()->save();
@@ -162,21 +169,21 @@ class TagController extends Controller
             $tag->resident->tag()->dissociate()->save();
         }
 
-        /** If beacon is card, save user. If beacon is wristband, save resident*/
-        if($request['beacon_type'] == "2"){
-            if(!empty($request['user_id'])){
-                $user = User::find($request['user_id']);
-                $user->tag()->associate($tag)->save();
-            }
-        } else {
-            if(!empty($request['resident_id'])){
-                $resident = Resident::find($request['resident_id']);
+        if(!empty($request['target'])){
+            $target_type = explode('-', $request['target'])[0];
+            $target_id = explode('-', $request['target'])[1];
+
+            if($target_type == "R"){
+                $resident = Resident::find($target_id);
                 $resident->tag()->associate($tag)->save();
+            } else {
+                $user = User::find($target_id);
+                $user->tag()->associate($tag)->save();
             }
         }
 
         return redirect()->route('beacons.index')
-            ->with('success','Tag updated successfully');
+            ->with('success','Beacon updated successfully');
     }
    
     /**
@@ -187,9 +194,30 @@ class TagController extends Controller
     */
     public function destroy(Tag $tag)
     {
-        $tag->delete();
-        return redirect()->route('tags.index')
-          ->with('success','Tag deleted successfully');
+        //
+    }
+
+    /**
+     * Remove the specified resources from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function destroys(Request $request)
+    {
+        $ids = $request->beacons_id;
+
+        Tag::destroy($ids);
+
+        if(count($ids) > 1){
+            return response()->json([
+                "success" => "Beacons deleted successfully."
+            ], 200);
+        } else {
+            return response()->json([
+                "success" => "Beacon deleted successfully."
+            ], 200);
+        }
     }
 
     public function userLastSeen(){

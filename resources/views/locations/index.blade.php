@@ -21,9 +21,8 @@
                             <a class="search-link" href="#"><i class="ri-search-line"></i></a>
                         </form>
                         <div class="col-4 row justify-content-end">
-                            <a class="btn btn-primary" href="#" id ="createLocationButton" style="margin-right: 10px">Create</a>
-                            <a class="btn" style ="color: white; background-color: var(--iq-danger); border-color: var(--iq-danger)" 
-                                href="#" id ="deleteLocationButton"> Delete</a>
+                            <a class="btn btn-primary" href="#" id ="createLocationButton" style="margin-right: 10px"><i class="ri-add-line"></i>Add Location</a>
+                            <a class="btn btn-danger" href="#" id ="deleteLocationButton"> Delete</a>
                         </div>
                     </div>
                     <div class="table-responsive" style="margin-top: 15px">
@@ -42,7 +41,7 @@
                                         <td>{{ $location->location_master_id }}</td>
                                         <td>{{ $location->location_description }}</td>
                                         <td>{{ $location->type->location_type}}</td>
-                                        <td>{{ $location->floor_level->name}}</td>
+                                        <td>{{ $location->floor_level->alias}}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

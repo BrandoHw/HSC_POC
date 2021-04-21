@@ -1,11 +1,17 @@
 @extends('layouts.app')
 
+@section('style')
+    <link href="{{ asset('css/map/leaflet.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/map/leaflet.draw.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/map/map.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/leaflet.js') }}"></script>
+    <script src="{{ asset('js/views/map/functions.js')}}"></script>
+    <script src="{{ asset('js/views/map/edit_functions.js')}}"></script>
+@endsection
 @section('content')
-<html>
+<!-- <html>
     <head>
-        <link href="{{ asset('css/map/leaflet.css') }}" rel="stylesheet">
-        <link href="{{ asset('css/map/leaflet.draw.css') }}" rel="stylesheet">
-        <link href="{{ asset('css/map/map.css') }}" rel="stylesheet">
+        
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         
         
@@ -18,36 +24,47 @@
 
       <title>A Leaflet map!</title>
 
-    </head>
+    </head> -->
     
-  
-    <div style='display: flex; height: 80vh;'>
-        <div class ="scroller" style="width:25%; line-height:3em;overflow:scroll;padding:5px;background-color: rgb(255, 255, 255);display: inline-block;">
-            <div id="reader-list-holder">
-                <input type="text" class="search form-control round" placeholder="Search" />
-                <ul id="reader-list" class="list iq-chat-ui nav flex-column nav-pills" style="display: inline-block">
-                    <li id = "first-item"><h3 class="serial">Serial</h3>
-                        <h3 class="location">Location</h3>
-                        <p class="mac">Mac</p>
-                        <p class="online">Online</p>
-                    </li>
-                </ul> 
-                <ul class="pagination"></ul>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12 col-lg-12">
+            <div class="iq-card">
+                <div class="iq-card-body">
+                    <div style='display: flex; height: 80vh;'>
+                        <div class ="scroller" style="width:25%; line-height:3em;overflow:scroll;padding:5px;background-color: rgb(255, 255, 255);display: inline-block;">
+                            <div id="reader-list-holder">
+                                <input type="text" class="search form-control round" placeholder="Search" />
+                                <ul id="reader-list" class="list iq-chat-ui nav flex-column nav-pills" style="display: inline-block">
+                                    <li id = "first-item"><h3 class="serial">Serial</h3>
+                                        <h3 class="location">Location</h3>
+                                        <p class="mac">Mac</p>
+                                        <p class="online">Online</p>
+                                    </li>
+                                </ul> 
+                                <ul class="pagination"></ul>
+                            </div>
+                        </div>
+
+                        <div id="map" style="width: 75%; display: inline-block"></div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div id="map" style="width: 75%; display: inline-block"></div>
     </div>
-
-            <!-- Create Zone Modal -->
+    <!-- Create Zone Modal -->
     <div class="modal fade" id="createZoneModal" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             @include('map.create')
         </div>
     </div>
-    </body>
+</div>
 
-        
+    <!-- </body> -->
+
+@endsection
+
+@section('script')
     <script src="{{ asset('js/views/map/jquery_functions.js')}}"></script>
     <script>
    

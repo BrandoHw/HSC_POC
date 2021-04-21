@@ -48,7 +48,7 @@ class RoleController extends Controller
     {
         $permissions = Permission::get();
         $modules = $permissionService->organise_permissions($permissions);
-        return view('roles.create',compact('permissions', 'modules'));
+        return view('settings.roles.create',compact('permissions', 'modules'));
     }
     
     /**

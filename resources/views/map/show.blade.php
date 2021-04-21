@@ -1,7 +1,13 @@
 @extends('layouts.app')
 
+@section('style')
+    <link href="{{ asset('css/map/leaflet.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/map/leaflet.draw.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/map/map.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/views/map/functions.js')}}"></script>
+@endsection
 @section('content')
-<html>
+ <!-- <html>
     <head>
         <link href="{{ asset('css/map/leaflet.css') }}" rel="stylesheet">
         <link href="{{ asset('css/map/leaflet.draw.css') }}" rel="stylesheet">
@@ -16,40 +22,38 @@
 
     </head>
 
-    <body>
+    <body> -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12 col-lg-12">
+            <div class="iq-card">
+                <div class="iq-card-body">
+                    <div style='display: flex; height: 76vh;'>
 
-    <!-- Title & Add-Button -->
-    {{-- <div class="row mb-2 mb-xl-3">
-        <div class="col-auto d-none d-sm-block">
-            <h3><strong>Maps</strong> Management</h3>
-        </div>
-        <div class="col-auto ml-auto text-right mt-n1">
-            @can('map-edit')
-            <a href="{{ url('map/1/edit') }}"class="btn btn-primary">Edit Map</a>
-            @endcan
-        </div>
-    </div> --}}
-    
-    <div style='display: flex; height: 76vh;'>
-
-        <div class ="scroller" style="width:25%; line-height:3em;overflow:scroll;padding:5px;background-color: rgb(255, 255, 255);display: inline-block;">
-            <div id="user-list-holder">
-                <input type="text" class="search form-control round" placeholder="Search" />
-        
-            <ul id="user-list" class="list iq-chat-ui nav flex-column nav-pills" style="display: inline-block">
-                <li id = "first-item"><h3 class="name">Name</h3>
-                    {{-- <h5 class="location">Location</h5> --}}
-                    <p class="tag">Tag</p>
-                </li>
-            </ul> 
-            <ul class="pagination"></ul>
+                        <div class ="scroller" style="width:25%; line-height:3em;overflow:scroll;padding:5px;background-color: rgb(255, 255, 255);display: inline-block;">
+                            <div id="user-list-holder">
+                                <input type="text" class="search form-control round" placeholder="Search" />
+                        
+                            <ul id="user-list" class="list iq-chat-ui nav flex-column nav-pills" style="display: inline-block">
+                                <li id = "first-item"><h3 class="name">Name</h3>
+                                    {{-- <h5 class="location">Location</h5> --}}
+                                    <p class="tag">Tag</p>
+                                </li>
+                            </ul> 
+                            <ul class="pagination"></ul>
+                            </div>
+                        </div>
+                        <div id="map" style="width: 75%; display: inline-block"></div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div id="map" style="width: 75%; display: inline-block"></div>
     </div>
-    </body>
+</div>
+    <!-- </body> -->
 
-
+@endsection
+@section('script')
     <script>
         var imageUrl = "{{url('/css/images/')}}";
         

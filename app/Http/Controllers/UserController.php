@@ -100,15 +100,11 @@ class UserController extends Controller
     */
     public function edit(User $user)
     {   
-        // $userRole = $user->roles[0];
-        // $userTagSerial = $user->tag->serial ?? "Not Assigned";
-        // // $tagsNull = Tag::doesntHave('user')->get();
-        // return response()->json([
-        //     "user" => $user,
-        //     "userRole" => $userRole,
-        //     "userTagSerial" => $userTagSerial],
-        //     // "tagsNull" => $tagsNull],
-        //     200);
+        $tagsNull = Tag::where('beacon_type', 2)
+            ->doesntHave('user')
+            ->pluck('beacon_mac', 'beacon_id');
+        $userTypes = UserType::pluck('type', 'user_type_id')->all();
+        return view('settings.users.edit', compact('user'));
     }
     
     /**

@@ -7,7 +7,7 @@
             <div class="iq-card">
                 <div class="iq-card-header d-flex justify-content-between">
                     <div class="iq-header-title">
-                        <h4 class="card-title">Resident ID: {{ $resident->resident_id }}</h4>
+                        <h4 class="card-title">Resident: <strong>{{ $resident->full_name }}</strong></h4>
                     </div>
                 </div>
                 <div class="iq-card-body">
@@ -48,15 +48,15 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="editTag">Wristband:</label>
-                            {!! Form::select('beacon_id', $tagsNull, null, ['placeholder' => 'Please select...', 'class' => 'form-control form-control', 'id' => 'editTag']) !!}
+                            <label for="editTag">Beacon:</label>
+                            {!! Form::select('beacon_id', $tags, null, ['placeholder' => 'Please select...', 'class' => 'form-control form-control', 'id' => 'editTag']) !!}
                             @error('beacon_id')
                                 <div class="alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="text-right">
-                            <button type="submit" class="btn btn-primary" disabled>Save</button>
-                            <a href="{{ route('residents.index') }}" class="btn iq-bg-danger">Cancel</a>
+                        <div class="text-center mt-5">
+                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                            <a href="{{ route('residents.index') }}" class="btn btn-secondary">Cancel</a>
                         </div>
                     {!! Form::close() !!}
                 </div>

@@ -89,7 +89,11 @@ class Tag extends Model
     public function getCurrentLocationAttribute()
     {
         $location = $this->gateway->location;
-        return $location->floor."F - ".$location->location_description;
+        if(isset($location)){
+            return $location->floor."F - ".$location->location_description;
+        } else {
+            return "-";
+        }
     }
 
     /**

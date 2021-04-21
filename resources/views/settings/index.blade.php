@@ -9,14 +9,17 @@
                     <div>
                         <ul class="nav nav-tabs justify-content-right" id="myTab-2" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" id="profile-setting" data-toggle="tab" href="#description" role="tab" aria-selected="true">Profile</a>
+                                <a class="nav-link active" id="profile-setting" data-toggle="tab" href="#manage-profile" role="tab" aria-selected="true">Profile</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="user-setting" data-toggle="tab" href="#specifications" role="tab"  aria-selected="false">Manage Members</a>
+                                <a class="nav-link" id="user-setting" data-toggle="tab" href="#manage-user" role="tab"  aria-selected="false">Manage Staffs</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="role-setting" data-toggle="tab" href="#manage-role" role="tab"  aria-selected="false">Roles & Permissions</a>
                             </li>
                         </ul>
                         <div class="tab-content" id="myTabContent-3">
-                            <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="profile-setting">
+                            <div class="tab-pane fade show active" id="manage-profile" role="tabpanel" aria-labelledby="profile-setting">
                             <div class="iq-card">
                                  <div class="iq-card-header d-flex justify-content-between">
                                     <div class="iq-header-title">
@@ -100,14 +103,14 @@
                                  </div>
                               </div>
                             </div>
-                            <div class="tab-pane fade" id="specifications" role="tabpanel" aria-labelledby="user-setting">
+                            <div class="tab-pane fade" id="manage-user" role="tabpanel" aria-labelledby="user-setting">
                                 <div class="row">   
                                     <div class="col-sm-12">
                                         <div class="iq-card">
                                             <div class="iq-card-body">
                                                 <div class="iq-search-bar row justify-content-between">
                                                     <form action="#" class="searchbox">
-                                                        <input type="text" id="myCustomSearchBox" class="text search-input" placeholder="Type here to search...">
+                                                        <input type="text" id="userCustomSearchBox" class="text search-input" placeholder="Type here to search...">
                                                         <a class="search-link" href="#"><i class="ri-search-line"></i></a>
                                                     </form>
                                                     <div class="col-4 row justify-content-end">
@@ -144,6 +147,52 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="tab-pane fade" id="manage-role" role="tabpanel" aria-labelledby="role-setting">
+                                <div class="row">   
+                                    <div class="col-sm-12">
+                                        <div class="iq-card">
+                                            <div class="iq-card-body">
+                                                <div class="iq-search-bar row justify-content-between">
+                                                    <form action="#" class="searchbox">
+                                                        <input type="text" id="roleCustomSearchBox" class="text search-input" placeholder="Type here to search...">
+                                                        <a class="search-link" href="#"><i class="ri-search-line"></i></a>
+                                                    </form>
+                                                    <div class="col-4 row justify-content-end">
+                                                        <a class="btn btn-primary" href="{{ route('roles.create') }}" style="margin-right: 10px;">Add Role</a>
+                                                        <a class="btn btn-danger" href="#" style="opacity:.65" disabled >Delete</a>
+                                                    </div>
+                                                </div>
+                                                <div class="table-responsive" style="margin-top: 15px">
+                                                    <table class="table table-stripe table-bordered hover" id="roleTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col" style="width:10%">#</th>
+                                                                <th scope="col">Name</th>
+                                                                <th scope="col">Color</th>
+                                                                <th scope="col">Permissions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($roles as $role)
+                                                                <tr href="{{ route('roles.edit',$role->id) }}">
+                                                                    <td>{{ $role->id }}</td>
+                                                                    <td>{{ $role->name }}</td>
+                                                                    <td><span class="badge badge-dark" style="background-color: {{ $role->color }} !important">{{ Str::upper($role->color) }}</span></td>
+                                                                    <td>
+                                                                        @if(!empty($rolePermissions))
+                                                                            {{ $rolePermissions->where("role_id", $role->id)->count() }}
+                                                                        @endif
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table> 
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -155,17 +204,30 @@
 
 @section("script")
 <script>
-    /* Initiate dataTable */
-    var dTable = $('#userTable').DataTable({
+    /* Initiate user dataTable */
+    var userTable = $('#userTable').DataTable({
             order: [[1, 'asc']],
         })
 
-    $('#myCustomSearchBox').keyup(function(){  
-        dTable.search($(this).val()).draw();   // this  is for customized searchbox with datatable search feature.
+    $('#userCustomSearchBox').keyup(function(){  
+        userTable.search($(this).val()).draw();   // this  is for customized searchbox with datatable search feature.
     })
 
-    // $('#userTable tbody tr td:not(:first-child)').click(function () {
-    //     window.location.href = $(this).parent('tr').attr('href');
-    // });
+    $('#userTable tbody tr td:not(:first-child)').click(function () {
+        window.location.href = $(this).parent('tr').attr('href');
+    });
+
+    /* Initiate role dataTable */
+    var roleTable = $('#roleTable').DataTable({
+            order: [[1, 'asc']],
+        })
+
+    $('#roleCustomSearchBox').keyup(function(){  
+        roleTable.search($(this).val()).draw();   // this  is for customized searchbox with datatable search feature.
+    })
+
+    $('#roleTable tbody tr td:not(:first-child)').click(function () {
+        window.location.href = $(this).parent('tr').attr('href');
+    });
 </script>
 @endsection

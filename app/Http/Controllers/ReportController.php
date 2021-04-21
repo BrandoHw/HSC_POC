@@ -6,6 +6,13 @@ use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:report-list|report-create|report-edit|report-delete', ['only' => ['index','store']]);
+        $this->middleware('permission:report-create', ['only' => ['create','store']]);
+        $this->middleware('permission:report-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:report-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      *

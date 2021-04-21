@@ -9,6 +9,12 @@ use Illuminate\Http\Request;
 
 class AlertController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:alert-list|alert-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:alert-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *

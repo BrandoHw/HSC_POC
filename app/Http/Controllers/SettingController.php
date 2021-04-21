@@ -7,6 +7,9 @@ use App\User;
 use App\UserType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use DB;
 
 class SettingController extends Controller
 {
@@ -29,7 +32,13 @@ class SettingController extends Controller
             $current = collect([$user->tag->beacon_id => $user->tag->beacon_mac]);
             $tagsNull = $current->concat($tagsNull)->all();
         }
-        return view('settings.index', compact('user', 'users', 'userTypes', 'tagsNull'));
+
+        $roles = Role::orderBy('id','asc')->get();
+        $rolePermissions = DB::table("role_has_permissions")
+            ->get();
+
+        return view('settings.index', compact('user', 'users', 'userTypes', 'tagsNull',
+            'roles', 'rolePermissions'));
     }
 
     /**

@@ -56,21 +56,21 @@ Route::group(['middleware' => ['auth']], function() {
     
     Route::resource('dashboard', DashboardController::class);
 
-    Route::resource('roles', RoleController::class);
-    Route::resource('users', UserController::class)
-        ->except(['show']);
-
     Route::resource('buildings', BuildingController::class);
     Route::resource('floors', FloorController::class);
     Route::get('floors/destroy/{id}', [FloorController::class, 'destroyHref'])->name('floor.destroy');
-    // Route::resource('beacons', TagController::class);
-    // Route::resource('gateways', ReaderController::class);
 
     Route::resource('beacons', TagController::class)
         ->parameters(['beacons' => 'tag'])
-        ->except(['show']);
+        ->except(['show', 'destroy']);
+    Route::delete('beacons/destroys', [TagController::class, 'destroys'])
+        ->name('beacons.destroys');
 
-    Route::resource('gateways', ReaderController::class)->parameters(['gateways' => 'reader']);
+    Route::resource('gateways', ReaderController::class)
+        ->parameters(['gateways' => 'reader'])
+        ->except(['show', 'destroy']);
+    Route::delete('gateways/destroys', [ReaderController::class, 'destroys'])
+        ->name('gateways.destroys');
 
     Route::resource('map', MapController::class);
     Route::resource('locations', LocationController::class);
@@ -89,24 +89,30 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('user/group', [UserLastSeenController::class, 'group']);
     
     Route::resource('residents', ResidentController::class)
-        ->only(['index', 'edit', 'update']);
+        ->except(['show']);
     
     Route::resource('attendance', AttendanceController::class)
-        ->only(['index', 'show']);
+        ->only(['index', 'destroy']);
 
     Route::resource('policies', PolicyController::class)
-        ->name('*', 'policies')->except(['show', 'destroy']);
-    Route::delete('policies/destroy-multi', [PolicyController::class, 'destroyMulti'])
-        ->name('policies.destroy-multi');
+        ->name('*', 'policies')
+        ->except(['show', 'destroy']);
+    Route::delete('policies/destroys', [PolicyController::class, 'destroys'])
+        ->name('policies.destroys');
 
-    Route::resource('alerts', AlertController::class);
+    Route::resource('alerts', AlertController::class)
+        ->only(['index', 'show', 'delete']);
 
-    // Route::resource('tracking', TrackingController::class);
     Route::resource('tracking', MapController::class);
     
     Route::resource('reports', ReportController::class);
+    
     Route::resource('settings', SettingController::class)
         ->except(['show']);
+    Route::resource('roles', RoleController::class)
+        ->except(['show', 'index']);
+    Route::resource('users', UserController::class)
+        ->except(['show', 'index']);
 
     // Route::get('/foo', function () {
     //     Artisan::call('storage:link');
