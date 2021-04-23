@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Alert;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -11,8 +12,8 @@ class AlertController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:alert-list|alert-delete', ['only' => ['index','show']]);
-        $this->middleware('permission:alert-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:alert-list|alert-archive', ['only' => ['index','show', 'updates']]);
+        $this->middleware('permission:alert-archive', ['only' => ['destroys']]);
     }
 
     /**
@@ -130,6 +131,40 @@ class AlertController extends Controller
     }
 
     /**
+     * Update the specified resources in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updates(Request $request)
+    {
+        $ids = $request->alerts_id;
+
+        $alerts = Alert::find($ids)->whereNull('resolved_at');
+        $user = User::find($request['user_id']);
+
+        $resolved_at = Carbon::now();
+
+        foreach($alerts as $alert){
+            $alert->user()->associate($user)->save();
+            $alert->resolved_at = $resolved_at;
+            $alert->save();
+        }
+        
+        $message = "Alert resolved successfully.";
+        
+        if(count($ids) > 1){
+            $message = "Alerts resolved successfully.";
+        }
+        return response()->json([
+            "success" => $message,
+            "user" => $user->full_name,
+            "alerts" => $alerts,
+            "resolved_at" => $alerts->first()->resolved_at_tz
+        ], 200);
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
@@ -138,5 +173,28 @@ class AlertController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Remove the specified resources from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function destroys(Request $request)
+    {
+        $ids = $request->alerts_id;
+
+        Alert::destroy($ids);
+
+        if(count($ids) > 1){
+            return response()->json([
+                "success" => "Alerts archived successfully."
+            ], 200);
+        } else {
+            return response()->json([
+                "success" => "Alert archived successfully."
+            ], 200);
+        }
     }
 }

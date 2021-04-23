@@ -56,6 +56,7 @@
             </div>
          </div>
       </div>
+      @can('tracking-list')
       <div class="col-lg-12">
          <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
             <div class="iq-card-body">
@@ -63,6 +64,8 @@
             </div>
          </div>
       </div>
+      @endcan
+      @can('attendance-list')
       <div class="col-lg-8">
          <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
             <div class="iq-card-header d-flex justify-content-between">
@@ -186,6 +189,7 @@
             </div>
          </div>
       </div>
+      @endcan
    </div>
 </div>
 
@@ -193,11 +197,12 @@
 @endsection
 
 @section('extra')
+@can('alert-list')
 <div class="iq-right-fixed">
    <div class="iq-card" style="box-shadow: none;">
       <div class="chat-search pt-3 pl-3">
          <div class="d-flex align-items-center">
-            <h4>Events</h4>
+            <h4>Today's Alert</h4>
          </div>
       </div>
       <div class="chat-sidebar-channel scroller mt-4 pl-3" style="height:calc(100vh - 5rem)">
@@ -251,162 +256,10 @@
                @endforeach
             </ul>      
          @endif
-         <!-- <ul class="iq-timeline" id="activity">
-            <li class="li-alert active">
-               <div class="timeline-dots border-danger"></div>
-                  <h6 class="float-left mb-1 text-danger">Fall 1</h6>
-                  <small class="float-right mt-1">10:00AM, Today</small>
-                  <div class="d-flex w-100 mb-1 align-items-center">
-                     <div class="user-img img-fluid"><img src="{{ asset('template/images/user/03.jpg') }}" alt="story-img" class="rounded-circle avatar-40"></div>
-                     <div class="media-support-info ml-3">
-                        <h6>Lynn Guini</h6>
-                        <p class="badge bagde-pill badge-danger mb-0 font-size-12">Toilet 1</p>
-                     </div>
-                     <div class="iq-card-header-toolbar">
-                        <div class="text-danger h6"><i class="ri-alert-fill"></i> Fall</div>
-                     </div>
-                  </div>
-            </li>
-            <li class="li-alert active">
-                  <div class="timeline-dots border-danger"></div>
-                  <h6 class="float-left mb-1 text-danger">Violence 1</h6>
-                  <small class="float-right mt-1">10:00AM, Today</small>
-                  <div class="d-flex w-100 mb-1 align-items-center">
-                     <div class="user-img img-fluid"><img src="{{ asset('template/images/user/03.jpg') }}" alt="story-img" class="rounded-circle avatar-40"></div>
-                     <div class="media-support-info ml-3">
-                        <h6>Lynn Guini</h6>
-                        <p class="badge bagde-pill badge-danger mb-0 font-size-12">Common Area 1</p>
-                     </div>
-                     <div class="iq-card-header-toolbar">
-                        <div class="text-danger h6"><i class="ri-alert-fill"></i> Violence</div>
-                     </div>
-                  </div>
-            </li>
-            <li class="li-notif">
-                  <div class="timeline-dots border-success"></div>
-                  <h6 class="float-left mb-1">Lobby</h6>
-                  <small class="float-right mt-1">10:00AM, Today</small>
-                  <div class="d-flex w-100 mb-1 align-items-center">
-                     <div class="user-img img-fluid"><img src="{{ asset('template/images/user/03.jpg') }}" alt="story-img" class="rounded-circle avatar-40"></div>
-                     <div class="media-support-info ml-3">
-                        <h6>Lynn Guini</h6>
-                     </div>
-                     <div class="iq-card-header-toolbar">
-                        <div class="text-success h6"><i class="ri-information-fill"></i> Entered</div>
-                     </div>
-                  </div>
-            </li>
-            <li class="li-alert active">
-                  <div class="timeline-dots border-danger"></div>
-                  <h6 class="float-left mb-1 text-danger">Violence 1</h6>
-                  <small class="float-right mt-1">10:00AM, Today</small>
-                  <div class="d-flex w-100 mb-1 align-items-center">
-                     <div class="user-img img-fluid"><img src="{{ asset('template/images/user/03.jpg') }}" alt="story-img" class="rounded-circle avatar-40"></div>
-                     <div class="media-support-info ml-3">
-                        <h6>Lynn Guini</h6>
-                        <p class="badge bagde-pill badge-danger mb-0 font-size-12">Common Area 1</p>
-                     </div>
-                     <div class="iq-card-header-toolbar">
-                        <div class="text-danger h6"><i class="ri-alert-fill"></i> Violence</div>
-                     </div>
-                  </div>
-            </li>
-            <li class="li-notif">
-                  <div class="timeline-dots border-success"></div>
-                  <h6 class="float-left mb-1">Lobby</h6>
-                  <small class="float-right mt-1">10:00AM, Today</small>
-                  <div class="d-flex w-100 mb-1 align-items-center">
-                     <div class="user-img img-fluid"><img src="{{ asset('template/images/user/03.jpg') }}" alt="story-img" class="rounded-circle avatar-40"></div>
-                     <div class="media-support-info ml-3">
-                        <h6>Lynn Guini</h6>
-                     </div>
-                     <div class="iq-card-header-toolbar">
-                        <div class="text-success h6"><i class="ri-information-fill"></i> Entered</div>
-                     </div>
-                  </div>
-            </li>
-            <li class="li-alert active">
-                  <div class="timeline-dots border-danger"></div>
-                  <h6 class="float-left mb-1 text-danger">Violence 1</h6>
-                  <small class="float-right mt-1">10:00AM, Today</small>
-                  <div class="d-flex w-100 mb-1 align-items-center">
-                     <div class="user-img img-fluid"><img src="{{ asset('template/images/user/03.jpg') }}" alt="story-img" class="rounded-circle avatar-40"></div>
-                     <div class="media-support-info ml-3">
-                        <h6>Lynn Guini</h6>
-                        <p class="badge bagde-pill badge-danger mb-0 font-size-12">Common Area 1</p>
-                     </div>
-                     <div class="iq-card-header-toolbar">
-                        <div class="text-danger h6"><i class="ri-alert-fill"></i> Violence</div>
-                     </div>
-                  </div>
-            </li>
-            <li class="li-alert active">
-                  <div class="timeline-dots border-danger"></div>
-                  <h6 class="float-left mb-1 text-danger">Resident Dupress</h6>
-                  <small class="float-right mt-1">10:00AM, Today</small>
-                  <div class="d-flex w-100 mb-1 align-items-center">
-                     <div class="user-img img-fluid"><img src="{{ asset('template/images/user/03.jpg') }}" alt="story-img" class="rounded-circle avatar-40"></div>
-                     <div class="media-support-info ml-3">
-                        <h6>Lynn Guini</h6>
-                        <p class="badge bagde-pill badge-danger mb-0 font-size-12">Room 103</p>
-                     </div>
-                     <div class="iq-card-header-toolbar">
-                        <div class="text-danger h6"><i class="ri-alert-fill"></i> SOS</div>
-                     </div>
-                  </div>
-            </li>
-            <li class="li-notif">
-                  <div class="timeline-dots border-success"></div>
-                  <h6 class="float-left mb-1">Lobby</h6>
-                  <small class="float-right mt-1">10:00AM, Today</small>
-                  <div class="d-flex w-100 mb-1 align-items-center">
-                     <div class="user-img img-fluid"><img src="{{ asset('template/images/user/03.jpg') }}" alt="story-img" class="rounded-circle avatar-40"></div>
-                     <div class="media-support-info ml-3">
-                        <h6>Lynn Guini</h6>
-                     </div>
-                     <div class="iq-card-header-toolbar">
-                        <div class="text-success h6"><i class="ri-information-fill"></i> Left</div>
-                     </div>
-                  </div>
-            </li>
-            <li class="li-notif">
-                  <div class="timeline-dots border-success"></div>
-                  <h6 class="float-left mb-1">Lobby</h6>
-                  <small class="float-right mt-1">10:00AM, Today</small>
-                  <div class="d-flex w-100 mb-1 align-items-center">
-                     <div class="user-img img-fluid"><img src="{{ asset('template/images/user/03.jpg') }}" alt="story-img" class="rounded-circle avatar-40"></div>
-                     <div class="media-support-info ml-3">
-                        <h6>Lynn Guini</h6>
-                     </div>
-                     <div class="iq-card-header-toolbar">
-                        <div class="text-success h6"><i class="ri-information-fill"></i> Entered</div>
-                     </div>
-                  </div>
-            </li>
-            <li class="li-alert active">
-                  <div class="timeline-dots border-danger"></div>
-                  <h6 class="float-left mb-1 text-danger">Inactivity 30 Minutes</h6>
-                  <small class="float-right mt-1">10:00AM, Today</small>
-                  <div class="d-flex w-100 mb-1 align-items-center">
-                     <div class="user-img img-fluid"><img src="{{ asset('template/images/user/03.jpg') }}" alt="story-img" class="rounded-circle avatar-40"></div>
-                     <div class="media-support-info ml-3">
-                        <h6>Lynn Guini</h6>
-                        <p class="badge bagde-pill badge-danger mb-0 font-size-12">Room 203</p>
-                     </div>
-                     <div class="iq-card-header-toolbar">
-                        <div class="text-danger h6"><i class="ri-alert-fill"></i> Abnormal</div>
-                     </div>
-                  </div>
-            </li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-         </ul> -->
       </div>
    </div>
 </div>
+@endcan
 @endsection
 
 @section('script')

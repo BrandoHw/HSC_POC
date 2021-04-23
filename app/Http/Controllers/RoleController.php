@@ -19,10 +19,10 @@ class RoleController extends Controller
     */
     function __construct()
     {
-        $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index','store']]);
+        $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index','edit']]);
         $this->middleware('permission:role-create', ['only' => ['create','store']]);
-        $this->middleware('permission:role-edit', ['only' => ['edit','update']]);
-        $this->middleware('permission:role-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:role-edit', ['only' => ['update']]);
+        $this->middleware('permission:role-delete', ['only' => ['destroys']]);
     }
     
     /**
@@ -61,7 +61,7 @@ class RoleController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|unique:roles,name',
-            'color' => 'required',
+            'color' => 'required|unique:roles,color',
             'permission' => 'required',
         ]);
         $role = Role::create([
@@ -69,7 +69,7 @@ class RoleController extends Controller
             'color' => $request['color']
         ]);
         $role->syncPermissions($request['permission']);
-        return redirect()->route('roles.index')
+        return redirect()->route('settings.index')
             ->with('success','Role created successfully');
     }
     
@@ -81,16 +81,7 @@ class RoleController extends Controller
     */
     public function show(PermissionService $permissionService, $id)
     {
-        $role = Role::find($id);
-        $rolePermissions = Permission::join("role_has_permissions","role_has_permissions.permission_id","=","permissions.id")
-            ->where("role_has_permissions.role_id",$id)
-            ->get();
-
-        $modules = $permissionService->organise_permissions($rolePermissions);
-        return response()->json([
-            'role' => $role,
-            'modules' => $modules],
-            200);
+        //
     }
     
     /**
@@ -109,7 +100,7 @@ class RoleController extends Controller
             ->all();
         $modules = $permissionService->organise_permissions($permissions);
         $roleModules = $rolePermissions;
-        return view('roles.edit',compact('role','modules','roleModules'));
+        return view('settings.roles.edit',compact('role','modules','roleModules'));
     }
     
     /**
@@ -146,10 +137,30 @@ class RoleController extends Controller
     */
     public function destroy($id)
     {
-        DB::table("roles")->where('id',$id)->delete();
-        return response()->json([
-            'success'=>'Role deleted.'],
-            200);
+        //
+    }
+
+    /**
+     * Remove the specified resources from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function destroys(Request $request)
+    {
+        $ids = $request->roles_id;
+
+        Role::destroy($ids);
+
+        if(count($ids) > 1){
+            return response()->json([
+                "success" => "Roles deleted successfully."
+            ], 200);
+        } else {
+            return response()->json([
+                "success" => "Role deleted successfully."
+            ], 200);
+        }
     }
 
     

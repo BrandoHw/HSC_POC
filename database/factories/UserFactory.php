@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\User;
 use Carbon\Carbon;
 use Faker\Generator as Faker;
+use Hash;
 use Illuminate\Support\Str;
 
 /*
@@ -20,24 +21,26 @@ use Illuminate\Support\Str;
 
 $factory->define(User::class, function (Faker $faker) {
     
-    $firstName = $faker->unique()->firstName();
-    $lastName = $faker->unique()->lastName();
+    $fName = $faker->firstName();
+    $lName = $faker->lastName();
     
-    $name = $firstName." ".$lastName;
-
-    $firstName = strtolower($firstName);
-    $lastName = strtolower($lastName);
+    $firstName = strtolower($fName);
+    $lastName = strtolower($lName);
     
-    $username = $firstName[0].".".$lastName;
+    $username = $firstName[0].$lName;
     $email = $firstName.".".$lastName."@example.com";
-    $password = $firstName[0].$lastName."@123";
+    $phoneNum = $faker->e164PhoneNumber();
+    $password = $firstName[0].$lName."@123";
 
     return [
-        'name' => $name,
+        'fName' => $fName,
+        'lName' => $lName,
         'username' => $username,
+        'gender' => 'M',
         'email' => $email,
+        'phone_number' => $phoneNum,
         // 'email_verified_at' => now(),
-        'password' => bcrypt($password),
+        'password' => Hash::make($password),
         // 'tag_id' => $faker->unique()->numberBetween($min = 1, $max = 19),
         'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         'updated_at' => Carbon::now()->format('Y-m-d H:i:s')

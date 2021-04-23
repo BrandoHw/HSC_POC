@@ -5,8 +5,10 @@
 <div class="container-fluid">
     <div class="row mb-3 mb-xl-4">
         <div class="col-auto d-none d-sm-block">
+            @can('floor-list')
             <a href="{{ route('floors.index') }}"class="btn btn-primary">Floor Management</a>
-            @can('map-edit')
+            @endcan
+            @can('location-list')
             <a href="{{ url('map/1/edit') }}"class="btn btn-primary">Edit Map</a>
             @endcan
         </div>
@@ -21,8 +23,12 @@
                             <a class="search-link" href="#"><i class="ri-search-line"></i></a>
                         </form>
                         <div class="col-4 row justify-content-end">
+                            @can('location-create')
                             <a class="btn btn-primary" href="#" id ="createLocationButton" style="margin-right: 10px"><i class="ri-add-line"></i>Add Location</a>
+                            @endcan
+                            @can('location-delete')
                             <a class="btn btn-danger" href="#" id ="deleteLocationButton"> Delete</a>
+                            @endcan
                         </div>
                     </div>
                     <div class="table-responsive" style="margin-top: 15px">
@@ -53,13 +59,16 @@
     </div>
 </div>
 
+@can('location-create')
 <!-- Create Location Modal -->
 <div class="modal fade" id="createLocationModal" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         @include('locations.create')
     </div>
 </div>
+@endcan
 
+@can('location-delete')
 <!-- Delete Button Alerts -->
 <div class="alert text-white bg-primary" role="alert" id="alert">
     <div class="iq-alert-text">A simple <b>primary</b> alert—check it out!</div>
@@ -67,6 +76,7 @@
     <i class="ri-close-line"></i>
     </button>
 </div>
+@endcan
 
 
 @endsection 
@@ -92,13 +102,17 @@
         window.location.href = $(this).parent('tr').attr('href');
     });
 
+    @can('location-create')
     $( "#createLocationButton" ).click(function() {
         $('#createLocationModal').modal('show');
     });
+    @endcan
 
+    @can('location-delete')
     $( "#deleteLocationButton" ).click(function() {
         deleteLocation();
     });
+    @endcan
   
     var floors = <?php echo $floors; ?>;
     var types = <?php echo $types; ?>;
@@ -123,6 +137,7 @@
         minimumResultsForSearch: Infinity
     });
 
+    @can('location-create')
     function createLocation(){
         console.log("createLocation")
         $.ajaxSetup({
@@ -159,7 +174,9 @@
             }
         })
     }
+    @endcan
 
+    @can('location-delete')
     function deleteLocation(){
         if (dTable.rows('.selected').data().length <= 0 ){
             alert("No items selected");
@@ -201,6 +218,7 @@
             })
         }
     }
+    @endcan
 
     $( function() {
         dialog = $( "#alert" ).dialog({

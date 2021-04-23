@@ -7,7 +7,7 @@
             <div class="iq-card">
                 <div class="iq-card-header d-flex justify-content-between">
                     <div class="iq-header-title">
-                        <h4 class="card-title">Create New Policy:</h4>
+                        <h4 class="card-title"><strong>Add Policy:</strong></h4>
                     </div>
                 </div>
                 <div class="iq-card-body">
@@ -224,7 +224,7 @@
                     </form>
                 </div>
                 <div class="iq-card-body d-flex justify-content-center">
-                    <button type="button" id="save-btn" class="btn btn-primary m-1" onClick="savePolicy()">Save</button>
+                    <button type="button" id="save-btn" class="btn btn-primary m-1" onClick="savePolicy()">Save Policy</button>
                     <a href='{{ route("policies.index") }}' id="cancel-btn" class="btn btn-secondary m-1">Cancel</a>
                 </div>
             </div>

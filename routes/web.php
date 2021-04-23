@@ -101,7 +101,11 @@ Route::group(['middleware' => ['auth']], function() {
         ->name('policies.destroys');
 
     Route::resource('alerts', AlertController::class)
-        ->only(['index', 'show', 'delete']);
+        ->only(['index', 'show']);
+    Route::patch('alerts/updates', [AlertController::class, 'updates'])
+        ->name('alerts.updates');
+    Route::delete('alerts/destroys', [AlertController::class, 'destroys'])
+        ->name('alerts.destroys');
 
     Route::resource('tracking', MapController::class);
     
@@ -109,10 +113,20 @@ Route::group(['middleware' => ['auth']], function() {
     
     Route::resource('settings', SettingController::class)
         ->except(['show']);
+        
     Route::resource('roles', RoleController::class)
-        ->except(['show', 'index']);
+        ->except(['show', 'index', 'destroy']);
+    Route::delete('roles/destroys', [RoleController::class, 'destroys'])
+        ->name('roles.destroys');
+
     Route::resource('users', UserController::class)
-        ->except(['show', 'index']);
+        ->except(['show', 'index', 'destroy']);
+    Route::post('users/profile', [UserController::class, 'change_profile'])
+        ->name('users.profile');
+    Route::post('users/password', [UserController::class, 'change_password'])
+        ->name('users.password');
+    Route::delete('users/destroys', [UserController::class, 'destroys'])
+        ->name('users.destroys');
 
     // Route::get('/foo', function () {
     //     Artisan::call('storage:link');

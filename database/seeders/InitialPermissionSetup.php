@@ -19,35 +19,6 @@ class InitialPermissionSetup extends Seeder
      */
     public function run()
     {
-        // $permissions_default = [
-        //     'user-list',
-        //     'role-list',
-        //     'reader-list',
-        //     'tag-list',
-        //     'attendance-list',
-        //     'map-list',
-        //     'floor-list',
-        //     'policy-list',
-        //     'alert-list',
-        //     'tracking-list',
-        //     'report-list',
-        //     'setting-list'
-        // ];
-
-        // $permissions_admin = [
-        //     'user-create', 'user-edit', 'user-delete',
-        //     'role-create', 'role-edit', 'role-delete',
-        //     'reader-create','reader-edit','reader-delete',
-        //     'tag-create','tag-edit','tag-delete',
-        //     'attendance-delete',
-        //     'floor-create', 'floor-edit', 'floor-delete',
-        //     'map-create','map-edit','map-delete',
-        //     'policy-create','policy-edit','policy-delete',
-        //     'alert-create','alert-edit','alert-delete',
-        //     'tracking-create','tracking-edit','tracking-delete',
-        //     'report-create','report-edit','report-delete',
-        //     'setting-create','setting-edit','setting-delete'
-        // ];
 
         $permissions = [
             'alert-list', 'alert-delete',
@@ -60,33 +31,47 @@ class InitialPermissionSetup extends Seeder
             'report-list', 'report-create','report-edit','report-delete',
             'resident-list', 'resident-create','resident-edit','resident-delete',
             'role-list', 'role-create', 'role-edit', 'role-delete',
+            'tracking-list',
             'user-list', 'user-create', 'user-edit', 'user-delete',
         ];
-
-        // foreach ($permissions_default as $permission){
-        //     Permission::firstOrCreate(['name' => $permission]);
-        // }
-
-        /* Non-Admin */
-        // $default = Role::create([
-        //     'name' => 'Default',
-        //     'color' => '#09D58F']);
-        // $permission_default = Permission::pluck('id', 'id')->all();
-        // $default->syncPermissions($permission_default);
 
         foreach ($permissions as $permission){
             Permission::firstOrCreate(['name' => $permission]);
         }
 
-        /* Admin */
+        // /* Admin */
         $admin = Role::create([
             'name' => 'Admin',
             'color' => '#09D58A']);
         $permission_admin = Permission::pluck('id', 'id')->all();
         $admin->syncPermissions($permission_admin);
 
+        $permissions_name_default = [
+            'alert-list',
+            'attendance-list', 
+            'beacon-list', 
+            'floor-list',
+            'gateway-list', 
+            'location-list', 
+            'policy-list',
+            'report-list',
+            'resident-list', 
+            'role-list', 
+            'tracking-list',
+            'user-list', 
+        ];
+
+        /* Non-Admin */
+        $default = Role::create([
+            'name' => 'Default',
+            'color' => '#874EFE']);
+        $permission_default = Permission::whereIn('name', $permissions_name_default)->pluck('id', 'id')->all();
+        $default->syncPermissions($permission_default);
+
         /* Admin User */
-        $user = User::find(1);
+        // $user = User::create([
+
+        // ]);
         // $tag = Tag::find(201);
         // $tag->user()->save($user);
 
@@ -96,6 +81,14 @@ class InitialPermissionSetup extends Seeder
         // $userRight = UserRight::find(1);
         // $userRight->user()->save($user);
 
-        $user->assignRole('Admin');
+        // $user->assignRole('Admin');
+
+        /* Users Table */
+        factory(User::class, 100)->create()->each(function ($user){
+            $user->assignRole('Admin');
+        });
+        factory(User::class, 400)->create()->each(function ($user){
+            $user->assignRole('Default');
+        });
     }
 }

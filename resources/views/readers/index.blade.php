@@ -12,8 +12,12 @@
                             <a class="search-link" href="#"><i class="ri-search-line"></i></a>
                         </form>
                         <div class="col-4 row justify-content-end">
+                            @can('gateway-create')
                             <a class="btn btn-primary" href="{{ route('gateways.create') }}" style="margin-right: 10px;"><i class="ri-add-line"></i>Add Gateway</a>
+                            @endcan
+                            @can('gateway-delete')
                             <a class="btn btn-danger" href="#" id="deleteGateway">Delete</a>
+                            @endcan
                         </div>
                     </div>
                     <div class="table-responsive" style="margin-top: 15px">
@@ -46,6 +50,7 @@
             </div>
         </div>
     </div>
+    @can('gateway-delete')
     <!-- Delete: Empty -->
     <div class="modal fade" id="empty-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -117,6 +122,7 @@
             </div>
         </div>
     </div>
+    @endcan
 </div>
 @endsection 
 
@@ -139,6 +145,7 @@
         window.location.href = $(this).parent('tr').attr('href');
     });
 
+    @can('gateway-delete')
     $('#deleteGateway').on('click', function(){
         let gateway_selected = dTable.column(0).checkboxes.selected();
         if(_.isEmpty(gateway_selected)){
@@ -221,5 +228,6 @@
             }
         });
     };
+    @endcan
 </script>
 @endsection

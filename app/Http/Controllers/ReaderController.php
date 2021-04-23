@@ -16,10 +16,10 @@ class ReaderController extends Controller
     */
     function __construct()
     {
-        $this->middleware('permission:gateway-list|gateway-create|gateway-edit|gateway-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:gateway-list|gateway-create|gateway-edit|gateway-delete', ['only' => ['index','edit']]);
         $this->middleware('permission:gateway-create', ['only' => ['create','store']]);
-        $this->middleware('permission:gateway-edit', ['only' => ['edit','update']]);
-        $this->middleware('permission:gateway-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:gateway-edit', ['only' => ['update']]);
+        $this->middleware('permission:gateway-delete', ['only' => ['destroys']]);
     }
     
     /**

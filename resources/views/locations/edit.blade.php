@@ -25,7 +25,9 @@
                             {!! Form::select('location_type', $types, $location->location_type_id ?? null, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'selType-location-form']) !!}
                         </div>
                         <div class="text-center mt-5">
+                            @can('location-edit')
                             <button type="submit" class="btn btn-primary">Update Location</button>
+                            @endcan
                             <a href="{{ route('locations.index') }}" class="btn btn-secondary">Cancel</a>
                         </div>
                     {!! Form::close() !!}

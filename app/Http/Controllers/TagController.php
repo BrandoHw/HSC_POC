@@ -18,9 +18,9 @@ class TagController extends Controller
     */
     function __construct()
     {
-        $this->middleware('permission:beacon-list|beacon-create|beacon-edit|beacon-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:beacon-list|beacon-create|beacon-edit|beacon-delete', ['only' => ['index','edit']]);
         $this->middleware('permission:beacon-create', ['only' => ['create','store']]);
-        $this->middleware('permission:beacon-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:beacon-edit', ['only' => ['update']]);
         $this->middleware('permission:beacon-delete', ['only' => ['destroy']]);
     }
     

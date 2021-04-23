@@ -19,10 +19,11 @@ class MapController extends Controller
     */
     function __construct()
     {
-        $this->middleware('permission:map-list|map-create|map-edit|map-delete', ['only' => ['index','show', 'dashboard', 'formdata', 'locationdata']]);
-        $this->middleware('permission:map-create', ['only' => ['create','store']]);
-        $this->middleware('permission:map-edit', ['only' => ['edit','update']]);
-        $this->middleware('permission:map-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:location-list|location-create|location-edit|location-delete', ['only' => ['index', 'edit',  'formdata', 'locationdata']]);
+        $this->middleware('permission:location-create', ['only' => ['create','store']]);
+        $this->middleware('permission:location-edit', ['only' => ['update']]);
+        $this->middleware('permission:location-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:tracking-list', ['only' => ['index', 'dashboard', 'formdata', 'locationdata']]);
     }
 
     /**

@@ -29,7 +29,9 @@
                             @enderror
                         </div>
                         <div class="text-center mt-5">
+                            @can('gateway-edit')
                             <button type="submit" class="btn btn-primary">Update Gateway</button>
+                            @endcan
                             <a href="{{ route('gateways.index') }}" class="btn btn-secondary">Cancel</a>
                         </div>
                     {!! Form::close() !!}

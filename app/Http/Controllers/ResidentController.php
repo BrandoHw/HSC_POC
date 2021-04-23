@@ -10,10 +10,10 @@ class ResidentController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:resident-list|resident-create|resident-edit|resident-delete', ['only' => ['index','store']]);
+        $this->middleware('permission:resident-list|resident-create|resident-edit|resident-delete', ['only' => ['index','edit']]);
         $this->middleware('permission:resident-create', ['only' => ['create','store']]);
-        $this->middleware('permission:resident-edit', ['only' => ['edit','update']]);
-        $this->middleware('permission:resident-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:resident-edit', ['only' => ['update']]);
+        $this->middleware('permission:resident-delete', ['only' => ['destroys']]);
     }
     /**
      * Display a listing of the resource.

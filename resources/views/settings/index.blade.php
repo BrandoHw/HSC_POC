@@ -11,188 +11,31 @@
                             <li class="nav-item">
                                 <a class="nav-link active" id="profile-setting" data-toggle="tab" href="#manage-profile" role="tab" aria-selected="true">Profile</a>
                             </li>
+                            @can('user-list')
                             <li class="nav-item">
-                                <a class="nav-link" id="user-setting" data-toggle="tab" href="#manage-user" role="tab"  aria-selected="false">Manage Staffs</a>
+                                <a class="nav-link" id="user-setting" data-toggle="tab" href="#manage-user" role="tab"  aria-selected="false">Manage Users</a>
                             </li>
+                            @endcan
+                            @can('role-list')
                             <li class="nav-item">
                                 <a class="nav-link" id="role-setting" data-toggle="tab" href="#manage-role" role="tab"  aria-selected="false">Roles & Permissions</a>
                             </li>
+                            @endcan
                         </ul>
                         <div class="tab-content" id="myTabContent-3">
                             <div class="tab-pane fade show active" id="manage-profile" role="tabpanel" aria-labelledby="profile-setting">
-                            <div class="iq-card">
-                                 <div class="iq-card-header d-flex justify-content-between">
-                                    <div class="iq-header-title">
-                                       <h4 class="card-title">Personal Information</h4>
-                                    </div>
-                                 </div>
-                                 <div class="iq-card-body">
-                                    {!! Form::model($user, ['method' => 'PATCH', 'route' => ['users.update', $user->user_id]]) !!}
-                                        <div class=" row align-items-center">
-                                            <div class="form-group col-sm-6">
-                                                <label for="fname">First Name:</label>
-                                                {!! Form::text('fName', null, array('class' => "form-control", 'id' => 'editFName')) !!}
-                                                @error('fName')
-                                                    <div class="alert-danger">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="form-group col-sm-6">
-                                                <label for="lname">Last Name:</label>
-                                                {!! Form::text('lName', null, array('class' => "form-control", 'id' => 'editLName')) !!}
-                                                @error('lName')
-                                                    <div class="alert-danger">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="form-group col-sm-6">
-                                                <label for="uname">Phone Number:</label>
-                                                {!! Form::text('phone_number', null, array('class' => "form-control", 'id' => 'editPhoneNum')) !!}
-                                                @error('phone_number')
-                                                    <div class="alert-danger">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="form-group col-sm-6">
-                                                <label for="editTag">Role:</label>
-                                                {!! Form::select('user_type', $userTypes, $user->userType->user_type_id, ['placeholder' => 'Please select...', 'class' => 'form-control form-control', 'id' => 'editUserType']) !!}
-                                                @error('user_type')
-                                                    <div class="alert-danger">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <hr>
-                                        <div class=" row align-items-center">
-                                            <div class="form-group col-sm-6">
-                                                <label for="uname">Username:</label>
-                                                {!! Form::text('username', null, array('class' => "form-control", 'id' => 'editUsername')) !!}
-                                                @error('username')
-                                                    <div class="alert-danger">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="form-group col-sm-6">
-                                                <label for="cname">Password: </label>
-                                                <a href="#" data-toggle="tooltip" data-placement="right" title="Leave blank if do not wish to change password..." style="cursor: pointer; left-padding:0">
-                                                    <i class="ri-information-fill"></i>
-                                                </a>
-                                                {!! Form::password('password', array('class' => 'form-control', 'id'=>'editPassword')) !!}
-                                                @error('password')
-                                                    <div class="alert-danger">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="form-group col-sm-6">
-                                                <label for="editTag">Card:</label>
-                                                {!! Form::select('beacon_id', $tagsNull, null, ['placeholder' => 'Please select...', 'class' => 'form-control form-control', 'id' => 'editTag']) !!}
-                                                @error('beacon_id')
-                                                    <div class="alert-danger">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="form-group col-sm-6">
-                                                <label for="cname">Permission: </label>
-                                                <a href="#" data-toggle="tooltip" data-placement="right" title="Cannot edit permission yourself" style="cursor: pointer; left-padding:0">
-                                                <i class="ri-information-fill"></i>
-                                                </a>
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="user_right" disabled {{ ($user->right_id == '1') ? 'checked':'' }}>
-                                                    <label class="custom-control-label" for="user_right">Administrator</label>
-                                                </div>
-                                            </div>
-                                       </div>
-                                       <div class="text-right">
-                                            <button type="submit" class="btn btn-primary" disabled>Save</button>
-                                            <a href="{{ route('beacons.index') }}" class="btn iq-bg-danger">Cancel</a>
-                                        </div>
-                                    {!! Form::close() !!}
-                                 </div>
-                              </div>
+                                @include('settings.profile')
                             </div>
+                            @can('user-list')
                             <div class="tab-pane fade" id="manage-user" role="tabpanel" aria-labelledby="user-setting">
-                                <div class="row">   
-                                    <div class="col-sm-12">
-                                        <div class="iq-card">
-                                            <div class="iq-card-body">
-                                                <div class="iq-search-bar row justify-content-between">
-                                                    <form action="#" class="searchbox">
-                                                        <input type="text" id="userCustomSearchBox" class="text search-input" placeholder="Type here to search...">
-                                                        <a class="search-link" href="#"><i class="ri-search-line"></i></a>
-                                                    </form>
-                                                    <div class="col-4 row justify-content-end">
-                                                        <a class="btn btn-primary" href="{{ route('users.create') }}" style="margin-right: 10px;">Add Member</a>
-                                                        <a class="btn btn-danger" href="#" style="opacity:.65" disabled >Delete</a>
-                                                    </div>
-                                                </div>
-                                                <div class="table-responsive" style="margin-top: 15px">
-                                                    <table class="table table-stripe table-bordered hover" id="userTable">
-                                                    <thead>
-                                                            <tr>
-                                                                <th scope="col" style="width:10%">#</th>
-                                                                <th scope="col">First Name</th>
-                                                                <th scope="col">Last Name</th>
-                                                                <th scope="col">Permission</th>
-                                                                <th scope="col">Card</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($users as $user)
-                                                                <tr href="{{ route('users.edit',$user->user_id) }}">
-                                                                    <td>{{ $user->user_id }}</td>
-                                                                    <td>{{ $user->fName }}</td>
-                                                                    <td>{{ $user->lName }}</td>
-                                                                    <td>{{ $user->userRight->description }}</td>
-                                                                    <td>{{ $user->tag->beacon_mac ?? "-" }}</td>
-                                                                </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table> 
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                @include('settings.users.index')
                             </div>
+                            @endcan
+                            @can('role-list')
                             <div class="tab-pane fade" id="manage-role" role="tabpanel" aria-labelledby="role-setting">
-                                <div class="row">   
-                                    <div class="col-sm-12">
-                                        <div class="iq-card">
-                                            <div class="iq-card-body">
-                                                <div class="iq-search-bar row justify-content-between">
-                                                    <form action="#" class="searchbox">
-                                                        <input type="text" id="roleCustomSearchBox" class="text search-input" placeholder="Type here to search...">
-                                                        <a class="search-link" href="#"><i class="ri-search-line"></i></a>
-                                                    </form>
-                                                    <div class="col-4 row justify-content-end">
-                                                        <a class="btn btn-primary" href="{{ route('roles.create') }}" style="margin-right: 10px;">Add Role</a>
-                                                        <a class="btn btn-danger" href="#" style="opacity:.65" disabled >Delete</a>
-                                                    </div>
-                                                </div>
-                                                <div class="table-responsive" style="margin-top: 15px">
-                                                    <table class="table table-stripe table-bordered hover" id="roleTable">
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col" style="width:10%">#</th>
-                                                                <th scope="col">Name</th>
-                                                                <th scope="col">Color</th>
-                                                                <th scope="col">Permissions</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($roles as $role)
-                                                                <tr href="{{ route('roles.edit',$role->id) }}">
-                                                                    <td>{{ $role->id }}</td>
-                                                                    <td>{{ $role->name }}</td>
-                                                                    <td><span class="badge badge-dark" style="background-color: {{ $role->color }} !important">{{ Str::upper($role->color) }}</span></td>
-                                                                    <td>
-                                                                        @if(!empty($rolePermissions))
-                                                                            {{ $rolePermissions->where("role_id", $role->id)->count() }}
-                                                                        @endif
-                                                                    </td>
-                                                                </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table> 
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                @include('settings.roles.index')
                             </div>
+                            @endcan
                         </div>
                     </div>
                 </div>
@@ -204,6 +47,48 @@
 
 @section("script")
 <script>
+    $(function(){
+        @if(session('password'))
+            $('#manage-personal').removeClass('active');
+            $('#personal-tab').removeClass('active show');
+            $('#manage-password').addClass('active');
+            $('#password-tab').addClass('active show');
+        @endif
+
+        @can('user-list')
+        @if(session('user'))
+            $('#profile-setting').removeClass('active');
+            $('#role-setting').removeClass('active');
+            $('#user-setting').addClass('active');
+            $('#manage-profile').removeClass('active show');
+            $('#manage-role').removeClass('active show');
+            $('#manage-user').addClass('active show');
+            @php(Session::forget('user'))
+        @endif
+        @endcan
+
+        @can('role-list')
+        @if(session('role'))
+            $('#profile-setting').removeClass('active');
+            $('#user-setting').removeClass('active');
+            $('#role-setting').addClass('active');
+            $('#manage-profile').removeClass('active show');
+            $('#manage-user').removeClass('active show');
+            $('#manage-role').addClass('active show');
+            @php(Session::forget('role'))
+        @endif
+        @endcan
+
+    })
+
+    @if($message = session('success'))
+        notyf.success(@json($message));
+    @endif
+    @if($message = session('error'))
+        notyf.error(@json($message));
+    @endif
+
+    @can('user-list')
     /* Initiate user dataTable */
     var userTable = $('#userTable').DataTable({
             order: [[1, 'asc']],
@@ -216,7 +101,9 @@
     $('#userTable tbody tr td:not(:first-child)').click(function () {
         window.location.href = $(this).parent('tr').attr('href');
     });
+    @endcan
 
+    @can('role-list')
     /* Initiate role dataTable */
     var roleTable = $('#roleTable').DataTable({
             order: [[1, 'asc']],
@@ -229,5 +116,178 @@
     $('#roleTable tbody tr td:not(:first-child)').click(function () {
         window.location.href = $(this).parent('tr').attr('href');
     });
+    @endcan
+
+    @can('user-delete')
+    /* DeleteUser */
+    $('#deleteUser').on('click', function(){
+        let user_selected = userTable.column(0).checkboxes.selected();
+        if(_.isEmpty(user_selected)){
+            $('#user-empty-modal').modal('toggle');
+        } else {
+            if(user_selected.length == 1){
+                $('#user-cancel-btn').prop('hidden', false);
+                $('#user-delete-btn').html('Yes, delete it');
+                $('#user-delete-btn').prop('disabled', false);
+                $('#user-delete-btn').css('background-color', 'var(--iq-danger)');
+                $('#user-delete-btn').css('border-color', 'var(--iq-danger)');
+                $('#user-confirmation-modal').modal('toggle');
+                
+            } else {
+                $('#user-cancel-multipl-btn').prop('hidden', false);
+                $('#user-delete-multipl-btn').html('Yes, delete them');
+                $('#user-delete-multipl-btn').prop('disabled', false);
+                $('#user-delete-multipl-btn').css('background-color', 'var(--iq-danger)');
+                $('#user-delete-multipl-btn').css('border-color', 'var(--iq-danger)');
+                $('#user-confirmation-multiple-modal').modal('toggle');
+            }
+        }
+    })
+
+    function confirmDeleteUser(id){
+        let cancel_btn = $('#user-cancel-btn');
+        let delete_btn = $('#user-delete-btn');
+        let modal = $('#user-confirmation-modal');
+
+        if(id != "user-delete-btn"){
+            cancel_btn = $('#user-cancel-multiple-btn');
+            delete_btn = $('#user-delete-multiple-btn');
+            modal = $('#user-confirmation-multiple-modal');
+        }
+        
+        cancel_btn.prop('hidden', true);
+        delete_btn.prop('disabled', true);
+        delete_btn.html('<i class="fa fa-circle-o-notch fa-spin"></i>Deleting');
+
+        let selected_row = userTable.column(0).checkboxes.selected();
+
+        let users_id = [];
+        $.each(selected_row, function(index, value){
+            let data = userTable.rows('#user-'+value).data()[0];
+            users_id.push(data[0]);
+        });
+        
+        let result = {
+            users_id: users_id,
+            _token: $('meta[name="csrf-token"]').attr('content')
+        };
+        
+        $.ajax({
+            url: '{{ route("users.destroys") }}',
+            type: "DELETE",
+            data: result,
+            success:function(response){
+                let errors = response['errors'];
+                if($.isEmptyObject(response['success'])){
+                    console.log(errors);
+                } else {
+                    delete_btn.css('background-color', 'var(--iq-success)');
+                    delete_btn.css('border-color', 'var(--iq-success)');
+                    delete_btn.html('<i class="fa fa-check"></i>Deleted');
+                    setTimeout(function() {
+                        modal.modal('toggle');
+                    }, 500);
+
+                    users_id.forEach(function(item){
+                        userTable
+                            .rows('#user-'+ item)
+                            .remove()
+                            .draw();
+                    })
+				    notyf.success(response['success']);
+                }
+            },
+            error:function(error){
+                console.log(error);
+            }
+        });
+    };
+    @endcan
+
+    @can('role-delete')
+    /* DeleteRole */
+    $('#deleteRole').on('click', function(){
+        let role_selected = roleTable.column(0).checkboxes.selected();
+        if(_.isEmpty(role_selected)){
+            $('#role-empty-modal').modal('toggle');
+        } else {
+            if(role_selected.length == 1){
+                $('#role-cancel-btn').prop('hidden', false);
+                $('#role-delete-btn').html('Yes, delete it');
+                $('#role-delete-btn').prop('disabled', false);
+                $('#role-delete-btn').css('background-color', 'var(--iq-danger)');
+                $('#role-delete-btn').css('border-color', 'var(--iq-danger)');
+                $('#role-confirmation-modal').modal('toggle');
+                
+            } else {
+                $('#role-cancel-multipl-btn').prop('hidden', false);
+                $('#role-delete-multipl-btn').html('Yes, delete them');
+                $('#role-delete-multipl-btn').prop('disabled', false);
+                $('#role-delete-multipl-btn').css('background-color', 'var(--iq-danger)');
+                $('#role-delete-multipl-btn').css('border-color', 'var(--iq-danger)');
+                $('#role-confirmation-multiple-modal').modal('toggle');
+            }
+        }
+    })
+
+    function confirmDeleteRole(id){
+        let cancel_btn = $('#role-cancel-btn');
+        let delete_btn = $('#role-delete-btn');
+        let modal = $('#role-confirmation-modal');
+
+        if(id != "role-delete-btn"){
+            cancel_btn = $('#role-cancel-multiple-btn');
+            delete_btn = $('#role-delete-multiple-btn');
+            modal = $('#role-confirmation-multiple-modal');
+        }
+        
+        cancel_btn.prop('hidden', true);
+        delete_btn.prop('disabled', true);
+        delete_btn.html('<i class="fa fa-circle-o-notch fa-spin"></i>Deleting');
+
+        let selected_row = roleTable.column(0).checkboxes.selected();
+
+        let roles_id = [];
+        $.each(selected_row, function(index, value){
+            let data = roleTable.rows('#role-'+value).data()[0];
+            roles_id.push(data[0]);
+        });
+        
+        let result = {
+            roles_id: roles_id,
+            _token: $('meta[name="csrf-token"]').attr('content')
+        };
+        
+        $.ajax({
+            url: '{{ route("roles.destroys") }}',
+            type: "DELETE",
+            data: result,
+            success:function(response){
+                let errors = response['errors'];
+                if($.isEmptyObject(response['success'])){
+                    console.log(errors);
+                } else {
+                    delete_btn.css('background-color', 'var(--iq-success)');
+                    delete_btn.css('border-color', 'var(--iq-success)');
+                    delete_btn.html('<i class="fa fa-check"></i>Deleted');
+                    setTimeout(function() {
+                        modal.modal('toggle');
+                    }, 500);
+
+                    roles_id.forEach(function(item){
+                        roleTable
+                            .rows('#role-'+ item)
+                            .remove()
+                            .draw();
+                    })
+				    notyf.success(response['success']);
+                }
+            },
+            error:function(error){
+                console.log(error);
+            }
+        });
+    };
+    @endcan
 </script>
 @endsection

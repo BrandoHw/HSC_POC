@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\User;
@@ -22,10 +23,10 @@ class UserController extends Controller
     */
     function __construct()
     {
-        $this->middleware('permission:user-list|user-view|user-create|user-edit|user-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:user-list|user-view|user-create|user-edit|user-delete', ['only' => ['index','edit']]);
         $this->middleware('permission:user-create', ['only' => ['create','store']]);
-        $this->middleware('permission:user-edit', ['only' => ['edit','update']]);
-        $this->middleware('permission:user-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:user-edit', ['only' => ['update']]);
+        $this->middleware('permission:user-delete', ['only' => ['destroy', 'destroys']]);
     }
 
     /**
@@ -45,12 +46,15 @@ class UserController extends Controller
     */
     public function create()
     {
-        $tagsNull = Tag::where('beacon_type', 2)
+        $tagsNull = Tag::doesntHave('resident')
             ->doesntHave('user')
             ->pluck('beacon_mac', 'beacon_id');
+        
+        $roles = Role::orderBy('id','asc')->get();
+        $rolePermissions = DB::table("role_has_permissions")
+            ->get();
 
-        $userTypes = UserType::pluck('type', 'user_type_id')->all();
-        return view('settings.users.create', compact('tagsNull', 'userTypes'));
+        return view('settings.users.create', compact('tagsNull', 'roles'));
     }
     
     /**
@@ -61,35 +65,33 @@ class UserController extends Controller
     */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        request()->validate([
             'fName' => 'required',
             'lName' => 'required',
-            'phone_number' => 'required',
-            'user_type' => 'required',
-            'username' => 'required|unique:users,username',
-            'password' => 'required
-                |min:6
-                |same:confirmPassword',
-            'role_id' => 'required',
+            'username' => 'required|unique:users_table,username,NULL,user_id,deleted_at,NULL',
+            'gender' => 'required',
+            'email' => 'required|email|unique:users_table,email,NULL,user_id,deleted_at,NULL',
+            'phone_number' => 'required|unique:users_table,phone_number,NULL,user_id,deleted_at,NULL',
+            'role' => 'required',
         ]);
         
-        // if($validator->fails()){
-        //     return response()->json([
-        //         "errors" => $validator->errors()]);
-        // }
+        $request['password'] = Hash::make($request['username'].'@123');
 
-        // $request['password'] = Hash::make($request['password']);
-        // $user = User::create($request->all());
-        // $user->assignRole([$request['role_id']]);
-        // $userId = $user->id;
-        // $userRole = $user->roles[0];
-        // $userTagSerial = $user->tag->serial ?? "Not Assigned";
-        // return response()->json([
-        //     'success'=> '<strong>'.$user->name.'</strong> created.',
-        //     "userId" => $userId,
-        //     "userRole" => $userRole,
-        //     "userTagSerial" => $userTagSerial],
-        //     200);
+        $user = User::create($request->all());
+
+        if(!empty($request['role'])){
+            DB::table('model_has_roles')->where('model_id',$user->user_id)->delete();
+            $user->assignRole([$request['role']]);
+        }
+
+        if(!empty($request['beacon_id'])){
+            $tag = Tag::find($request['beacon_id']);
+            $tag->user()->save($user);
+        }
+
+        $request->session()->flash('user', true);
+        $request->session()->flash('success', 'User created successfully.');
+        return redirect()->route('settings.index');
     }
     
     /**
@@ -100,11 +102,19 @@ class UserController extends Controller
     */
     public function edit(User $user)
     {   
-        $tagsNull = Tag::where('beacon_type', 2)
+        $tagsNull = Tag::doesntHave('resident')
             ->doesntHave('user')
             ->pluck('beacon_mac', 'beacon_id');
-        $userTypes = UserType::pluck('type', 'user_type_id')->all();
-        return view('settings.users.edit', compact('user'));
+        
+        if(!empty($user->tag)){
+            $current = collect([$user->tag->beacon_id => $user->tag->beacon_mac]);
+            $tagsNull = $current->concat($tagsNull)->all();
+        }
+
+        $roles = Role::orderBy('id','asc')->get();
+        $rolePermissions = DB::table("role_has_permissions")
+            ->get();
+        return view('settings.users.edit', compact('user', 'tagsNull', 'roles'));
     }
     
     /**
@@ -115,13 +125,7 @@ class UserController extends Controller
     */
     public function show(Request $request , User $user)
     {   
-        // $userRole = $user->roles[0];
-        // $userTag = $user->tag;
-        // return response()->json([
-        //     "user" => $user,
-        //     "userRole" => $userRole,
-        //     "userTag" => $userTag],
-        //     200);
+        //
     }
     
     /**
@@ -133,49 +137,100 @@ class UserController extends Controller
     */
     public function update(Request $request, User $user)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'name' => 'required|unique:users,name,'.$user->id,
-        //     'username' => 'required|unique:users,username,'.$user->id,
-        //     'email' => 'required|email|unique:users,email,'.$user->id,
-        //     'password' => 'same:confirmPassword',
-        //     'role_id' => 'required',
-        // ]);
+        request()->validate([
+            'fName' => 'required',
+            'lName' => 'required',
+            'username' => 'required|unique:users_table,username,'.$user->user_id.',user_id',
+            'gender' => 'required',
+            'email' => 'required|email|unique:users_table,email,'.$user->user_id.',user_id',
+            'phone_number' => 'required|unique:users_table,phone_number,'.$user->user_id.',user_id',
+            'role' => 'required',
+        ]);
 
-        // if ($validator->fails()){
-        //     return response()->json([
-        //         "errors" => $validator->errors()]);
-        // }
+        $user->update($request->all());
 
-        // if(empty($request['password'])){
-        //     $request = Arr::except($request,array('password'));
-        // }
-        // else{
-        //     $passwordValidator = Validator::make($request->all(),['password' => 'min:6']);
-            
-        //     if($passwordValidator->fails())
-        //     {
-        //         // $validator->errors()->add('password', 'The password must be at least 6 characters');
-        //         return response()->json([
-        //             "errors" => $passwordValidator->errors()]);
-        //     }
-        //     else
-        //     {
-        //         $request['password'] = Hash::make($request['password']);
-        //     }
-        // }
-        
-        // $user->update($request->all());
-        // DB::table('model_has_roles')->where('model_id',$user->id)->delete();
-        // $user->assignRole([$request['role_id']]);
-        // $userRole = $user->roles[0];
-        // $userTag = $user->tag->serial ?? "Not Assigned";
-        // return response()->json([
-        //     'success'=> '<strong>'.$user->name.'</strong> updated.',
-        //     "userRole" => $userRole,
-        //     "userTag" => $userTag],
-        //     200);
+        if(!empty($request['role'])){
+            DB::table('model_has_roles')->where('model_id',$user->user_id)->delete();
+            $user->assignRole([$request['role']]);
+        }
+
+        if(!empty($request['beacon_id'])){
+            $tag = Tag::find($request['beacon_id']);
+            $tag->user()->save($user);
+        }
+
+        $request->session()->flash('user', true);
+        $request->session()->flash('success', 'User updated successfully.');
+        return redirect()->route('settings.index');
     }
+
+    /**
+    * Update the specified resource in storage.
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @return \Illuminate\Http\Response
+    */
+    public function change_profile(Request $request)
+    {
+        $user = Auth::user();
+        request()->validate([
+            'fName' => 'required',
+            'lName' => 'required',
+            'username' => 'required|unique:users_table,username,'.$user->user_id.',user_id',
+            'gender' => 'required',
+            'email' => 'required|email|unique:users_table,email,'.$user->user_id.',user_id',
+            'phone_number' => 'required|unique:users_table,phone_number,'.$user->user_id.',user_id',
+            'role' => 'required',
+        ]);
+
+        $user->update($request->all());
+
+        if(!empty($request['role'])){
+            DB::table('model_has_roles')->where('model_id',$user->user_id)->delete();
+            $user->assignRole([$request['role']]);
+        }
+
+        if(!empty($request['beacon_id'])){
+            $tag = Tag::find($request['beacon_id']);
+            $tag->user()->save($user);
+        }
+
+        $request->session()->flash('personal', true);
+        $request->session()->flash('success', 'Profile updated successfully.');
+        return redirect()->route('settings.index');
+    }
+
+    /**
+    * Update the specified resource in storage.
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @return \Illuminate\Http\Response
+    */
+    public function change_password(Request $request)
+    {
+        $user = Auth::user();
+        request()->validate([
+            'old_password' => 'required',
+            'new_password' => 'required|confirmed|min:8|different:old_password',
+            'new_password_confirmation' => 'required',
+        ]);
+
+        $request->session()->flash('password', true);
         
+        $password = $request['old_password'];
+        $new_password = $request['new_password'];
+
+        if(Hash::check($password, $user->password)){
+            // $user->update(['password' => Hash::make($request['new_password'])]);
+            $user->forceFill(['password' => Hash::make($new_password)]);
+            $user->save();
+            $request->session()->flash('success', 'Password changed successfully.');
+        } else {
+            $request->session()->flash('error', 'Password does not match.');
+        }
+        return redirect()->route('settings.index');
+    }
+
     /**
     * Remove the specified resource from storage.
     *
@@ -184,11 +239,30 @@ class UserController extends Controller
     */
     public function destroy(User $user)
     {
-        $name = $user->name;
-        $user->delete();
-        return response()->json([
-            'success'=>'<strong>'.$name.'</strong> deleted.'],
-            200);
+        //
+    }
+
+    /**
+     * Remove the specified resources from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function destroys(Request $request)
+    {
+        $ids = $request->users_id;
+
+        User::destroy($ids);
+
+        if(count($ids) > 1){
+            return response()->json([
+                "success" => "Users deleted successfully."
+            ], 200);
+        } else {
+            return response()->json([
+                "success" => "User deleted successfully."
+            ], 200);
+        }
     }
 }
 

@@ -1,152 +1,122 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid p-0">
-    
-    <!-- Title & Add-Button -->
-    <div class="row mb-2 mb-xl-3 justify-content-start">
-        <a href="{{ route('roles.index') }}" style="padding-left: 12px">
-            @svg('chevron-left', 'feather-chevron-left align-middle')  
-        </a>
-        <h3 style="padding-left: 12px">Edit <strong>{{ $role->name }}</strong> Role</h3>
-    </div>
-
-    <!-- Form -->
-    {!! Form::model($role, ['method' => 'PATCH','route' => ['roles.update', $role->id]]) !!}
+<div class="container-fluid">
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <!-- Basic Information -->
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Basic Information</h5>
-                </div>
-                <div class="card-body" id="editCardBody">
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label>
-                                Name
-                                <span style="color: red; display:block; float:right"> *</span>
-                            </label>
-                            {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control', 'id' => 'editName')) !!}
-                            @error('name')
-                                <script>$('#editName').css("border", "1px solid red");</script>
-                                <div class="alert-danger">{{ $message }}</div>
-                            @enderror
+        <div class="col-sm-12 col-lg-9">
+            {!! Form::model($role, ['method' => 'PATCH','route' => ['roles.update', $role->id]]) !!}
+                <div class="iq-card">
+                    <div class="iq-card-header d-flex justify-content-between">
+                        <div class="iq-header-title">
+                            <h4 class="card-title">Role: <strong>{{ $role->name }}</strong></h4>
                         </div>
+                    </div>
+                    <div class="iq-card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="name">Name:</label>
+                                {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control', 'id' => 'editName')) !!}
+                                @error('name')
+                                    <script>$('#name').css("border", "1px solid red");</script>
+                                    <div class="alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
                         <div class="form-group col-md-6">
-                            <label>
-                                Color
-                                <span style="color: red; display:block; float:right"> *</span>
-                            </label>
+                            <label for="color">Color:</label>
                             <div class="input-group">
-                                <input type="color" name=color id="editColor" class="form-control" value='{{ $role->color }}'>
+                            {!! Form::color('color', null, array('placeholder' => 'Click to select color', 'class' => "form-control", 'id' => 'color')) !!}
                                 <div class="input-group-append">
-                                    <span class="input-group-text" id="editColorHolder" style="width:100px">{{ $role->color }}</span>
+                                    <span class="input-group-text" id='color-code' style="width:100px">#000000</span>
                                 </div>
                             </div>
                             @error('color')
-                                <script>$('#editColor').css("border", "1px solid red");</script>
-                                <script>$('#editColorHolder').css("border", "1px solid red");</script>
+                                <script>$('#color').css("border", "1px solid red");</script>
+                                <script>$('#color-code').css("border", "1px solid red");</script>
                                 <div class="alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
-                    
                 </div>
-            </div>
-            
-            <!-- Manage Permissions -->
-            <div class="card">
-                <div class="card-header">
-                    <label class="h5 card-title">
-                        Manage Permissions
-                        <span style="color: red; display:block; float:right"> *</span>
-                    </label>
-                    <h6 class="card-subtitle text-muted">Please check at least one permission</h6>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive" id="permissionTableHolder">
-                        <table class="table table-striped table-hover table-sm" id="permissionTable">
-                            <thead>
-                                <tr>
-                                    <th scope="col" style="width:40%">Modules</th>
-                                    <th scope="col" class="text-center noSort" style="width:15%" >View</th>
-                                    <th scope="col" class="text-center noSort" style="width:15%">Create</th>
-                                    <th scope="col" class="text-center noSort" style="width:15%">Edit</th>
-                                    <th scope="col" class="text-center noSort" style="width:15%">Delete</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($modules as $module)
-                                <tr>
-                                    <td>{{ ucfirst($module['name']) }} Management</td>
-                                    <td class="text-center">
-                                        <label class="d-flex justify-content-center custom-control custom-checkbox">
-                                            @if($module['list'] != null)
-                                                {{ Form::checkbox('permission[]', $module['list'], in_array($module['list'], $roleModules) ? true : false, array('class' => 'custom-control-input')) }}
-                                            @else
-                                                <input type="checkbox" class="custom-control-input" name="permission[]" value="{{ $module['list']}}" disabled>
-                                            @endif
-                                            <span class="custom-control-label" style="float:none"></span>
-                                        </label>
-                                    </td>
-                                    <td class="text-center">
-                                        <label class="d-flex justify-content-center custom-control custom-checkbox">
-                                            @if($module['create'] != null)
-                                                {{ Form::checkbox('permission[]', $module['create'], in_array($module['create'], $roleModules) ? true : false, array('class' => 'custom-control-input')) }}
-                                            @else
-                                                <input type="checkbox" class="custom-control-input" name="permission[]" value="{{ $module['edit']}}" disabled>
-                                            @endif
-                                            <span class="custom-control-label" style="float:none"></span>
-                                        </label>
-                                    </td>
-                                    <td class="text-center">
-                                        <label class="d-flex justify-content-center custom-control custom-checkbox">
-                                            @if($module['edit'] != null)
-                                                {{ Form::checkbox('permission[]', $module['edit'], in_array($module['edit'], $roleModules) ? true : false, array('class' => 'custom-control-input')) }}
-                                            @else
-                                                <input type="checkbox" class="custom-control-input" name="permission[]" value="{{ $module['edit']}}" disabled>
-                                            @endif
-                                            <span class="custom-control-label" style="float:none"></span>
-                                        </label>
-                                    </td>
-                                    <td class="text-center">
-                                        <label class="d-flex justify-content-center custom-control custom-checkbox">
-                                            @if($module['delete'] != null)
-                                                {{ Form::checkbox('permission[]', $module['delete'], in_array($module['delete'], $roleModules) ? true : false, array('class' => 'custom-control-input')) }}
-                                            @else
-                                                <input type="checkbox" class="custom-control-input" name="permission[]" value="{{ $module['delete']}}" disabled>
-                                            @endif
-                                            <span class="custom-control-label" style="float:none"></span>
-                                        </label>
-                                    </td>
-                                </tr>
-                                @endforeach
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <div class="iq-card">
+                    <div class="iq-card-header d-flex justify-content-between">
+                        <div class="iq-header-title">
+                            <h4 class="card-title">Manage Permissions: {{session('permissions')}}</h4>
+                        </div>
                     </div>
-                    @error('permission')
-                        <script>$('#permissionTableHolder').css("border", "1px solid red");</script>
-                        <div class="alert-danger">{{ $message }}</div>
-                    @enderror
+                    <div class="iq-card-body">
+                        <div class="table-responsive" id="permissionTableHolder">
+                            <table class="table table-striped table-hover table-sm" id="permissionTable">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="width:40%">Modules</th>
+                                        <th scope="col" class="text-center noSort">All</th>
+                                        <th scope="col" class="text-center noSort">View</th>
+                                        <th scope="col" class="text-center noSort">Create</th>
+                                        <th scope="col" class="text-center noSort">Edit</th>
+                                        <th scope="col" class="text-center noSort">Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($modules as $module)
+                                    <tr>
+                                        <td>{{ ucfirst($module['name']) }} Management</td>
+                                        <td class="text-center">
+                                            <label class="d-flex justify-content-center custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" 
+                                                    id="all-{{ $module['name'] }}"
+                                                    onChange="toggle_list_permission(this.id)">
+                                                <span class="custom-control-label" style="float:none"></span>
+                                            </label>
+                                        </td>
+                                        <td class="text-center">
+                                            <label class="d-flex justify-content-center custom-control custom-checkbox">
+                                                {{ Form::checkbox('permission[]', $module['list'], in_array($module['list'], $roleModules) ? true : false, array('class' => 'custom-control-input', 
+                                                    'id'=>'list-'.$module['name'], 'onChange' =>'toggle_list_permission(this.id)', isset($module['list']) ? '':'disabled')) }}
+                                                <span class="custom-control-label" style="float:none"></span>
+                                            </label>
+                                        </td>
+                                        <td class="text-center">
+                                            <label class="d-flex justify-content-center custom-control custom-checkbox">
+                                                {{ Form::checkbox('permission[]', $module['create'], in_array($module['create'], $roleModules) ? true : false, array('class' => 'custom-control-input', 
+                                                    'id'=>'create-'.$module['name'], 'onChange' =>'toggle_list_permission(this.id)', isset($module['create']) ? '':'disabled')) }}
+                                                <span class="custom-control-label" style="float:none"></span>
+                                            </label>
+                                        </td>
+                                        <td class="text-center">
+                                            <label class="d-flex justify-content-center custom-control custom-checkbox">
+                                                {{ Form::checkbox('permission[]', $module['edit'], in_array($module['edit'], $roleModules) ? true : false, array('class' => 'custom-control-input', 
+                                                    'id'=>'edit-'.$module['name'], 'onChange' => 'toggle_list_permission(this.id)', isset($module['edit']) ? '':'disabled')) }}
+                                                <span class="custom-control-label" style="float:none"></span>
+                                            </label>
+                                        </td>
+                                        <td class="text-center">
+                                            <label class="d-flex justify-content-center custom-control custom-checkbox">
+                                                {{ Form::checkbox('permission[]', $module['delete'], in_array($module['delete'], $roleModules) ? true : false, array('class' => 'custom-control-input', 
+                                                    'id'=>'delete-'.$module['name'], 'onChange' =>'toggle_list_permission(this.id)', isset($module['delete']) ? '':'disabled')) }}
+                                                <span class="custom-control-label" style="float:none"></span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            @error('permission')
+                                <script>$('#permissionTable').css("border", "1px solid red");</script>
+                                <div class="alert-danger">{{ $message }}</div>
+                            @enderror
+                            <div class="text-center mt-5">
+                                @can('role-edit')
+                                <button type="submit" class="btn btn-primary">Update Role</button>
+                                @endcan
+                                @php(session(['role' => 'page']))
+                                <a href="{{ route('settings.index') }}" class="btn btn-secondary">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            {!! Form::close() !!}
         </div>
     </div>
-    
-    <!-- Button -->
-    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-        <a href="{{ route('roles.index') }}" class="btn btn-secondary">Cancel</a>
-        <button type="submit" class="btn btn-primary">Save</button>
-    </div>
-    {!! Form::close() !!}
 </div>
 @endsection
 
@@ -154,12 +124,6 @@
 <script type="text/javascript">
 
     $(function () {
-        /* Initiate tooltip */
-        $('[data-toggle="tooltip"]').tooltip()
-
-        /* Initiate popover */
-        $('[data-toggle="popover"]').popover()
-
         /* Initiate dataTable */
         var table = $('#permissionTable').DataTable({
             responsive: true,
@@ -174,11 +138,76 @@
             }],
         })
 
-        $('#editColor').on('change', function(event) {
-            var colorCode = $('#editColor').val().toUpperCase();
-            $('#editColorHolder').html(colorCode);
-        });
+        $('#color-code').html($('#color').val().toUpperCase());
+        
+        @foreach($modules as $module)
+            check_all('all-' + @json($module['name']));
+        @endforeach
     })
+
+    $('#color').on('change', function(event) {
+        var colorCode = $('#color').val().toUpperCase();
+        $('#color-code').html(colorCode);
+    });
+
+    function check_all(id){
+        let is_all = true;
+        let module = id.split('-')[1];
+        ['list', 'create', 'edit', 'delete'].forEach(function(item){
+            let element = $('#' + item + '-' + module);
+            if(!element.is(':disabled')){
+                if(!element.is(':checked')){
+                    is_all = false;
+                }
+            }
+        });
+
+        if(is_all){
+            $('#all-' + module).prop('checked', true);
+        } else {
+            $('#all-' + module).prop('checked', false);
+        }
+    }
+
+    function toggle_list_permission(id){
+        let permission = id.split('-')[0];
+        let module = id.split('-')[1];
+
+        $('#' + id).prop('disabled', false);
+
+        let all_permission = ['list', 'create', 'edit', 'delete'];
+
+        if(permission != 'all'){
+            if(permission != 'list'){
+                if($('#' + id).is(':checked')){
+                    $('#list-' + module).prop('checked', true);
+                }
+            } else {
+                if(!$('#' + id).is(':checked')){
+                    $('#all-' + module).prop('checked', false);
+                    $('#create-' + module).prop('checked', false);
+                    $('#edit-' + module).prop('checked', false);
+                    $('#delete-' + module).prop('checked', false);
+                }
+            }
+        } else {
+            if($('#' + id).is(':checked')){
+                all_permission.forEach(function(item){
+                    let element = $('#' + item + '-' + module);
+                    if(!element.is(':disabled')){
+                        if(!element.is(':checked')){
+                            $('#' + item + '-' + module).prop('checked', true);
+                        }
+                    }
+                })
+            } else {
+                all_permission.forEach(function(item){
+                    $('#' + item + '-' + module).prop('checked', false);
+                })
+            }
+        }
+        check_all(id);
+    };
 
 </script>
 @endsection

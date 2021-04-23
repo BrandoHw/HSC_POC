@@ -52,7 +52,9 @@
                             @enderror
                         </div>
                         <div class="text-center mt-5">
+                            @can('beacon-edit')
                             <button type="submit" class="btn btn-primary">Update Beacon</button>
+                            @endcan
                             <a href="{{ route('beacons.index') }}" class="btn btn-secondary">Cancel</a>
                         </div>
                     {!! Form::close() !!}

@@ -55,7 +55,9 @@
                             @enderror
                         </div>
                         <div class="text-center mt-5">
+                            @can('resident-edit')
                             <button type="submit" class="btn btn-primary">Update Profile</button>
+                            @endcan
                             <a href="{{ route('residents.index') }}" class="btn btn-secondary">Cancel</a>
                         </div>
                     {!! Form::close() !!}

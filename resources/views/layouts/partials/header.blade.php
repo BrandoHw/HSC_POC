@@ -56,7 +56,11 @@
                             @break
                         @case('users')
                             <li class="breadcrumb-item active"><a href="{{ route('settings.index') }}"><i class="ri-settings-4-line mr-1 float-left"></i>Settings</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Staffs</li>
+                            <li class="breadcrumb-item active" aria-current="page">Users</li>
+                            @break
+                        @case('roles')
+                            <li class="breadcrumb-item active"><a href="{{ route('settings.index') }}"><i class="ri-settings-4-line mr-1 float-left"></i>Settings</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Roles & Permissions</li>
                             @break
                         @default
                             <li class="breadcrumb-item active"><a href="{{ route('home') }}"><i class="ri-home-4-line mr-1 float-left"></i>Dashboard</a></li>
@@ -91,7 +95,7 @@
                  </li>
                 <li>
                     <a href="#" class="search-toggle iq-waves-effect d-flex align-items-center bg-primary rounded">
-                        <img src="{{ asset('template/images/user/1.jpg') }}" class="img-fluid rounded mr-3" alt="user">
+                        <img src="{{ Auth::user()->gender == 'M' ? asset('img/avatars/default-profile-m.jpg'):asset('img/avatars/default-profile-f.jpg') }}" class="img-fluid rounded mr-3" alt="user">
                         <div class="caption">
                             <h6 class="mb-0 line-height text-white">{{ Auth::user()->full_name }}</h6>
                         </div>
@@ -99,9 +103,6 @@
                     <div class="iq-sub-dropdown iq-user-dropdown">
                         <div class="iq-card shadow-none m-0">
                             <div class="iq-card-body p-0 ">
-                                <div class="bg-primary p-3">
-                                    <h5 class="mb-0 text-white line-height">Hello {{ Auth::user()->full_name }}</h5>
-                                </div>
                                 <a href="{{ route('settings.index') }}" class="iq-sub-card iq-bg-primary-hover">
                                     <div class="media align-items-center">
                                         <div class="rounded iq-card-icon iq-bg-primary">

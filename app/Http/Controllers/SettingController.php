@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use DB;
+use Session;
 
 class SettingController extends Controller
 {
@@ -22,9 +23,8 @@ class SettingController extends Controller
     {
         $user = Auth::user();
         $users = User::orderBy('user_id', 'asc')->get();
-        $userTypes = UserType::pluck('type', 'user_type_id')->all();
 
-        $tagsNull = Tag::where('beacon_type', 2)
+        $tagsNull = Tag::doesntHave('resident')
             ->doesntHave('user')
             ->pluck('beacon_mac', 'beacon_id');
         
@@ -37,7 +37,7 @@ class SettingController extends Controller
         $rolePermissions = DB::table("role_has_permissions")
             ->get();
 
-        return view('settings.index', compact('user', 'users', 'userTypes', 'tagsNull',
+        return view('settings.index', compact('user', 'users', 'tagsNull',
             'roles', 'rolePermissions'));
     }
 

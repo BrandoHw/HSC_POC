@@ -26,10 +26,10 @@ class PolicyController extends Controller
     */
     function __construct()
     {
-        $this->middleware('permission:policy-list|policy-create|policy-edit|policy-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:policy-list|policy-create|policy-edit|policy-delete', ['only' => ['index','edit']]);
         $this->middleware('permission:policy-create', ['only' => ['create','store']]);
-        $this->middleware('permission:policy-edit', ['only' => ['edit','update']]);
-        $this->middleware('permission:policy-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:policy-edit', ['only' => ['update']]);
+        $this->middleware('permission:policy-delete', ['only' => ['destroys']]);
     }
     /**
      * Display a listing of the resource.

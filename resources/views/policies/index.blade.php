@@ -12,8 +12,12 @@
                             <a class="search-link" href="#"><i class="ri-search-line"></i></a>
                         </form>
                         <div class="col-4 row justify-content-end">
-                            <a class="btn btn-primary" href="{{ route('policies.create') }}" style="margin-right: 10px">Create</a>
+                            @can('policy-create')
+                            <a class="btn btn-primary" href="{{ route('policies.create') }}" style="margin-right: 10px"><i class="ri-add-line"></i>Add Policy</a>
+                            @endcan
+                            @can('policy-delete')
                             <a class="btn btn-danger" href="#" id="deletePolicy">Delete</a>
+                            @endcan
                         </div>
                     </div>
                     <div class="table-responsive" style="margin-top: 15px">
@@ -73,6 +77,7 @@
             </div>
         </div>
     </div>
+    @can('policy-delete')
     <!-- Delete: Empty -->
     <div class="modal fade" id="empty-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -144,6 +149,7 @@
             </div>
         </div>
     </div>
+    @endcan
 </div>
 @endsection 
 
@@ -162,6 +168,7 @@
         window.location.href = $(this).parent('tr').attr('href');
     });
 
+    @can('policy-delete')
     $('#deletePolicy').on('click', function(){
         let policy_selected = dTable.column(0).checkboxes.selected();
         if(_.isEmpty(policy_selected)){
@@ -244,5 +251,6 @@
             }
         });
     };
+    @endcan
 </script>
 @endsection

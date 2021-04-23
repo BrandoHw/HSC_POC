@@ -12,8 +12,12 @@
                             <a class="search-link" href="#"><i class="ri-search-line"></i></a>
                         </form>
                         <div class="col-4 row justify-content-end">
+                            @can('beacon-create')
                             <a class="btn btn-primary" href="{{ route('beacons.create') }}" style="margin-right: 10px"><i class="ri-add-line"></i>Add Beacon</a>
+                            @endcan
+                            @can('beacon-delete')
                             <a class="btn btn-danger" href="#" id="deleteBeacon">Delete</a>
+                            @endcan
                         </div>
                     </div>
                     <div class="table-responsive" style="margin-top: 15px">
@@ -52,6 +56,7 @@
             </div>
         </div>
     </div>
+    @can('beacon-delete')
     <!-- Delete: Empty -->
     <div class="modal fade" id="empty-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -123,6 +128,7 @@
             </div>
         </div>
     </div>
+    @endcan
 </div>
 @endsection 
 
@@ -145,6 +151,7 @@
         window.location.href = $(this).parent('tr').attr('href');
     });
 
+    @can('beacon-delete')
     $('#deleteBeacon').on('click', function(){
         let beacon_selected = dTable.column(0).checkboxes.selected();
         if(_.isEmpty(beacon_selected)){
@@ -227,5 +234,6 @@
             }
         });
     };
+    @endcan
 </script>
 @endsection
