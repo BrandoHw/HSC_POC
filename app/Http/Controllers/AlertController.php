@@ -23,7 +23,7 @@ class AlertController extends Controller
      */
     public function index()
     {
-        $alerts = Alert::orderBy('alert_id', 'asc')->get();
+        $alerts = Alert::orderBy('alert_id', 'asc')->with(['reader', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])->get();
         return view('alerts.index', compact('alerts'));
     }
 
@@ -140,7 +140,9 @@ class AlertController extends Controller
     {
         $ids = $request->alerts_id;
 
-        $alerts = Alert::find($ids)->whereNull('resolved_at');
+        $alerts = Alert::find($ids)->whereNull('resolved_at')
+            ->with(['reader', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
+            ->get();
         $user = User::find($request['user_id']);
 
         $resolved_at = Carbon::now();
