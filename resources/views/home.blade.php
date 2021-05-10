@@ -308,13 +308,13 @@
 
 @section('script')
 <script>
-   // let last = @json($alerts_last);
-   let last = 3124;
+   let last = @json($alerts_last);
+   // let last = 3124;
    $(function(){
       $('#body').addClass(['sidebar-main-active', 'right-column-fixed', 'header-top-bgcolor']);
 
-      // let timer = setInterval(getNewAlerts, 10000);
-      getNewAlerts();
+      let timer = setInterval(getNewAlerts, 30000);
+      // getNewAlerts();
    });
 
    $(document).on('click','.li-alert', function(){
