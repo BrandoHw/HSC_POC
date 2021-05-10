@@ -5,11 +5,17 @@
             <div class="top-logo">
                 <a href="index.html" class="logo">
                     <img src="{{ asset('img/icons/wecare.png') }}" alt="logo">
-                <span>WECare</span>
+                    <span style="text-transform: none !important">WeCare</span>
                 </a>
             </div>
         </div>
         <nav class="navbar navbar-expand-lg navbar-light p-0">
+            <div class="iq-menu-bt align-self-center" style="position:unset; margin-left:1.5rem; margin-right:-0.125rem; background: var(--iq-body-bg)">
+                <div class="wrapper-menu">
+                <div class="main-circle"><i class="ri-arrow-left-s-line"></i></div>
+                <div class="hover-circle"><i class="ri-arrow-right-s-line"></i></div>
+                </div>
+            </div>
             <nav aria-label="breadcrumb" style="padding-left:20px">
                 <ol class="breadcrumb iq-bg-primary mb-0">
                     @switch(Request::segment(1))
@@ -76,23 +82,25 @@
                 </ol>
             </nav>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto navbar-list">
+                    <li id ="notif-li" class="nav-item">
+                        <a href="#" id = "notif-a" class="search-toggle iq-waves-effect">
+                            <div id="notif-bell" style="width: 20px; height: 20px"></div>
+                            <span id ="notif-danger-dots"class="bg-danger dots"></span>
+                        </a>
+                        <div class="iq-sub-dropdown">
+                            <div class="iq-card shadow-none m-0">
+                                <div id ="notification-card" class="iq-card-body p-0 ">
+                                    <div class="bg-primary p-3">
+                                        <h5 class="mb-0 text-white">All Notifications<small id = "notif-count" class="badge  badge-light float-right pt-1"></small></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
             <ul class="navbar-list">
-                <li id ="notif-li" class="nav-item">
-                    <a href="#" id = "notif-a" class="search-toggle iq-waves-effect">
-                       <div id="notif-bell"></div>
-                       <span id ="notif-danger-dots"class="bg-danger dots"></span>
-                    </a>
-                    <div class="iq-sub-dropdown">
-                       <div class="iq-card shadow-none m-0">
-                          <div id ="notification-card" class="iq-card-body p-0 ">
-                             <div class="bg-primary p-3">
-                                <h5 class="mb-0 text-white">All Notifications<small id = "notif-count" class="badge  badge-light float-right pt-1"></small></h5>
-                             </div>
-                          </div>
-                       </div>
-                    </div>
-                 </li>
                 <li>
                     <a href="#" class="search-toggle iq-waves-effect d-flex align-items-center bg-primary rounded">
                         <img src="{{ Auth::user()->gender == 'M' ? asset('img/avatars/default-profile-m.jpg'):asset('img/avatars/default-profile-f.jpg') }}" class="img-fluid rounded mr-3" alt="user">

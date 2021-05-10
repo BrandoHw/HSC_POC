@@ -86,6 +86,18 @@ class Alert extends Model
     }
 
     /**
+     * Convert occured_at to Asia/Kuala_Lumpur timezone, return time only.
+     *
+     * @return string
+     */
+    public function getOccuredAtTimeTzAttribute()
+    {
+        $date = $this->occured_at_tz;
+        $string = explode(' ', $date);
+        return $string[1].' '.$string[2];
+    }
+
+    /**
      * Convert resolved_at to Asia/Kuala_Lumpur timezone.
      *
      * @return string
@@ -99,5 +111,46 @@ class Alert extends Model
         } else {
             return "-";
         }
+    }
+
+    /**
+     * Convert occured_at to Asia/Kuala_Lumpur timezone.
+     *
+     * @return string
+     */
+    public function getTimeDiffTzAttribute()
+    {
+        $date = Carbon::createFromFormat('Y-m-d H:i:s', $this->occured_at, 'UTC');
+        $date->setTimezone('Asia/Kuala_Lumpur');
+        $today = Carbon::now('Asia/Kuala_Lumpur')->setTimeZone('UTC');
+
+        $diff = $date->diff($today)->format('%H:%i:%s');
+        $hour = explode(':', $diff)[0];
+        $minute = explode(':', $diff)[1];
+        $second = explode(':', $diff)[2];
+
+        if($hour == '00' && $minute == '00'){
+            return 'Now';
+        }
+
+        if ($hour == '00'){
+            $hour = '';
+        } else {
+            if($hour[0] == '0'){
+                $hour = $hour[1];
+            }
+            $hour = $hour.'hrs ';
+        }
+
+        if ($minute == '00'){
+            $minute = '';
+        } else {
+            if($minute[0] == '0'){
+                $minute = $minute[1].'ms';
+            } 
+            $minute = $minute.'ms ';
+        }
+
+        return $hour.$minute.'ago';
     }
 }

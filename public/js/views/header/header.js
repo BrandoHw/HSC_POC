@@ -858,9 +858,9 @@ $(function() {
     anim = lottie.loadAnimation(params);
     anim.pause();
     $("#notif-danger-dots").hide();
-    $("#notif-bell").on('click', function(){
-        $(this).parent().parent().toggleClass('iq-show');
-        $(this).parent().toggleClass('active');
+    $("#notif-li").on('click', function(){
+        $(this).toggleClass('iq-show');
+        $('#notif-a').toggleClass('active');
     });
 
     getAlerts = function(){

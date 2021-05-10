@@ -276,7 +276,7 @@ Index Of Script
         -----------------------------------------------------------------------*/
         let Scrollbar = window.Scrollbar;
         if (jQuery('#sidebar-scrollbar').length) {
-            Scrollbar.init(document.querySelector('#sidebar-scrollbar'), options);
+            Scrollbar.init(document.querySelector('#sidebar-scrollbar'), {});
         }
         let Scrollbar1 = window.Scrollbar;
         if (jQuery('#right-sidebar-scrollbar').length) {

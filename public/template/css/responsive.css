@@ -161,7 +161,7 @@ NOTE: This file contains the styling for responsive Template.
 	.iq-menu-horizontal ul.iq-menu.d-flex { display: block !important; background: var(--iq-white); }
 	.iq-menu-horizontal .iq-sidebar-menu .iq-menu li a { padding: 15px 20px; }
 	.iq-menu-horizontal .iq-sidebar-menu .iq-menu li ul { position: static; box-shadow: none; }
-	.iq-search-bar .searchbox { width: 100%; }
+	/* .iq-search-bar .searchbox { width: 100%; } */
 	.iq-right-fixed { margin: 0 15px; }
 	body.sidebar-main-active .iq-sidebar-logo { display: none; }
 	.sidebar-main .iq-sidebar:hover .iq-submenu li a { font-size: 14px; }

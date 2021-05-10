@@ -199,4 +199,142 @@ class AlertController extends Controller
             ], 200);
         }
     }
+
+    /**
+     * Remove the specified resources from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function new_alerts(Request $request)
+    {
+        $last_id = $request->last_id;
+
+        $today = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');
+        $alerts = Alert::where('occured_at', '>=', $today)
+            ->whereNull('resolved_at')
+            ->orderBy('occured_at', 'desc')
+            ->with(['reader', 'reader.location', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
+            ->get();
+
+        $alerts_new = $alerts->where('alert_id', '>', $last_id);
+        $tags = $alerts->unique('beacon_id')->pluck('tag');
+        
+        $alerts_grouped = collect();
+        $alerts_by_tag = $alerts_new->groupBy('beacon_id');
+        foreach($alerts_by_tag as $alerts){
+            $id = $alerts->first()->beacon_id;
+            $counts = $alerts->countBy('rules_id');
+            
+            $filters = $alerts->unique('rules_id');
+            foreach($filters as $filter){
+                $filter['time_diff_tz'] = $filter->time_diff_tz;
+                $filter['occured_at_time_tz'] = $filter->occured_at_time_tz;
+                $filter['counts'] = $counts[$filter->rules_id];
+            }
+
+            $all_counts = 0;
+            foreach($counts as $count){
+                $all_counts += $count;
+            }
+
+            $alerts_grouped->put($id, [$filters, $alerts->first()->tag->current_location, $all_counts]);
+        }
+
+        foreach($tags as $tag){
+            if(empty($alerts_grouped[$tag->beacon_id])){
+                $alerts_grouped->put($tag->beacon_id, [[], $tag->current_location, -1]);
+            }
+        }
+
+        $alerts_num = 0;
+        if(count($alerts_new) > 0){
+            $alerts_num = count($alerts_new);
+            $last_id = $alerts_new->sortBy('alert_id')->last()->alert_id;
+        }
+
+        return response()->json([
+            "success" => $alerts_num.' alerts returned',
+            "alerts_grouped" => $alerts_grouped,
+            "alerts_num" => $alerts_num,
+            "last_id" => $last_id
+        ], 200);
+        
+    }
+
+    /**
+     * Resolve the specified alerts according to tag in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function resolve_all(Request $request)
+    {
+        $tag_id = $request['tag_id'];
+
+        $today = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');
+        $alerts = Alert::where('occured_at', '>=', $today)
+            ->where('beacon_id', $tag_id)
+            ->whereNull('resolved_at')
+            ->with(['reader', 'reader.location', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
+            ->get();
+
+        $user = User::find($request['user_id']);
+
+        $resolved_at = Carbon::now();
+
+        foreach($alerts as $alert){
+            $alert->user()->associate($user)->save();
+            $alert->resolved_at = $resolved_at;
+            $alert->save();
+        }
+        $message = "Alert resolved successfully.";
+        
+        if(count($alerts) > 1){
+            $message = "Alerts resolved successfully.";
+        }
+        return response()->json([
+            "success" => $message,
+            "tag_id" => $tag_id,
+        ], 200);
+    }
+
+    /**
+     * Resolve the specified alerts according to tag and policy in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function resolve(Request $request)
+    {
+        $tag_id = $request['tag_id'];
+        $policy_id = $request['rule_id'];
+
+        $today = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');
+        $alerts = Alert::where('occured_at', '>=', $today)
+            ->where('beacon_id', $tag_id)
+            ->where('rules_id', $policy_id)
+            ->whereNull('resolved_at')
+            ->with(['reader', 'reader.location', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
+            ->get();
+
+        $user = User::find($request['user_id']);
+
+        $resolved_at = Carbon::now();
+
+        foreach($alerts as $alert){
+            $alert->user()->associate($user)->save();
+            $alert->resolved_at = $resolved_at;
+            $alert->save();
+        }
+        $message = "Alert resolved successfully.";
+        
+        if(count($alerts) > 1){
+            $message = "Alerts resolved successfully.";
+        }
+        return response()->json([
+            "success" => $message,
+            "tag_id" => $tag_id,
+        ], 200);
+    }
 }

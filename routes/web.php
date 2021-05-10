@@ -106,6 +106,12 @@ Route::group(['middleware' => ['auth']], function() {
         ->name('alerts.updates');
     Route::delete('alerts/destroys', [AlertController::class, 'destroys'])
         ->name('alerts.destroys');
+    Route::post('alerts/new', [AlertController::class, 'new_alerts'])
+        ->name('alerts.new');
+    Route::patch('alerts/resolve/all', [AlertController::class, 'resolve_all'])
+        ->name('alerts.resolve_all');
+    Route::patch('alerts/resolve', [AlertController::class, 'resolve'])
+        ->name('alerts.resolve');
 
     Route::resource('tracking', MapController::class);
     

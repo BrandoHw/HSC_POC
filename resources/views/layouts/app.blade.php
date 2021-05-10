@@ -7,7 +7,7 @@
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'WECare') }}</title>
+        <title>{{ config('app.name', 'WeCare') }}</title>
         
         <link rel="shortcut icon" href="{{ asset('img/icons/wecare.png') }}">
         
@@ -17,7 +17,7 @@
         <!-- Favicon -->
         <link href="{{ asset('template/images/favicon.ico') }}" rel="stylesheet" type="text/plain">
         <!-- Bootstrap CSS -->
-        <link href="{{ asset('template/css/bootstrap.min.css') }}" rel="stylesheet">
+        <!-- <link href="{{ asset('template/css/bootstrap.min.css') }}" rel="stylesheet"> -->
         <!-- Typography CSS -->
         <link href="{{ asset('template/css/typography.css') }}" rel="stylesheet">
         <!-- Style CSS -->
@@ -25,11 +25,11 @@
         <!-- Reponsive CSS -->
         <link href="{{ asset('template/css/responsive.css') }}" rel="stylesheet">
         <!-- Full calendar -->
-        <link href="{{ asset('template/fullcalendar/core/main.css') }} " rel='stylesheet' />
-        <link href="{{ asset('template/fullcalendar/daygrid/main.css') }} " rel='stylesheet' />
-        <link href="{{ asset('template/fullcalendar/timegrid/main.css') }} " rel='stylesheet' />
-        <link href="{{ asset('template/fullcalendar/list/main.css') }} " rel='stylesheet' />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <!-- <link href="{{ asset('template/fullcalendar/core/main.css') }} " rel='stylesheet' /> -->
+        <!-- <link href="{{ asset('template/fullcalendar/daygrid/main.css') }} " rel='stylesheet' /> -->
+        <!-- <link href="{{ asset('template/fullcalendar/timegrid/main.css') }} " rel='stylesheet' /> -->
+        <!-- <link href="{{ asset('template/fullcalendar/list/main.css') }} " rel='stylesheet' /> -->
+        <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> -->
 
         <!-- Developer Defined Style -->
         <link href="{{ asset('css/custom/datatable.css') }}" rel="stylesheet">
@@ -57,14 +57,7 @@
         </div>
         @include('layouts.partials.footer')
         
-        <!-- Optional JavaScript -->
-        <!-- Developer Defined Script -->
-        <!-- <script src="{{ asset('js/app.js') }}"></script> -->
-
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <!-- <script src="{{ asset('template/js/jquery.min.js') }}"></script>
-        <script src="{{ asset('template/js/popper.min.js') }}"></script>
-        <script src="{{ asset('template/js/bootstrap.min.js') }}"></script> -->
+        <!-- Required javascript for custom.js -->
         <!-- Appear JavaScript -->
         <script src="{{ asset('template/js/jquery.appear.js') }}"></script>
         <!-- Countdown JavaScript -->
@@ -78,8 +71,6 @@
         <script src="{{ asset('template/js/apexcharts.js') }}"></script>
         <!-- Slick JavaScript -->
         <script src="{{ asset('template/js/slick.min.js') }}"></script>
-        <!-- Select2 JavaScript -->
-        <script src="{{ asset('template/js/select2.min.js') }}"></script>
         <!-- Owl Carousel JavaScript -->
         <script src="{{ asset('template/js/owl.carousel.min.js') }}"></script>
         <!-- Magnific Popup JavaScript -->
@@ -88,22 +79,6 @@
         <script src="{{ asset('template/js/smooth-scrollbar.js') }}"></script>
         <!-- lottie JavaScript -->
         <script src="{{ asset('template/js/lottie.js') }}"></script>
-        <!-- am core JavaScript -->
-        <script src="{{ asset('template/js/core.js') }}"></script>
-        <!-- am charts JavaScript -->
-        <script src="{{ asset('template/js/charts.js') }}"></script>
-        <!-- am animated JavaScript -->
-        <script src="{{ asset('template/js/animated.js') }}"></script>
-        <!-- am kelly JavaScript -->
-        <script src="{{ asset('template/js/kelly.js') }}"></script>
-        <!-- am maps JavaScript -->
-        <script src="{{ asset('template/js/maps.js') }}"></script>
-        <!-- am worldLow JavaScript -->
-        <script src="{{ asset('template/js/worldLow.js') }}"></script>
-        <!-- Flatpicker Js -->
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-        <!-- Chart Custom JavaScript -->
-        <script src="{{ asset('template/js/chart-custom.js') }}"></script>
         <!-- Custom JavaScript -->
         <script src="{{ asset('template/js/custom.js') }}"></script>
 

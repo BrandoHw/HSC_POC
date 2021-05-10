@@ -3,7 +3,7 @@
     <div class="iq-sidebar-logo d-flex justify-content-between">
         <a href="../">
             <img src="{{ asset('img/icons/wecare.png') }}" alt="logo">
-            <span>WECare</span>
+            <span>WeCare</span>
         </a>
         <div class="iq-menu-bt-sidebar">
             <div class="iq-menu-bt align-self-center">
@@ -17,7 +17,6 @@
     <div id="sidebar-scrollbar">
         <nav class="iq-sidebar-menu">
             <ul id="iq-sidebar-toggle" class="iq-menu">
-                <!-- Proposed nav item -->
                 <li class="{{ Request::is('/') ? 'sidebar-item active' : 'sidebar-item' }}">
                     <a href="{{ route('home') }}" class="iq-waves-effect"><i class="ri-home-4-fill"></i><span>Dashboard</span></a>
                 </li>
@@ -83,7 +82,7 @@
                 <li class="{{ Request::segment(1) === 'tracking' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('tracking.index') }}" class="iq-waves-effect"><i class="ri-map-pin-user-fill"></i><span>Tracking</span></a></li>
                 @endcan
                 @can('report-list')
-                <li class="{{ Request::segment(1) === 'reports' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="#" class="iq-waves-effect"><i class="ri-file-chart-fill"></i><span>Reports</span></a></li>
+                <li class="{{ Request::segment(1) === 'reports' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('reports.index') }}" class="iq-waves-effect"><i class="ri-file-chart-fill"></i><span>Reports</span></a></li>
                 @endcan
                 <li class="{{ Request::segment(1) === 'settings' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('settings.index') }}" class="iq-waves-effect"><i class="ri-settings-4-fill"></i><span>Settings</span></a></li>
             </ul>

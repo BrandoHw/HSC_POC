@@ -8385,42 +8385,6 @@ if(jQuery('#menu-chart-03').length){
         var chart = new ApexCharts(document.querySelector("#menu-chart-03"), options);
         chart.render();
     }
-  
-   
-    if(jQuery('#home-perfomer-chart').length){
-         var options = {
-          series: [44, 55, 67, 83],
-          chart: {
-          height: 350,
-          type: 'radialBar',
-        },
-        colors: ['#827af3','#e64141','#ffd400','#00d0ff'],
-        plotOptions: {
-          radialBar: {
-            dataLabels: {
-              name: {
-                fontSize: '22px',
-              },
-              value: {
-                fontSize: '16px',
-              },
-              total: {
-                show: true,
-                label: 'Total',
-                formatter: function (w) {
-                  // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
-                  return 249
-                }
-              }
-            }
-          }
-        },
-        labels: ['Breakfast', 'Lunch', 'Tea-Time', 'Dinner'],
-        };
-
-        var chart = new ApexCharts(document.querySelector("#home-perfomer-chart"), options);
-        chart.render();
-    }
      
      if(jQuery('#menu-overtime-chart').length){
         am4core.ready(function() {
