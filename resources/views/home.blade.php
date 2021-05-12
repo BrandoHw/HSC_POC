@@ -372,7 +372,7 @@
                         let full_name = f_name + ' ' + l_name;
 
 
-                        let new_alert_main = '<li class="mb-3 sell-list border-info rounded" id="main-group-{{ $person->tag->beacon_id }}">'
+                        let new_alert_main = '<li class="mb-3 sell-list border-info rounded" id="main-group-'+ tag_id  +'">'
                         + '<div class="d-flex p-3 align-items-center alert-main">'
                            + '<div class="user-img img-fluid">'
                               + '<img src="{{ asset("img/avatars/default-profile-m.jpg") }}" alt="story-img" class="img-fluid rounded-circle avatar-40">'
