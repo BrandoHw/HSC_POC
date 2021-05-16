@@ -90,7 +90,7 @@
             @error('target')
             message = @json($message);
             $('#target').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
-            $('#target').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');
+            $('#target').siblings('span').after('<div class="invalid-feedback" id="invalid-target" style="display:block">'+ message +'</div>');
             @enderror
         })
 
@@ -102,6 +102,9 @@
                 $('#target-div').prop('hidden', false);
                 if(!$('#target').hasClass("select2-hidden-accessible")){
                     $('#target').select2();
+                }
+                if($('#invalid-target').length){
+                    $('#invalid-target').remove();
                 }
                 $('#assign').val('1');
             } else {

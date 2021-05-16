@@ -89,7 +89,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('user/group', [UserLastSeenController::class, 'group']);
     
     Route::resource('residents', ResidentController::class)
-        ->except(['show']);
+        ->except(['show', 'destroy']);
+    Route::delete('residents/destroys', [ResidentController::class, 'destroys'])
+        ->name('residents.destroys');
     
     Route::resource('attendance', AttendanceController::class)
         ->only(['index', 'destroy']);

@@ -78,7 +78,6 @@
                                         <script>
                                             $('#assign').prop("checked", true);
                                             $('#tag-div').prop("hidden", false);
-                                            $('#tag').val('').trigger('change');
                                         </script>
                                     @enderror
                                 </div>
@@ -111,24 +110,22 @@
         let message = "Error Message";
 
         @error('gender')
-        /* Profile Tag Error */
         message = @json($message);
         $('#gender').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
         $('#gender').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');
         @enderror
 
         @error('role')
-        /* Profile Tag Error */
         message = @json($message);
         $('#role').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
         $('#role').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');
         @enderror
 
         @error('beacon_id')
-        /* Profile Tag Error */
         message = @json($message);
         $('#tag').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
-        $('#tag').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');
+        $('#tag').siblings('span').after('<div class="invalid-feedback" id="invalid-tag" style="display:block">'+ message +'</div>');
+        $('#tag').val('').trigger('change');
         @enderror
     });
 
@@ -140,6 +137,9 @@
             $('#tag-div').prop('hidden', false);
             if(!$('#tag').hasClass("select2-hidden-accessible")){
                 $('#tag').select2();
+            }
+            if($('#invalid-tag').length){
+                $('#invalid-tag').remove();
             }
             $('#assign').val('1');
         } else {
