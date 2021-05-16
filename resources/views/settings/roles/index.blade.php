@@ -27,10 +27,10 @@
                 <tbody>
                     @foreach ($roles as $role)
                         <tr id="role-{{ $role->id }}" href="{{ route('roles.edit',$role->id) }}">
-                            <td>{{ $role->id }}</td>
-                            <td>{{ $role->name }}</td>
-                            <td><span class="badge badge-dark" style="background-color: {{ $role->color }} !important">{{ Str::upper($role->color) }}</span></td>
-                            <td>
+                            <td class="info-role">{{ $role->id }}</td>
+                            <td class="info-role">{{ $role->name }}</td>
+                            <td class="info-role"><span class="badge badge-dark" style="background-color: {{ $role->color }} !important">{{ Str::upper($role->color) }}</span></td>
+                            <td class="info-role">
                                 @if(!empty($rolePermissions))
                                     {{ $rolePermissions->where("role_id", $role->id)->count() }}
                                 @endif

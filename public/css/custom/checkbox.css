@@ -1,0 +1,8 @@
+.custom-control-input:checked ~ .custom-control-label::before{
+    border-color: var(--iq-primary);
+    background-color: var(--iq-primary);
+}
+
+.custom-checkbox .custom-control-input:disabled:checked ~ .custom-control-label::before{
+    background-color: rgba(71, 92, 199, .5);
+}

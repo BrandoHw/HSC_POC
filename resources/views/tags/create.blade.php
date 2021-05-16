@@ -1,4 +1,3 @@
-{!! Form::open(array('route' => 'beacons.store','method'=>'POST')) !!}
 @extends('layouts.app')
 
 @section('content')

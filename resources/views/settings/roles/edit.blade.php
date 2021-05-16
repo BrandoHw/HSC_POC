@@ -17,8 +17,8 @@
                                 <label for="name">Name:</label>
                                 {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control', 'id' => 'editName')) !!}
                                 @error('name')
-                                    <script>$('#name').css("border", "1px solid red");</script>
-                                    <div class="alert-danger">{{ $message }}</div>
+                                    <script>$('#name').addClass("is-invalid");</script>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                         <div class="form-group col-md-6">
@@ -30,9 +30,9 @@
                                 </div>
                             </div>
                             @error('color')
-                                <script>$('#color').css("border", "1px solid red");</script>
+                                <script>$('#color').addClass("is-invalid");</script>
+                                <div class="invalid-feedback">{{ $message }}</div>
                                 <script>$('#color-code').css("border", "1px solid red");</script>
-                                <div class="alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
@@ -102,7 +102,7 @@
                             </table>
                             @error('permission')
                                 <script>$('#permissionTable').css("border", "1px solid red");</script>
-                                <div class="alert-danger">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                             <div class="text-center mt-5">
                                 @can('role-edit')
@@ -131,10 +131,10 @@
             paging: false,
             searching: false,
             info: false,
-            'order': [],
-            'columnDefs':[{
-                'targets': 'noSort',
-                'orderable': false
+            order: [0, 'asc']
+            columnDefs:[{
+                targets: 'noSort',
+                orderable: false
             }],
         })
 
@@ -143,6 +143,13 @@
         @foreach($modules as $module)
             check_all('all-' + @json($module['name']));
         @endforeach
+
+        @cannot('role-edit')
+            $('#name').prop('disabled', true);
+            $('#color').prop('disabled', true);
+            $('#color-code').prop('disabled', true);
+            $('input:checkbox').prop('disabled', true);
+        @endcan
     })
 
     $('#color').on('change', function(event) {

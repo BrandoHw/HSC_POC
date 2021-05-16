@@ -33,7 +33,11 @@ class ResidentController extends Controller
      */
     public function create()
     {
-        //
+        $tags = Tag::doesntHave('resident')
+            ->doesntHave('user')
+            ->pluck('beacon_mac', 'beacon_id');
+        
+        return view('residents.create',compact('tags'));
     }
 
     /**
@@ -87,7 +91,7 @@ class ResidentController extends Controller
     public function update(Request $request, Resident $resident)
     {
         request()->validate([
-            'beacon_id' => 'required|',
+            'beacon_id' => 'required',
         ]);
 
         if(!empty($resident->tag)){

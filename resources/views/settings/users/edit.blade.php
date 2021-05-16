@@ -12,70 +12,78 @@
                 </div>
                 <div class="iq-card-body">
                     {!! Form::model($user, ['method' => 'PATCH', 'route' => ['users.update', $user->user_id]]) !!}
+                        <input type="hidden" value="{{ $user->user_id }}" name="user_id" />
                         <div class=" row align-items-center">
                             <div class="form-group col-sm-6">
                                 <label for="fname">First Name:</label>
-                                {!! Form::text('fName', null, array('class' => "form-control", 'id' => 'fName')) !!}
+                                {!! Form::text('fName', null, ['placeholder' => 'Enter first name', 'class' => "form-control", 'id' => 'f-name', 'disabled']) !!}
                                 @error('fName')
-                                    <script>$('#fName').css("border", "1px solid red");</script>
-                                    <div class="alert-danger">{{ $message }}</div>
+                                    <script>$('#f-name').addClass('is-invalid');</script>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="form-group col-sm-6">
                                 <label for="lname">Last Name:</label>
-                                {!! Form::text('lName', null, array('class' => "form-control", 'id' => 'lName')) !!}
+                                {!! Form::text('lName', null, ['placeholder' => 'Enter last name', 'class' => "form-control", 'id' => 'l-name', 'disabled']) !!}
                                 @error('lName')
-                                    <script>$('#lName').css("border", "1px solid red");</script>
-                                    <div class="alert-danger">{{ $message }}</div>
+                                    <script>$('#l-name').addClass('is-invalid');</script>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="form-group col-sm-6">
                                 <label for="username">Username:</label>
-                                {!! Form::text('username', null, array('class' => "form-control", 'id' => 'username')) !!}
+                                {!! Form::text('username', null, ['placeholder' => 'Enter username', 'class' => "form-control", 'id' => 'username', 'disabled']) !!}
                                 @error('username')
-                                    <script>$('#username').css("border", "1px solid red");</script>
-                                    <div class="alert-danger">{{ $message }}</div>
+                                    <script>$('#username').addClass('is-invalid');</script>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="email">Gender:</label>
-                                {!! Form::select('gender', ['M' => 'Male', 'F' => 'Female'], $user->gender, ['class' => 'form-control', 'id' => 'gender']) !!}
-                                @error('gender')
-                                    <script>$('#gender').css("border", "1px solid red");</script>
-                                    <div class="alert-danger">{{ $message }}</div>
-                                @enderror
+                                <label for="gender">Gender:</label>
+                                {!! Form::select('gender', ['M' => 'Male', 'F' => 'Female'], $user->gender, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'gender', 'disabled']) !!}
                             </div>
                             <div class="form-group col-sm-6">
                                 <label for="email">Email:</label>
-                                {!! Form::text('email', null, array('class' => "form-control", 'id' => 'email')) !!}
+                                {!! Form::text('email', null, ['placeholder' => 'Enter email', 'class' => "form-control", 'id' => 'email', 'disabled']) !!}
                                 @error('email')
                                     <script>$('#email').css("border", "1px solid red");</script>
                                     <div class="alert-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="phone_number">Phone Number:</label>
-                                {!! Form::text('phone_number', null, array('class' => "form-control", 'id' => 'phoneNum')) !!}
+                                <label for="phone-num">Phone Number:</label>
+                                {!! Form::text('phone_number', null, ['placeholder' => 'Enter phone number', 'class' => "form-control", 'id' => 'phone-num', 'disabled']) !!}
                                 @error('phone_number')
-                                    <script>$('#phoneNum').css("border", "1px solid red");</script>
+                                    <script>$('#phone-num').css("border", "1px solid red");</script>
                                     <div class="alert-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="editTag">Role:</label>
-                                {!! Form::select('role', $roles->pluck('name', 'id'), $user->roles[0]->id, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'role']) !!}
+                                <label for="role">Role:</label>
+                                {!! Form::select('role', $roles->pluck('name', 'id'), $user->roles[0]->id, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'role', 'disabled']) !!}
                                 @error('role')
                                     <script>$('#role').css("border", "1px solid red");</script>
                                     <div class="alert-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="editTag">Beacon:</label>
-                                {!! Form::select('beacon_id', $tagsNull, null, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'tag']) !!}
-                                @error('beacon_id')
-                                    <script>$('#tag').css("border", "1px solid red");</script>
-                                    <div class="alert-danger">{{ $message }}</div>
-                                @enderror
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" value="0" id="assign" name="assign" disabled {{ $available ? '':'disabled' }} {{ $current ? 'checked':'' }}>
+                                    <label class="custom-control-label" for="assign">Assign a beacon</label>
+                                    @if(!$available)
+                                        <div class="text-secondary"><i class="ri-information-fill text-warning"></i> <em>Cannot assign right now. No available beacon. </em></div>
+                                    @endif
+                                </div>
+                                <div class="mt-2" id="tag-div" {{ $current ? '':'hidden' }}>
+                                    {!! Form::select('beacon_id', $tagsNull, null, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'tag', 'disabled']) !!}
+                                    @error('beacon_id')
+                                        <script>
+                                            $('#assign').prop("checked", true);
+                                            $('#tag-div').prop("hidden", false);
+                                            $('#tag').val('').trigger('change');
+                                        </script>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
                         <div class="text-center mt-5">
@@ -94,5 +102,78 @@
 @endsection
 
 @section('script')
+<script>
+    $(function(){
+        /* Initialise select2 */
+        $('#gender').select2();
+        $('#role').select2();
+        $('#tag').select2();
 
+        @if($available)
+            @if(!empty($user->tag))
+                $('#tag').select2('val', [@json($user->tag->beacon_id)]);
+            @else
+                $('#tag').val('').trigger('change');
+            @endif
+        @else
+            $('#assign').prop('disabled', true);
+            $('#tag').prop('disabled', true);
+        @endif
+
+        @can('user-edit')
+            $('#f-name').prop('disabled', false);
+            $('#l-name').prop('disabled', false);
+            $('#username').prop('disabled', false);
+            $('#email').prop('disabled', false);
+            $('#gender').prop('disabled', false);
+            $('#email').prop('disabled', false);
+            $('#phone-num').prop('disabled', false);
+            $('#role').prop('disabled', false);
+            $('#assign').prop('disabled', false);
+            $('#tag').prop('disabled', false);
+        @endcan
+
+        /* Display select2 error */
+        let message = "Error Message";
+
+        @error('gender')
+        /* Profile Tag Error */
+        message = @json($message);
+        $('#gender').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
+        $('#gender').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');
+        @enderror
+
+        @error('role')
+        /* Profile Tag Error */
+        message = @json($message);
+        $('#role').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
+        $('#role').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');
+        @enderror
+
+        @error('beacon_id')
+        /* Profile Tag Error */
+        message = @json($message);
+        $('#tag').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
+        $('#tag').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');
+        $('#tag').val('').trigger('change');
+        @enderror
+    });
+
+    $('#assign').on('change', function(){
+        if($('#assign').is(':checked')){
+            if($('#tag').hasClass("select2-hidden-accessible")){
+                $('#tag').select2('destroy');
+            }
+            $('#tag-div').prop('hidden', false);
+            if(!$('#tag').hasClass("select2-hidden-accessible")){
+                $('#tag').select2();
+            }
+            $('#assign').val('1');
+        } else {
+            $('#assign').val('0');
+            $('#tag-div').prop('hidden', true);
+        }
+        $('#tag').val('').trigger('change');
+    })
+</script>
 @endsection

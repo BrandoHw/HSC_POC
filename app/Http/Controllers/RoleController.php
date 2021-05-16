@@ -32,11 +32,7 @@ class RoleController extends Controller
     */
     public function index(Request $request)
     {
-        $roles = Role::orderBy('id','asc')->get();
-        $rolePermissions = DB::table("role_has_permissions")
-            ->get();
-        $users = User::all();
-        return view('roles.index',compact('roles', 'rolePermissions', 'users'));
+        //
     }
 
     /**
@@ -63,6 +59,10 @@ class RoleController extends Controller
             'name' => 'required|unique:roles,name',
             'color' => 'required|unique:roles,color',
             'permission' => 'required',
+        ], [
+            'color.required' => 'Please select the color.',
+            'color.unique' => 'This color is taken. Please select another color.',
+            'permission.required' => 'Please select at least one permission.'
         ]);
         $role = Role::create([
             'name' => $request['name'],
@@ -70,7 +70,7 @@ class RoleController extends Controller
         ]);
         $role->syncPermissions($request['permission']);
         return redirect()->route('settings.index')
-            ->with('success','Role created successfully');
+            ->with('success', ucfirst($role->name).' created successfully');
     }
     
     /**
@@ -114,19 +114,23 @@ class RoleController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'name' => 'required',
+            'color' => 'required',
             'permission' => 'required',
+        ], [
+            'color.required' => 'Please select the color.',
+            'color.unique' => 'This color is taken. Please select another color.',
+            'permission.required' => 'Please select at least one permission.'
         ]);
         $role = Role::find($id);
 
         $role->update([
-                'name' => $request['name'],
-                'color' => $request['color']
-            ]);
+            'name' => $request['name'],
+            'color' => $request['color']
+        ]);
 
         $role->syncPermissions($request->input('permission'));
-        return redirect()->route('roles.index')
-            ->with('success','Role updated successfully');
+        return redirect()->route('settings.index')
+            ->with('success', ucfirst($role->name).' updated successfully');
     }
     
     /**

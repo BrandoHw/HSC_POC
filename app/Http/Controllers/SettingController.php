@@ -28,9 +28,15 @@ class SettingController extends Controller
             ->doesntHave('user')
             ->pluck('beacon_mac', 'beacon_id');
         
+        $current = null;
         if(!empty($user->tag)){
             $current = collect([$user->tag->beacon_id => $user->tag->beacon_mac]);
-            $tagsNull = $current->concat($tagsNull)->all();
+            $tagsNull = $current->concat($tagsNull);
+        }
+
+        $available = true;
+        if($tagsNull->isEmpty()){
+            $available = false;
         }
 
         $roles = Role::orderBy('id','asc')->get();
@@ -38,7 +44,7 @@ class SettingController extends Controller
             ->get();
 
         return view('settings.index', compact('user', 'users', 'tagsNull',
-            'roles', 'rolePermissions'));
+            'roles', 'rolePermissions', 'current', 'available'));
     }
 
     /**

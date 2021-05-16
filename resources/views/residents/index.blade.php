@@ -12,6 +12,12 @@
                             <a class="search-link" href="#"><i class="ri-search-line"></i></a>
                         </form>
                         <div class="col-4 row justify-content-end">
+                            @can('resident-create')
+                            <a class="btn btn-primary" href="{{ route('residents.create') }}" style="margin-right: 10px"><i class="ri-add-line"></i>Add Resident</a>
+                            @endcan
+                            @can('resident-delete')
+                            <a class="btn btn-danger" href="#" id="deleteResident">Delete</a>
+                            @endcan
                         </div>
                     </div>
                     <div class="table-responsive" style="margin-top: 15px">

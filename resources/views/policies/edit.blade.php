@@ -18,7 +18,7 @@
                         </div>
                         <div class="form-group">
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="alert" name="alert" checked="{{ $policy->alert_action }}">
+                                <input type="checkbox" class="custom-control-input" id="alert" name="alert" {{ $policy->alert_action ? 'checked':'' }}>
                                 <label class="custom-control-label" for="alert">Enabled</label>
                             </div>
                         </div>
@@ -26,7 +26,6 @@
                         <div class="form-group">
                             <label for="type">Policy Type:</label>
                             <select class="form-control" id="type" onChange="validatePolicyInput(this.id)">
-                                <option selected="" disabled="">Please select...</option>
                                 <option {{ ($policy->rules_type_id == "1") ? 'selected':'' }} value="1">Attendance</option>
                                 <option {{ ($policy->rules_type_id == "2") ? 'selected':'' }} value="2">Battery</option>
                                 <option {{ ($policy->rules_type_id == "3") ? 'selected':'' }} value="3">Duress Button</option>
@@ -133,7 +132,6 @@
                                 <i class="ri-information-fill"></i>
                             </a>
                             <select class="form-control" id="frequency" onChange="validatePolicyInput(this.id)">
-                                <option value="" selected="" disabled="">Please select ...</option>
                                 @if(isset($policy->frequency))
                                     <option {{ ($policy->frequency == "1") ? 'selected':'' }} value=1>1 second</option>
                                     <option {{ ($policy->frequency == "5") ? 'selected':'' }} value=5>5 seconds</option>
@@ -161,7 +159,6 @@
                         <div class="form-group">
                             <label for="target">Target(s):</label>
                             <select class="form-control" id="target" onChange="validatePolicyInput(this.id)">
-                                <option selected="" disabled="">Please select...</option>
                                 <option {{ ($policy->target_type == 'all') ? 'selected':'' }} value="all">Everyone</option>
                                 <option {{ ($policy->target_type == 'user-only') ? 'selected':'' }} value="user-only">User Only</option>
                                 <option {{ ($policy->target_type == 'resident-only') ? 'selected':'' }} value="resident-only">Resident Only</option>
@@ -186,7 +183,6 @@
                         <div class="form-group">
                             <label for="day">Day(s):</label>
                             <select class="form-control" id="day" onChange="validatePolicyInput(this.id)" {{ ($policy->rules_type_id == '2') ? 'disabled':'' }}>
-                                <option selected="" disabled="">Please select...</option>
                                 <option {{ ($policy->day_type == "daily") ? 'selected':'' }} value="daily">Daily</option>
                                 <option {{ ($policy->day_type == "weekdays") ? 'selected':'' }} value="weekdays">Monday to Friday</option>
                                 <option {{ ($policy->day_type == "weekends") ? 'selected':'' }} value="weekends">Saturday to Sunday</option>
@@ -326,8 +322,6 @@
             multiple: true,
             closeOnSelect: false,
             allowClear: true,
-            selectionCssClass: 'form-control',
-            placeholder: "Please select..."
         });
 
         let selected_location = new Array(@json($policy->all_locations));
@@ -340,6 +334,12 @@
         $('#z-value').inputSpinner();
         $('#duration').inputSpinner();
 
+        /* Initialise select2 */
+        $('#type').select2();
+        $('#frequency').select2();
+        $('#target').select2();
+        $('#day').select2();
+
         @if($policy->target_type == "custom")
             /* Initialise custom-target select2 */
             if($('#target').val() == "custom"){
@@ -348,8 +348,6 @@
                     closeOnSelect: false,
                     scrollAfterSelect: false,
                     allowClear: true,
-                    selectionCssClass: 'form-control',
-                    placeholder: "Please select target..."
                 });
                 let selected_target = new Array(@json($policy->all_targets));
                 $('#custom-target').select2('val', selected_target)
@@ -472,6 +470,15 @@
         $('#trigger-option-geofence').prop('hidden', !option['geofence']);
         $('#trigger-option-violence-param').prop('hidden', !option['violence']);
         $('#trigger-option-violence-frequency').prop('hidden', !option['violence']);
+
+        if($('#type').val() == "6"){
+            if($('#frequency').hasClass("select2-hidden-accessible")){
+                $('#frequency').select2('destroy');
+            }
+            if(!$('#frequency').hasClass("select2-hidden-accessible")){
+                $('#frequency').select2();
+            }
+        }
         
     })
 
@@ -803,12 +810,6 @@
                     $('#z-axis-row').after('<div class="invalid-feedback" id="invalid-' + id +'" style="display:block">Please select at least one axis.</div>');
                 }
                 break;
-            case "custom-target":
-                if (!$('#invalid-custom-target').length){
-                    $('#custom-target').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
-                    $('#custom-target').siblings('span').after('<div class="invalid-feedback" id="invalid-' + id +'" style="display:block">Please select the target(s) for this policy.</div>')
-                }
-                break;
             case "custom-day":
                 if (!$('#invalid-custom-day').length){
                     let days = ['sun', 'mon', 'tue', 'wed', 'thurs', 'fri', 'sat'];
@@ -818,10 +819,36 @@
                     $('#custom-day-row').after('<div class="invalid-feedback" id="invalid-' + id +'" style="display:block">Please select at least one day.</div>');
                 }
                 break;
+            case "type":
+            case "frequency":
+            case "target":
+            case "custom-target":
+            case "day":
             case "location":
-                if (!$('#invalid-location').length){
-                    $('#location').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
-                    $('#location').siblings('span').after('<div class="invalid-feedback" id="invalid-' + id +'" style="display:block">Please select the location(s) for this policy.</div>')
+                let message = "message";
+                switch(id){
+                    case 'type':
+                        message = "Please select a policy type."
+                        break;
+                    case 'frequency':
+                        message = "Please select the frequency."
+                        break;
+                    case 'target':
+                        message = "Please select the target(s) who is governed under this policy."
+                        break;
+                    case 'custom-target':
+                        message = "Please select the target(s) for this policy."
+                        break;
+                    case 'day':
+                        message = "Please select the day(s)."
+                        break;
+                    case 'location':
+                        message = "Please select the location(s) for this type."
+                        break;
+                }
+                if (!$('#invalid-' + id).length){
+                    $('#' + id).siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
+                    $('#' + id).siblings('span').after('<div class="invalid-feedback" id="invalid-' + id +'" style="display:block">'+ message +'</div>')
                 }
                 break;
             case "unique-name":
@@ -841,9 +868,6 @@
                     switch(id){
                         case "name":
                             obj.after('<div class="invalid-feedback" id="invalid-' + id +'">Please enter a name in the input field.</div>');
-                            break;
-                        case "type":
-                            obj.after('<div class="invalid-feedback" id="invalid-' + id +'">Please select a policy type.</div>');
                             break;
                         case "battery":
                             $('#battery').siblings('.input-group').find('.input-group-prepend .btn').css('border-color', '#dc3545');
@@ -865,15 +889,6 @@
                             $('#z-value').siblings('.input-group').find('.input-group-prepend .btn').css('border-color', '#dc3545');
                             $('#z-value').siblings('.input-group').find('.input-group-append .btn').css('border-color', '#dc3545');
                             $('#z-value').siblings('.input-group').after('<div class="invalid-feedback" id="invalid-' + id +'">Please enter the g-value threshold for z-axis.</div>');
-                            break;
-                        case "frequency":
-                            obj.after('<div class="invalid-feedback" id="invalid-' + id +'">Please select the frequency.</div>');
-                            break;
-                        case "target":
-                            obj.after('<div class="invalid-feedback" id="invalid-' + id +'">Please select the target(s) who is governed under this policy.</div>');
-                            break;
-                        case "day":
-                            obj.after('<div class="invalid-feedback" id="invalid-' + id +'">Please select the day(s).</div>');
                             break;
                         case "start-time":
                             $('.date .input-group-append .input-group-text').css('border', '1px solid #dc3545');
@@ -931,10 +946,15 @@
                     $('#invalid-custom-day').remove();
                 }
                 break;
+            case "type":
+            case "frequency":
+            case "target":
+            case "custom-target":
+            case "day":
             case "location":
-                if ($('#invalid-location').length){
-                    $('#location').siblings('span').find('.select2-selection').css('border', '');
-                    $('#invalid-location').remove();
+                if ($('#invalid-' + id).length){
+                    $('#' + id).siblings('span').find('.select2-selection').css('border', '');
+                    $('#invalid-' + id).remove();
                 }
                 break;
             default:

@@ -33,9 +33,13 @@
 
         <!-- Developer Defined Style -->
         <link href="{{ asset('css/custom/datatable.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/custom/select2.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/custom/checkbox.css') }}" rel="stylesheet">
 
         @yield('style')
 
+        <!-- Customise Select2 Style -->
+        
         <script src="{{ asset('js/app.js') }}"></script>
         
     </head>
@@ -128,6 +132,10 @@
                     selector: 'td:first-child'
                 }
             })
+
+            $.fn.select2.defaults.set( "theme", "bootstrap" );
+            $.fn.select2.defaults.set( "closeOnSelect", true );
+            $.fn.select2.defaults.set( "placeholder", "Please select..." );
         </script>
         
         @yield('script')

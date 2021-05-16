@@ -17,8 +17,8 @@
                                 <label for="name">Name:</label>
                                 {!! Form::text('name', null, array('placeholder' => 'Enter name', 'class' => "form-control", 'id' => 'name')) !!}
                                 @error('name')
-                                    <script>$('#name').css("border", "1px solid red");</script>
-                                    <div class="alert-danger">{{ $message }}</div>
+                                    <script>$('#name').addClass("is-invalid");</script>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
@@ -30,9 +30,9 @@
                                     </div>
                                 </div>
                                 @error('color')
-                                    <script>$('#color').css("border", "1px solid red");</script>
+                                    <script>$('#color').addClass("is-invalid");</script>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     <script>$('#color-code').css("border", "1px solid red");</script>
-                                    <div class="alert-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
@@ -102,8 +102,8 @@
                                 </tbody>
                             </table>
                             @error('permission')
-                                <script>$('#permissionTable').css("border", "1px solid red");</script>
-                                <div class="alert-danger">{{ $message }}</div>
+                                <script>$('#permissionTable').css("border", "1px solid #dc3545");</script>
+                                <div class="invalid-feedback" style="display:block">{{ $message }}</div>
                             @enderror
                             <div class="text-center mt-5">
                                 <button type="submit" class="btn btn-primary">Save Role</button>

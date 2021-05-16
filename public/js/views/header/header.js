@@ -930,9 +930,9 @@ $(function() {
             },
         })
         .always(function () {
-            setTimeout(getAlerts, 60000);
+            // setTimeout(getAlerts, 60000);
         });
     }
 
-    getAlerts()
+    // getAlerts()
 });

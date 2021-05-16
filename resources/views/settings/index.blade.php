@@ -79,6 +79,54 @@
         @endif
         @endcan
 
+        /* Profile */
+        /* Initialise select2 */
+        changeSelect();
+
+        @if($available)
+            @if(!empty($user->tag))
+                $('#tag').select2('val', [@json($user->tag->beacon_id)]);
+            @else
+                $('#tag').val('').trigger('change');
+            @endif
+        @else
+            $('#assign').prop('disabled', true);
+            $('#tag').prop('disabled', true);
+        @endif
+
+        @canany(['user-edit', 'beacon-edit'])
+            $('#assign').prop('disabled', false);
+            $('#tag').prop('disabled', false);
+        @endcanany
+        
+        @can('user-edit')
+            $('#role').prop('disabled', false);
+        @endcan
+
+        /* Display select2 error */
+        let message = "Error Message";
+
+        @error('gender')
+        /* Profile Tag Error */
+        message = @json($message);
+        $('#gender').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
+        $('#gender').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');
+        @enderror
+
+        @error('role')
+        /* Profile Tag Error */
+        message = @json($message);
+        $('#role').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
+        $('#role').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');
+        @enderror
+
+        @error('beacon_id')
+        /* Profile Tag Error */
+        message = @json($message);
+        $('#tag').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
+        $('#tag').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');
+        $('#tag').val('').trigger('change');
+        @enderror
     })
 
     @if($message = session('success'))
@@ -87,6 +135,43 @@
     @if($message = session('error'))
         notyf.error(@json($message));
     @endif
+
+    /* Profile */
+    /* Initialise select2 */
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        changeSelect()
+    })
+
+    function changeSelect(){
+        $('#gender').select2({
+            tags: true,
+        });
+        $('#role').select2({ 
+            tags: true ,
+        });
+        $('#tag').select2({ 
+            tags: true ,
+        });
+    }
+
+    @can('user-edit')
+    $('#assign').on('change', function(){
+        if($('#assign').is(':checked')){
+            if($('#tag').hasClass("select2-hidden-accessible")){
+                $('#tag').select2('destroy');
+            }
+            $('#tag-div').prop('hidden', false);
+            if(!$('#tag').hasClass("select2-hidden-accessible")){
+                $('#tag').select2();
+            }
+            $('#assign').val('1');
+        } else {
+            $('#assign').val('0');
+            $('#tag-div').prop('hidden', true);
+        }
+        $('#tag').val('').trigger('change');
+    })
+    @endcan
 
     @can('user-list')
     /* Initiate user dataTable */
@@ -98,7 +183,7 @@
         userTable.search($(this).val()).draw();   // this  is for customized searchbox with datatable search feature.
     })
 
-    $('#userTable tbody tr td:not(:first-child)').click(function () {
+    $('#userTable').on('click', '.info-user', function () {
         window.location.href = $(this).parent('tr').attr('href');
     });
     @endcan
@@ -113,7 +198,7 @@
         roleTable.search($(this).val()).draw();   // this  is for customized searchbox with datatable search feature.
     })
 
-    $('#roleTable tbody tr td:not(:first-child)').click(function () {
+    $('#roleTable').on('click', '.info-role', function () {
         window.location.href = $(this).parent('tr').attr('href');
     });
     @endcan

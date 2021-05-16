@@ -28,15 +28,15 @@
                 <tbody>
                     @foreach ($users as $user)
                         <tr id="user-{{ $user->user_id }}" href="{{ route('users.edit',$user->user_id) }}">
-                            <td>{{ $user->user_id }}</td>
-                            <td>{{ $user->fName }}</td>
-                            <td>{{ $user->lName }}</td>
-                            <td>
+                            <td class="info-user">{{ $user->user_id }}</td>
+                            <td class="info-user">{{ $user->fName }}</td>
+                            <td class="info-user">{{ $user->lName }}</td>
+                            <td class="info-user">
                                 <span class="badge badge-dark" style="background-color: {{ $user->roles[0]->color }} !important">
                                     {{ $user->getRoleNames()[0] }}
                                 </span>
                             </td>
-                            <td>{{ $user->tag->beacon_mac ?? "-" }}</td>
+                            <td class="info-user">{{ $user->tag->beacon_mac ?? "-" }}</td>
                         </tr>
                     @endforeach
                 </tbody>

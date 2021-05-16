@@ -7,6 +7,8 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AddUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\User;
 use App\UserType;
 use App\Tag;
@@ -53,8 +55,13 @@ class UserController extends Controller
         $roles = Role::orderBy('id','asc')->get();
         $rolePermissions = DB::table("role_has_permissions")
             ->get();
+        
+        $available = true;
+        if($tagsNull->isEmpty()){
+            $available = false;
+        }
 
-        return view('settings.users.create', compact('tagsNull', 'roles'));
+        return view('settings.users.create', compact('tagsNull', 'roles', 'available'));
     }
     
     /**
@@ -63,18 +70,8 @@ class UserController extends Controller
     * @param  \Illuminate\Http\Request  $request
     * @return \Illuminate\Http\Response
     */
-    public function store(Request $request)
+    public function store(AddUserRequest $request)
     {
-        request()->validate([
-            'fName' => 'required',
-            'lName' => 'required',
-            'username' => 'required|unique:users_table,username,NULL,user_id,deleted_at,NULL',
-            'gender' => 'required',
-            'email' => 'required|email|unique:users_table,email,NULL,user_id,deleted_at,NULL',
-            'phone_number' => 'required|unique:users_table,phone_number,NULL,user_id,deleted_at,NULL',
-            'role' => 'required',
-        ]);
-        
         $request['password'] = Hash::make($request['username'].'@123');
 
         $user = User::create($request->all());
@@ -90,7 +87,7 @@ class UserController extends Controller
         }
 
         $request->session()->flash('user', true);
-        $request->session()->flash('success', 'User created successfully.');
+        $request->session()->flash('success', $user->full_name.' created successfully.');
         return redirect()->route('settings.index');
     }
     
@@ -106,15 +103,21 @@ class UserController extends Controller
             ->doesntHave('user')
             ->pluck('beacon_mac', 'beacon_id');
         
+        $current = null;
         if(!empty($user->tag)){
             $current = collect([$user->tag->beacon_id => $user->tag->beacon_mac]);
-            $tagsNull = $current->concat($tagsNull)->all();
+            $tagsNull = $current->concat($tagsNull);
+        }
+
+        $available = true;
+        if($tagsNull->isEmpty()){
+            $available = false;
         }
 
         $roles = Role::orderBy('id','asc')->get();
         $rolePermissions = DB::table("role_has_permissions")
             ->get();
-        return view('settings.users.edit', compact('user', 'tagsNull', 'roles'));
+        return view('settings.users.edit', compact('user', 'tagsNull', 'roles', 'current', 'available'));
     }
     
     /**
@@ -135,23 +138,18 @@ class UserController extends Controller
     * @param  App\User $user
     * @return \Illuminate\Http\Response
     */
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        request()->validate([
-            'fName' => 'required',
-            'lName' => 'required',
-            'username' => 'required|unique:users_table,username,'.$user->user_id.',user_id',
-            'gender' => 'required',
-            'email' => 'required|email|unique:users_table,email,'.$user->user_id.',user_id',
-            'phone_number' => 'required|unique:users_table,phone_number,'.$user->user_id.',user_id',
-            'role' => 'required',
-        ]);
-
         $user->update($request->all());
 
         if(!empty($request['role'])){
             DB::table('model_has_roles')->where('model_id',$user->user_id)->delete();
             $user->assignRole([$request['role']]);
+        }
+
+        /** Remove the tag associated with this user */
+        if(!empty($user->tag)){
+            $user->tag()->dissociate()->save();
         }
 
         if(!empty($request['beacon_id'])){
@@ -160,7 +158,7 @@ class UserController extends Controller
         }
 
         $request->session()->flash('user', true);
-        $request->session()->flash('success', 'User updated successfully.');
+        $request->session()->flash('success',  $user->full_name.' updated successfully.');
         return redirect()->route('settings.index');
     }
 
@@ -170,29 +168,27 @@ class UserController extends Controller
     * @param  \Illuminate\Http\Request  $request
     * @return \Illuminate\Http\Response
     */
-    public function change_profile(Request $request)
+    public function change_profile(UpdateUserRequest $request)
     {
-        $user = Auth::user();
-        request()->validate([
-            'fName' => 'required',
-            'lName' => 'required',
-            'username' => 'required|unique:users_table,username,'.$user->user_id.',user_id',
-            'gender' => 'required',
-            'email' => 'required|email|unique:users_table,email,'.$user->user_id.',user_id',
-            'phone_number' => 'required|unique:users_table,phone_number,'.$user->user_id.',user_id',
-            'role' => 'required',
-        ]);
-
+        $user = User::find($request['user_id']);
         $user->update($request->all());
+        $permissions = $user->getPermissionsViaRoles()->pluck('name')->all();
 
-        if(!empty($request['role'])){
-            DB::table('model_has_roles')->where('model_id',$user->user_id)->delete();
-            $user->assignRole([$request['role']]);
-        }
-
-        if(!empty($request['beacon_id'])){
-            $tag = Tag::find($request['beacon_id']);
-            $tag->user()->save($user);
+        if(in_array('user-edit', $permissions) || in_array('beacon-edit', $permissions)){
+            if(!empty($request['role'])){
+                DB::table('model_has_roles')->where('model_id',$user->user_id)->delete();
+                $user->assignRole([$request['role']]);
+            }
+    
+            /** Remove the tag associated with this user */
+            if(!empty($user->tag)){
+                $user->tag()->dissociate()->save();
+            }
+    
+            if(!empty($request['beacon_id'])){
+                $tag = Tag::find($request['beacon_id']);
+                $tag->user()->save($user);
+            }
         }
 
         $request->session()->flash('personal', true);
@@ -209,22 +205,23 @@ class UserController extends Controller
     public function change_password(Request $request)
     {
         $user = Auth::user();
+        $request->session()->flash('password', true);
+
         request()->validate([
             'old_password' => 'required',
             'new_password' => 'required|confirmed|min:8|different:old_password',
             'new_password_confirmation' => 'required',
+        ], [
+            'new_password_confirmation.required' => 'Please eneter new password again in the input field.'
         ]);
-
-        $request->session()->flash('password', true);
         
         $password = $request['old_password'];
         $new_password = $request['new_password'];
 
         if(Hash::check($password, $user->password)){
-            // $user->update(['password' => Hash::make($request['new_password'])]);
             $user->forceFill(['password' => Hash::make($new_password)]);
             $user->save();
-            $request->session()->flash('success', 'Password changed successfully.');
+            $request->session()->flash('success', 'Password updated successfully.');
         } else {
             $request->session()->flash('error', 'Password does not match.');
         }
