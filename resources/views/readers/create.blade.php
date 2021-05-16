@@ -11,21 +11,21 @@
                     </div>
                 </div>
                 <div class="iq-card-body">
-                    {!! Form::open(array('route' => 'gateways.store','method'=>'POST')) !!}
+                    {!! Form::open(['route' => 'gateways.store','method'=>'POST']) !!}
                         <div class="form-group">
                             <label for="serial">Serial Number:</label>
-                            {!! Form::text('serial', null, array('placeholder' => 'Exp: L1-CA-01', 'class' => "form-control", 'id' => 'createSerial')) !!}
+                            {!! Form::text('serial', null, ['placeholder' => 'Exp: L1-CA-01', 'class' => "form-control", 'id' => 'serial']) !!}
                             @error('serial')
-                                <script>$('#createSerial').css("border", "1px solid red");</script>
-                                <div class="alert-danger">{{ $message }}</div>
+                                <script>$('#serial').addClass('is-invalid');</script>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="serial">Mac Address:</label>
-                            {!! Form::text('mac_addr', null, array('placeholder' => 'Exp: AABBCCDDEEFF', 'class' => "form-control", 'id' => 'createMacAdd')) !!}
+                            <label for="mac-addr">Mac Address:</label>
+                            {!! Form::text('mac_addr', null, ['placeholder' => 'Exp: AABBCCDDEEFF', 'class' => "form-control", 'id' => 'mac-addr']) !!}
                             @error('mac_addr')
-                                <script>$('#createMacAdd').css("border", "1px solid red");</script>
-                                <div class="alert-danger">{{ $message }}</div>
+                                <script>$('#mac-addr').addClass('is-invalid');</script>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="text-center mt-5">

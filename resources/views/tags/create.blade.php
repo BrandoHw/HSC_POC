@@ -11,13 +11,13 @@
                     </div>
                 </div>
                 <div class="iq-card-body">
-                    {!! Form::open(array('route' => 'beacons.store','method'=>'POST')) !!}
+                    {!! Form::open(['route' => 'beacons.store','method'=>'POST']) !!}
                         <div class="form-group">
-                            <label for="createMacAdd">Mac Address:</label>
-                            {!! Form::text('beacon_mac', null, array('placeholder' => 'Exp: AABBCCDDEEFF','class' => "form-control", 'id' => 'createMacAdd')) !!}
+                            <label for="beacon-mac">Mac Address:</label>
+                            {!! Form::text('beacon_mac', null, ['placeholder' => 'Exp: AABBCCDDEEFF','class' => "form-control", 'id' => 'beacon-mac']) !!}
                             @error('beacon_mac')
-                                <script>$('#createMacAdd').css("border", "1px solid red");</script>
-                                <div class="alert-danger">{{ $message }}</div>
+                                <script>$('#beacon-mac').addClass('is-invalid');</script>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div> 
                         <div class="form-group">
@@ -30,7 +30,6 @@
                             </div>
                         </div>
                         <div class="form-group" id="target-div" hidden>
-                            <label for="target">Target:</label>
                             <select class="form-control" id="target" name="target">
                                 @foreach($residents as $resident)
                                     <option value="R-{{ $resident->resident_id }}">
@@ -47,7 +46,6 @@
                                     $('#target-div').prop("hidden", false);
                                     $('#target').val('').trigger('change');
                                 </script>
-                                <div class="alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="text-center mt-5">
@@ -65,10 +63,16 @@
 @section('script')
     <script>
         $(function(){
-            $('#target').select2({
-                selectionCssClass: 'form-control',
-                placeholder: "Please select ..."
-            });
+            $('#target').select2();
+            
+            /* Display select2 error */
+            let message = "Error Message";
+
+            @error('target')
+            message = @json($message);
+            $('#target').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
+            $('#target').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');
+            @enderror
         })
 
         $('#assign').on('change', function(){
@@ -78,14 +82,7 @@
                 }
                 $('#target-div').prop('hidden', false);
                 if(!$('#target').hasClass("select2-hidden-accessible")){
-                    $('#target').select2({
-                        multiple: false,
-                        closeOnSelect: false,
-                        scrollAfterSelect: false,
-                        allowClear: false,
-                        selectionCssClass: 'form-control',
-                        placeholder: "Please select target..."
-                    });
+                    $('#target').select2();
                 }
                 $('#assign').val('1');
             } else {

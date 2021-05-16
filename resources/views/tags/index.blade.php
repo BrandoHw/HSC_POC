@@ -34,13 +34,13 @@
                                 @foreach ($tags as $tag)
                                     <tr id="beacon-{{ $tag->beacon_id }}" href="{{ route('beacons.edit',$tag->beacon_id) }}">
                                         <td>{{ $tag->beacon_id }}</td>
-                                        <td>{{ $tag->beacon_mac }}</td>
-                                        <td>
+                                        <td class="info">{{ $tag->beacon_mac }}</td>
+                                        <td class="info">
                                             <span class="badge badge-pill iq-bg-{{ ($tag->beacon_type == 1) ? 'primary':'success' }}">
                                                 {{ ($tag->beacon_type == 2) ? 'Card':'Wristband' }}
                                             </span>
                                         </td>
-                                        <td>
+                                        <td class="info">
                                             @if(!empty($tag->user))
                                                 {{ $tag->user->full_name ?? '-' }}
                                             @else
@@ -147,7 +147,7 @@
         dTable.search($(this).val()).draw();   // this  is for customized searchbox with datatable search feature.
     })
 
-    $('#tagTable tbody tr td:not(:first-child)').click(function () {
+    $('#tagTable').on('click', '.info', function () {
         window.location.href = $(this).parent('tr').attr('href');
     });
 

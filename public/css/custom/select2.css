@@ -27,4 +27,17 @@
     background-color: var(--iq-primary);
 }
 
+.select2-container--bootstrap.select2-container--disabled .select2-selection,
+.select2-container--bootstrap.select2-container--disabled .select2-selection--multiple .select2-selection__choice{
+    background-color: #e9ecef;
+    border-color: var(--iq-dark-border);
+    box-shadow: unset;
+    color: var(--iq-secondary);
+}
+
+.select2-container--bootstrap.select2-container--disabled .select2-selection--single .select2-selection__rendered,
+.select2-container--bootstrap.select2-container--disabled .select2-selection--multiple .select2-selection__rendered{
+    color: var(--iq-secondary);
+}
+
 

@@ -13,11 +13,11 @@
                 <div class="iq-card-body">
                     {!! Form::model($tag, ['method' => 'PATCH', 'route' => ['beacons.update', $tag->beacon_id]]) !!}
                         <div class="form-group">
-                            <label for="editMacAdd">Mac Address:</label>
-                            {!! Form::text('beacon_mac', null, array('placeholder' => 'Exp: AABBCCDDEEFF','class' => "form-control", 'id' => 'editMacAdd')) !!}
+                            <label for="beacon-mac">Mac Address:</label>
+                            {!! Form::text('beacon_mac', null, ['placeholder' => 'Exp: AABBCCDDEEFF','class' => "form-control", 'id' => 'beacon-mac']) !!}
                             @error('beacon_mac')
-                                <script>$('#editMacAdd').css("border", "1px solid red");</script>
-                                <div class="alert-danger">{{ $message }}</div>
+                                <script>$('#beacon-mac').addClass('is-invalid');</script>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-group">
@@ -48,7 +48,6 @@
                                     $('#target-div').prop("hidden", false);
                                     $('#target').val('').trigger('change');
                                 </script>
-                                <div class="alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="text-center mt-5">
@@ -68,11 +67,7 @@
 @section('script')
     <script>
         $(function(){
-
-            $('#target').select2({
-                selectionCssClass: 'form-control',
-                placeholder: "Please select ..."
-            });
+            $('#target').select2();
             @if($available)
                 @if(!empty($tag->user))
                     $('#target').select2('val', ['U-'+@json($tag->user->user_id)]);
@@ -82,6 +77,21 @@
                     $('#target').val('').trigger('change');
                 @endif
             @endif
+
+            @cannot('beacon-edit')
+                $('#beacon-mac').prop('disabled', true);
+                $('#assign').prop('disabled', true);
+                $('#target').prop('disabled', true);
+            @endcannot
+
+            /* Display select2 error */
+            let message = "Error Message";
+
+            @error('target')
+            message = @json($message);
+            $('#target').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
+            $('#target').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');
+            @enderror
         })
 
         $('#assign').on('change', function(){
@@ -91,14 +101,7 @@
                 }
                 $('#target-div').prop('hidden', false);
                 if(!$('#target').hasClass("select2-hidden-accessible")){
-                    $('#target').select2({
-                        multiple: false,
-                        closeOnSelect: false,
-                        scrollAfterSelect: false,
-                        allowClear: false,
-                        selectionCssClass: 'form-control',
-                        placeholder: "Please select target..."
-                    });
+                    $('#target').select2();
                 }
                 $('#assign').val('1');
             } else {

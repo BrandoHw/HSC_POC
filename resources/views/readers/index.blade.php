@@ -36,11 +36,11 @@
                                 @foreach ($readers as $reader)
                                     <tr id="gateway-{{ $reader->gateway_id }}" href="{{ route('gateways.edit',$reader->gateway_id) }}">
                                         <td>{{ $reader->gateway_id }}</td>
-                                        <td>{{ isset($reader->serial) ? $reader->serial : "N/A" }} </td>
-                                        <td>{{ $reader->mac_addr }}</td>
-                                        <td>{{ isset($reader->location) ? $reader->location->location_description : "-"  }}</td>
-                                        <td>{{ isset($reader->location) ? $reader->location->floor_level->alias : "-"  }}</td>
-                                        <td>{{ isset($reader->reader_status) ? $reader->reader_status : "-"  }}</td>
+                                        <td class="info">{{ isset($reader->serial) ? $reader->serial : "N/A" }} </td>
+                                        <td class="info">{{ $reader->mac_addr }}</td>
+                                        <td class="info">{{ isset($reader->location) ? $reader->location->location_description : "-"  }}</td>
+                                        <td class="info">{{ isset($reader->location) ? $reader->location->floor_level->alias : "-"  }}</td>
+                                        <td class="info">{{ isset($reader->reader_status) ? $reader->reader_status : "-"  }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -141,7 +141,7 @@
         dTable.search($(this).val()).draw();   // this  is for customized searchbox with datatable search feature.
     })
 
-    $('#readerTable tbody tr td:not(:first-child)').click(function () {
+    $('#readerTable').on('click', '.info', function () {
         window.location.href = $(this).parent('tr').attr('href');
     });
 

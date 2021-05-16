@@ -61,16 +61,15 @@ class TagController extends Controller
     */
     public function store(Request $request)
     {
+        $rules = ['beacon_mac' => 'required|string|min:12|max:12|unique:beacons_table,beacon_mac'];
+        $messages = [];
+
         if($request['assign'] == '1'){
-            request()->validate([
-                'beacon_mac' => 'required|string|min:12|max:12|unique:beacons_table,beacon_mac',
-                'target' => 'required'
-            ]);
-        } else {
-            request()->validate([
-                'beacon_mac' => 'required|string|min:12|max:12|unique:beacons_table,beacon_mac',
-            ]);
+            $rules['target'] = 'required';
+            $messages['target.request'] = 'Please select at least one target.';
         }
+
+        request()->validate($rules, $messages, ['beacon_mac' => 'mac address']);
         
         $tag = Tag::create($request->all());
 
@@ -92,7 +91,7 @@ class TagController extends Controller
         }
         
         return redirect()->route('beacons.index')
-            ->with('success','Beacon added successfully.');
+            ->with('success', $tag->beacon_mac.' added successfully.');
     }
     
     /**
@@ -147,16 +146,15 @@ class TagController extends Controller
     */
     public function update(Request $request, Tag $tag)
     {
+        $rules = ['beacon_mac' => 'required|string|min:12|max:12|unique:beacons_table,beacon_mac,'.$tag->beacon_id.',beacon_id'];
+        $messages = [];
+
         if($request['assign'] == '1'){
-            request()->validate([
-                'beacon_mac' => 'required|string|min:12|max:12|unique:beacons_table,beacon_mac,'.$tag->beacon_id.',beacon_id',
-                'target' => 'required'
-            ]);
-        } else {
-            request()->validate([
-                'beacon_mac' => 'required|string|min:12|max:12|unique:beacons_table,beacon_mac,'.$tag->beacon_id.',beacon_id',
-            ]);
+            $rules['target'] = 'required';
+            $messages['target.request'] = 'Please select at least one target.';
         }
+
+        request()->validate($rules, $messages, ['beacon_mac' => 'mac address']);
 
         $tag->update($request->all());
 
@@ -183,7 +181,7 @@ class TagController extends Controller
         }
 
         return redirect()->route('beacons.index')
-            ->with('success','Beacon updated successfully');
+            ->with('success', $tag->beacon_mac.' updated successfully.');
     }
    
     /**

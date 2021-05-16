@@ -353,6 +353,22 @@
                 $('#custom-target').select2('val', selected_target)
             }
         @endif
+
+        @cannot('policy-edit')
+            let disabled_items = ['name', 'alert', 'type', 'battery',
+                'x-axis', 'y-axis', 'z-axis', 'x-value', 'y-value', 'z-value', 'frequency',
+                'target', 'custom-target',
+                'day', 'sun', 'mon', 'tue', 'wed', 'thurs', 'fri', 'sat', 
+                'start-time', 'duration', 'location'];
+
+            disabled_items.forEach(function(item){
+                $('#' + item).prop('disabled', true);
+            });
+
+            $('input[name="attendance-option"]').prop('disabled', true);
+            $('input[name="geofence-option"]').prop('disabled', true);
+            
+        @endcannot
     });
 
     /* If target is custom, show custom target */

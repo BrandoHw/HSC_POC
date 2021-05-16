@@ -28,7 +28,7 @@
                 <tbody>
                     @foreach ($users as $user)
                         <tr id="user-{{ $user->user_id }}" href="{{ route('users.edit',$user->user_id) }}">
-                            <td class="info-user">{{ $user->user_id }}</td>
+                            <td>{{ $user->user_id }}</td>
                             <td class="info-user">{{ $user->fName }}</td>
                             <td class="info-user">{{ $user->lName }}</td>
                             <td class="info-user">

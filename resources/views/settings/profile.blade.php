@@ -85,7 +85,6 @@
                                                 <script>
                                                     $('#assign').prop("checked", true);
                                                     $('#tag-div').prop("hidden", false);
-                                                    $('#tag').val('').trigger('change');
                                                 </script>
                                             @enderror
                                         </div>

@@ -6,3 +6,11 @@
 .custom-checkbox .custom-control-input:disabled:checked ~ .custom-control-label::before{
     background-color: rgba(71, 92, 199, .5);
 }
+
+.custom-radio .custom-control-input:disabled:checked~.custom-control-label::before{
+    background-color: rgba(71, 92, 199, .5);
+}
+
+.flatpickr-input[readonly] {
+    cursor: not-allowed;
+}

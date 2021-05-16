@@ -34,7 +34,7 @@
         <!-- Developer Defined Style -->
         <link href="{{ asset('css/custom/datatable.css') }}" rel="stylesheet">
         <link href="{{ asset('css/custom/select2.css') }}" rel="stylesheet">
-        <link href="{{ asset('css/custom/checkbox.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/custom/custom.css') }}" rel="stylesheet">
 
         @yield('style')
 

@@ -56,12 +56,15 @@ class ReaderController extends Controller
         request()->validate([
             'serial' => 'required|unique:gateways_table,serial',
             'mac_addr' => 'required|string|min:12|max:12|unique:gateways_table,mac_addr',
+        ], [], [
+            'serial' => 'serial number',
+            'mac_addr' => 'mac address',
         ]);
         
         $reader = Reader::create($request->all());
         
         return redirect()->route('gateways.index')
-            ->with('success','Gateway added successfully.');
+            ->with('success', $reader->serial.' added successfully.');
     }
     
     /**
@@ -100,10 +103,13 @@ class ReaderController extends Controller
         request()->validate([
             'serial' => 'required|unique:gateways_table,serial,'.$reader->gateway_id.',gateway_id',
             'mac_addr' => 'required|string|min:12|max:12|unique:gateways_table,mac_addr,'.$reader->gateway_id.',gateway_id',
+        ], [], [
+            'serial' => 'serial number',
+            'mac_addr' => 'mac address',
         ]);
         $reader->update($request->all());
         return redirect()->route('gateways.index')
-            ->with('success','Gateway updated successfully');
+            ->with('success', $reader->serial.' updated successfully.');
     }
    
     /**

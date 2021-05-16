@@ -14,18 +14,18 @@
                     {!! Form::model($reader, ['method' => 'PATCH','route' => ['gateways.update', $reader->gateway_id]]) !!}
                         <div class="form-group">
                             <label for="serial">Serial Number:</label>
-                            {!! Form::text('serial', null, array('class' => "form-control", 'id' => 'editSerial')) !!}
+                            {!! Form::text('serial', null, ['placeholder' => 'Exp: L1-CA-01', 'class' => "form-control", 'id' => 'serial']) !!}
                             @error('serial')
-                                <script>$('#editSerial').css("border", "1px solid red");</script>
-                                <div class="alert-danger">{{ $message }}</div>
+                                <script>$('#serial').addClass('is-invalid');</script>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="serial">Mac Address:</label>
-                            {!! Form::text('mac_addr', null, array('class' => "form-control", 'id' => 'editMacAdd')) !!}
+                            <label for="mac-addr">Mac Address:</label>
+                            {!! Form::text('mac_addr', null, ['placeholder' => 'Exp: AABBCCDDEEFF', 'class' => "form-control", 'id' => 'mac-addr']) !!}
                             @error('mac_addr')
-                                <script>$('#editMacAdd').css("border", "1px solid red");</script>
-                                <div class="alert-danger">{{ $message }}</div>
+                                <script>$('#mac-addr').addClass('is-invalid');</script>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="text-center mt-5">
@@ -40,4 +40,15 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('script')
+<script>
+    $(function(){
+        @cannot('gateway-edit')
+            $('#serial').prop('disabled', true);
+            $('#mac-addr').prop('disabled', true);
+        @endcannot
+    })
+</script>
 @endsection
