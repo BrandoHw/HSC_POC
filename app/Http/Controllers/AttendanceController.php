@@ -30,8 +30,12 @@ class AttendanceController extends Controller
     */
     public function index()
     {
-        $attendance_policies = Policy::where('rules_type_id', '1')->orderBy('description', 'asc')->get();
-        $attendance_alerts= Alert::orderBy('occured_at', 'asc')->whereIn('rules_id', $attendance_policies)->get();
+        $attendance_policies = Policy::where('rules_type_id', '1')->orderBy('description', 'asc')
+            ->with(['scope', 'alerts'])
+            ->get();
+        $attendance_alerts= Alert::orderBy('occured_at', 'asc')->whereIn('rules_id', $attendance_policies)
+            ->with(['reader', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
+            ->get();
         $targets = Tag::get();
         $minDate = $attendance_alerts->first()->occured_at_tz ?? Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');
         $maxDate = $attendance_alerts->last()->occured_at_tz ?? Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');

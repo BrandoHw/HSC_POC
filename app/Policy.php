@@ -120,6 +120,28 @@ class Policy extends Model
     }
 
     /**
+     * Get the policy's target.
+     *
+     * @return string
+     */
+    public function getTargetTypeNameAttribute()
+    {
+        $target_type = $this->target_type;
+
+        switch($target_type){
+            case 'all':
+                return 'Everyone';
+            case 'resident-only':
+                return 'Resident(s) Only';
+            case 'user-only':
+                return 'User(s) Only';
+            case 'custom':
+                return 'Cusrom';
+            
+        }
+    }
+
+    /**
      * Get the policy's day type.
      *
      * @return string

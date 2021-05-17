@@ -35,9 +35,9 @@
                                        <div class="col-5">Duration:</div>
                                        <div class="col-7">{{ $policy->scope->duration }} hr(s)</div>
                                        <div class="col-5">Target:</div>
-                                       <div class="col-7">{{ $policy->target_type }}</div>
+                                       <div class="col-7">{{ $policy->target_type_name }}</div>
                                        <div class="col-5">Day:</div>
-                                       <div class="col-7">{{ $policy->day_type }}</div>
+                                       <div class="col-7">{{ ucfirst($policy->day_type) }}</div>
                                     </div>
                                     <hr class="mb-0">
                                 </div>
