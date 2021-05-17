@@ -1,0 +1,20 @@
+
+##Symlink
+When testing on a local server the server uses and absolute path symlink 
+to retrieve images from the public folder.
+
+This won't work on the deployed server. Delete the original symlink.
+Instead create a relative symlink using
+ln -sfn ../storage/app/public/ public/storage
+
+##Deployment steps
+[require manifest.yaml and .bp-config]
+cd to root directory for app (contains .bp-config)
+ibmcloud login [enter credentials]
+target -r au-syd
+cf api https://api.au-syd.cf.cloud.ibm.com
+cf login [enter credentials]
+org : MDTi Sydney
+space: WECare Syd
+cf push (if you are in the root you do not need to put the app name here)
+

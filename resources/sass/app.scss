@@ -1,0 +1,28 @@
+// Bootstrap
+@import "~bootstrap/scss/bootstrap";
+
+
+@import "~tempusdominus-bootstrap-4/src/sass/tempusdominus-bootstrap-4";
+@import "~daterangepicker/daterangepicker.css";
+@import "~select2/src/scss/core";
+@import "~select2-bootstrap-theme/dist/select2-bootstrap.css";
+@import "~bs-stepper/dist/css/bs-stepper.css";
+@import "~notyf/notyf.min.css";
+@import "~flatpickr/dist/flatpickr.min.css";
+@import '~jquery-ui/themes/base/all.css';
+
+
+// Datatables
+@import '~datatables.net-bs4/css/dataTables.bootstrap4.css';
+@import '~datatables.net-buttons-bs4/css/buttons.bootstrap4.css';
+@import '~datatables.net-fixedcolumns-bs4/css/fixedColumns.bootstrap4.css';
+@import '~datatables.net-fixedheader-bs4/css/fixedHeader.bootstrap4.css';
+@import '~datatables.net-select-bs4/css/select.bootstrap4.css';
+@import '~datatables.net-scroller-bs4/css/scroller.bootstrap4.css';
+@import '~jquery-datatables-checkboxes/css/dataTables.checkboxes.css';
+
+// Full Calendar
+@import '~@fullcalendar/common/main.css';
+@import '~@fullcalendar/daygrid/main.css';
+@import '~@fullcalendar/list/main.css';
+@import '~@fullcalendar/timegrid/main.css';
