@@ -133,6 +133,8 @@ Route::group(['middleware' => ['auth']], function() {
         ->name('users.profile');
     Route::post('users/password', [UserController::class, 'change_password'])
         ->name('users.password');
+    Route::post('users/reset', [UserController::class, 'reset_password'])
+        ->name('users.reset');
     Route::delete('users/destroys', [UserController::class, 'destroys'])
         ->name('users.destroys');
 

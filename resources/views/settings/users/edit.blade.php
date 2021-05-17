@@ -9,10 +9,13 @@
                     <div class="iq-header-title">
                         <h4 class="card-title">User: <strong>{{ $user->full_name }}</strong></h4>
                     </div>
+                    <div class="iq-card-header-toolbar d-flex align-items-center">
+                        <button type="button" class="btn btn-warning" id="resetPassword">Reset Password</button>
+                    </div>
                 </div>
                 <div class="iq-card-body">
                     {!! Form::model($user, ['method' => 'PATCH', 'route' => ['users.update', $user->user_id]]) !!}
-                        <input type="hidden" value="{{ $user->user_id }}" name="user_id" />
+                        <input type="hidden" value="{{ $user->user_id }}" name="user_id" id="user-id" />
                         <div class=" row align-items-center">
                             <div class="form-group col-sm-6">
                                 <label for="fname">First Name:</label>
@@ -68,7 +71,7 @@
                             </div>
                             <div class="form-group col-sm-6">
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" value="0" id="assign" name="assign" disabled {{ $available ? '':'disabled' }} {{ $current ? 'checked':'' }}>
+                                    <input type="checkbox" class="custom-control-input" value="0" id="assign" name="assign" {{ $available ? '':'disabled' }} {{ $current ? 'checked':'' }}>
                                     <label class="custom-control-label" for="assign">Assign a beacon</label>
                                     @if(!$available)
                                         <div class="text-secondary"><i class="ri-information-fill text-warning"></i> <em>Cannot assign right now. No available beacon. </em></div>
@@ -93,6 +96,30 @@
                             <a href="{{ route('settings.index') }}" class="btn btn-secondary">Cancel</a>
                         </div>
                     {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Reset Password: Confirmation -->
+    <div class="modal fade" id="confirmation-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body" style="margin-left: -15px; margin-right: -15px; margin-top: -15px">
+                    <div class="container-fluid bd-example-row">
+                        <div class="row justify-content-center iq-bg-danger">
+                            <i class="ri-error-warning-fill text-danger" style="font-size: 85px; margin: -15px"></i>
+                        </div>
+                        <div class="row mt-3 justify-content-center mt-2">
+                            <div class="h4 font-weight-bold">Reset password?</div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="">The user password will be reset to {username}@123.</div>
+                        </div>
+                        <div class="row mt-5 justify-content-center">
+                            <button type="button" class="btn btn-secondary m-1" id="cancel-btn" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger m-1" id="reset-btn" onClick="confirmResetPassword(this.id)">Yes, reset it</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -174,5 +201,55 @@
         }
         $('#tag').val('').trigger('change');
     })
+
+    @can('user-edit')
+    $('#resetPassword').on('click', function(){
+        $('#cancel-btn').prop('hidden', false);
+        $('#reset-btn').html('Yes, reset it');
+        $('#reset-btn').prop('disabled', false);
+        $('#reset-btn').css('background-color', 'var(--iq-danger)');
+        $('#reset-btn').css('border-color', 'var(--iq-danger)');
+        $('#confirmation-modal').modal('toggle');
+    })
+    
+    function confirmResetPassword(id){
+        console.log('inside');
+        let cancel_btn = $('#cancel-btn');
+        let reset_btn = $('#reset-btn');
+        let modal = $('#confirmation-modal');
+        
+        cancel_btn.prop('hidden', true);
+        reset_btn.prop('disabled', true);
+        reset_btn.html('<i class="fa fa-circle-o-notch fa-spin"></i>Reseting');
+
+        let result = {
+            user_id: $('#user-id').val(),
+            _token: $('meta[name="csrf-token"]').attr('content')
+        };
+        
+        $.ajax({
+            url: '{{ route("users.reset") }}',
+            type: "POST",
+            data: result,
+            success:function(response){
+                let errors = response['errors'];
+                if($.isEmptyObject(response['success'])){
+                    console.log(errors);
+                } else {
+                    reset_btn.css('background-color', 'var(--iq-success)');
+                    reset_btn.css('border-color', 'var(--iq-success)');
+                    reset_btn.html('<i class="fa fa-check"></i>Reset');
+                    setTimeout(function() {
+                        modal.modal('toggle');
+                    }, 500);
+				    notyf.success(response['success']);
+                }
+            },
+            error:function(error){
+                console.log(error);
+            }
+        });
+    }
+    @endcan
 </script>
 @endsection

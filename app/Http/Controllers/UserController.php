@@ -27,7 +27,7 @@ class UserController extends Controller
     {
         $this->middleware('permission:user-list|user-view|user-create|user-edit|user-delete', ['only' => ['index','edit']]);
         $this->middleware('permission:user-create', ['only' => ['create','store']]);
-        $this->middleware('permission:user-edit', ['only' => ['update']]);
+        $this->middleware('permission:user-edit', ['only' => ['update', 'reset_password']]);
         $this->middleware('permission:user-delete', ['only' => ['destroy', 'destroys']]);
     }
 
@@ -226,6 +226,26 @@ class UserController extends Controller
             $request->session()->flash('error', 'Password does not match.');
         }
         return redirect()->route('settings.index');
+    }
+
+    /**
+    * Reset the specified resource in storage.
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @return \Illuminate\Http\Response
+    */
+    public function reset_password(Request $request)
+    {
+        $user = User::find($request['user_id']);
+
+        $reset_password = $user->username.'@123';
+
+        $user->forceFill(['password' => Hash::make($reset_password)]);
+        $user->save();
+
+        return response()->json([
+            "success" => "Password reset successfully."
+        ], 200);
     }
 
     /**
