@@ -931,7 +931,6 @@ $(function() {
                         $('<div/>', {class: '', text: 'No Unresolved Alerts', style: 'text-align: center'})
                     )
                 )
-                
                 if (data.length > 0){
                     $("#notif-danger-dots").show();
                     anim.play();

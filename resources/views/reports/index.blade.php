@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-
-
 @section('content')
 
 <div class="container-fluid">
@@ -26,13 +24,13 @@
                             </div>
                         </div>
                             <div class="col-8 row" style="justify-content: flex-end">
-                                <div id="selHolder" class="col-8 row" style="justify-content: flex-end">
+                                <div id="selHolder" class="col-9 row" style="justify-content: flex-end">
                                     <label class="col-form-label col-sm-3 text-sm-right">
                                         Category:
                                         </label>
                                     <select id='selCategory' class="col-sm-4" style="margin-right: 15px"name ="select" ></select>
                                 </div>
-                                <a id ="archive-btn" class="btn btn-primary" style="margin-left: 15px; float: right" href="#">Draw</a>
+                                <button id ="draw-btn" class="btn btn-primary" style="margin-left: 15px; float: right; align-items: center;" href="#">Draw</button>
                             </div>
                     </div>
 
@@ -260,7 +258,7 @@
     });
 
     var series;
-    $('#archive-btn').on('click', function (){
+    $('#draw-btn').on('click', function (){
         // console.log(alertTable.rows( { search: 'applied' } ).data());
         // console.log(alertTable.rows( { search: 'applied' } ).data().length);
         var length = alertTable.rows( { search: 'applied' } ).data().length;
@@ -303,28 +301,18 @@
         counts_subject_data.sort(count_sort);
         counts_location_data.sort(count_sort);
   
-        if (counts_policy_type_data.length === 0 || counts_subject_data === 0 || counts_location_data === 0 || counts_gateways_data === 0){
-        }else{
-            var text = "<b>Most Frequent Alert Type</b>: ".concat(counts_policy_type_data[0]["Policy Type"], "<br>",
-                        "<b>Most Frequent Subject</b>: ", counts_subject_data[0]["Subject"], "<br>",
-                        "<b>Most Frequent Location</b>: ", counts_location_data[0]["Location"])
-            console.log(counts_location_data);
+        console.log('click');
+        gateways = <?php echo $gateways ?>;
+        if (tab === "home-tab-two" && gateways.length != 0){
             $('#chart-div').height("40vh");
             $('#chart-title').show();
-            $('#chart-info').html(text);
-            $('#chart-info').show();
             if (pie_chart.series.indexOf(series) != -1)
             pie_chart.series.removeIndex(
                 pie_chart.series.indexOf(series)
             ).dispose();
-
             series = pie_chart.series.push(new am4charts.PieSeries());
             series.dataFields.value = "count";
-
-            if (tab === "home-tab-two"){
-                console.log("tabtwo");
-                var count = 0;
-                gateways = <?php echo $gateways ?>;
+            var count = 0;
                 var length = gateways.length;
                 for (i=0; i<length; i++){
                     var data = gateways[i];
@@ -340,25 +328,41 @@
                 pie_chart.data = counts_gateways_data;
                 $('#chart-title').text('Gateway Status')
                 $('#chart-info').hide();
-            }else{
-                switch ($('#selCategory').select2('data')[0].text){
-                case "Policy Type":
-                    series.dataFields.category = "Policy Type";
-                    pie_chart.data = counts_policy_type_data;
-                    $('#chart-title').text('Alerts by Policy Type')
-                    break;
-                case "Subject":
-                    series.dataFields.category = "Subject";
-                    pie_chart.data = counts_subject_data;
-                    $('#chart-title').text('Alerts by Subject')
-                    break;
-                case "Location":
-                    series.dataFields.category = "Location";
-                    pie_chart.data = counts_location_data;
-                    $('#chart-title').text('Alerts by Location')
-                    break;
-                }
+        }else if (counts_policy_type_data.length != 0){
+            var text = "<b>Most Frequent Alert Type</b>: ".concat(counts_policy_type_data[0]["Policy Type"], "<br>",
+                        "<b>Most Frequent Subject</b>: ", counts_subject_data[0]["Subject"], "<br>",
+                        "<b>Most Frequent Location</b>: ", counts_location_data[0]["Location"])
+            // console.log(counts_location_data);
+            $('#chart-div').height("40vh");
+            $('#chart-title').show();
+            $('#chart-info').html(text);
+            $('#chart-info').show();
+            if (pie_chart.series.indexOf(series) != -1)
+            pie_chart.series.removeIndex(
+                pie_chart.series.indexOf(series)
+            ).dispose();
+
+            series = pie_chart.series.push(new am4charts.PieSeries());
+            series.dataFields.value = "count";
+            
+            switch ($('#selCategory').select2('data')[0].text){
+            case "Policy Type":
+                series.dataFields.category = "Policy Type";
+                pie_chart.data = counts_policy_type_data;
+                $('#chart-title').text('Alerts by Policy Type')
+                break;
+            case "Subject":
+                series.dataFields.category = "Subject";
+                pie_chart.data = counts_subject_data;
+                $('#chart-title').text('Alerts by Subject')
+                break;
+            case "Location":
+                series.dataFields.category = "Location";
+                pie_chart.data = counts_location_data;
+                $('#chart-title').text('Alerts by Location')
+                break;
             }
+            
         }
     })
 

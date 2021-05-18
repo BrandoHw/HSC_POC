@@ -22,7 +22,7 @@ class GeneralController extends Controller
 
         // return Storage::disk('s3-resized')->url('resized-resident-1.jpg');
         //return Storage::disk('s3')->putFile('floor', $request[$image_id]);
-        //return view('test.test');
+        return view('test.test');
     }
 
      /**

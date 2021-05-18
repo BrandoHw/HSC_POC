@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="{{ asset('js/leaflet.js') }}"></script>
     <script src="{{ asset('js/views/map/edit_functions.js')}}"></script>
+
 @endsection
 @section('content')
  <!-- <html>
@@ -45,7 +46,9 @@
                                     <p class="tag">Tag</p>
                                 </li>
                             </ul> 
-                            <ul class="pagination"></ul>
+                            <ul class="pagination">
+                            </ul>
+                            
                             </div>
                         </div>
                         <div id="map" style="width: 75%; display: inline-block"></div>

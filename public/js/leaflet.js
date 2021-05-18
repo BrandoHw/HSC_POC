@@ -138,7 +138,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var bs_s
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\WECare-POS-map\resources\js\modules\leaflet.js */"./resources/js/modules/leaflet.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\WeCare-HSC\resources\js\modules\leaflet.js */"./resources/js/modules/leaflet.js");
 
 
 /***/ })

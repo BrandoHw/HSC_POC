@@ -125,12 +125,14 @@ class MapController extends Controller
     {
         $readers = Reader::where('assigned', '!=', 1)
         ->with('location', 'location.floor_level')
-        ->has('location')->has('location.floor_level')
+        //->has('location')->has('location.floor_level')
         ->get();
 
         foreach ($readers as $reader){
             if ($reader->location != null){
                 $reader->alias = $reader->location->floor_level->alias;
+            }else{
+                $reader->alias = null;
             }
         }
 

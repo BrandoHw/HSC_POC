@@ -203,6 +203,7 @@ class AlertController extends Controller
                 Alert::whereHas('tag', function($q){
                     $q->whereHas('staff');})
                     ->with(['tag', 'tag.staff', 'reader', 'reader.location',  'policy'])
+                    ->whereNull('resolved_at')
                     ->orderBy('occured_at', 'desc')
                     ->limit($limit)
                     ->get();
@@ -211,6 +212,7 @@ class AlertController extends Controller
                 Alert::whereHas('tag', function($q){
                     $q->whereHas('staff');})
                     ->with(['tag', 'tag.staff', 'reader', 'reader.location',  'policy'])
+                    ->whereNull('resolved_at')
                     ->orderBy('occured_at', 'desc')
                     ->count();
 
@@ -231,6 +233,7 @@ class AlertController extends Controller
                 Alert::whereHas('tag', function($q){
                     $q->whereHas('resident');})
                     ->with(['tag', 'tag.resident', 'reader', 'reader.location',  'policy'])
+                    ->whereNull('resolved_at')
                     ->orderBy('occured_at', 'desc')
                     ->limit($limit)
                     ->get();
@@ -239,8 +242,10 @@ class AlertController extends Controller
                 Alert::whereHas('tag', function($q){
                     $q->whereHas('resident');})
                     ->with(['tag', 'tag.resident', 'reader', 'reader.location',  'policy'])
+                    ->whereNull('resolved_at')
                     ->orderBy('occured_at', 'desc')
                     ->count();
+
             foreach($alert_r as $alert){
                 $alert->full_name = $alert->tag->resident->resident_fName." ".$alert->tag->resident->resident_lName;
                 $alert->duration = Carbon::parse($alert->occured_at)->diffForHumans();
