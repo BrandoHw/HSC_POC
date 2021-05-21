@@ -168,7 +168,7 @@ sup {
 }
 
 a {
-	color: #827af3;
+	color: var(--iq-primary-dark);
 	text-decoration: none;
 	background-color: transparent
 }
@@ -2729,8 +2729,8 @@ fieldset:disabled a.btn {
 .btn-primary:not(:disabled):not(.disabled):active,
 .show>.btn-primary.dropdown-toggle {
 	color: #fff;
-	background: #827af3;
-    border-color: #827af3;
+	background: var(--iq-primary-dark);
+    border-color: var(--iq-primary-dark);
 }
 
 .btn-primary:not(:disabled):not(.disabled).active:focus,
@@ -3052,8 +3052,8 @@ fieldset:disabled a.btn {
 .btn-outline-primary:not(:disabled):not(.disabled):active,
 .show>.btn-outline-primary.dropdown-toggle {
 	color: #fff;
-	background-color: #827af3;
-	border-color: #827af3
+	background-color: var(--iq-primary-dark);
+	border-color: var(--iq-primary-dark);
 }
 
 .btn-outline-primary:not(:disabled):not(.disabled).active:focus,
@@ -4004,8 +4004,8 @@ input[type=submit].btn-block {
 
 .custom-control-input:checked~.custom-control-label::before {
 	color: #fff;
-	border-color: #827af3;
-	background-color: #827af3
+	border-color: var(--iq-primary-dark);
+	background-color: var(--iq-primary-dark);
 }
 
 .custom-control-input:focus~.custom-control-label::before {
@@ -5283,9 +5283,9 @@ input[type=submit].btn-block {
 	padding: .5rem .75rem;
 	margin-left: -1px;
 	line-height: 1.25;
-	color: #827af3;
+	color: var(--iq-primary-dark);
 	background-color: #fff;
-	border: 1px solid #827af3
+	border: 1px solid var(--iq-primary-dark);
 }
 
 .page-link:hover {
@@ -5293,7 +5293,7 @@ input[type=submit].btn-block {
 	color: #0056b3;
 	text-decoration: none;
 	background-color: #e9ecef;
-	border-color: #827af3
+	border-color: var(--iq-primary-dark);
 }
 
 .page-link:focus {
@@ -5316,8 +5316,8 @@ input[type=submit].btn-block {
 .page-item.active .page-link {
 	z-index: 3;
 	color: #fff;
-	background-color: #827af3;
-	border-color: #827af3
+	background-color: var(--iq-primary-dark);
+	border-color: var(--iq-primary-dark);
 }
 
 .page-item.disabled .page-link {
@@ -5325,7 +5325,7 @@ input[type=submit].btn-block {
 	pointer-events: none;
 	cursor: auto;
 	background-color: #fff;
-	border-color: #827af3
+	border-color: var(--iq-primary-dark);
 }
 
 .pagination-lg .page-link {

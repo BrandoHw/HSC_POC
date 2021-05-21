@@ -239,7 +239,7 @@ a:hover { text-decoration: none; }
 .iq-waves-effect { position: relative; overflow: hidden; }
 
 /*  Ripple */
-.ripple { width: 0; height: 0; border-radius: 50%; background: rgba(71, 92, 199, 0.1); transform: scale(0); position: absolute; opacity: 1; }
+.ripple { width: 0; height: 0; border-radius: 50%; background: rgba(132, 240, 234, 0.1); transform: scale(0); position: absolute; opacity: 1; }
 .rippleEffect { animation: rippleDrop .6s linear; }
 @keyframes rippleDrop {
   100% { transform: scale(2); opacity: 0; }

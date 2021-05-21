@@ -5,13 +5,13 @@ Variable
 :root {
   --iq-title-text: #303030;
   --iq-body-text: #a09e9e;
-  --iq-body-bg : #efeefd;
-  --iq-bg-dark-bg: #6d73f6; 
+  --iq-body-bg : #f0fcfb;
+  --iq-bg-dark-bg: #088E8B;
   --iq-bg-light-color: #efeefd;
   --iq-bg-dark-color: #1d203f;
-  --iq-primary: #827af3;
-  --iq-primary-light: #b47af3;
-  --iq-primary-dark: #6B69D2;
+  --iq-primary: #00A19D;
+  --iq-primary-light: #0ABAB5;
+  --iq-primary-dark: #00726F;
   --iq-secondary: #a09e9e;
   --iq-secondary-light: #c1c1c1;
   --iq-secondary-dark: #7d7d7d;
@@ -33,7 +33,7 @@ Variable
   --iq-black: #000000;
   --iq-cyan: #0cd2e3;
   --iq-icon-color: #8c91b6;
-  --iq-light-primary: #e0defc;
+  --iq-light-primary: #ade9e8;
   --iq-light-secondary: #f1f2f1;
   --iq-light-success: #eefff2;
   --iq-light-danger: #fff5f4;

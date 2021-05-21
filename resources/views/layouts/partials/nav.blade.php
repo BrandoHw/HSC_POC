@@ -2,7 +2,7 @@
 <div class="iq-sidebar">
     <div class="iq-sidebar-logo d-flex justify-content-between">
         <a href="../">
-            <img src="{{ asset('img/icons/wecare.png') }}" alt="logo">
+            <img src="{{ asset('img/icons/WeCare-Logo-Blue.png') }}" style="height:55px; width:55px" alt="logo">
             <span>WeCare</span>
         </a>
         <div class="iq-menu-bt-sidebar">

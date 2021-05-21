@@ -32,9 +32,9 @@
     padding: .49rem .75rem;
     margin-left: -1px;
     line-height: 1.25;
-    color: #827af3;
+    color: var(--iq-primary-dark);
     background-color: #fff;
-    border: 1px solid #827af3;
+    border: 1px solid var(--iq-primary-dark);
     top: 0.4em;
 }
 
@@ -62,21 +62,21 @@
     color: #0056b3;
     text-decoration: none;
     background-color: #e9ecef;
-    border-color: #827af3;
+    border-color: var(--iq-primary-dark);
 }
  
 .dataTables_wrapper .dataTables_paginate .paginate_button.current {
     z-index: 3;
     color: #fff;
-    background-color: #827af3;
-    border-color: #827af3;
+    background-color: var(--iq-primary-dark);
+    border-color: var(--iq-primary-dark);
 }
 .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
     color: #6c757d;
     pointer-events: none;
     cursor: auto;
     background-color: #fff;
-    border-color: #827af3;
+    border-color: var(--iq-primary-dark);
 }
 
 .dataTable tbody tr.selected,

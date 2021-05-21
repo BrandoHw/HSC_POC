@@ -99,5 +99,5 @@ div#powered-by {
 .ratting {
     margin: 0 0 10px;
     font-size: 18px;
-    color: #827af3;
+    color: var(--iq-primary-dark);
 }
