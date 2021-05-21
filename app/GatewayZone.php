@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class GatewayZone extends Model
 {
-    use SoftDeletes;
+    //use SoftDeletes; SoftDeletes will interfere with on delete triggers
     use HasFactory;
     
     protected $fillable = [
@@ -19,7 +19,7 @@ class GatewayZone extends Model
     protected $table ='gateway_zones';
 
     public function gateway(){
-        return $this->belongsTo(Reader::class, 'mac_addr', 'mac_addr')->withTrashed();
+        return $this->belongsTo(Reader::class, 'mac_addr', 'mac_addr');//->withTrashed();
     }
 
 

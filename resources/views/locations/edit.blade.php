@@ -16,7 +16,7 @@
                             <label for="name">Name:</label>
                             <input name="location_description" type="text" class="form-control" id="name-location-form" value="{{ $location->location_description }}" placeholder="Enter name">
                         </div>
-                        <div class="form-group">
+                        <div hidden class="form-group">
                             <label for="floor">Floor:</label>
                             {!! Form::select('floor', $floors, $location->floor_id ?? null, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'selFloor-location-form']) !!}
                         </div>

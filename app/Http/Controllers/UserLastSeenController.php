@@ -16,8 +16,8 @@ class UserLastSeenController extends Controller
      */
     public function index()
     {
-        $userCount = array();
-        $userRunningCount =  array();
+        $userCount = array(); // A count of the number of user in each gateway zone (Key = Mac, Value = Number of Users)
+        $userRunningCount =  array(); // (Key = Mac, Value = Number of Users if above threshold, else 0 (e.g [0 0, 7]) For 3 locations with 1 4 and 7 users in zone)
         //The threshold at which multiple markers converge into one large clickable marker
         $threshold = 5;
         //Convert from object to array, (array) typecasting unsuitable, it returns associative array, 

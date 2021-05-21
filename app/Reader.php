@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Reader extends Model
 {
-    use SoftDeletes;
+    //use SoftDeletes;
     
     /**
      * The table associated with the model.

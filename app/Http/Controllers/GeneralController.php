@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use App\GatewayZone;
-
+use App\Alert;
 class GeneralController extends Controller
 {
     //
@@ -22,7 +22,9 @@ class GeneralController extends Controller
 
         // return Storage::disk('s3-resized')->url('resized-resident-1.jpg');
         //return Storage::disk('s3')->putFile('floor', $request[$image_id]);
-        return view('test.test');
+        return $alerts = Alert::orderBy('alert_id', 'asc')->with(['reader', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])->get();
+    
+        //return view('test.test');
     }
 
      /**

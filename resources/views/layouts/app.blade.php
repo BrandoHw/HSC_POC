@@ -133,15 +133,15 @@
                 }
             })
 
-            var csrfToken = $('[name="csrf_token"]').attr('content');
+            // var csrfToken = $('[name="csrf_token"]').attr('content');
 
-            setInterval(refreshToken, 360000); // 1 hour 
+            // setInterval(refreshToken, 360000); // 1 hour 
 
-            function refreshToken(){
-                $.get('refresh-csrf').done(function(data){
-                    csrfToken = data; // the new token
-                })
-            }
+            // function refreshToken(){
+            //     $.get('refresh-csrf').done(function(data){
+            //         csrfToken = data; // the new token
+            //     })
+            // }
 
             $.fn.select2.defaults.set( "theme", "bootstrap" );
             $.fn.select2.defaults.set( "closeOnSelect", true );

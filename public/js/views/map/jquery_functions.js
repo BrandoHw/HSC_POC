@@ -166,22 +166,25 @@ function addGatewayZone() {
                 setupList(data['gatewayZones'], data['readers']);
                 $('#loading-indicator').hide();
                 $('#nextBtn-2').show();
+                $('#previousBtn-2').show();
                 stepper.next();
                 
-                // notyf.success(response['success']);
+                notyf.success("Added Gateway Zone");
 
             },
             error: function(xhr, request, error){
                 console.log('error');
                 console.log(xhr.responseText);
+                $('#loading-indicator').hide();
+                $('#nextBtn-2').show();
+                $('#previousBtn-2').show();
+                notyf.failure("Failed to Add Gateway Zone");
             },
     });
 };
 
 
 $(function() {
-  
-
     var floors;
     var types;
     $.ajaxSetup({
@@ -341,6 +344,7 @@ $(function() {
         if ( locationTable.rows( '.selected' ).any() ){
             $('#addLocationMessage').hide();
             $('#nextBtn-2').hide();
+            $('#previousBtn-2').hide();
             $('#loading-indicator').show();
             addGatewayZone();
         }else{

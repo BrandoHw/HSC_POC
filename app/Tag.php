@@ -70,7 +70,7 @@ class Tag extends Model
     }
 
     public function gateway(){
-        return $this->hasOne(Reader::class, 'gateway_id', 'current_loc')->withTrashed();
+        return $this->hasOne(Reader::class, 'gateway_id', 'current_loc');//->withTrashed();
     }
 
     /**

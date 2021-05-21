@@ -46,7 +46,7 @@ class Alert extends Model
      */
     public function reader()
     {
-        return $this->belongsTo(Reader::class, 'reader_id', 'gateway_id')->withTrashed();
+        return $this->belongsTo(Reader::class, 'reader_id', 'gateway_id');//->withTrashed();
     }
 
     /**
@@ -82,7 +82,7 @@ class Alert extends Model
     {
         $date = Carbon::createFromFormat('Y-m-d H:i:s', $this->occured_at, 'UTC');
         $date->setTimezone('Asia/Kuala_Lumpur');
-        return $date->format('Y-m-d g:i:s A');
+        return $date->format('Y-m-d H:i:s');
     }
 
     /**
@@ -107,7 +107,7 @@ class Alert extends Model
         if(isset($this->resolved_at)){
             $date = Carbon::createFromFormat('Y-m-d H:i:s', $this->resolved_at, 'UTC');
             $date->setTimezone('Asia/Kuala_Lumpur');
-            return $date->format('Y-m-d g:i:s A');
+            return $date->format('Y-m-d H:i:s');
         } else {
             return "-";
         }

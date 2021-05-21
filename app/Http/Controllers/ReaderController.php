@@ -6,6 +6,7 @@ use App\Building;
 use App\Floor;
 use App\Reader;
 use Illuminate\Http\Request;
+use App\GatewayZone;
 
 class ReaderController extends Controller
 {
@@ -54,8 +55,8 @@ class ReaderController extends Controller
     public function store(Request $request)
     {
         request()->validate([
-            'serial' => 'required|unique:gateways_table,serial',
-            'mac_addr' => 'required|string|min:12|max:12|unique:gateways_table,mac_addr',
+            'serial' => 'required|unique:gateways_table,serial, NULL,gateway_id,deleted_at,NULL',
+            'mac_addr' => 'required|string|min:12|max:12|unique:gateways_table,mac_addr, NULL,gateway_id,deleted_at,NULL',
         ], [], [
             'serial' => 'serial number',
             'mac_addr' => 'mac address',
@@ -101,8 +102,8 @@ class ReaderController extends Controller
     public function update(Request $request, Reader $reader)
     {
         request()->validate([
-            'serial' => 'required|unique:gateways_table,serial,'.$reader->gateway_id.',gateway_id',
-            'mac_addr' => 'required|string|min:12|max:12|unique:gateways_table,mac_addr,'.$reader->gateway_id.',gateway_id',
+            'serial' => 'required|unique:gateways_table,serial,'.$reader->gateway_id.',gateway_id, deleted_at,NULL',
+            'mac_addr' => 'required|string|min:12|max:12|unique:gateways_table,mac_addr,'.$reader->gateway_id.',gateway_id, deleted_at,NULL',
         ], [], [
             'serial' => 'serial number',
             'mac_addr' => 'mac address',
@@ -135,6 +136,12 @@ class ReaderController extends Controller
     {
         $ids = $request->gateways_id;
 
+        $gateways = Reader::whereIn('gateway_id', $ids)->get();
+        $gatewayMacs = $gateways->pluck('mac_addr');
+        $gatewayZones = GatewayZone::whereIn('mac_addr', $gatewayMacs)->get();
+        foreach($gatewayZones as $gatewayZone){
+            $gatewayZone->delete();
+        }
         Reader::destroy($ids);
 
         if(count($ids) > 1){
