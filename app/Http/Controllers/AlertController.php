@@ -140,9 +140,7 @@ class AlertController extends Controller
     {
         $ids = $request->alerts_id;
 
-        $alerts = Alert::find($ids)->whereNull('resolved_at')
-            ->with(['reader', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
-            ->get();
+        $alerts = Alert::find($ids)->whereNull('resolved_at');
         $user = User::find($request['user_id']);
 
         $resolved_at = Carbon::now();

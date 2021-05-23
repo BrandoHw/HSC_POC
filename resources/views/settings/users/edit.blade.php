@@ -147,6 +147,7 @@
         @endif
 
         @cannot('user-edit')
+            $('#resetPassword').prop('disabled', true);
             $('#f-name').prop('disabled', true);
             $('#l-name').prop('disabled', true);
             $('#username').prop('disabled', true);
