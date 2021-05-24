@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use App\GatewayZone;
 use App\Alert;
+use App\Tag;
 class GeneralController extends Controller
 {
     //
@@ -21,6 +22,17 @@ class GeneralController extends Controller
      
 
         // return Storage::disk('s3-resized')->url('resized-resident-1.jpg');
+     
+        $beacons = json_decode(json_encode(Tag::with(['staff', 'gateway', 'gateway.location'])->has('staff')->has('gateway')->get()));
+        $beacons_r = json_decode(json_encode(Tag::with(['resident', 'gateway', 'gateway.location'])->has('resident')->has('gateway')->get()));
+        
+        usort($beacons_r, function ($a, $b) {
+            return strcmp($a->resident->resident_fName, $b->resident->resident_fName);
+        });
+        $beacons = array_merge((array) $beacons, (array) $beacons_r);
+
+        return $beacons;
+
         //return Storage::disk('s3')->putFile('floor', $request[$image_id]);
         return $alerts = Alert::orderBy('alert_id', 'asc')->with(['reader', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])->get();
     

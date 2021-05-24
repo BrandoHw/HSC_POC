@@ -41,7 +41,8 @@ class Resident extends Model
         'beacon_id', 
         'resident_fName', 'resident_lName', 'resident_age', 
         'gender', 'wheelchair', 'walking_cane',
-        'x_value', 'y_value', 'z_value'
+        'x_value', 'y_value', 'z_value',
+        'image_url',
     ];
     /**
      * Get the tag that owns the resident

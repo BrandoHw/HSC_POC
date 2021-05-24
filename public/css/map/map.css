@@ -197,7 +197,7 @@ a[href], input[type='submit'], input[type='image'], label[for], select, button, 
   padding: 6px 12px;
   margin-left: -1px;
   line-height: 1.42857143;
-  color: #337ab7;
+  color: var(--iq-primary-dark);
   text-decoration: none;
   background-color: #fff;
   border: 1px solid #ddd;
@@ -231,8 +231,8 @@ a[href], input[type='submit'], input[type='image'], label[for], select, button, 
   z-index: 3;
   color: #fff;
   cursor: default;
-  background-color: #337ab7;
-  border-color: #337ab7;
+  background-color:  var(--iq-primary-dark);
+  border-color:  var(--iq-primary-dark);
 }
 .pagination > .disabled > span,
 .pagination > .disabled > span:hover,

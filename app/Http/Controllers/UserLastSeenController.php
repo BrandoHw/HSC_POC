@@ -25,6 +25,11 @@ class UserLastSeenController extends Controller
 
         $beacons = json_decode(json_encode(Tag::with(['staff', 'gateway', 'gateway.location'])->has('staff')->has('gateway')->get()));
         $beacons_r = json_decode(json_encode(Tag::with(['resident', 'gateway', 'gateway.location'])->has('resident')->has('gateway')->get()));
+        
+        usort($beacons_r, function ($a, $b) {
+            return strcmp($a->resident->resident_fName, $b->resident->resident_fName);
+        });
+
         $beacons = array_merge((array) $beacons, (array) $beacons_r);
 
 
@@ -37,6 +42,8 @@ class UserLastSeenController extends Controller
                 $userRunningCount[$user->gateway->mac_addr] = 0;
             };
         }
+
+      
         foreach ($userCount as  $key => $value){
             if ($value >= $threshold){
                 $userRunningCount[$key] = $value;
@@ -168,8 +175,12 @@ class UserLastSeenController extends Controller
 
         $beacons = json_decode(json_encode(Tag::with(['staff', 'gateway', 'gateway.location'])->has('staff')->has('gateway')->get()));
         $beacons_r = json_decode(json_encode(Tag::with(['resident', 'gateway', 'gateway.location'])->has('resident')->has('gateway')->get()));
-        $beacons = array_merge((array) $beacons, (array) $beacons_r);
+        
+        usort($beacons_r, function ($a, $b) {
+            return strcmp($a->resident->resident_fName, $b->resident->resident_fName);
+        });
 
+        $beacons = array_merge((array) $beacons, (array) $beacons_r);
 
         foreach ($beacons as $user){
             $user->updated_at = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');

@@ -250,12 +250,12 @@ class AlertController extends Controller
                 $alert->full_name = $alert->tag->resident->resident_fName." ".$alert->tag->resident->resident_lName;
                 $alert->duration = Carbon::parse($alert->occured_at)->diffForHumans();
                 $alert->image_url = null;
-                if (Storage::disk('s3-resized')->exists('resized'.'-'.'resident'.'-'.$alert->tag->resident->resident_id.'.jpg')) {
-                    $alert->image_url = Storage::disk('s3-resized')->url('resized'.'-'.'resident'.'-'.$alert->tag->resident->resident_id.'.jpg');
-                }else if (Storage::disk('s3-resized')->exists('resized'.'-'.'resident'.'-'.$alert->tag->resident->resident_id.'.jpeg')) {
-                    $alert->image_url = Storage::disk('s3-resized')->url('resized'.'-'.'resident'.'-'.$alert->tag->resident->resident_id.'.jpeg');
-                }else if (Storage::disk('s3-resized')->exists('resized'.'-'.'resident'.'-'.$alert->tag->resident->resident_id.'.png')) {
-                    $alert->image_url = Storage::disk('s3-resized')->url('resized'.'-'.'resident'.'-'.$alert->tag->resident->resident_id.'.png');
+                if (Storage::disk('s3-resized')->exists('resized-residents'.'/'.'resident'.'-'.$alert->tag->resident->resident_id.'.jpg')) {
+                    $alert->image_url = Storage::disk('s3-resized')->url('resized-residents'.'/'.'resident'.'-'.$alert->tag->resident->resident_id.'.jpg');
+                }else if (Storage::disk('s3-resized')->exists('resized-residents'.'/'.'resident'.'-'.$alert->tag->resident->resident_id.'.jpeg')) {
+                    $alert->image_url = Storage::disk('s3-resized')->url('resized-residents'.'/'.'resident'.'-'.$alert->tag->resident->resident_id.'.jpeg');
+                }else if (Storage::disk('s3-resized')->exists('resized-residents'.'/'.'resident'.'-'.$alert->tag->resident->resident_id.'.png')) {
+                    $alert->image_url = Storage::disk('s3-resized')->url('resized-residents'.'/'.'resident'.'-'.$alert->tag->resident->resident_id.'.png');
                 }
             }
 

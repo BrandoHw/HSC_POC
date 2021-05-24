@@ -45,7 +45,7 @@ function addTooltip(data, drawnLayers, gatewayZones, max_count, current_count, d
 
       var Icon = L.icon({
         iconUrl: imageUrl + "/redmarker.png", //IconSizeFinder
-        iconSize: [20,15],
+        iconSize: [20,25],
         className: 'blinking'
         });
 
@@ -56,7 +56,7 @@ function addTooltip(data, drawnLayers, gatewayZones, max_count, current_count, d
         string = max_count.toString().concat(" People in this location");
         Icon = L.icon({
           iconUrl: imageUrl + "/orangemarker.png", //IconSizeFinder
-          iconSize: [18,18],
+          iconSize: [25,30],
           className: 'blinking'
         });
         latv = -30;
@@ -204,7 +204,7 @@ function drawUserLocation(data, drawnLayers, gatewayZones, floorIndex, redIcon){
 
   var redIcon = L.icon({
     iconUrl: imageUrl + "/redmarker.png",
-    iconSize: [20,20], //IconSizeFinder
+    iconSize: [30,30], //IconSizeFinder
     className: 'blinking'
   });
 

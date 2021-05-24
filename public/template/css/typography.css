@@ -237,7 +237,14 @@ Custom Background Color
 /*----------------------------------------------
 Background Color Opacity
 ------------------------------------------------*/
-.iq-bg-primary { background: rgba(130, 122, 243, 0.2); background: -moz-linear-gradient(left, rgba(130, 122, 243, 0.2) 0%, rgba(180, 122, 243, 0.2) 100%); background: -webkit-gradient(left top, right top, color-stop(0%, rgba(130, 122, 243, 0.2)), color-stop(100%, rgba(180, 122, 243, 0.2))); background: -webkit-linear-gradient(left, rgba(130, 122, 243, 0.2) 0%, rgba(180, 122, 243, 0.2) 100%); background: -o-linear-gradient(left, rgba(130, 122, 243, 0.2) 0%, rgba(180, 122, 243, 0.2) 100%); background: -ms-linear-gradient(left, rgba(130, 122, 243, 0.2) 0%, rgba(180, 122, 243, 0.2) 100%); background: linear-gradient(to right, rgba(130, 122, 243, 0.2) 0%, rgba(180, 122, 243, 0.2) 100%); filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='var(--iq-primary)', endColorstr='var(--iq-primary-light)', GradientType=1); color: var(--iq-primary) !important; }
+.iq-bg-primary { background: rgba(122, 219, 243, 0.2); 
+  background: -moz-linear-gradient(left, rgba(122, 219, 243, 0.2) 0%, rgba(122, 209, 243, 0.2) 100%); 
+  background: -webkit-gradient(left top, right top, color-stop(0%, rgba(122, 219, 243, 0.2)), color-stop(100%, rgba(122, 209, 243, 0.2))); 
+  background: -webkit-linear-gradient(left, rgba(122, 219, 243, 0.2) 0%, rgba(122, 209, 243, 0.2) 100%); 
+  background: -o-linear-gradient(left, rgba(122, 219, 243, 0.2) 0%, rgba(122, 209, 243, 0.2) 100%); 
+  background: -ms-linear-gradient(left, rgba(122, 219, 243, 0.2) 0%, rgba(122, 209, 243, 0.2) 100%); 
+  background: linear-gradient(to right, rgba(122, 219, 243, 0.2) 0%, rgba(122, 209, 243, 0.2) 100%); 
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='var(--iq-primary)', endColorstr='var(--iq-primary-light)', GradientType=1); color: var(--iq-primary) !important; }
 .iq-bg-secondary { background: var(--iq-light-secondary) !important; color: var(--iq-secondary) !important; }
 .iq-bg-success { background: var(--iq-light-success) !important; color: var(--iq-success) !important; }
 .iq-bg-danger { background: var(--iq-light-danger) !important; color: var(--iq-danger) !important; }
@@ -300,6 +307,7 @@ Avatar Size
 .avatar-35 { height: 35px; width: 35px; line-height: 35px; font-size: 0.5rem; }
 .avatar-30 { height: 30px; width: 30px; line-height: 30px; font-size: 0.4rem; }
 .avatar-40 { height: 40px; width: 40px; line-height: 40px; font-size: 0.6rem; }
+.avatar-40-wide { height: 40px; width: 50px; line-height: 40px; font-size: 0.6rem; }
 .avatar-45 { height: 45px; width: 45px; line-height: 45px; font-size: 0.8rem; }
 .avatar-50 { height: 50px; width: 50px; line-height: 50px; font-size: 1rem; }
 .avatar-60 { height: 60px; width: 60px; line-height: 60px; font-size: 1.2rem; }

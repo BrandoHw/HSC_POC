@@ -11,7 +11,7 @@
                     </div>
                 </div>
                 <div class="iq-card-body">
-                    {!! Form::open(['route' => 'residents.store','method'=>'POST']) !!}
+                    {!! Form::open(['route' => 'residents.store','method'=>'POST', 'enctype'=>"multipart/form-data"]) !!}
                     <div class=" row align-items-center">
                         <div class="form-group col-sm-6">
                             <label for="f-name">First Name:</label>
@@ -67,6 +67,11 @@
                                     </script>
                                 @enderror
                             </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label for="image-input" >Resident Profile Picture</label>
+                            <input id="image-input" type="file" class="form-control" name="image-input">
+                            <img src="#" alt = "" id="img-preview" width="200px" />   <!--for preview purpose -->
                         </div>
                     </div>
                     <div class="text-center mt-5">
@@ -149,6 +154,21 @@
             }
             $('#tag').val('').trigger('change');
         })
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#img-preview').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $('#image-input').change(function(){
+        readURL(this);
+    });
 
     </script>
 @endsection

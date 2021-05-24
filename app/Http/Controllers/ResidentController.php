@@ -6,7 +6,7 @@ use App\Http\Requests\ResidentRequest;
 use App\Resident;
 use App\Tag;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Storage;
 class ResidentController extends Controller
 {
     function __construct()
@@ -24,6 +24,10 @@ class ResidentController extends Controller
     public function index()
     {
         $residents = Resident::orderBy('resident_id', 'asc')->with('tag')->get();
+
+        foreach($residents as $resident){
+            $resident->resized_url = Storage::disk('s3-resized')->url("resized-".$resident->image_url);
+        }
         return view('residents.index', compact('residents'));
     }
 
@@ -52,15 +56,31 @@ class ResidentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ResidentRequest $request)
+    public function store(Request $request)
     {
+        
         $resident = Resident::create($request->all());
 
         if(!empty($request['beacon_id'])){
             $tag = Tag::find($request['beacon_id']);
             $resident->tag()->associate($tag)->save();
         }
-
+        $image_id = "image-input";
+        $extension = $request[$image_id]->extension();
+        $filename = "resident-".$resident->resident_id.".".$extension;
+        if ($request->hasFile($image_id)) {
+            if ($request->file($image_id)->isValid()) {
+                $validated = $request->validate([
+                    'image' => 'mimes:jpeg,png|max:16384',
+                ]);
+                $image_url = Storage::disk('s3')->putFileAs(
+                'residents', $request->file('image-input'), $filename,
+                );
+                $resident->update(['image_url' => $image_url]);
+            }
+        }
+      
+        
         return redirect()->route('residents.index')
             ->with('success', $resident->full_name.' updated successfully.');
     }
@@ -120,6 +140,21 @@ class ResidentController extends Controller
         if(!empty($request['beacon_id'])){
             $tag = Tag::find($request['beacon_id']);
             $tag->resident()->save($resident);
+        }
+
+        $image_id = "image-input";
+        $extension = $request[$image_id]->extension();
+        $filename = "resident-".$resident->resident_id.".".$extension;
+        if ($request->hasFile($image_id)) {
+            if ($request->file($image_id)->isValid()) {
+                $validated = $request->validate([
+                    'image' => 'mimes:jpeg,png|max:16384',
+                ]);
+                $image_url = Storage::disk('s3')->putFileAs(
+                'residents', $request->file('image-input'), $filename,
+                );
+                $resident->update(['image_url' => $image_url]);
+            }
         }
 
         return redirect()->route('residents.index')
