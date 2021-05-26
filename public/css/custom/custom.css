@@ -14,3 +14,11 @@
 .flatpickr-input[readonly] {
     cursor: not-allowed;
 }
+
+.custom-notyf {
+    font-size: 18px;
+}
+
+.notyf__icon {
+    font-size: 0;
+}

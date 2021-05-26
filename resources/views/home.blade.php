@@ -227,13 +227,12 @@
          </div>
       </div>
       <div class="chat-sidebar-channel scroller pl-3 pr-3" style="height:calc(100vh - 5rem)">
-         @if(count($alerts) < 1)
-            <div class="text-center align-middle" style="margin-top: 12rem">
-               <div data-icon="x" style="font-size: 85px" class="icon text-secondary" ></div>
-               <p>No Alert Right Now!</p>
-            </div>
-         @else
-            <ul class=" list-inline p-0 m-0" id="alert-all">
+         <div class="text-center align-middle" style="margin-top: 12rem" id="no-alert-div" {{ (count($alerts) < 1) ? "":"hidden"}}>
+            <div data-icon="x" style="font-size: 85px" class="icon text-secondary" ></div>
+            <p>No Alert Right Now!</p>
+         </div>
+         <ul class=" list-inline p-0 m-0" id="alert-all" {{ (count($alerts) >= 1) ? "":"hidden"}}>
+            @if(count($alerts) >= 1)
                @foreach($alerts->groupBy('beacon_id') as $alerts_person)
                   @php($person = $alerts_person->first()->tag->resident ? $alerts_person->first()->tag->resident: $alerts_person->first()->tag->user)
                   <li class="mb-3 sell-list border-info rounded" id="main-group-{{ $person->tag->beacon_id }}">
@@ -299,10 +298,9 @@
                            @endforeach
                      </ul>
                   </li>
-                  
                @endforeach
-            </ul>
-         @endif
+            @endif
+         </ul>
       </div>
    </div>
 </div>
@@ -312,12 +310,12 @@
 @section('script')
 <script>
    let last = @json($alerts_last);
-   // let last = 3124;
+   
    $(function(){
       $('#body').addClass(['sidebar-main-active', 'right-column-fixed', 'header-top-bgcolor']);
 
       let timer = setInterval(getNewAlerts, 30000);
-      // getNewAlerts();
+      let timer_diff = setInterval(updateTimeDiff, 60000);
    });
 
    $(document).on('click','.li-alert', function(){
@@ -340,6 +338,40 @@
       }
    })
 
+   function updateTimeDiff(){
+      if($('.time-diff em').length){
+         $('.time-diff em').each(function(){
+            let string = $(this).html().split(' ');
+            let minute = -1;
+            let hour = -1;
+
+            if(string.length >= 3){
+               hour = parseInt(string[0].split('h')[0]);
+               minute = parseInt(string[1].split('m')[0]);
+            } else {
+               minute = parseInt(string[0].split('m')[0]);
+            }
+            minute += 1;
+      
+            if(minute >= 60){
+               if(hour == -1){
+                  hour = 1;
+               } else {
+                  hour += 1;
+               }
+               minute = 0;
+            }
+      
+            let message = minute + "ms ago";
+      
+            if(hour > 0){
+               message = hour + "hrs " + message;
+            }
+            $(this).html(message);
+         })
+      }
+   }
+
    function getNewAlerts(){
       let refresh_btn = $('#refresh-alerts');
       refresh_btn.html('<i class="fa fa-custom fa-circle-o-notch fa-spin mr-0"></i>');
@@ -355,10 +387,17 @@
          type: "POST",
          data: result,
          success:function(response){
-               let errors = response['errors'];
-               if($.isEmptyObject(response['success'])){
-                  console.log(errors);
-               } else {
+            let errors = response['errors'];
+            if($.isEmptyObject(response['success'])){
+               console.log(errors);
+            } else {
+               if(response['alerts_num'] != 0){
+                  /* Check whether there is existing alerts */
+                  if($("#alert-all").is(":hidden")){
+                     $('#no-alert-div').prop('hidden', true);
+                     $('#alert-all').prop('hidden', false);
+                  }
+
                   let alerts_grouped = response['alerts_grouped'];
                   last = response['last_id'];
                   Object.keys(alerts_grouped).forEach(function(key){
@@ -373,7 +412,6 @@
                         let f_name = person['fName'] ?? person['resident_fName'];
                         let l_name = person['lName'] ?? person['resident_lName'];
                         let full_name = f_name + ' ' + l_name;
-
 
                         let new_alert_main = '<li class="mb-3 sell-list border-info rounded" id="main-group-'+ tag_id  +'">'
                         + '<div class="d-flex p-3 align-items-center alert-main">'
@@ -418,15 +456,17 @@
 
                      }
                   })
-                  notyf.success(response['success']);
-                  setTimeout(function() {
-                     refresh_btn.html('<i class="ri-refresh-line mr-0"></i>');
-                     refresh_btn.prop('disabled', false);
-                  }, 2000);
+                  notyf.open({
+                     type: 'warning',
+                     message: response['success'],
+                  });
                }
+               refresh_btn.html('<i class="ri-refresh-line mr-0"></i>');
+               refresh_btn.prop('disabled', false);
+            }
          },
          error:function(error){
-               console.log(error);
+            console.log(error);
          }
       });
    }

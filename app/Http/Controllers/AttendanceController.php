@@ -92,10 +92,7 @@ class AttendanceController extends Controller
         $date = $request['date'];
         $date_carbon = Carbon::parse($request['date'], 'Asia/Kuala_Lumpur');
         $now = Carbon::now();
-        $today = Carbon::now()->setTime(16,0,0);
-        if($today > $now){
-            $today = Carbon::now()->subDays(1)->setTime(16,0,0); // Set to Asia/Kuala_Lumpur 12:00;
-        }
+        $today = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');
 
         $start_time = Carbon::parse($policy->datetime_at_utc);
         $policy['absent'] = -1;
