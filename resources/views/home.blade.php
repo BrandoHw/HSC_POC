@@ -11,6 +11,9 @@
    .alert-resolve li a:hover { text-decoration: none; }
    .alert-ul li:hover .alert-resolve { right: 0; }
    .alert-main:hover .alert-resolve { right: 0; }
+   .ri-refresh-line { font-size: 20px; }
+   .fa-custom { font-size: 17px; margin-top: 5px}
+   .custom-btn { height: 40px; width: 40px; padding: 0; border-radius: 10px; }
 
 </style>
 @endsection
@@ -220,7 +223,7 @@
             <h4 class="card-title">Today's Alert</h4>
          </div>
          <div class="iq-card-header-toolbar d-flex align-items-center">
-            <button type="button" class="btn iq-bg-primary" id="refresh-alerts" onClick="getNewAlerts()"><i class="fa fa-refresh mr-0"></i></button>
+            <button type="button" class="btn custom-btn iq-bg-primary" id="refresh-alerts" onClick="getNewAlerts()"><i class="ri-refresh-line mr-0"></i></button>
          </div>
       </div>
       <div class="chat-sidebar-channel scroller pl-3 pr-3" style="height:calc(100vh - 5rem)">
@@ -339,7 +342,7 @@
 
    function getNewAlerts(){
       let refresh_btn = $('#refresh-alerts');
-      refresh_btn.html('<i class="fa fa-circle-o-notch fa-spin mr-0"></i>');
+      refresh_btn.html('<i class="fa fa-custom fa-circle-o-notch fa-spin mr-0"></i>');
       refresh_btn.prop('disabled', true);
 
       let result = {
@@ -417,7 +420,7 @@
                   })
                   notyf.success(response['success']);
                   setTimeout(function() {
-                     refresh_btn.html('<i class="fa fa-refresh mr-0"></i>');
+                     refresh_btn.html('<i class="ri-refresh-line mr-0"></i>');
                      refresh_btn.prop('disabled', false);
                   }, 2000);
                }
