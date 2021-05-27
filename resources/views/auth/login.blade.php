@@ -39,16 +39,26 @@
                 <div class="sign-in-detail text-white">
                     <a class="sign-in-logo mb-5" href="#"><img src="{{ asset('img/icons/wecare-white.png') }}" class="img-fluid" alt="logo"><span class="text-white h3"> WECare</span></a>
                     <div class="owl-carousel" data-autoplay="true" data-loop="true" data-nav="false" data-dots="true" data-items="1" data-items-laptop="1" data-items-tab="1" data-items-mobile="1" data-items-mobile-sm="1" data-margin="0">
-                        <div class="item d-flex justify-content-center">
-                            <img src="{{ asset('img/login/data.eps') }}" class="img-fluid mb-4 rounded-circle" style="width: 70% !important; height: 70%; !important" alt="logo">
-                            <!-- <h4 class="mb-1 text-white">Manage your orders</h4>
-                            <p>It is a long established fact that a reader will be distracted by the readable content.</p> -->
+                        <div class="item">
+                            <div class="d-flex justify-content-center">
+                                <img src="{{ asset('img/login/tracking.svg') }}" class="img-fluid mb-4 rounded-circle" style="width: 60% !important; height: 60%; !important" alt="logo">
+                            </div>
+                            <!-- <h4 class="mb-1 text-white">Tracking People</h4> -->
+                            <!-- <p>It is a long established fact that a reader will be distracted by the readable content.</p> -->
                         </div>
-                        <div class="item d-flex justify-content-center">
-                            <img src="{{ asset('img/login/data.eps') }}" class="img-fluid mb-4 rounded-circle" style="width: 70% !important; height: 70%; !important" alt="logo">
+                        <div class="item">
+                            <div class="d-flex justify-content-center">
+                                <img src="{{ asset('img/login/attendance.svg') }}" class="img-fluid mb-4 rounded-circle" style="width: 60% !important; height: 60%; !important" alt="logo">
+                            </div>
+                            <!-- <h4 class="mb-1 text-white">Manage Attendances</h4> -->
+                            <!-- <p>It is a long established fact that a reader will be distracted by the readable content.</p> -->
                         </div>
-                        <div class="item d-flex justify-content-center">
-                            <img src="{{ asset('img/login/data.eps') }}" class="img-fluid mb-4 rounded-circle" style="width: 70% !important; height: 70%; !important" alt="logo">
+                        <div class="item">
+                            <div class="d-flex justify-content-center">
+                                <img src="{{ asset('img/login/data.svg') }}" class="img-fluid mb-4 rounded-circle" style="width: 60% !important; height: 60%; !important" alt="logo">
+                            </div>
+                            <!-- <h4 class="mb-1 text-white">Manage Profiles</h4> -->
+                            <!-- <p>It is a long established fact that a reader will be distracted by the readable content.</p> -->
                         </div>
                     </div>
                 </div>
