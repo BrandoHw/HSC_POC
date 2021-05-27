@@ -30,7 +30,6 @@
                             @enderror
                         </div>
                         <div class="d-inline-block w-100">
-                            <a href="{{ route('password.request') }}" class="float-left">Forgot password?</a>
                             <button type="submit" class="btn btn-primary float-right">Sign in</button>
                         </div>
                     </form>

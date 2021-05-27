@@ -49,7 +49,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Auth::routes(['register' => false]);
+Auth::routes(['register' => false, 'reset' => false]);
 
 
 Route::group(['middleware' => ['auth']], function() { 
