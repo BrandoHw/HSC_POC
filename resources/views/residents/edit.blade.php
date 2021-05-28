@@ -171,6 +171,12 @@
             $('#gender').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');
             @enderror
 
+            @error('contact_relationship')
+            message = @json($message);
+            $('#relationship').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
+            $('#relationship').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');
+            @enderror
+
             @error('beacon_id')
             message = @json($message);
             $('#tag').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
