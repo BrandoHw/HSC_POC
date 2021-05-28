@@ -69,6 +69,46 @@
                                 </div>
                             </div>
                         </div>
+                        <hr>
+                        <p class="iq-bg-primary pl-3 pr-3 pt-2 pb-2 rounded">Emergency Contact Person</p>
+                        <div class=" row align-items-center">
+                            <div class="form-group col-sm-6">
+                                <label for="name">Name:</label>
+                                {!! Form::text('contact_name', null, ['class' => "form-control", 'id' => 'name', 'placeholder' => 'Enter name']) !!}
+                                @error('contact_name')
+                                    <script>$('#name').addClass('is-invalid');</script>
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="realtionship">Relationship:</label>
+                                {!! Form::select('contact_relationship', $relationship, $resident->contact_relationship, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'relationship']) !!}
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="phone-num-1">Phone Number 1:</label>
+                                {!! Form::text('contact_phone_num_1', null, ['class' => "form-control", 'id' => 'phone-num-1', 'placeholder' => 'Enter phone number']) !!}
+                                @error('contact_phone_num_1')
+                                    <script>$('#phone-num-1').addClass('is-invalid');</script>
+                                    <div class="invalid-feedback">{{ $message }}</div> 
+                                @enderror
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="phone-num-2">Phone Number 2:  <em class="text-secondary"><small>[Optional]</small></em></label>
+                                {!! Form::text('contact_phone_num_2', null, ['class' => "form-control", 'id' => 'phone-num-2', 'placeholder' => 'Enter phone number']) !!}
+                                @error('contact_phone_num_2')
+                                    <script>$('#phone-num-2').addClass('is-invalid');</script>
+                                    <div class="invalid-feedback">{{ $message }}</div> 
+                                @enderror
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="address">Address:</label>
+                                {!! Form::textarea('contact_address', null, ['class' => "form-control", 'size' => '30x5', 'id' => 'address', 'placeholder' => 'Enter address']) !!}
+                                @error('contact_address')
+                                    <script>$('#address').addClass('is-invalid');</script>
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
                         <div class="text-center mt-5">
                             @can('resident-edit')
                             <button type="submit" class="btn btn-primary">Update Resident</button>
@@ -90,6 +130,7 @@
 
             $('#gender').select2();
             $('#tag').select2();
+            $('#relationship').select2();
 
             @if($available)
                 @if(!empty($resident->tag))
@@ -128,6 +169,12 @@
             message = @json($message);
             $('#gender').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
             $('#gender').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');
+            @enderror
+
+            @error('contact_relationship')
+            message = @json($message);
+            $('#relationship').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
+            $('#relationship').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');
             @enderror
 
             @error('beacon_id')

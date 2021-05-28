@@ -87,7 +87,7 @@
         <script src="{{ asset('template/js/custom.js') }}"></script>
 
         <!-- Header Js -->
-        <!-- <script src="{{ asset('js/views/header/header.js')}}"></script> -->
+        <script src="{{ asset('js/views/header/header.js')}}"></script>
         <script>
             // Notyf Intial Setting
             var notyf = new Notyf({
