@@ -179,7 +179,6 @@ class AttendanceController extends Controller
             }
 
             $data = collect([
-                'id' => $target->beacon_id,
                 'name' => $full_name,
                 'type' => $type,
                 'attendance' => $attendance_badge,
