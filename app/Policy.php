@@ -300,4 +300,15 @@ class Policy extends Model
         $datetime->setTimezone('UTC');
         return $datetime->format('Y-m-d H:i:s');
     }
+
+    /**
+     * Convert updated_at to Asia/Kuala_Lumpur timezone.
+     *
+     * @return string
+     */
+    public function getTimeAtUtcAttribute()
+    {
+        $time = Carbon::parse($this->scope->start_time);
+        return $time->format('g:i A');;
+    }
 }

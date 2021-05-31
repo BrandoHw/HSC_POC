@@ -28,6 +28,10 @@ class ResidentRequest extends FormRequest
             'resident_lName' => 'required',
             'resident_age' => 'required',
             'gender' => 'required',
+            'contact_name' => 'required',
+            'contact_phone_num_1' => 'required',
+            'contact_address' => 'required',
+            'contact_relationship' => 'required',
         ];
 
         if($this->request->get('assign') == '1'){
@@ -48,6 +52,10 @@ class ResidentRequest extends FormRequest
             'resident_fName' => 'first name',
             'resident_fName' => 'last name',
             'resident_age' => 'age',
+            'contact_name' => 'name',
+            'contact_phone_num_1' => 'phone number',
+            'contact_address' => 'address',
+            'contact_relationship' => 'relationship',
         ];
 
         if($this->request->get('assign') == '1'){
@@ -66,6 +74,7 @@ class ResidentRequest extends FormRequest
     {
         $custom_messages = [
             'gender.required' => 'Please select the :attribute.',
+            'contact_relationship.required' => 'Please select the :attribute.',
         ];
 
         if($this->request->get('assign') == '1'){

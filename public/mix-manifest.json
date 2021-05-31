@@ -1,10 +1,6 @@
 {
-    "/js/amcharts.js": "/js/amcharts.js",
-    "/css/app.css": "/css/app.css",
     "/js/app.js": "/js/app.js",
-    "/js/jquery.js": "/js/jquery.js",
-    "/js/leaflet.js": "/js/leaflet.js",
-    "/js/notyf.js": "/js/notyf.js",
+    "/css/app.css": "/css/app.css",
     "/vendors~canvg.js": "/vendors~canvg.js",
     "/vendors~pdfmake.js": "/vendors~pdfmake.js",
     "/vendors~xlsx.js": "/vendors~xlsx.js",

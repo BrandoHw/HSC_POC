@@ -351,10 +351,11 @@ class AlertController extends Controller
         }
 
         return response()->json([
-            "success" => $alerts_num.' alerts returned',
+            "success" => $alerts_num.' New Alerts!',
             "alerts_grouped" => $alerts_grouped,
             "alerts_num" => $alerts_num,
-            "last_id" => $last_id
+            "last_id" => $last_id,
+            "today" => $today,
         ], 200);
         
     }

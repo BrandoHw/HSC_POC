@@ -47,7 +47,15 @@ class ResidentController extends Controller
             $available = false;
         }
         
-        return view('residents.create',compact('tagsNull', 'available'));
+        $relationship = [
+            "S" => "Spouse",
+            "P" => "Parent", 
+            "C" => "Children",
+            "R" => "Relative",
+            "O" => "Others"
+        ];
+        
+        return view('residents.create',compact('tagsNull', 'available', 'relationship'));
     }
 
     /**
@@ -118,7 +126,16 @@ class ResidentController extends Controller
         if($tagsNull->isEmpty()){
             $available = false;
         }
-        return view('residents.edit', compact('resident', 'tagsNull', 'current', 'available'));
+
+        $relationship = [
+            "S" => "Spouse",
+            "P" => "Parent", 
+            "C" => "Children",
+            "R" => "Relative",
+            "O" => "Others"
+        ];
+
+        return view('residents.edit', compact('resident', 'tagsNull', 'current', 'available', 'relationship'));
     }
 
     /**

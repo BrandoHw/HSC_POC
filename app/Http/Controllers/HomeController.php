@@ -67,7 +67,6 @@ class HomeController extends Controller
         //     ->get();
 
         $alerts = Alert::where('occured_at', '>=', $today)
-            ->where('alert_id', '<=', 3124)
             ->orderBy('occured_at', 'desc')
             ->with(['reader', 'reader.location', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
             ->get();

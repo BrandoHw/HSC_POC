@@ -96,6 +96,19 @@
                     x: 'center',
                     y: 'top',
                 },
+                types: [
+                    {
+                        type: 'warning',
+                        background: 'orange',
+                        icon: {
+                            className: 'fa fa-exclamation-triangle custom-notyf',
+                            tagName: 'i',
+                            color: 'white',
+                        },
+                        dismissible: true,
+                        duration: 0
+                    }
+                ]
             });
             
             // Datatable Default Setting

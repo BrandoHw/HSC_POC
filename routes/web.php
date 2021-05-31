@@ -49,7 +49,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Auth::routes(['register' => false]);
+Auth::routes(['register' => false, 'reset' => false]);
 
 
 Route::group(['middleware' => ['auth']], function() { 
@@ -98,6 +98,10 @@ Route::group(['middleware' => ['auth']], function() {
     
     Route::resource('attendance', AttendanceController::class)
         ->only(['index', 'destroy']);
+    Route::get('attendance/date', [AttendanceController::class, 'show_date'])
+        ->name('attendance.date');
+    Route::get('attendance/badge', [AttendanceController::class, 'show_badge'])
+        ->name('attendance.badge');
 
     Route::resource('policies', PolicyController::class)
         ->name('*', 'policies')

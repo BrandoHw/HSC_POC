@@ -32,8 +32,16 @@ import "./modules/notyf";
 import "./modules/stepper";
 
 // Leaflet
-// require('leaflet');
-// require('leaflet-draw');
+import "./modules/leaflet";
+
+// AmCharts
+import "./modules/amcharts";
+
+// PDFMake
+import "./modules/pdfmake";
+
+// JSZip
+import "./modules/jszip";
 
 //List
 import List from "list.js";
