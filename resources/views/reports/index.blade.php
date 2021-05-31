@@ -43,6 +43,10 @@
                             <a class="nav-link" id="home-tab-two" 
                             data-toggle="tab" href="#tab-table2" role="tab" aria-controls="home" aria-selected="true">Gateways</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="home-tab-three" 
+                            data-toggle="tab" href="#tab-table3" role="tab" aria-controls="home" aria-selected="true">Residents</a>
+                        </li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab-table1">
@@ -101,6 +105,42 @@
                                                         {{ ($gateway->online == true) ? 'Online':'Offline'  }}
                                                     </span>
                                                 </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table> 
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab-table3">
+                            <div class="table-responsive" style="margin-top: 15px">
+                                <table class="table table-stripe table-bordered hover" id="residentTable">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Full Name</th>
+                                            <th scope="col">DoB</th>
+                                            <th scope="col">Age</th>
+                                            <th scope="col">Gender</th>
+                                            <th scope="col">Wheelchair</th>
+                                            <th scope="col">Walking Cane</th>
+                                            <th scope="col">Contact Name</th>
+                                            <th scope="col">Contact Phone Numbers</th>
+                                            <th scope="col">Contact Address</th>
+                                            <th scope="col">Contact Relationship</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($residents as $resident)
+                                            <tr>
+                                                <td>{{ $resident->full_name}}</td>
+                                                <td>{{ $resident->resident_dob}}</td>
+                                                <td>{{ $resident->age}}</td>
+                                                <td>{{ $resident->gender ?? "-" }}</td>
+                                                <td class='info align-middle'>{{ ($resident->wheelchair) ? "Yes":"No" }}</td>
+                                                <td class='info align-middle'>{{ ($resident->walking_cane) ? "Yes":"No" }}</td>
+                                                <td>{{ $resident->contact_name ?? "-" }}</td>
+                                                <td>{{ $resident->contact_numbers ?? "-" }}</td>
+                                                <td>{{ $resident->contact_address ?? "-" }}</td>
+                                                <td>{{ $resident->contact_relationship ?? "-" }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -182,11 +222,17 @@
 
         if (e.target.id === "home-tab-one"){
             $('#selHolder').show();
+            $('#draw-btn').show();
             tab = "home-tab-one";
             console.log($('#selCategory').select2('data')[0]);
         }else if (e.target.id === "home-tab-two"){
             $('#selHolder').hide();
+            $('#draw-btn').show();
             tab = "home-tab-two";
+        }else if (e.target.id === "home-tab-three"){
+            $('#selHolder').hide();
+            $('#draw-btn').hide();
+            tab = "home-tab-three";
         }
     });
 
@@ -216,7 +262,7 @@
             "<'row'<'col-sm-12 col-md-5'li><'col-sm-12 col-md-7'p>>",
         buttons: [{
             extend: 'excelHtml5',
-            title: 'Data export alerts',
+            title: 'Data export Alerts',
             }
         ],
         order: [[0, 'asc']],
@@ -245,7 +291,7 @@
             "<'row'<'col-sm-12 col-md-5'li><'col-sm-12 col-md-7'p>>",
         buttons: [{
             extend: 'excelHtml5',
-            title: 'Data export gateways',
+            title: 'Data export Gateways',
             },
         ],
         columnDefs: [{
@@ -253,8 +299,23 @@
         }],
         pageLength: 15,
         order: [[0, 'desc']],
-        // orderCellsTop: true,
-        // fixedHeader: true,
+    });
+
+    
+    var residentTable = $('#residentTable').DataTable({
+        dom: "<'row'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6'>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-12 col-md-5'li><'col-sm-12 col-md-7'p>>",
+        buttons: [{
+            extend: 'excelHtml5',
+            title: 'Data export Residents',
+            },
+        ],
+        columnDefs: [{
+            orderable: false,
+        }],
+        pageLength: 15,
+        order: [[0, 'desc']],
     });
 
     var series;
@@ -310,8 +371,17 @@
             pie_chart.series.removeIndex(
                 pie_chart.series.indexOf(series)
             ).dispose();
-            series = pie_chart.series.push(new am4charts.PieSeries());
+            series = pie_chart.series.push(new am4charts.series());
             series.dataFields.value = "count";
+            series.slices.template.stroke = am4core.color("#fff");
+            series.slices.template.strokeWidth = 2;
+            series.slices.template.strokeOpacity = 1;
+
+            // This creates initial animation
+            series.hiddenState.properties.opacity = 1;
+            series.hiddenState.properties.endAngle = -90;
+            series.hiddenState.properties.startAngle = -90;
+
             var count = 0;
                 var length = gateways.length;
                 for (i=0; i<length; i++){
@@ -328,6 +398,7 @@
                 pie_chart.data = counts_gateways_data;
                 $('#chart-title').text('Gateway Status')
                 $('#chart-info').hide();
+
         }else if (counts_policy_type_data.length != 0){
             var text = "<b>Most Frequent Alert Type</b>: ".concat(counts_policy_type_data[0]["Policy Type"], "<br>",
                         "<b>Most Frequent Subject</b>: ", counts_subject_data[0]["Subject"], "<br>",
@@ -344,7 +415,16 @@
 
             series = pie_chart.series.push(new am4charts.PieSeries());
             series.dataFields.value = "count";
+            series.slices.template.stroke = am4core.color("#fff");
+            series.slices.template.strokeWidth = 2;
+            series.slices.template.strokeOpacity = 1;
+
+            // This creates initial animation
+            series.hiddenState.properties.opacity = 1;
+            series.hiddenState.properties.endAngle = -90;
+            series.hiddenState.properties.startAngle = -90;
             
+
             switch ($('#selCategory').select2('data')[0].text){
             case "Policy Type":
                 series.dataFields.category = "Policy Type";

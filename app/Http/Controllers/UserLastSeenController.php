@@ -34,6 +34,7 @@ class UserLastSeenController extends Controller
 
 
         foreach ($beacons as $user){
+            $user->grey_marker = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->lt(Carbon::now()->subMinutes(5));
             $user->updated_at = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
             if (array_key_exists($user->gateway->mac_addr, $userCount)){
                 $userCount[$user->gateway->mac_addr] = $userCount[$user->gateway->mac_addr] + 1;
@@ -82,8 +83,7 @@ class UserLastSeenController extends Controller
     public function show($id)
     {
         //
-        $userLastSeen = UserLastSeen::where('id', '==' , $id)->get();
-        return $userLastSeen;
+     
     }
 
     /**
@@ -130,7 +130,10 @@ class UserLastSeenController extends Controller
         //
         $id = $request->input('id');
         $beacon = json_decode(json_encode(Tag::with(['resident', 'staff', 'gateway', 'gateway.location'])->where('beacon_id', $id)->get()));
+        $beacon[0]->grey_marker = Carbon::parse($beacon[0]->updated_at)->tz('Asia/Kuala_Lumpur')->lt(Carbon::now()->subMinutes(5));
         $beacon[0]->updated_at = Carbon::parse($beacon[0]->updated_at)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
+      
+
         return $beacon;
     }
 
@@ -183,6 +186,7 @@ class UserLastSeenController extends Controller
         $beacons = array_merge((array) $beacons, (array) $beacons_r);
 
         foreach ($beacons as $user){
+            $user->grey_marker = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->lt(Carbon::now()->subMinutes(5));
             $user->updated_at = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
             if (array_key_exists($user->gateway->mac_addr, $userCount)){
                 $userCount[$user->gateway->mac_addr] = $userCount[$user->gateway->mac_addr] + 1;

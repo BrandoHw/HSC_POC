@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Illuminate\Support\Carbon;
 class Resident extends Model
 {
     use HasFactory;
@@ -39,7 +39,7 @@ class Resident extends Model
      */
     protected $fillable = [
         'beacon_id', 
-        'resident_fName', 'resident_lName', 'resident_age', 
+        'resident_fName', 'resident_lName', 'resident_age', 'resident_dob',
         'gender', 'wheelchair', 'walking_cane',
         'x_value', 'y_value', 'z_value',
         'image_url',
@@ -64,5 +64,25 @@ class Resident extends Model
     public function getFullNameAttribute()
     {
         return ucfirst($this->resident_fName)." ".ucfirst($this->resident_lName);
+    }
+
+       /**
+     * Get the resident's age from date of birth
+     *
+     * @return int
+     */
+    public function getAgeAttribute()
+    {
+        return  Carbon::parse($this->resident_dob)->age;
+    }
+
+         /**
+     * Get the resident's age from date of birth
+     *
+     * @return string
+     */
+    public function getContactNumbersAttribute()
+    {
+        return $this->contact_phone_num_1."\n".$this->contact_phone_num_2;
     }
 }

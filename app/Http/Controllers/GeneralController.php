@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use App\GatewayZone;
 use App\Alert;
+use App\Resident;
 use App\Tag;
 class GeneralController extends Controller
 {
@@ -21,21 +22,30 @@ class GeneralController extends Controller
     
      
 
-        // return Storage::disk('s3-resized')->url('resized-resident-1.jpg');
-     
-        $beacons = json_decode(json_encode(Tag::with(['staff', 'gateway', 'gateway.location'])->has('staff')->has('gateway')->get()));
-        $beacons_r = json_decode(json_encode(Tag::with(['resident', 'gateway', 'gateway.location'])->has('resident')->has('gateway')->get()));
+        $id = 11;
+      
+        // $beacon = json_decode(json_encode(Tag::with(['resident', 'staff', 'gateway', 'gateway.location'])->where('beacon_id', $id)->get()));
+        // $beacon[0]->grey_marker2 = Carbon::parse($beacon[0]->updated_at)->lt(Carbon::now()->subMinutes(5));
+        // $beacon[0]->BBBBBB= $beacon[0]->updated_at;
+        // $beacon[0]->AAAAAA= Carbon::parse($beacon[0]->updated_at)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
+        // $beacon[0]->updated_at = Carbon::parse($beacon[0]->updated_at)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
+        // $beacon[0]->grey_marker = Carbon::parse($beacon[0]->updated_at)->tz('UTC')->lt(Carbon::now()->subMinutes(5));
+        // $beacon[0]->atest = Carbon::parse($beacon[0]->updated_at)->timezone('UTC');
+        // $beacon[0]->atest2 = Carbon::now()->timezone('Europe/Stockholm');
+        // $beacon[0]->atest3 = Carbon::now();
         
-        usort($beacons_r, function ($a, $b) {
-            return strcmp($a->resident->resident_fName, $b->resident->resident_fName);
-        });
-        $beacons = array_merge((array) $beacons, (array) $beacons_r);
+        //                    // UTC
+        // $beacon[0]->first = Carbon::create(2012, 9, 5, 23, 26, 11);
+        // $beacon[0]->second = Carbon::create(2012, 9, 5, 20, 26, 11)->timezone('Asia/Kuala_Lumpur');                           // America/Vancouver
 
-        return $beacons;
+        // $beacon[0]->first->setDateTime(2012, 1, 1, 10, 0, 0); //10am
+        // $beacon[0]->second->setDateTime(2012, 1, 1, 10, 0, 0)->timezone('Asia/Kuala_Lumpur'); //  2am
+        // $beacon[0]->third = $beacon[0]->first->lessThan($beacon[0]->second);
+        // $beacon[0]->atest4 = $beacon[0]->second->timezone;
 
-        //return Storage::disk('s3')->putFile('floor', $request[$image_id]);
-        return $alerts = Alert::orderBy('alert_id', 'asc')->with(['reader', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])->get();
-    
+        $resident = Resident::find(11);
+        $resident_dob = $resident->age;
+        return $resident_dob;
         //return view('test.test');
     }
 

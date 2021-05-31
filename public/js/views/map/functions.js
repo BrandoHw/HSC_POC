@@ -44,7 +44,7 @@ function addTooltip(data, drawnLayers, gatewayZones, max_count, current_count, d
       lngv = lngArray[userCount%3];
 
       var Icon = L.icon({
-        iconUrl: imageUrl + "/redmarker.png", //IconSizeFinder
+        iconUrl: imageUrl + "/redmarker.png", 
         iconSize: [20,25],
         className: 'blinking'
         });
@@ -55,11 +55,17 @@ function addTooltip(data, drawnLayers, gatewayZones, max_count, current_count, d
       if (isBigMarker){
         string = max_count.toString().concat(" People in this location");
         Icon = L.icon({
-          iconUrl: imageUrl + "/orangemarker.png", //IconSizeFinder
+          iconUrl: imageUrl + "/redmarkermulti.png", 
           iconSize: [25,30],
           className: 'blinking'
         });
         latv = -30;
+      }else if (data.grey_marker){
+        Icon = L.icon({
+          iconUrl: imageUrl + "/greymarker.png", //Icon Size 
+          iconSize: [20,25],
+          className: 'blinking'
+          });
       }
       var x= Number(result.geoJson.marker.lng);
       var y= Number(result.geoJson.marker.lat);
@@ -202,14 +208,22 @@ function drawZones(gatewayZones, drawnLayers, btIcon){
 
 function drawUserLocation(data, drawnLayers, gatewayZones, floorIndex, redIcon){
 
-  var redIcon = L.icon({
-    iconUrl: imageUrl + "/redmarker.png",
-    iconSize: [30,30], //IconSizeFinder
-    className: 'blinking'
-  });
-
+  var Icon;
   //Look for drawn zone that corresponds to the tag mac
   data = data[0];
+  if (data.grey_marker){
+    Icon = L.icon({
+      iconUrl: imageUrl + "/greymarker.png", //Icon Size 
+      iconSize: [20,25],
+      className: 'blinking'
+      });
+  }else{
+    Icon = L.icon({
+      iconUrl: imageUrl + "/redmarker.png",
+      iconSize: [20,25], //IconSizeFinder
+      className: 'blinking'
+    });
+  }
   console.log(data);
   console.log(data.hasOwnProperty('resident'));
   var mac_addr = data.gateway.mac_addr;
@@ -238,7 +252,7 @@ function drawUserLocation(data, drawnLayers, gatewayZones, floorIndex, redIcon){
                                         "<br> <b>Last Seen</b>: ", last_seen);
     var x= Number(result.geoJson.marker.lng);
     var y= Number(result.geoJson.marker.lat);
-    var marker = L.marker({lng: x,lat: (y+25)}, {icon: redIcon}).bindPopup(
+    var marker = L.marker({lng: x,lat: (y+25)}, {icon: Icon}).bindPopup(
       string
     );
 

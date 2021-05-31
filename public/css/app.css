@@ -16876,5 +16876,9 @@ body.tempusdominus-bootstrap-datetimepicker-widget-day-click {
   border-color: #5897fb;
 }
 
+.caret-hidden {
+  caret-color: transparent;
+}
+
 
 

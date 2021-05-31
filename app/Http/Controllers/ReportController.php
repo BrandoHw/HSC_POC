@@ -6,6 +6,7 @@ use App\Alert;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Reader;
+use App\Resident;
 
 class ReportController extends Controller
 {
@@ -40,7 +41,9 @@ class ReportController extends Controller
                 $reader->online = false;
             }
         }
-        return view('reports.index', compact('alerts', 'gateways'));
+
+        $residents = Resident::get();
+        return view('reports.index', compact('alerts', 'gateways', 'residents'));
     }
 
     /**
