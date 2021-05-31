@@ -78,7 +78,7 @@
                             <ul>
                                 <li></li>
                                 <li class="button" data-toggle="tooltip" data-placement="top" title="Reload"><a href="#" id="refresh-attendance" onClick="reloadTableData()"><i class="ri-refresh-line"></i></a></li>
-                                <li data-toggle="tooltip" data-placement="top" title="Download"><a href="#"><i class="ri-download-line"></i></a></li>
+                                <li class="button" data-toggle="tooltip" data-placement="top" title="Download"><a href="#" id="export-btn" onClick="exportTableData()"><i class="ri-download-line"></i></a></li>
                             </ul>
                             
                         </div>
@@ -130,7 +130,7 @@
             }
         );
 
-        let timer = setInterval(reloadTableData, 30000);
+        // let timer = setInterval(reloadTableData, 30000);
     })
 
     @foreach($attendance_policies as $policy)
@@ -154,6 +154,9 @@
             {data: 'detected_at'},
         ],
         order: [[3, 'asc']],
+        buttons: [
+            { extend: 'csv'}
+        ]
     });
     @endforeach
 
@@ -181,6 +184,16 @@
             @endforeach
         }
     })
+
+    function exportTableData(){
+        table_26.button('.buttons-csv').trigger();
+        console.log('button clicked');
+    }
+
+    // $('#export-btn').on('click', function(){
+    //     table_26.button('.buttons-csv').trigger();
+    //     console.log('click event');
+    // })
 
     function reloadTableData(){
         console.log('reload');

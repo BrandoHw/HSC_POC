@@ -1,11 +1,11 @@
-<html>
-  <head>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
-  </head>
-  <body>
-    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-  </body>
-</html>
+<!-- <html> -->
+  <!-- <head> -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css"> -->
+  <!-- </head> -->
+  <!-- <body> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script> -->
+  <!-- </body> -->
+<!-- </html> -->
 
 @if(session()->has('success'))
     <div class="alert alert-success">

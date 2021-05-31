@@ -32,8 +32,10 @@ import "./modules/notyf";
 import "./modules/stepper";
 
 // Leaflet
-// require('leaflet');
-// require('leaflet-draw');
+import "./modules/leaflet";
+
+// AmCharts
+import "./modules/amcharts";
 
 //List
 import List from "list.js";

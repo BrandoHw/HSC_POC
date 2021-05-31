@@ -5,8 +5,8 @@
     <link href="{{ asset('css/map/leaflet.draw.css') }}" rel="stylesheet">
     <link href="{{ asset('css/map/map.css') }}" rel="stylesheet">
     <script src="{{ asset('js/views/map/functions.js')}}"></script>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="{{ asset('js/leaflet.js') }}"></script>
+    <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> -->
+    <!-- <script src="{{ asset('js/leaflet.js') }}"></script> -->
     <script src="{{ asset('js/views/map/edit_functions.js')}}"></script>
 @endsection
 @section('content')

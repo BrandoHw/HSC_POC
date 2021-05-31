@@ -3855,7 +3855,6 @@ When it's NOT activated, the fc-button classes won't even be in the DOM.
 .fc .fc-scrollgrid-section-sticky > * {
     background: #fff;
     background: var(--fc-page-bg-color, #fff);
-    position: -webkit-sticky;
     position: sticky;
     z-index: 2; /* TODO: var */
     /* TODO: box-shadow when sticking */
@@ -3872,7 +3871,6 @@ When it's NOT activated, the fc-button classes won't even be in the DOM.
     margin-bottom: -1px;
   }
 .fc-sticky { /* no .fc wrap because used as child of body */
-  position: -webkit-sticky;
   position: sticky;
 }
 .fc .fc-view-harness {
@@ -4424,7 +4422,6 @@ A HORIZONTAL event
     border-right: 0;
   }
 .fc .fc-list-sticky .fc-list-day > * { /* the cells */
-      position: -webkit-sticky;
       position: sticky;
       top: 0;
       background: #fff;
@@ -13168,7 +13165,6 @@ button.bg-dark:focus {
 }
 
 .position-sticky {
-  position: -webkit-sticky !important;
   position: sticky !important;
 }
 
@@ -13188,9 +13184,8 @@ button.bg-dark:focus {
   z-index: 1030;
 }
 
-@supports ((position: -webkit-sticky) or (position: sticky)) {
+@supports (position: sticky) {
   .sticky-top {
-    position: -webkit-sticky;
     position: sticky;
     top: 0;
     z-index: 1020;
@@ -16876,5 +16871,4 @@ body.tempusdominus-bootstrap-datetimepicker-widget-day-click {
   border-color: #5897fb;
 }
 
-
-
+/* (ignored) *//* (ignored) *//* (ignored) */

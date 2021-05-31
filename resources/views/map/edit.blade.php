@@ -4,7 +4,7 @@
     <link href="{{ asset('css/map/leaflet.css') }}" rel="stylesheet">
     <link href="{{ asset('css/map/leaflet.draw.css') }}" rel="stylesheet">
     <link href="{{ asset('css/map/map.css') }}" rel="stylesheet">
-    <script src="{{ asset('js/leaflet.js') }}"></script>
+    <!-- <script src="{{ asset('js/leaflet.js') }}"></script> -->
     <script src="{{ asset('js/views/map/functions.js')}}"></script>
     <script src="{{ asset('js/views/map/edit_functions.js')}}"></script>
 @endsection

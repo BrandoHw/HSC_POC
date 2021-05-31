@@ -18,10 +18,11 @@ mix.js('resources/js/app.js', 'public/js')
 
 mix.copy('node_modules/feather-icons/dist/icons', 'public/assets/svg/feather-icons');
 
-mix.js('resources/js/modules/notyf.js', 'public/js/notyf.js');
+/* Comment out because it is already included in the form of npm */
+// mix.js('resources/js/modules/notyf.js', 'public/js/notyf.js');
 
-mix.js('resources/js/modules/jquery.js', 'public/js/jquery.js');
+// mix.js('resources/js/modules/jquery.js', 'public/js/jquery.js');
 
-mix.js('resources/js/modules/leaflet.js', 'public/js/leaflet.js');
+// mix.js('resources/js/modules/leaflet.js', 'public/js/leaflet.js');
 
-mix.js('resources/js/modules/amcharts.js', 'public/js/amcharts.js');
+// mix.js('resources/js/modules/amcharts.js', 'public/js/amcharts.js');
