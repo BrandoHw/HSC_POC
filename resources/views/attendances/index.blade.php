@@ -171,7 +171,7 @@
                 defaultDate: "today"
             }
         );
-        // let timer = setInterval(reloadTableData, 30000);
+        let timer = setInterval(reloadTableData, 30000);
     })
 
     @foreach($attendance_policies as $policy)
