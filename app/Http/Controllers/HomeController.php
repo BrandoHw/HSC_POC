@@ -61,19 +61,14 @@ class HomeController extends Controller
         $floors = Floor::where('building_id', $id)->with('map')->orderBy('number', 'asc')->get();
 
         $today = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');
-        // $alerts = Alert::where('occured_at', '>=', $today)
-        //     ->orderBy('occured_at', 'desc')
-        //     ->with(['reader', 'reader.location', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
-        //     ->get();
 
         $alerts = Alert::where('occured_at', '>=', $today)
             ->orderBy('occured_at', 'desc')
             ->with(['reader', 'reader.location', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
             ->get();
       
-            
         $alerts_count = $alerts->count();
-        $alerts_last = Alert::orderBy('alert_id', 'desc')->first()->alert_id;
+        $alerts_last = Alert::orderBy('alert_id', 'desc')->first()->alert_id ?? 0;
 
         $policies_count = Policy::count();
         $readers_count = Reader::count();
