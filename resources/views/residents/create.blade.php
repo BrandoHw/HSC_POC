@@ -30,12 +30,17 @@
                             @enderror
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="age">Age:</label>
-                            {!! Form::number('resident_age', null, ['class' => "form-control", 'id' => 'age', 'min' => '1', 'max'=>'120', 'placeholder' => 'Enter age']) !!}
+                            <label for="dob">Date of Birth:</label>
+                            <div class="input-group date">
+                                {!! Form::text('resident_dob', null, ['class' => "form-control", 'id' => 'dob', 'style' => 'background-color: white', 'placeholder' => 'Please select...']) !!}
+                                <div class="input-group-append">
+                                    <div class="input-group-text"><i class="fa fa-calendar-o"></i></div>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group col-sm-6">
                             <label for="gender">Gender:</label>
-                            {!! Form::select('gender', ['M' => 'Male', 'F' => 'Female'], null, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'gender']) !!}
+                            {!! Form::select('resident_gender', ['M' => 'Male', 'F' => 'Female'], null, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'gender']) !!}
                         </div>
                         <div class="form-group col-sm-6">
                             <label>External Support:</label>
@@ -124,8 +129,10 @@
 @section('script')
     <script>
         $(function(){
-            $('#age').inputSpinner();
-
+            $('#dob').flatpickr({
+                maxDate: 'today'
+            });
+            
             $('#gender').select2();
             $('#tag').select2();
             $('#relationship').select2();
@@ -133,15 +140,17 @@
             /* Display select2 error */
             let message = "Error Message";
 
-            @error('resident_age')
+            @error('resident_dob')
             message = @json($message);
-            $('#age').addClass('is-invalid');
-            $('#age').siblings('.input-group').find('.input-group-prepend .btn').css('border-color', '#dc3545');
-            $('#age').siblings('.input-group').find('.input-group-append .btn').css('border-color', '#dc3545');
-            $('#age').siblings('.input-group').after('<div class="invalid-feedback">'+ message +'</div>');
+            $('#dob').addClass('is-invalid');
+            $('#dob').siblings('.input-group-append').css({
+                'border': '1px solid #dc3545',
+                'border-radius': '0 0.25rem 0.25rem 0',
+            });
+            $('#dob').siblings('.input-group-append').after('<div class="invalid-feedback">'+ message +'</div>');
             @enderror
             
-            @error('gender')
+            @error('resident_gender')
             message = @json($message);
             $('#gender').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
             $('#gender').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');

@@ -26,7 +26,7 @@
                                 <tr>
                                     <th scope="col" style="width:10%">#</th>
                                     <th scope="col">Name</th>
-                                    <th scope="col">Age</th>
+                                    <th scope="col">D.O.B.</th>
                                     <th scope="col">Gender</th>
                                     <th scope="col">Wheelchair</th>
                                     <th scope="col">Walking Cane</th>
@@ -38,8 +38,8 @@
                                     <tr id="resident-{{ $resident->resident_id }}" href="{{ route('residents.edit',$resident->resident_id) }}">
                                         <td class='align-middle'>{{ $resident->resident_id }}</td>
                                         <td class='info align-middle'><img class="rounded-circle img-fluid avatar-40" src="{{ asset('img/avatars/default-profile-m.jpg') }}" alt="profile"> {{ $resident->full_name }}</td>
-                                        <td class='info align-middle'>{{ $resident->resident_age }}</td>
-                                        <td class='info align-middle'>{{ $resident->gender ?? '-' }}</td>
+                                        <td class='info align-middle'>{{ $resident->resident_dob }}</td>
+                                        <td class='info align-middle'>{{ $resident->resident_gender ?? '-' }}</td>
                                         <td class='info align-middle'>{{ ($resident->wheelchair) ? "Yes":"No" }}</td>
                                         <td class='info align-middle'>{{ ($resident->walking_cane) ? "Yes":"No" }}</td>
                                         <td class='info align-middle'>{{ $resident->tag->beacon_mac ?? "-" }}</td>
