@@ -90,6 +90,7 @@ class PolicyController extends Controller
             case "5":
                 $params = ['geofence-option' => 'required|string'];
                 break;
+            case "4":
             case "6":
                 $params = [
                     'frequency' => 'required|string',
@@ -131,6 +132,7 @@ class PolicyController extends Controller
             case '5':
                 $add_on = ["geofence" => (int)$request['geofence-option']];
                 break;
+            case '4':
             case '6':
                 $add_on = [];
                 if((float)$request['x-value'] >= 0){
@@ -282,6 +284,7 @@ class PolicyController extends Controller
                 case "5":
                     $params = ['geofence-option' => 'required|string'];
                     break;
+                case "4":
                 case "6":
                     $params = [
                         'frequency' => 'required|string',
@@ -331,9 +334,10 @@ class PolicyController extends Controller
                 case '5':
                     $data['geofence'] = (int)$request['geofence-option'];
                     break;
+                case '4':
                 case '6':
                     if((float)$request['x-value'] >= 0){
-                        $data['x_frequency'] = (float)$request['x-value'];
+                        $data['x_threshold'] = (float)$request['x-value'];
                         $data['x_frequency'] = (int)$request['frequency'];
                     }
                     if((float)$request['y-value'] >= 0){

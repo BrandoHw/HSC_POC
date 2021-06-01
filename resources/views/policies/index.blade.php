@@ -48,16 +48,16 @@
                                                     < {{ $policy->battery_threshold }}%
                                                     @break
                                                 @case(3)
-                                                @case(4)
                                                     -
                                                     @break  
                                                 @case(5)
                                                     {{ ($policy->geofence) ? 'Entering Zone':'Leaving Zone' }}
                                                     @break  
+                                                @case(4)
                                                 @case(6)
-                                                    x-axis: {{ ($policy->x_threshold) ?:'-' }}<br>
-                                                    y-axis: {{ ($policy->y_threshold) ?:'-' }}<br>
-                                                    z-axis: {{ ($policy->z_threshold) ?:'-' }}
+                                                    x-axis: {{ ($policy->x_threshold) ? number_format($policy->x_threshold, 1, '.', ','):'-' }}<br>
+                                                    y-axis: {{ ($policy->y_threshold) ? number_format($policy->y_threshold, 1, '.', ','):'-' }}<br>
+                                                    z-axis: {{ ($policy->z_threshold) ? number_format($policy->z_threshold, 1, '.', ','):'-' }}
                                                     @break  
                                             @endswitch
                                         </td>
