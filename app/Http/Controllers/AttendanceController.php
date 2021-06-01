@@ -41,10 +41,12 @@ class AttendanceController extends Controller
         foreach($attendance_policies as $policy){
             $policy['start_time'] = Carbon::parse($policy->datetime_at_utc);
             $policy['absent'] = -1;
+            $targets = $policy->scope->tags;
+
             if($now > $policy['start_time']){
                 if($policy->attendance != 0){
                     $policy['absent'] = count($policy->all_targets) - ($policy->alerts->where('occured_at', '>=', date($policy->datetime_at_utc))->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))->unique('beacon_id')->count());
-                    foreach($policy->scope->tags as $target){
+                    foreach($targets as $target){
                         $target['found'] = $attendance_alerts->where('rules_id', $policy->rules_id)
                         ->where('beacon_id', $target->beacon_id)
                         ->where('occured_at', '>=', date($policy->datetime_at_utc))
@@ -53,7 +55,7 @@ class AttendanceController extends Controller
                     }
                 } else {
                     $policy['absent'] = $policy->alerts->where('occured_at', '>=', date($policy->datetime_at_utc))->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))->unique('beacon_id')->count();
-                    foreach($policy->scope->tags as $target){
+                    foreach($targets as $target){
                         $target['found'] = $attendance_alerts->where('rules_id', $policy->rules_id)
                         ->where('beacon_id', $target->beacon_id)
                         ->where('occured_at', '>=', date($policy->datetime_at_utc))
@@ -90,18 +92,31 @@ class AttendanceController extends Controller
     {
         $policy = Policy::find($request['rule_id']);
         $date = $request['date'];
-        $date_carbon = Carbon::parse($request['date'], 'Asia/Kuala_Lumpur');
+        $num = $request['num'];
+        
         $now = Carbon::now();
         $today = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');
+        
+        if($date == -1){
+            $date_carbon = $today;
+        } else {
+            $date_carbon = Carbon::parse($request['date'], 'Asia/Kuala_Lumpur');
+        }
 
         $start_time = Carbon::parse($policy->datetime_at_utc);
         $policy['absent'] = -1;
+
+        if($num == -1){
+            $targets = $policy->scope->tags;
+        } else {
+            $targets = $policy->scope->tags->sortByDesc('updated_at')->take($num); 
+        }
 
         if($date_carbon >= $today){
             if($now > $start_time){
                 if($policy->attendance != 0){
                     $policy['absent'] = count($policy->all_targets) - ($policy->alerts->where('occured_at', '>=', date($policy->datetime_at_utc))->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))->unique('beacon_id')->count());
-                    foreach($policy->scope->tags as $target){
+                    foreach($targets as $target){
                         $target['found'] = $policy->alerts
                         ->where('beacon_id', $target->beacon_id)
                         ->where('occured_at', '>=', date($policy->datetime_at_utc))
@@ -110,7 +125,7 @@ class AttendanceController extends Controller
                     }
                 } else {
                     $policy['absent'] = $policy->alerts->where('occured_at', '>=', date($policy->datetime_at_utc))->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))->unique('beacon_id')->count();
-                    foreach($policy->scope->tags as $target){
+                    foreach($targets as $target){
                         $target['found'] = $policy->alerts
                         ->where('beacon_id', $target->beacon_id)
                         ->where('occured_at', '>=', date($policy->datetime_at_utc))
@@ -123,7 +138,7 @@ class AttendanceController extends Controller
             $today_check = false;
             if($policy->attendance != 0){
                 $policy['absent'] = count($policy->all_targets) - ($policy->alerts->where('occured_at', '>=', date($policy->datetime_at_utc))->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))->unique('beacon_id')->count());
-                foreach($policy->scope->tags as $target){
+                foreach($targets as $target){
                     $target['found'] = $policy->alerts
                     ->where('beacon_id', $target->beacon_id)
                     ->where('occured_at', '>=', date($policy->datetime_at_utc))
@@ -132,7 +147,7 @@ class AttendanceController extends Controller
                 }
             } else {
                 $policy['absent'] = $policy->alerts->where('occured_at', '>=', date($policy->datetime_at_utc))->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))->unique('beacon_id')->count();
-                foreach($policy->scope->tags as $target){
+                foreach($targets as $target){
                     $target['found'] = $policy->alerts
                     ->where('beacon_id', $target->beacon_id)
                     ->where('occured_at', '>=', date($policy->datetime_at_utc))
@@ -145,7 +160,7 @@ class AttendanceController extends Controller
 
         $data_update = collect();
 
-        foreach($policy->scope->tags as $target){
+        foreach($targets as $target){
             if(!empty($target->user)){
                 $full_name = $target->user->full_name ?? '-';
                 $type = "Staff";
