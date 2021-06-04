@@ -27,12 +27,13 @@ use App\Http\Controllers\UserLastSeenController;
 use App\Http\Controllers\ResidentController;
 use App\Http\Controllers\PolicyController;
 use App\Http\Controllers\AlertController;
+use App\Http\Controllers\AttendanceKliaController;
 use App\Http\Controllers\AwsBucketController;
 use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\LocationController;
-
+use App\Http\Controllers\StaffController;
 use App\UserLastSeen;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -157,4 +158,13 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('get-image', [AwsBucketController::class, 'getImage']);
     Route::get('test', [GeneralController::class, 'index']);
     Route::post('test', [GeneralController::class, 'storeTest']);
+
+   
+    //KLIA Controllers
+    Route::get('get-attendance-klia', [AttendanceKliaController::class, 'getAttendanceKLIA'])->name('klia.get');;
+    Route::resource('staff', StaffController::class)
+    ->except(['show', 'destroy']);
+    Route::delete('staff/destroys', [StaffController::class, 'destroys'])
+    ->name('staff.destroys');
+
 });

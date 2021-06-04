@@ -55,14 +55,16 @@ class Tag extends Model
         return $this->hasOne(User::class, 'beacon_id', 'beacon_id')->withTrashed();
     }
 
-    /**
-     * Get the resident record associated with the tag
-     */
+   
 
     public function staff()
     {
         return $this->hasOne(User::class, 'beacon_id', 'beacon_id')->withTrashed();
     }
+
+     /**
+     * Get the resident record associated with the tag
+     */
 
     public function resident()
     {
@@ -71,6 +73,11 @@ class Tag extends Model
 
     public function gateway(){
         return $this->hasOne(Reader::class, 'gateway_id', 'current_loc');//->withTrashed();
+    }
+
+    public function staff_klia()
+    {
+        return $this->hasOne(Staff::class, 'beacon_id', 'beacon_id');
     }
 
     /**

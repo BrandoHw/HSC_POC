@@ -13,7 +13,7 @@
                         </form>
                         <div class="col-4 row justify-content-end">
                             @can('resident-create')
-                            <a class="btn btn-primary" href="{{ route('residents.create') }}" style="margin-right: 10px"><i class="ri-add-line"></i>Add Resident</a>
+                            <a class="btn btn-primary" href="{{ route('staff.create') }}" style="margin-right: 10px"><i class="ri-add-line"></i>Add Staff Member</a>
                             @endcan
                             @can('resident-delete')
                             <a class="btn btn-danger" href="#" id="deleteResident">Delete</a>
@@ -26,26 +26,18 @@
                                 <tr>
                                     <th scope="col" style="width:10%">#</th>
                                     <th scope="col">Name</th>
-                                    <th scope="col">Age</th>
-                                    <th scope="col">Gender</th>
-                                    <th scope="col">Wheelchair</th>
-                                    <th scope="col">Walking Cane</th>
                                     <th scope="col">Beacon</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($residents as $resident)
-                                    <tr id="resident-{{ $resident->resident_id }}" href="{{ route('residents.edit',$resident->resident_id) }}">
+                                    <tr id="resident-{{ $resident->resident_id }}" href="{{ route('staff.edit',$resident->resident_id) }}">
                                         <td class='align-middle'>{{ $resident->resident_id }}</td>
                                         <td class='info align-middle'><img class="rounded img-fluid avatar-40"
                                             src={{ $resident->image_url === null ? 
                                             asset('img/avatars/default-profile-m.jpg') : $resident->resized_url }}
                                             alt="profile"> {{ $resident->full_name }}
                                         </td>
-                                        <td class='info align-middle'>{{ $resident->resident_age }}</td>
-                                        <td class='info align-middle'>{{ $resident->gender ?? '-' }}</td>
-                                        <td class='info align-middle'>{{ ($resident->wheelchair) ? "Yes":"No" }}</td>
-                                        <td class='info align-middle'>{{ ($resident->walking_cane) ? "Yes":"No" }}</td>
                                         <td class='info align-middle'>{{ $resident->tag->beacon_mac ?? "-" }}</td>
                                     </tr>
                                 @endforeach
@@ -67,10 +59,10 @@
                             <i class="ri-error-warning-fill text-primary" style="font-size: 85px; margin: -15px"></i>
                         </div>
                         <div class="row mt-3 justify-content-center mt-2">
-                            <div class="h4 font-weight-bold">No resident selected!</div>
+                            <div class="h4 font-weight-bold">No staff member selected!</div>
                         </div>
                         <div class="row justify-content-center">
-                            <div class="">Select at least one resident to delete.</div>
+                            <div class="">Select at least one staff member to delete.</div>
                         </div>
                         <div class="row mt-5 justify-content-center">
                             <button type="button" class="btn btn-secondary m-1" data-dismiss="modal">Dismiss</button>
@@ -90,7 +82,7 @@
                             <i class="ri-error-warning-fill text-danger" style="font-size: 85px; margin: -15px"></i>
                         </div>
                         <div class="row mt-3 justify-content-center mt-2">
-                            <div class="h4 font-weight-bold">Delete this resident?</div>
+                            <div class="h4 font-weight-bold">Delete this staff member?</div>
                         </div>
                         <div class="row justify-content-center">
                             <div class="">You will not be able to recover it.</div>
@@ -114,7 +106,7 @@
                             <i class="ri-error-warning-fill text-danger" style="font-size: 85px; margin: -15px"></i>
                         </div>
                         <div class="row mt-3 justify-content-center mt-2">
-                            <div class="h4 font-weight-bold">Delete these residents?</div>
+                            <div class="h4 font-weight-bold">Delete these staff members?</div>
                         </div>
                         <div class="row justify-content-center">
                             <div class="">You will not be able to recover them.</div>
@@ -207,7 +199,7 @@
         };
         
         $.ajax({
-            url: '{{ route("residents.destroys") }}',
+            url: '{{ route("staff.destroys") }}',
             type: "DELETE",
             data: result,
             success:function(response){

@@ -7,7 +7,8 @@ use App\Resident;
 use App\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-class ResidentController extends Controller
+
+class StaffController extends Controller
 {
     function __construct()
     {
@@ -28,7 +29,7 @@ class ResidentController extends Controller
         foreach($residents as $resident){
             $resident->resized_url = Storage::disk('s3-resized')->url("resized-".$resident->image_url);
         }
-        return view('residents.index', compact('residents'));
+        return view('klia.staff.index', compact('residents'));
     }
 
     /**
@@ -55,7 +56,7 @@ class ResidentController extends Controller
             "O" => "Others"
         ];
         
-        return view('residents.create',compact('tagsNull', 'available', 'relationship'));
+        return view('klia.staff.create',compact('tagsNull', 'available', 'relationship'));
     }
 
     /**
@@ -89,7 +90,7 @@ class ResidentController extends Controller
         }
       
         
-        return redirect()->route('residents.index')
+        return redirect()->route('staff.index')
             ->with('success', $resident->full_name.' updated successfully.');
     }
 
@@ -139,7 +140,7 @@ class ResidentController extends Controller
             $resident->image_url = Storage::disk('s3')->url($resident->image_url);
         }
 
-        return view('residents.edit', compact('resident', 'tagsNull', 'current', 'available', 'relationship'));
+        return view('klia.staff.edit', compact('resident', 'tagsNull', 'current', 'available', 'relationship'));
     }
 
     /**
@@ -164,9 +165,9 @@ class ResidentController extends Controller
         }
 
         $image_id = "image-input";
+        $extension = $request[$image_id]->extension();
+        $filename = "resident-".$resident->resident_id.".".$extension;
         if ($request->hasFile($image_id)) {
-            $extension = $request[$image_id]->extension();
-            $filename = "resident-".$resident->resident_id.".".$extension;
             if ($request->file($image_id)->isValid()) {
                 $validated = $request->validate([
                     'image' => 'mimes:jpeg,png|max:16384',
@@ -178,7 +179,7 @@ class ResidentController extends Controller
             }
         }
 
-        return redirect()->route('residents.index')
+        return redirect()->route('staff.index')
             ->with('success', $resident->full_name.' updated successfully');
     }
 

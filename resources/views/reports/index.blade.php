@@ -134,7 +134,7 @@
                                                 <td>{{ $resident->full_name}}</td>
                                                 <td>{{ $resident->resident_dob}}</td>
                                                 <td>{{ $resident->age}}</td>
-                                                <td>{{ $resident->gender ?? "-" }}</td>
+                                                <td>{{ $resident->resident_gender ?? "-" }}</td>
                                                 <td class='info align-middle'>{{ ($resident->wheelchair) ? "Yes":"No" }}</td>
                                                 <td class='info align-middle'>{{ ($resident->walking_cane) ? "Yes":"No" }}</td>
                                                 <td>{{ $resident->contact_name ?? "-" }}</td>
@@ -258,7 +258,7 @@
             "<'row'<'col-sm-12 col-md-5'li><'col-sm-12 col-md-7'p>>",
         buttons: [{
             extend: 'excelHtml5',
-            title: 'Data export Alerts',
+            title: 'Data Export Alerts',
             }
         ],
         order: [[0, 'asc']],

@@ -30,6 +30,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application Type
+    |--------------------------------------------------------------------------
+    |
+    | This values determines the "type" of the application, this use for versioning
+    | between HSC and KLIA version of this app.
+    */
+
+    'type' => env('APP_TYPE', 'hsc'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Debug Mode
     |--------------------------------------------------------------------------
     |

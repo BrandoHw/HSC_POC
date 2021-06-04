@@ -59,6 +59,7 @@ class MapController extends Controller
      
         $floors = Floor::where('building_id', $id)->with('map')->orderBy('number', 'asc')->get();
         //TODO: check map url whether image exists then change to greyimage/noimage found
+
         return view('map.show', compact('gatewayZones', 'building', 'floors'));
     }
 

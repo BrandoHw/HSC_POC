@@ -234,6 +234,7 @@ function drawUserLocation(data, drawnLayers, gatewayZones, floorIndex, redIcon){
   else if (!(data.staff === null)){
     full_name = data.staff.fName.concat(" ", data.staff.lName)
   }
+  
   var tag_mac = data.beacon_mac;
   var last_seen = data.updated_at;
   var result = gatewayZones.filter(obj => obj.mac_addr === mac_addr)[0];
@@ -259,10 +260,10 @@ function drawUserLocation(data, drawnLayers, gatewayZones, floorIndex, redIcon){
     // Create an element to hold all your text and markup
     var container = $('<div />');
 
-    // Delegate all event handling for the container itself and its contents to the container
-    container.on('click', '.smallPolygonLink', function() {
-      alert("test");
-    });
+    //Delegate all event handling for the container itself and its contents to the container
+    // container.on('click', '.smallPolygonLink', function() {
+    //   alert("test");
+    // });
 
     // Insert whatever you want into the container, using whichever approach you prefer
     container.html("<b>Name</b>: ".concat("<a href='#' class='smallPolygonLink'>", full_name, "</a>"));

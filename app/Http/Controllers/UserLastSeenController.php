@@ -43,7 +43,6 @@ class UserLastSeenController extends Controller
                 $userRunningCount[$user->gateway->mac_addr] = 0;
             };
         }
-
       
         foreach ($userCount as  $key => $value){
             if ($value >= $threshold){
@@ -129,11 +128,16 @@ class UserLastSeenController extends Controller
     {
         //
         $id = $request->input('id');
-        $beacon = json_decode(json_encode(Tag::with(['resident', 'staff', 'gateway', 'gateway.location'])->where('beacon_id', $id)->get()));
+        $beacon = json_decode(json_encode(Tag::with(['resident', 'staff_klia', 'staff', 'gateway', 'gateway.location'])->where('beacon_id', $id)->get()));
         $beacon[0]->grey_marker = Carbon::parse($beacon[0]->updated_at)->tz('Asia/Kuala_Lumpur')->lt(Carbon::now()->subMinutes(5));
         $beacon[0]->updated_at = Carbon::parse($beacon[0]->updated_at)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
-      
-
+    
+        // if (empty($beacon[0]->staff) && !empty($beacon[0]->staff_klia)){
+        //     $beacon[0]->staff = (object)array();
+        //     $beacon[0]->staff->fName =  $beacon[0]->staff_klia->name;
+        //     $beacon[0]->staff->lName =  "";
+        // }
+        
         return $beacon;
     }
 
@@ -158,12 +162,28 @@ class UserLastSeenController extends Controller
             ->with(['staff', 'gateway', 'gateway.location'])
             ->get()
         ));
-        $beacons = array_merge((array) $beacons, (array) $beacons_r);
+
+        // $beacons_s = json_decode(json_encode(
+        //     Tag::whereHas('gateway', function($q) use($mac_addr){
+        //         $q->where('mac_addr', $mac_addr);})
+        //     ->whereHas('staff_klia')
+        //     ->with(['staff_klia', 'gateway', 'gateway.location'])
+        //     ->get()
+        // ));
+
+        $beacons = array_merge((array) $beacons, (array) $beacons_r);//, (array) $beacons_s);
 
         
         foreach ($beacons as $user){
             $user->updated_at = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
+            // if (!property_exists($user, 'staff') && property_exists($user, 'staff_klia')){
+            //     $user->staff = (object)array();
+            //     $user->staff->fName =  $user->staff_klia->name;
+            //     $user->staff->lName =  "";
+            // }
         }
+
+     
         return $beacons;
     }
 
@@ -178,12 +198,22 @@ class UserLastSeenController extends Controller
 
         $beacons = json_decode(json_encode(Tag::with(['staff', 'gateway', 'gateway.location'])->has('staff')->has('gateway')->get()));
         $beacons_r = json_decode(json_encode(Tag::with(['resident', 'gateway', 'gateway.location'])->has('resident')->has('gateway')->get()));
+       
+        // $beacons_s = json_decode(json_encode(Tag::with(['staff_klia', 'gateway', 'gateway.location'])->has('staff_klia')->has('gateway')->get()));
+        
+        // foreach ($beacons_s as $user){
+        //     if (!property_exists($user, 'staff') && property_exists($user, 'staff_klia')){
+        //         $user->staff = (object)array();
+        //         $user->staff->fName =  $user->staff_klia->name;
+        //         $user->staff->lName =  "";
+        //     }
+        // }
         
         usort($beacons_r, function ($a, $b) {
             return strcmp($a->resident->resident_fName, $b->resident->resident_fName);
         });
 
-        $beacons = array_merge((array) $beacons, (array) $beacons_r);
+        $beacons = array_merge((array) $beacons, (array) $beacons_r);//, (array) $beacons_s);
 
         foreach ($beacons as $user){
             $user->grey_marker = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->lt(Carbon::now()->subMinutes(5));
@@ -194,6 +224,7 @@ class UserLastSeenController extends Controller
                 $userCount[$user->gateway->mac_addr] = 1;
                 $userRunningCount[$user->gateway->mac_addr] = 0;
             };
+    
         }
         foreach ($userCount as  $key => $value){
             if ($value >= $threshold){

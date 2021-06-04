@@ -35,6 +35,10 @@ class HomeController extends Controller
     public function index()
     {
 
+        if(config('app.type') === 'klia') {
+            return view('klia.dashboard.index');
+        }
+        
         $id = 1;
         $gatewayZones = GatewayZone::with(['gateway', 
         'gateway.location', 
@@ -116,8 +120,10 @@ class HomeController extends Controller
         }
 
         return view('home', compact('gatewayZones', 'building', 'floors', 
-            'alerts', 'alerts_count', 'alerts_last', 'policies_count', 'tags_count', 'residents_count', 'readers_count', 
-            'attendance_policies', 'attendance_alerts', 'attendance'
+        'alerts', 'alerts_count', 'alerts_last', 'policies_count', 'tags_count', 'residents_count', 'readers_count', 
+        'attendance_policies', 'attendance_alerts', 'attendance'
         ));
+        
+       
     }
 }
