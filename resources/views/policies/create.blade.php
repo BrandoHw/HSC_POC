@@ -57,9 +57,6 @@
                         <div class="form-group" id="trigger-option-duress" hidden>
                             <p><i class="ri-information-fill"></i> This policy will violate immediately when the duress button at the beacon is pressed.</p>
                         </div>
-                        <div class="form-group" id="trigger-option-fall" hidden>
-                            <p><i class="ri-information-fill"></i> This policy will violate immediately when fall is detected.</p>
-                        </div>
                         <div class="form-group" id="trigger-option-geofence" hidden>
                             <label>Geofence Option:</label>
                             <div id="radio-geofence">
@@ -73,8 +70,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group" id="trigger-option-violence-param" hidden>
-                            <label>Violence Parameters:</label>
+                        <div class="form-group" id="trigger-option-fall-violence" hidden>
+                            <p><i class="ri-information-fill"></i> This policy will violate immediately if the parameters below is fulfilled.</p>
+                        </div>
+                        <div class="form-group" id="trigger-option-param" hidden>
+                            <label><span class='policy-type-name'></span> Parameters:</label>
                             <a href="#" data-toggle="tooltip" data-placement="right" title="" style="cursor: pointer; left-padding:0" data-original-title="The policy will violate according to the G-value threashold set at the selected x, y, z-axis">
                                 <i class="ri-information-fill"></i>
                             </a>
@@ -106,8 +106,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group" id="trigger-option-violence-frequency" hidden>
-                            <label>Violence Frequency:</label>
+                        <div class="form-group" id="trigger-option-frequency" hidden>
+                            <label><span class='policy-type-name'></span> Frequency:</label>
                             <a href="#" data-toggle="tooltip" data-placement="right" title="" style="cursor: pointer; left-padding:0" data-original-title="The policy will violate after it fulfill the parameters set for this frequency of time.">
                                 <i class="ri-information-fill"></i>
                             </a>
@@ -364,9 +364,8 @@
             attendance: false,
             battery: false,
             duress: false,
-            fall: false,
             geofence: false,
-            violence: false,
+            fall_violence: false,
         };
 
         $('#day').prop('disabled', false);
@@ -374,7 +373,9 @@
         $('#duration').prop('disabled', false);
         $('#location').prop('disabled', false);
 
-        switch($('#type').val()){
+        let type = $('#type').val();
+
+        switch(type){
             case "1":
                 option['attendance'] = true;
                 break;
@@ -389,30 +390,31 @@
                 $('#start-time').prop('disabled', true);
                 $('#duration').prop('disabled', true);
                 $('#location').prop('disabled', true);
-                
                 break;
             case "3":
                 option['duress'] = true;
                 break;
             case "4":
-                option['fall'] = true;
+                $('.policy-type-name').html('Fall');
+                option['fall_violence'] = true;
                 break;
             case "5":
                 option['geofence'] = true;
                 break;
             case "6":
-                option['violence'] = true;
+                $('.policy-type-name').html('Violence');
+                option['fall_violence'] = true;
                 break;
         }
         $('#trigger-option-attendance').prop('hidden', !option['attendance']);
         $('#trigger-option-battery').prop('hidden', !option['battery']);
         $('#trigger-option-duress').prop('hidden', !option['duress']);
-        $('#trigger-option-fall').prop('hidden', !option['fall']);
         $('#trigger-option-geofence').prop('hidden', !option['geofence']);
-        $('#trigger-option-violence-param').prop('hidden', !option['violence']);
-        $('#trigger-option-violence-frequency').prop('hidden', !option['violence']);
+        $('#trigger-option-fall-violence').prop('hidden', !option['fall_violence']);
+        $('#trigger-option-param').prop('hidden', !option['fall_violence']);
+        $('#trigger-option-frequency').prop('hidden', !option['fall_violence']);
 
-        if($('#type').val() == "6"){
+        if(type == "4" || type == "6"){
             if($('#frequency').hasClass("select2-hidden-accessible")){
                 $('#frequency').select2('destroy');
             }
@@ -480,6 +482,7 @@
             case "5":
                 result['geofence-option'] = validatePolicyInput('geofence-option');
                 break;
+            case "4":
             case "6":
                 result['violence'] = validatePolicyInput('violence');
                 result['frequency'] = validatePolicyInput('frequency');

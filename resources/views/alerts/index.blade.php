@@ -31,7 +31,7 @@
                                 <a class="search-link" href="#"><i class="ri-search-line"></i></a>
                             </form>
                             <a class="special iq-bg-primary" href="#" data-toggle="tooltip" data-placement="top" 
-                                title="Refresh" style="margin-left: 10px" id="refreshAlert"><i class="ri-restart-line"></i></a>
+                                title="Refresh" style="margin-left: 10px" id="refresh-alerts" onClick="getNewAlerts()"><i class="ri-refresh-line mr-0"></i></a>
                         </div>
                         <div class="col-4 row justify-content-end">
                             <a class="btn btn-primary" href="#" style="margin-right: 10px" id="resolveAlert"><i class="ri-check-line"></i>Mark as Resolved</a>
@@ -49,7 +49,7 @@
                                     <th scope="col">Policy Name</th>
                                     <th scope="col">Subject</th>
                                     <th scope="col">Location</th>
-                                    <th scope="col">Occured at</th>
+                                    <th scope="col">Occurred at</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Resolved by</th>
                                     <th scope="col">Resolved at</th>
@@ -103,18 +103,22 @@
 
 @section("script")
 <script>
+    
+    let token = $('meta[name="csrf-token"]').attr('content');
+    let last = @json($alerts_last);
+
+    $(function(){
+        let timer = setInterval(getNewAlerts, 30000);
+    });
+
     /* Initiate dataTable */
-    var dTable = $('#alertTable').DataTable({
-            order: [[5, 'desc']],
-        })
+    let dTable = $('#alertTable').DataTable({
+        order: [[5, 'desc']],
+    })
 
     $('#myCustomSearchBox').keyup(function(){  
         dTable.search($(this).val()).draw();   // this  is for customized searchbox with datatable search feature.
     })
-
-    // $('#alertTable tbody tr td:not(:first-child)').click(function () {
-    //     window.location.href = $(this).parent('tr').attr('href');
-    // });
 
     /* Resolve Alert */
     $('#resolveAlert').on('click', function(){
@@ -131,15 +135,83 @@
                 $('#resolve-confirmation-modal').modal('toggle');
                 
             } else {
-                $('#cancel-multipl-btn').prop('hidden', false);
-                $('#resolve-multipl-btn').html('Yes, resolve them.');
-                $('#resolve-multipl-btn').prop('disabled', false);
-                $('#resolve-multipl-btn').css('background-color', 'var(--iq-primary)');
-                $('#resolve-multipl-btn').css('border-color', 'var(--iq-primary)');
+                $('#cancel-multiple-btn').prop('hidden', false);
+                $('#resolve-multiple-btn').html('Yes, resolve them.');
+                $('#resolve-multiple-btn').prop('disabled', false);
+                $('#resolve-multiple-btn').css('background-color', 'var(--iq-primary)');
+                $('#resolve-multiple-btn').css('border-color', 'var(--iq-primary)');
                 $('#resolve-confirmation-multiple-modal').modal('toggle');
             }
         }
     })
+
+    function getNewAlerts(){
+        let refresh_btn = $('#refresh-alerts');
+        refresh_btn.html('<i class="fa fa-custom fa-circle-o-notch fa-spin mr-0"></i>');
+        refresh_btn.prop('disabled', true);
+
+        let result = {
+            last_id: last,
+            _token: $('meta[name="csrf-token"]').attr('content')
+        };
+
+        $.ajax({
+            url: '{{ route("alerts.new_table") }}',
+            type: "POST",
+            data: result,
+            success:function(response){
+                let errors = response['errors'];
+                if($.isEmptyObject(response['success'])){
+                    console.log(errors);
+                } else {
+                    console.log(response);
+                    last = response['last_id'];
+                    if(response['alerts_num'] == 0){
+                        notyf.open({
+                            type: 'warning',
+                            message: response['success'],
+                            dismissible: false,
+                            duration: 4000
+                        });
+                    } else {
+                        let alerts = response['data'];
+                        alerts.forEach(function(item){
+                            let id = item['id'];
+                            dTable.row.add([
+                                id,
+                                item['policy_type'],
+                                item['policy'],
+                                item['subject'],
+                                item['location'],
+                                item['occured_at'],
+                                item['status'],
+                                item['resolved_by'],
+                                item['resolved_at'],
+                            ])
+                            .node().id = 'alert-' + id;
+                            dTable.draw(false);
+
+                            $('#alert-'+id+' td:eq(0)').attr('id', 'checkbox-'+id);
+                            $('#alert-'+id+' td:eq(6)').attr('id', 'status-'+id);
+                            $('#alert-'+id+' td:eq(7)').attr('id', 'resolved-by-'+id);
+                            $('#alert-'+id+' td:eq(8)').attr('id', 'resolved-at-'+id);
+                        });
+                        notyf.success(response['success']);
+                    }
+                    
+                    refresh_btn.html('<i class="fa fa-custom fa-check mr-0"></i>');
+                    setTimeout(function() {
+                        refresh_btn.html('<i class="ri-refresh-line mr-0"></i>');
+                        refresh_btn.prop('disabled', false);
+                    }, 1000);
+                    console.log(last);
+                }
+            },
+            error:function(error){
+                console.log(error);
+            }
+        });
+    }
 
     function confirmResolveAlert(id){
         let cancel_btn = $('#cancel-btn');
@@ -167,7 +239,7 @@
         let result = {
             alerts_id: alerts_id,
             user_id: @json(auth()->user()->user_id),
-            _token: $('meta[name="csrf-token"]').attr('content')
+            _token: token
         };
         
         $.ajax({
@@ -186,18 +258,28 @@
                         modal.modal('toggle');
                     }, 500);
 
-                    let alerts = response['alerts'];
-                    console.log(alerts);
-                    alerts.forEach(function(item){
-                        let item_id = item['alert_id'];
-                        console.log(item);
-                        $('#alert-' + item_id).removeClass('selected');
-                        $('#status-' + item_id).html('<span class="badge badge-pill iq-bg-success">Resolved</span>');
-                        $('#resolved-by-' + item_id).html(response['user']);
-                        $('#resolved-at-' + item_id).html(response['resolved_at']);
-                    })
+                    let found = response['found'];
+
+                    if(!found){
+                        notyf.open({
+                            type: 'warning',
+                            message: response['success'],
+                            dismissible: false,
+                            duration: 4000
+                        });
+                    } else {
+                        let alerts = response['alerts'];
+                        Object.keys(alerts).forEach(function(key) {
+                            let item = alerts[key];
+                            let item_id = item['alert_id'];
+                            $('#alert-' + item_id).removeClass('selected');
+                            $('#status-' + item_id).html('<span class="badge badge-pill iq-bg-success">Resolved</span>');
+                            $('#resolved-by-' + item_id).html(response['user']);
+                            $('#resolved-at-' + item_id).html(response['resolved_at']);
+                        });
+                        notyf.success(response['success']);
+                    }
                     dTable.columns().checkboxes.deselect(true);
-				    notyf.success(response['success']);
                 }
             },
             error:function(error){
@@ -222,11 +304,11 @@
                 $('#archive-confirmation-modal').modal('toggle');
                 
             } else {
-                $('#cancel-multipl-btn').prop('hidden', false);
-                $('#archive-multipl-btn').html('Yes, archive them');
-                $('#archive-multipl-btn').prop('disabled', false);
-                $('#archive-multipl-btn').css('background-color', 'var(--iq-danger)');
-                $('#archive-multipl-btn').css('border-color', 'var(--iq-danger)');
+                $('#cancel-multiple-btn').prop('hidden', false);
+                $('#archive-multiple-btn').html('Yes, archive them');
+                $('#archive-multiple-btn').prop('disabled', false);
+                $('#archive-multiple-btn').css('background-color', 'var(--iq-danger)');
+                $('#archive-multiple-btn').css('border-color', 'var(--iq-danger)');
                 $('#archive-confirmation-multiple-modal').modal('toggle');
             }
         }
@@ -245,7 +327,7 @@
         
         cancel_btn.prop('hidden', true);
         archive_btn.prop('disabled', true);
-        archive_btn.html('<i class="fa fa-circle-o-notch fa-spin"></i>Deleting');
+        archive_btn.html('<i class="fa fa-circle-o-notch fa-spin"></i>Archiving');
 
         let selected_row = dTable.column(0).checkboxes.selected();
 
@@ -257,7 +339,7 @@
         
         let result = {
             alerts_id: alerts_id,
-            _token: $('meta[name="csrf-token"]').attr('content')
+            _token: token
         };
         
         $.ajax({

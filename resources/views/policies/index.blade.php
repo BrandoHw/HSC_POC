@@ -48,16 +48,16 @@
                                                     < {{ $policy->battery_threshold }}%
                                                     @break
                                                 @case(3)
-                                                @case(4)
                                                     -
                                                     @break  
                                                 @case(5)
                                                     {{ ($policy->geofence) ? 'Entering Zone':'Leaving Zone' }}
                                                     @break  
+                                                @case(4)
                                                 @case(6)
-                                                    x-axis: {{ ($policy->x_threshold) ?:'-' }}<br>
-                                                    y-axis: {{ ($policy->y_threshold) ?:'-' }}<br>
-                                                    z-axis: {{ ($policy->z_threshold) ?:'-' }}
+                                                    x-axis: {{ ($policy->x_threshold) ? number_format($policy->x_threshold, 1, '.', ','):'-' }}<br>
+                                                    y-axis: {{ ($policy->y_threshold) ? number_format($policy->y_threshold, 1, '.', ','):'-' }}<br>
+                                                    z-axis: {{ ($policy->z_threshold) ? number_format($policy->z_threshold, 1, '.', ','):'-' }}
                                                     @break  
                                             @endswitch
                                         </td>
@@ -172,7 +172,7 @@
     $('#deletePolicy').on('click', function(){
         let policy_selected = dTable.column(0).checkboxes.selected();
         if(_.isEmpty(policy_selected)){
-            // $('#empty-modal').modal('toggle');
+            $('#empty-modal').modal('toggle');
         } else {
             if(policy_selected.length == 1){
                 $('#cancel-btn').prop('hidden', false);
@@ -183,11 +183,11 @@
                 $('#confirmation-modal').modal('toggle');
                 
             } else {
-                $('#cancel-multipl-btn').prop('hidden', false);
-                $('#delete-multipl-btn').html('Yes, delete them');
-                $('#delete-multipl-btn').prop('disabled', false);
-                $('#delete-multipl-btn').css('background-color', 'var(--iq-danger)');
-                $('#delete-multipl-btn').css('border-color', 'var(--iq-danger)');
+                $('#cancel-multiple-btn').prop('hidden', false);
+                $('#delete-multiple-btn').html('Yes, delete them');
+                $('#delete-multiple-btn').prop('disabled', false);
+                $('#delete-multiple-btn').css('background-color', 'var(--iq-danger)');
+                $('#delete-multiple-btn').css('border-color', 'var(--iq-danger)');
                 $('#confirmation-multiple-modal').modal('toggle');
             }
         }

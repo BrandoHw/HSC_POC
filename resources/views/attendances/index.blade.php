@@ -184,6 +184,7 @@
             data: function(data) {
                 data.rule_id = {{ $policy->rules_id }};
                 data.date = $("#date").val();
+                data.num = -1;
             }
         },
         columns:[
@@ -193,7 +194,7 @@
             {data: 'curr_loc'},
             {data: 'detected_at'},
         ],
-        order: [[3, 'asc']],
+        order: [[4, 'asc']],
         buttons: [
             { extend: 'csvHtml5', filename: function(){ return filename; }},
             { extend: 'excelHtml5', filename: function(){ return filename; }, title: function(){ return title; }, message: function(){ return message; } },
@@ -333,9 +334,12 @@
                     });
 
                     let refresh_btn = $('#refresh-attendance');
-                    refresh_btn.html('<i class="ri-refresh-line"></i>');
-                    refresh_btn.removeClass('custom-disabled');
+                    refresh_btn.html('<i class="fa fa-custom fa-check mr-0"></i>');
                     notyf.success('Attendance updated successfully');
+                    setTimeout(function() {
+                        refresh_btn.html('<i class="ri-refresh-line mr-0"></i>');
+                        refresh_btn.removeClass('custom-disabled');
+                    }, 1000);
                 }
             },
             error:function(error){

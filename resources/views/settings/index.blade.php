@@ -222,11 +222,11 @@
                 $('#user-confirmation-modal').modal('toggle');
                 
             } else {
-                $('#user-cancel-multipl-btn').prop('hidden', false);
-                $('#user-delete-multipl-btn').html('Yes, delete them');
-                $('#user-delete-multipl-btn').prop('disabled', false);
-                $('#user-delete-multipl-btn').css('background-color', 'var(--iq-danger)');
-                $('#user-delete-multipl-btn').css('border-color', 'var(--iq-danger)');
+                $('#user-cancel-multiple-btn').prop('hidden', false);
+                $('#user-delete-multiple-btn').html('Yes, delete them');
+                $('#user-delete-multiple-btn').prop('disabled', false);
+                $('#user-delete-multiple-btn').css('background-color', 'var(--iq-danger)');
+                $('#user-delete-multiple-btn').css('border-color', 'var(--iq-danger)');
                 $('#user-confirmation-multiple-modal').modal('toggle');
             }
         }
@@ -308,11 +308,11 @@
                 $('#role-confirmation-modal').modal('toggle');
                 
             } else {
-                $('#role-cancel-multipl-btn').prop('hidden', false);
-                $('#role-delete-multipl-btn').html('Yes, delete them');
-                $('#role-delete-multipl-btn').prop('disabled', false);
-                $('#role-delete-multipl-btn').css('background-color', 'var(--iq-danger)');
-                $('#role-delete-multipl-btn').css('border-color', 'var(--iq-danger)');
+                $('#role-cancel-multiple-btn').prop('hidden', false);
+                $('#role-delete-multiple-btn').html('Yes, delete them');
+                $('#role-delete-multiple-btn').prop('disabled', false);
+                $('#role-delete-multiple-btn').css('background-color', 'var(--iq-danger)');
+                $('#role-delete-multiple-btn').css('border-color', 'var(--iq-danger)');
                 $('#role-confirmation-multiple-modal').modal('toggle');
             }
         }

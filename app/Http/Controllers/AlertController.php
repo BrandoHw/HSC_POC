@@ -15,8 +15,8 @@ class AlertController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:alert-list|alert-archive', ['only' => ['index','show', 'updates']]);
-        $this->middleware('permission:alert-archive', ['only' => ['destroys']]);
+        $this->middleware('permission:alert-list|alert-delete', ['only' => ['index','show', 'updates']]);
+        $this->middleware('permission:alert-delete', ['only' => ['destroys']]);
     }
 
     /**
@@ -26,8 +26,10 @@ class AlertController extends Controller
      */
     public function index()
     {
-        $alerts = Alert::orderBy('alert_id', 'asc')->with(['reader', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])->get();
-        return view('alerts.index', compact('alerts'));
+        // $alerts = Alert::orderBy('alert_id', 'asc')->with(['reader', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])->get();
+        $alerts = Alert::where('alert_id', '<=', 3170)->orderBy('alert_id', 'asc')->with(['reader', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])->get();
+        $alerts_last = $alerts->last()->alert_id ?? 0;
+        return view('alerts.index', compact('alerts', 'alerts_last'));
     }
 
     /**
@@ -158,27 +160,37 @@ class AlertController extends Controller
         $ids = $request->alerts_id;
 
         $alerts = Alert::find($ids)->whereNull('resolved_at');
-        $user = User::find($request['user_id']);
-
-        $resolved_at = Carbon::now();
-
-        foreach($alerts as $alert){
-            $alert->user()->associate($user)->save();
-            $alert->resolved_at = $resolved_at;
-            $alert->save();
-        }
         
-        $message = "Alert resolved successfully.";
-        
-        if(count($ids) > 1){
-            $message = "Alerts resolved successfully.";
+        if(count($alerts)<1){
+            return response()->json([
+                "success" => "No unresolved alert found!",
+                "found" => false,
+            ], 200);
+        } else {
+            $user = User::find($request['user_id']);
+    
+            $resolved_at = Carbon::now();
+    
+            foreach($alerts as $alert){
+                $alert->user()->associate($user)->save();
+                $alert->resolved_at = $resolved_at;
+                $alert->save();
+            }
+            
+            $message = "Alert resolved successfully.";
+            
+            if(count($ids) > 1){
+                $message = "Alerts resolved successfully.";
+            }
+            return response()->json([
+                "success" => $message,
+                "user" => $user->full_name,
+                "alerts" => $alerts,
+                "found" => true,
+                "resolved_at" => $alerts->first()->resolved_at_tz
+            ], 200);
         }
-        return response()->json([
-            "success" => $message,
-            "user" => $user->full_name,
-            "alerts" => $alerts,
-            "resolved_at" => $alerts->first()->resolved_at_tz
-        ], 200);
+
     }
 
     /**
@@ -286,19 +298,20 @@ class AlertController extends Controller
 
         Alert::destroy($ids);
 
+        $message = "Alert archived successfully.";
+
         if(count($ids) > 1){
-            return response()->json([
-                "success" => "Alerts archived successfully."
-            ], 200);
-        } else {
-            return response()->json([
-                "success" => "Alert archived successfully."
-            ], 200);
-        }
+            $message = "Alerts archived successfully.";
+        };
+
+        return response()->json([
+            "success" => $message,
+        ], 200);
+        
     }
 
     /**
-     * Remove the specified resources from storage.
+     * Get new alerts for dashboard.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -357,6 +370,82 @@ class AlertController extends Controller
             "last_id" => $last_id,
             "today" => $today,
         ], 200);
+        
+    }
+
+    /**
+     * Get new alerts for index datatable.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function new_alerts_table(Request $request)
+    {
+        $last_id = $request->last_id;
+
+        $alerts_new = Alert::where('alert_id', '>', $last_id)->get();
+
+        $alerts_num = 0;
+        if(count($alerts_new) > 0){
+            $alerts_num = count($alerts_new);
+            $last_id = $alerts_new->sortBy('alert_id')->last()->alert_id;
+        }
+
+        if($alerts_num < 1){
+            return response()->json([
+                "success" => 'No new alert found!',
+                "alerts_num" => $alerts_num,
+                "last_id" => $last_id,
+            ], 200);
+        } else {
+            $data_update = collect();
+
+            foreach($alerts_new as $alert){
+                if(!empty($alert->tag->user)){
+                    $full_name = $alert->tag->user->full_name ?? '-';
+                } else {
+                    $full_name = $alert->tag->resident->full_name ?? '-';
+                }
+    
+                if($alert->policy->trashed()){
+                    $policy = '<span class="text-secondary"><em>' . $alert->policy->description . '<span class="small text-secondary">[deleted]</span></em></span>';
+                } else {
+                    $policy = $alert->policy->description;
+                }
+    
+                $color = $alert->resolved_at ? 'success':'danger';
+                $status = $alert->resolved_at ? 'Resolved':'Unresolved';
+                $status_full = '<span class="badge badge-pill iq-bg-' . $color .'">' . $status . '</span>';
+    
+                $data = collect([
+                    'id' => $alert->alert_id,
+                    'policy_type' => $alert->policy->policyType->rules_type_desc,
+                    'policy' => $policy,
+                    'subject' => $full_name,
+                    'location' => $alert->reader->location_full ?? "-",
+                    'occured_at' => $alert->occured_at_tz,
+                    'status' => $status_full,
+                    'resolved_by' => $alert->user->full_name ?? "-",
+                    'resolved_at' => $alert->resolved_at_tz
+                ]);
+    
+                $data_update->push($data);
+            }
+
+            if($alerts_num > 1){
+                $message = $alerts_num . " new alerts found!";
+            } else {
+                $message = $alerts_num . " new alert found!";
+            }
+
+            return response()->json([
+                "success" => "Alerts updated successfully. ". $message,
+                "data" => $data_update,
+                "alerts_num" => $alerts_num,
+                "last_id" => $last_id,
+            ], 200);
+        }
+
         
     }
 

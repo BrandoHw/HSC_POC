@@ -90,7 +90,7 @@
             </div>
             <div class="iq-card-body">
                <div>
-                  <ul class="nav nav-tabs justify-content-right" id="myTab-2" role="tablist">
+                  <ul class="nav nav-tabs justify-content-right" id="attendance-nav" role="tablist">
                         @foreach($attendance_policies as $policy)
                         <li class="nav-item">
                            <a class="nav-link {{ $loop->first ? 'active':'' }}" id="attendance-{{ $policy->rules_id }}" data-toggle="tab" href="#tab-{{ $policy->rules_id }}" role="tab" aria-selected="true">{{ $policy->description }}</a>
@@ -99,86 +99,28 @@
                   </ul>
                   <div class="tab-content">
                      @foreach($attendance_policies as $policy)
-                     <div class="tab-pane fade {{ ($loop->first) ? 'show active':'' }}" id="tab-{{ $policy->rules_id }}" role="tabpanel">
-                        <div class="iq-card" style="height: 100%">
-                           <div class="iq-card-body">
-                              <div class="table-responsive">
-                                 <table class="table mb-0 table-borderless">
-                                    <thead>
-                                       <tr>
-                                          <th scope="col" style="width:10%">#</th>
-                                          <th scope="col">Name</th>
-                                          <th scope="col">Type</th>
-                                          <th scope="col">Attendance</th>
-                                          <th scope="col">Current Location</th>
-                                          <th scope="col">Detected at</th>
-                                       </tr>
-                                    </thead>
-                                    <tbody>
-                                       @foreach ($policy->scope->tags->sortByDesc('updated_at')->take(5) as $target)
-                                          @if($target->is_assigned == true)
-                                                <tr href="#" id="target-{{ $target->beacon_id }}">
-                                                   <td>{{ $target->beacon_id }}</td>
-                                                   <td>
-                                                      @if($target->beacon_type == 2)
-                                                            {{ $target->user->full_name ?? '-' }}
-                                                      @else
-                                                            {{ $target->resident->full_name ?? '-' }}
-                                                      @endif
-                                                   </td>
-                                                   <td>
-                                                      @if($target->beacon_type == 2)
-                                                            Staff
-                                                      @else
-                                                            Resident
-                                                      @endif
-                                                   </td>
-                                                   <td>
-                                                      @php($now = \Carbon\Carbon::now()->toDateTimeString())
-                                                      @php($start_time = \Carbon\Carbon::parse($policy->datetime_at_utc))
-                                                      @if($now < $start_time)
-                                                            <span class="badge badge-pill badge-secondary">N/A</span>
-                                                      @else
-                                                            @if($policy->attendance == 0)
-                                                               @php($found_absent_last = $attendance_alerts->where('rules_id', $policy->rules_id)
-                                                               ->where('beacon_id', $target->beacon_id)
-                                                               ->where('occured_at', '>=', date($policy->datetime_at_utc))
-                                                               ->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))
-                                                               ->last())
-                                                               <span class="badge badge-pill badge-{{ (isset($found_absent_last)) ? 'danger':'success'}}">
-                                                                  {{ (isset($found_absent_last)) ? 'Absent':'Present'}}
-                                                               </span>
-                                                            @else
-                                                               @php($found_present_first = $attendance_alerts->where('rules_id', $policy->rules_id)
-                                                               ->where('beacon_id', $target->beacon_id)
-                                                               ->where('occured_at', '>=', date($policy->datetime_at_utc))
-                                                               ->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))
-                                                               ->first())
-                                                               <span class="badge badge-pill badge-{{ (isset($found_present_first)) ? 'success':'danger'}}">
-                                                                  {{ (isset($found_present_first)) ? 'Present':'Absent'}}
-                                                               </span>
-                                                            @endif
-                                                      @endif
-                                                   </td>
-                                                   <td>
-                                                      {{ $target->current_location ?? '-' }}
-                                                   </td>
-                                                   <td>
-                                                      @if($policy->attendance == 0)
-                                                            {{ $found_absent_last->occured_at_tz ?? '-' }}
-                                                      @else
-                                                            {{ $found_present_first->occured_at_tz ?? '-' }}
-                                                      @endif
-                                                   </td>
+                        <div class="tab-pane fade {{ ($loop->first) ? 'show active':'' }}" id="tab-{{ $policy->rules_id }}" role="tabpanel">
+                           <div class="iq-card" style="height: 100%">
+                                 <div class="iq-card-body" style="padding: 15px">
+                                    <div class="table-responsive" style="overflow-x: hidden">
+                                       <table class="table" id="table-{{ $policy->rules_id }}">
+                                             <thead>
+                                                <tr>
+                                                   <!-- <th scope="col" style="width:10%">#</th> -->
+                                                   <th scope="col">Name</th>
+                                                   <th scope="col">Type</th>
+                                                   <th scope="col" style="width:10%">Attendance</th>
+                                                   <th scope="col">Current Location</th>
+                                                   <th scope="col" style="width:25%">Detected at</th>
                                                 </tr>
-                                          @endif
-                                       @endforeach
-                                    </tbody>
-                                 </table>
-                              </div>
+                                             </thead>
+                                             <tbody>
+                                             </tbody>
+                                       </table> 
+                                    </div>
+                                 </div>
                            </div>
                         </div>
-                     </div>
                      @endforeach
                   </div>
                </div>
@@ -190,6 +132,9 @@
             <div class="iq-card-header d-flex justify-content-between">
                <div class="iq-header-title">
                   <h4 class="card-title">Attendance</h4>
+               </div>
+               <div class="iq-card-header-toolbar d-flex align-items-center">
+                  <button type="button" class="btn custom-btn iq-bg-primary" id="refresh-attendance" onClick="reloadTableData()"><i class="ri-refresh-line mr-0"></i></button>
                </div>
             </div>
             <div class="iq-card-body">
@@ -314,10 +259,69 @@
    $(function(){
       $('#body').addClass(['sidebar-main-active', 'right-column-fixed', 'header-top-bgcolor']);
 
-      let timer = setInterval(getNewAlerts, 30000);
-      let timer_diff = setInterval(updateTimeDiff, 60000);
+      let timer_tables = setInterval(reloadTableData, 30000);
+      let timer_alerts = setInterval(getNewAlerts, 30000);
+      let timer_alerts_diff = setInterval(updateTimeDiff, 60000);
    });
 
+   @foreach($attendance_policies as $policy)
+   /* Initiate dataTable */
+   let table_{{ $policy->rules_id }} = $('#table-{{ $policy->rules_id }}').DataTable({
+   dom:'rt',  
+   processing: true,
+      serverSide: false,
+      ajax: {
+         url: '{{ route("attendance.date") }}',
+         data: function(data) {
+               data.rule_id = {{ $policy->rules_id }};
+               data.date = -1;
+               data.num = 5;
+         }
+      },
+      columns:[
+         {data: 'name', checkboxes: false, orderable: true},
+         {data: 'type'},
+         {data: 'attendance'},
+         {data: 'curr_loc'},
+         {data: 'detected_at'},
+      ],
+      order: [[4, 'asc']],
+   });
+   @endforeach
+
+   $('#attendance-nav').on('shown.bs.tab', function (e) {
+      let policy_id = e['target'].id.split('-')[1];
+
+      switch(policy_id){
+         @foreach($attendance_policies as $policy)
+         case "{{ $policy->rules_id }}":
+               table_{{ $policy->rules_id }}.columns.adjust().draw();
+               break;
+         @endforeach
+      }
+   });
+
+   function reloadTableData(){
+      console.log('reload');
+      let refresh_btn = $('#refresh-attendance');
+      refresh_btn.html('<i class="fa fa-custom fa-circle-o-notch fa-spin mr-0"></i>');
+      refresh_btn.addClass('custom-disabled');
+
+      @foreach($attendance_policies as $policy)
+         table_{{ $policy->rules_id }}.ajax.reload();
+      @endforeach
+
+      setTimeout(function() {
+         refresh_btn.html('<i class="fa fa-custom fa-check mr-0"></i>');
+         // notyf.success('Attendance updated successfully');
+      }, 500);
+      setTimeout(function() {
+         // let refresh_btn = $('#refresh-attendance');
+         refresh_btn.html('<i class="ri-refresh-line mr-0"></i>');
+         refresh_btn.removeClass('custom-disabled');
+      }, 1000);
+   }
+   
    $(document).on('click','.li-alert', function(){
       if($(this).hasClass('active')){
          console.log('has class')
@@ -461,8 +465,11 @@
                      message: response['success'],
                   });
                }
-               refresh_btn.html('<i class="ri-refresh-line mr-0"></i>');
-               refresh_btn.prop('disabled', false);
+               refresh_btn.html('<i class="fa fa-custom fa-check mr-0"></i>');
+               setTimeout(function() {
+                  refresh_btn.html('<i class="ri-refresh-line mr-0"></i>');
+                  refresh_btn.prop('disabled', false);
+               }, 1000);
             }
          },
          error:function(error){

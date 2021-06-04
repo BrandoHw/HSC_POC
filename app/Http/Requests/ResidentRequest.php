@@ -26,8 +26,8 @@ class ResidentRequest extends FormRequest
         $rules = [
             'resident_fName' => 'required',
             'resident_lName' => 'required',
-            'resident_age' => 'required',
-            'gender' => 'required',
+            'resident_dob' => 'required|date',
+            'resident_gender' => 'required',
             'contact_name' => 'required',
             'contact_phone_num_1' => 'required',
             'contact_address' => 'required',
@@ -51,7 +51,8 @@ class ResidentRequest extends FormRequest
         $custom_attributes = [
             'resident_fName' => 'first name',
             'resident_fName' => 'last name',
-            'resident_age' => 'age',
+            'resident_dob' => 'date of birth',
+            'resident_gender' => 'gender',
             'contact_name' => 'name',
             'contact_phone_num_1' => 'phone number',
             'contact_address' => 'address',
@@ -73,7 +74,8 @@ class ResidentRequest extends FormRequest
     public function messages()
     {
         $custom_messages = [
-            'gender.required' => 'Please select the :attribute.',
+            'resident_dob.required' => 'Please select the :attribute.',
+            'resident_gender.required' => 'Please select the :attribute.',
             'contact_relationship.required' => 'Please select the :attribute.',
         ];
 
