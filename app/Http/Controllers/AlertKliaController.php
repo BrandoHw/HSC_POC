@@ -9,8 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 
-
-class AlertController extends Controller
+class AlertKliaController extends Controller
 {
     function __construct()
     {
@@ -28,7 +27,7 @@ class AlertController extends Controller
         // $alerts = Alert::orderBy('alert_id', 'asc')->with(['reader', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])->get();
         $alerts = Alert::where('alert_id', '<=', 3170)->orderBy('alert_id', 'asc')->with(['reader', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])->get();
         $alerts_last = $alerts->last()->alert_id ?? 0;
-        return view('alerts.index', compact('alerts', 'alerts_last'));
+        return view('klia.alerts.index', compact('alerts', 'alerts_last'));
     }
 
     /**

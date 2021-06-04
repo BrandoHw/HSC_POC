@@ -34,6 +34,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\AlertKliaController;
 use App\UserLastSeen;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -168,5 +169,19 @@ Route::group(['middleware' => ['auth']], function() {
     ->except(['show', 'destroy']);
     Route::delete('staff/destroys', [StaffController::class, 'destroys'])
     ->name('staff.destroys');
+    Route::resource('alerts-klia', AlertKliaController::class)
+        ->except(['create', 'store', 'edit', 'update', 'destroy']);
+    Route::patch('alerts-klia/updates', [AlertKliaController::class, 'updates'])
+        ->name('alerts.klia.updates');
+    Route::delete('alerts-klia.destroys', [AlertKliaController::class, 'destroys'])
+        ->name('alerts.klia.destroys');
+    Route::post('alerts-klia.new', [AlertKliaController::class, 'new_alerts'])
+        ->name('alerts.klia.new');
+    Route::post('alerts-klia.new/table', [AlertKliaController::class, 'new_alerts_table'])
+        ->name('alerts.klia.new_table');
+    Route::patch('alerts-klia.resolve/all', [AlertKliaController::class, 'resolve_all'])
+        ->name('alerts.klia.resolve_all');
+    Route::patch('alerts-klia.resolve', [AlertKliaController::class, 'resolve'])
+        ->name('alerts.klia.resolve');
 
 });

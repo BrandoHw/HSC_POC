@@ -84,10 +84,17 @@
                     @endcan
                 @endif
 
+                @if(env('APP_TYPE') == 'klia')
+                    @can('alert-list')
+                        <li class="{{ Request::segment(1) === 'alerts-klia' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('alerts-klia.index') }}" class="iq-waves-effect"><i class="ri-alarm-warning-fill"></i><span>Alerts</span></a></li>
+                    @endcan
+                @else
+                    @can('alert-list')
+                        <li class="{{ Request::segment(1) === 'alerts' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('alerts.index') }}" class="iq-waves-effect"><i class="ri-alarm-warning-fill"></i><span>Alerts</span></a></li>
+                    @endcan
+                @endif
 
-                @can('alert-list')
-                <li class="{{ Request::segment(1) === 'alerts' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('alerts.index') }}" class="iq-waves-effect"><i class="ri-alarm-warning-fill"></i><span>Alerts</span></a></li>
-                @endcan
+
                 @can('tracking-list')
                 <li class="{{ Request::segment(1) === 'tracking' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('tracking.index') }}" class="iq-waves-effect"><i class="ri-map-pin-user-fill"></i><span>Tracking</span></a></li>
                 @endcan
