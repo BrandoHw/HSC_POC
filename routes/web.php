@@ -116,13 +116,15 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('reports', ReportController::class);
     Route::get('report-data', [ReportController::class, 'getData'])->name('report.data');
     Route::resource('alerts', AlertController::class)
-        ->only(['index', 'show']);
+        ->except(['create', 'store', 'edit', 'update', 'destroy']);
     Route::patch('alerts/updates', [AlertController::class, 'updates'])
         ->name('alerts.updates');
     Route::delete('alerts/destroys', [AlertController::class, 'destroys'])
         ->name('alerts.destroys');
     Route::post('alerts/new', [AlertController::class, 'new_alerts'])
         ->name('alerts.new');
+    Route::post('alerts/new/table', [AlertController::class, 'new_alerts_table'])
+        ->name('alerts.new_table');
     Route::patch('alerts/resolve/all', [AlertController::class, 'resolve_all'])
         ->name('alerts.resolve_all');
     Route::patch('alerts/resolve', [AlertController::class, 'resolve'])

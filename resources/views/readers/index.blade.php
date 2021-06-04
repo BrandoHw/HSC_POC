@@ -160,11 +160,11 @@
                 $('#confirmation-modal').modal('toggle');
                 
             } else {
-                $('#cancel-multipl-btn').prop('hidden', false);
-                $('#delete-multipl-btn').html('Yes, delete them');
-                $('#delete-multipl-btn').prop('disabled', false);
-                $('#delete-multipl-btn').css('background-color', 'var(--iq-danger)');
-                $('#delete-multipl-btn').css('border-color', 'var(--iq-danger)');
+                $('#cancel-multiple-btn').prop('hidden', false);
+                $('#delete-multiple-btn').html('Yes, delete them');
+                $('#delete-multiple-btn').prop('disabled', false);
+                $('#delete-multiple-btn').css('background-color', 'var(--iq-danger)');
+                $('#delete-multiple-btn').css('border-color', 'var(--iq-danger)');
                 $('#confirmation-multiple-modal').modal('toggle');
             }
         }
