@@ -111,8 +111,9 @@ class StaffController extends Controller
      * @param  \App\Resident  $resident
      * @return \Illuminate\Http\Response
      */
-    public function edit(Resident $resident)
+    public function edit($id)
     {
+        $resident = Resident::find($id);
         $tagsNull = Tag::doesntHave('resident')
             ->doesntHave('user')
             ->pluck('beacon_mac', 'beacon_id');
@@ -140,6 +141,7 @@ class StaffController extends Controller
             $resident->image_url = Storage::disk('s3')->url($resident->image_url);
         }
 
+       
         return view('klia.staff.edit', compact('resident', 'tagsNull', 'current', 'available', 'relationship'));
     }
 
@@ -150,8 +152,9 @@ class StaffController extends Controller
      * @param  \App\Tag  $resident
      * @return \Illuminate\Http\Response
      */
-    public function update(ResidentRequest $request, Resident $resident)
+    public function update(ResidentRequest $request, $id)
     {
+        $resident = Resident::find($id);
         $resident->update($request->all());
 
         /** Remove the tag associated with this user */
@@ -165,9 +168,9 @@ class StaffController extends Controller
         }
 
         $image_id = "image-input";
-        $extension = $request[$image_id]->extension();
-        $filename = "resident-".$resident->resident_id.".".$extension;
         if ($request->hasFile($image_id)) {
+            $extension = $request[$image_id]->extension();
+            $filename = "resident-".$resident->resident_id.".".$extension;
             if ($request->file($image_id)->isValid()) {
                 $validated = $request->validate([
                     'image' => 'mimes:jpeg,png|max:16384',

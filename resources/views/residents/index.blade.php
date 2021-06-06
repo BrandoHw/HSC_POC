@@ -37,7 +37,11 @@
                                 @foreach ($residents as $resident)
                                     <tr id="resident-{{ $resident->resident_id }}" href="{{ route('residents.edit',$resident->resident_id) }}">
                                         <td class='align-middle'>{{ $resident->resident_id }}</td>
-                                        <td class='info align-middle'><img class="rounded-circle img-fluid avatar-40" src="{{ asset('img/avatars/default-profile-m.jpg') }}" alt="profile"> {{ $resident->full_name }}</td>
+                                        <td class='info align-middle'><img class="rounded img-fluid avatar-40"
+                                            src={{ $resident->image_url === null ? 
+                                            asset('img/avatars/default-profile-m.jpg') : $resident->resized_url }}
+                                            alt="profile"> {{ $resident->full_name }}
+                                        </td>
                                         <td class='info align-middle'>{{ $resident->resident_dob }}</td>
                                         <td class='info align-middle'>{{ $resident->resident_gender ?? '-' }}</td>
                                         <td class='info align-middle'>{{ ($resident->wheelchair) ? "Yes":"No" }}</td>

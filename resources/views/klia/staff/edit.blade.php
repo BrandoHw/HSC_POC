@@ -7,7 +7,7 @@
             <div class="iq-card">
                 <div class="iq-card-header d-flex justify-content-between">
                     <div class="iq-header-title">
-                        <h5 class="card-title">Resident: <strong>{{ $resident->full_name }}</strong></h5>
+                        <h5 class="card-title">Staff Member: <strong>{{ $resident->full_name }}</strong></h5>
                     </div>
                 </div>
                 <div class="iq-card-body">
@@ -21,7 +21,7 @@
         <div class="col-sm-12 col-lg-8">
             <div class="iq-card">
                 <div class="iq-card-body">
-                    {!! Form::model($resident, ['method' => 'PATCH', 'route' => ['residents.update', $resident->resident_id], 'enctype'=>"multipart/form-data"]) !!}
+                    {!! Form::model($resident, ['method' => 'PATCH', 'route' => ['staff.update', $resident->resident_id], 'enctype'=>"multipart/form-data"]) !!}
                         <div class=" row align-items-center">
                             <div class="form-group col-sm-6">
                                 <label for="f-name">First Name:</label>
@@ -39,15 +39,20 @@
                                     <div class="invalid-feedback">{{ $message }}</div> 
                                 @enderror
                             </div>
-                            <div class="form-group col-sm-6">
-                                <label for="age">Age:</label>
-                                {!! Form::number('resident_age', null, ['class' => "form-control", 'id' => 'age', 'min' => '1', 'max'=>'100', 'placeholder' => 'Enter age']) !!}
+                            <div class="form-group col-sm-6" style="display: none">
+                                <label for="dob">Date of Birth:</label>
+                                <div class="input-group date">
+                                    {!! Form::text('resident_dob', "1950-01-01", ['class' => "form-control", 'id' => 'dob', 'style' => 'background-color: white', 'placeholder' => 'Please select...']) !!}
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="fa fa-calendar-o"></i></div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group col-sm-6">
+                            <div class="form-group col-sm-6" style="display: none">
                                 <label for="gender">Gender:</label>
-                                {!! Form::select('gender', ['M' => 'Male', 'F' => 'Female'], $resident->gender, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'gender']) !!}
+                                {!! Form::select('resident_gender', ['M' => 'Male', 'F' => 'Female'], $resident->resident_gender, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'gender']) !!}
                             </div>
-                            <div class="form-group col-sm-6">
+                            <div class="form-group col-sm-6" style="display: none">
                                 <label>External Support:</label>
                                 <div class="row align-items-center ml-2" id="support-row">
                                     <div class="custom-control custom-checkbox mr-3">
@@ -79,17 +84,17 @@
                                 </div>
                             </div>
                             <div class="form-group col-sm-12">
-                                <label for="image-input" >Resident Profile Picture</label>
+                                <label for="image-input" >Staff Profile Picture</label>
                                 <input id="image-input" type="file" class="form-control" name="image-input">
                                 <img src="#" alt = "" id="img-preview" width="200px" />   <!--for preview purpose -->
                             </div>
                         </div>
-                        <hr>
-                        <p class="iq-bg-primary pl-3 pr-3 pt-2 pb-2 rounded">Emergency Contact Person</p>
-                        <div class=" row align-items-center">
+
+                        <p class="iq-bg-primary pl-3 pr-3 pt-2 pb-2 rounded" style="display: none">Emergency Contact Person</p>
+                        <div class=" row align-items-center" style="display: none">
                             <div class="form-group col-sm-6">
                                 <label for="name">Name:</label>
-                                {!! Form::text('contact_name', null, ['class' => "form-control", 'id' => 'name', 'placeholder' => 'Enter name']) !!}
+                                {!! Form::text('contact_name', "N/A", ['class' => "form-control", 'id' => 'name', 'placeholder' => 'Enter name']) !!}
                                 @error('contact_name')
                                     <script>$('#name').addClass('is-invalid');</script>
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -101,7 +106,7 @@
                             </div>
                             <div class="form-group col-sm-6">
                                 <label for="phone-num-1">Phone Number 1:</label>
-                                {!! Form::text('contact_phone_num_1', null, ['class' => "form-control", 'id' => 'phone-num-1', 'placeholder' => 'Enter phone number']) !!}
+                                {!! Form::text('contact_phone_num_1', "N/A", ['class' => "form-control", 'id' => 'phone-num-1', 'placeholder' => 'Enter phone number']) !!}
                                 @error('contact_phone_num_1')
                                     <script>$('#phone-num-1').addClass('is-invalid');</script>
                                     <div class="invalid-feedback">{{ $message }}</div> 
@@ -109,7 +114,7 @@
                             </div>
                             <div class="form-group col-sm-6">
                                 <label for="phone-num-2">Phone Number 2:  <em class="text-secondary"><small>[Optional]</small></em></label>
-                                {!! Form::text('contact_phone_num_2', null, ['class' => "form-control", 'id' => 'phone-num-2', 'placeholder' => 'Enter phone number']) !!}
+                                {!! Form::text('contact_phone_num_2', "N/A", ['class' => "form-control", 'id' => 'phone-num-2', 'placeholder' => 'Enter phone number']) !!}
                                 @error('contact_phone_num_2')
                                     <script>$('#phone-num-2').addClass('is-invalid');</script>
                                     <div class="invalid-feedback">{{ $message }}</div> 
@@ -117,7 +122,7 @@
                             </div>
                             <div class="form-group col-sm-6">
                                 <label for="address">Address:</label>
-                                {!! Form::textarea('contact_address', null, ['class' => "form-control", 'size' => '30x5', 'id' => 'address', 'placeholder' => 'Enter address']) !!}
+                                {!! Form::textarea('contact_address', "N/A", ['class' => "form-control", 'size' => '30x5', 'id' => 'address', 'placeholder' => 'Enter address']) !!}
                                 @error('contact_address')
                                     <script>$('#address').addClass('is-invalid');</script>
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -126,7 +131,7 @@
                         </div>
                         <div class="text-center mt-5">
                             @can('resident-edit')
-                            <button type="submit" class="btn btn-primary">Update Resident</button>
+                            <button type="submit" class="btn btn-primary">Update Staff Member</button>
                             @endcan
                             <a href="{{ route('residents.index') }}" class="btn btn-secondary">Cancel</a>
                         </div>
@@ -141,7 +146,9 @@
 @section('script')
     <script>
         $(function(){
-            $('#age').inputSpinner();
+            $('#dob').flatpickr({
+                maxDate: 'today'
+            });
 
             $('#gender').select2();
             $('#tag').select2();
@@ -161,7 +168,7 @@
             @cannot('resident-edit')
                 $('#f-name').prop('disabled', true);
                 $('#l-name').prop('disabled', true);
-                $('#age').prop('disabled', true);
+                $('#dob').prop('disabled', true);
                 $('#gender').prop('disabled', true);
                 $('#wheelchair').prop('disabled', true);
                 $('#walking-cane').prop('disabled', true);
@@ -172,15 +179,17 @@
             /* Display select2 error */
             let message = "Error Message";
 
-            @error('resident_age')
+            @error('resident_dob')
             message = @json($message);
-            $('#age').addClass('is-invalid');
-            $('#age').siblings('.input-group').find('.input-group-prepend .btn').css('border-color', '#dc3545');
-            $('#age').siblings('.input-group').find('.input-group-append .btn').css('border-color', '#dc3545');
-            $('#age').siblings('.input-group').after('<div class="invalid-feedback">'+ message +'</div>');
+            $('#dob').addClass('is-invalid');
+            $('#dob').siblings('.input-group-append').css({
+                'border': '1px solid #dc3545',
+                'border-radius': '0 0.25rem 0.25rem 0',
+            });
+            $('#dob').siblings('.input-group-append').after('<div class="invalid-feedback">'+ message +'</div>');
             @enderror
             
-            @error('gender')
+            @error('resident_gender')
             message = @json($message);
             $('#gender').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
             $('#gender').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');

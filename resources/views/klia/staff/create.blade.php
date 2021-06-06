@@ -30,12 +30,17 @@
                             @enderror
                         </div>
                         <div class="form-group col-sm-6" style="display: none">
-                            <label for="age">Age:</label>
-                            {!! Form::number('resident_age', 30, ['class' => "form-control", 'id' => 'age', 'min' => '1', 'max'=>'120', 'placeholder' => 'Enter age']) !!}
+                            <label for="dob">Date of Birth:</label>
+                            <div class="input-group date">
+                                {!! Form::text('resident_dob', "1950-01-01", ['class' => "form-control", 'id' => 'dob', 'style' => 'background-color: white', 'placeholder' => 'Please select...']) !!}
+                                <div class="input-group-append">
+                                    <div class="input-group-text"><i class="fa fa-calendar-o"></i></div>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group col-sm-6" style="display: none">
                             <label for="gender">Gender:</label>
-                            {!! Form::select('gender', ['M' => 'Male', 'F' => 'Female'], 'M', ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'gender']) !!}
+                            {!! Form::select('resident_gender', ['M' => 'Male', 'F' => 'Female'], 'M', ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'gender']) !!}
                         </div>
                         <div class="form-group col-sm-6" style="display: none">
                             <label>External Support:</label>

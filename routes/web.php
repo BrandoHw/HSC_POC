@@ -164,11 +164,14 @@ Route::group(['middleware' => ['auth']], function() {
 
    
     //KLIA Controllers
-    Route::get('get-attendance-klia', [AttendanceKliaController::class, 'getAttendanceKLIA'])->name('klia.get');;
+    Route::get('get-attendance-klia', [AttendanceKliaController::class, 'getAttendanceKLIA'])->name('klia.get');
+
     Route::resource('staff', StaffController::class)
     ->except(['show', 'destroy']);
     Route::delete('staff/destroys', [StaffController::class, 'destroys'])
     ->name('staff.destroys');
+
+
     Route::resource('alerts-klia', AlertKliaController::class)
         ->except(['create', 'store', 'edit', 'update', 'destroy']);
     Route::patch('alerts-klia/updates', [AlertKliaController::class, 'updates'])

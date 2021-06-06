@@ -74,6 +74,7 @@ class ResidentController extends Controller
             $resident->tag()->associate($tag)->save();
         }
         $image_id = "image-input";
+    
         if ($request->hasFile($image_id)) {
             $extension = $request[$image_id]->extension();
             $filename = "resident-".$resident->resident_id.".".$extension;
@@ -164,6 +165,7 @@ class ResidentController extends Controller
         }
 
         $image_id = "image-input";
+ 
         if ($request->hasFile($image_id)) {
             $extension = $request[$image_id]->extension();
             $filename = "resident-".$resident->resident_id.".".$extension;

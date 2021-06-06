@@ -44,6 +44,7 @@ class Resident extends Model
         'x_value', 'y_value', 'z_value', 
         'contact_name', 'contact_phone_num_1', 'contact_phone_num_2',
         'contact_address', 'contact_relationship',
+        'image_url',
     ];
     /**
      * Get the tag that owns the resident
