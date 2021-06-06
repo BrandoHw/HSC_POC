@@ -15,7 +15,7 @@ class AttendanceKliaController extends Controller
 
     public function getAttendanceKLIA(Request $request)
     {
-        // $request['date_range'] = "05/05/2021 - 06/03/2021";
+        // $request['date_range'] = "05/05/2021 - 06/06/2021";
         $date_start = new Carbon(explode(' - ', $request['date_range'])[0]);
         $date_end = new Carbon(explode(' - ', $request['date_range'])[1]);
         $date_end = $date_end->addDays(1)->subSecond(1);

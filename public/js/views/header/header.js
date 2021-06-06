@@ -875,12 +875,14 @@ $(function() {
             success: function(data_array){
                 // console.log("NOTIFICATION BAR");
                 console.log(data_array);
-                data = data_array['alerts'];
                 $('#notif-count').text(data_array['counts']);
                 $("#notification-card").children('.iq-sub-card').remove();
-             
+                data = data_array['alerts'];
+                var length = data.length;
+                if (length > 5)
+                    length = 5;
                 if (data.length > 0){
-                    for (var i = 0; i < 5; i++) {
+                    for (var i = 0; i < length; i++) {
                         var full_name = data[i].full_name;
                         var rule = data[i].policy.description;
                         var duration = data[i].duration;
