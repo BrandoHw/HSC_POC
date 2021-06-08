@@ -47,6 +47,10 @@
                             <a class="nav-link" id="home-tab-three" 
                             data-toggle="tab" href="#tab-table3" role="tab" aria-controls="home" aria-selected="true">Residents</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="home-tab-four" 
+                            data-toggle="tab" href="#tab-table4" role="tab" aria-controls="home" aria-selected="true">Users</a>
+                        </li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab-table1">
@@ -56,7 +60,7 @@
                                         <tr>
                                             <th scope="col">Policy Type</th>
                                             <th scope="col">Policy Name</th>
-                                            <th scope="col">Subject</th>
+                                            <th scope="col">Name</th>
                                             <th scope="col">Location</th>
                                             <th scope="col">Date</th>
                                             <th scope="col">Time</th>
@@ -147,6 +151,34 @@
                                 </table> 
                             </div>
                         </div>
+                        <div class="tab-pane" id="tab-table4">
+                            <div class="table-responsive" style="margin-top: 15px">
+                                <table class="table table-stripe table-bordered hover" id="userTable">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Username</th>
+                                            <th scope="col">User Type</th>
+                                            <th scope="col">Role</th>
+                                            <th scope="col">Email</th>
+                                            <th scope="col">Phone Number</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($users as $user)
+                                            <tr>
+                                                <td>{{ $user->full_name}}</td>
+                                                <td>{{ $user->username}}</td>
+                                                <td>{{ $user->user_type->type ?? "-"}}</td>
+                                                <td>{{ $user->user_right->description ?? "-"}}</td>
+                                                <td>{{ $user->email}}</td>
+                                                <td>{{ $user->phone_number }}</td> 
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table> 
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -229,7 +261,12 @@
             $('#selHolder').hide();
             $('#draw-btn').hide();
             tab = "home-tab-three";
+        }else if (e.target.id === "home-tab-four"){
+            $('#selHolder').hide();
+            $('#draw-btn').hide();
+            tab = "home-tab-four";
         }
+
     });
 
     // Setup - add a text input to each footer cell
@@ -247,7 +284,7 @@
         } );
     } );
 
-    
+
     /* Initiate dataTable */
     var alertTable = $('#alertTable').DataTable({
         columnDefs: [{
@@ -279,6 +316,8 @@
             {data: 'time'},
         ],  
         pageLength: 15, 
+        orderCellsTop: true,
+        fixedHeader: true,
     });
 
     var gatewayTable = $('#gatewayTable').DataTable({
@@ -294,7 +333,7 @@
             orderable: false,
         }],
         pageLength: 15,
-        order: [[0, 'desc']],
+        order: [[0, 'asc']],
     });
 
     
@@ -311,7 +350,23 @@
             orderable: false,
         }],
         pageLength: 15,
-        order: [[0, 'desc']],
+        order: [[0, 'asc']],
+    });
+
+    var userTable = $('#userTable').DataTable({
+        dom: "<'row'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6'>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-12 col-md-5'li><'col-sm-12 col-md-7'p>>",
+        buttons: [{
+            extend: 'excelHtml5',
+            title: 'Data export Users',
+            },
+        ],
+        columnDefs: [{
+            orderable: false,
+        }],
+        pageLength: 15,
+        order: [[0, 'asc']],
     });
 
     var series;

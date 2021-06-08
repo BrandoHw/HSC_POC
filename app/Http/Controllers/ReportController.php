@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Reader;
 use App\Resident;
+use App\User;
 
 class ReportController extends Controller
 {
@@ -43,7 +44,9 @@ class ReportController extends Controller
         }
 
         $residents = Resident::get();
-        return view('reports.index', compact('alerts', 'gateways', 'residents'));
+        $users = User::with(['userType', 'userRight'])->get();
+
+        return view('reports.index', compact('alerts', 'gateways', 'residents', 'users'));
     }
 
     /**
