@@ -128,7 +128,7 @@ class UserLastSeenController extends Controller
     {
         //
         $id = $request->input('id');
-        $beacon = json_decode(json_encode(Tag::with(['resident', 'staff_klia', 'staff', 'gateway', 'gateway.location'])->where('beacon_id', $id)->get()));
+        $beacon = json_decode(json_encode(Tag::with(['resident', 'staff', 'gateway', 'gateway.location'])->where('beacon_id', $id)->get()));
         $beacon[0]->grey_marker = Carbon::parse($beacon[0]->updated_at)->tz('Asia/Kuala_Lumpur')->lt(Carbon::now()->subMinutes(5));
         $beacon[0]->updated_at = Carbon::parse($beacon[0]->updated_at)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
     

@@ -80,7 +80,7 @@ class StaffController extends Controller
             $filename = "resident-".$resident->resident_id.".".$extension;
             if ($request->file($image_id)->isValid()) {
                 $validated = $request->validate([
-                    'image' => 'mimes:jpeg,png|max:16384',
+                    'image-input' => 'mimes:jpeg,png|max:16384',
                 ]);
                 $image_url = Storage::disk('s3')->putFileAs(
                 'residents', $request->file('image-input'), $filename,
@@ -173,7 +173,7 @@ class StaffController extends Controller
             $filename = "resident-".$resident->resident_id.".".$extension;
             if ($request->file($image_id)->isValid()) {
                 $validated = $request->validate([
-                    'image' => 'mimes:jpeg,png|max:16384',
+                    'image-input' => 'mimes:jpeg,png|max:16384',
                 ]);
                 $image_url = Storage::disk('s3')->putFileAs(
                 'residents', $request->file('image-input'), $filename,
