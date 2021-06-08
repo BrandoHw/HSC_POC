@@ -55,6 +55,7 @@ Auth::routes(['register' => false, 'reset' => false]);
 Route::group(['middleware' => ['auth']], function() { 
     
     Route::get('/', [HomeController::class, 'index'])->name('home')->block();
+    Route::get('/icon', [HomeController::class, 'show_icon'])->name('home.icon');
     
     //Route::resource('dashboard', DashboardController::class);
 

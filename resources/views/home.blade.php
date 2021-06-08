@@ -15,6 +15,7 @@
    .fa-custom { font-size: 17px; margin-top: 5px}
    .custom-btn { height: 40px; width: 40px; padding: 0; border-radius: 10px; }
    .apexcharts-series { cursor: pointer }
+   .iq-card-icon { cursor: pointer }
 
 </style>
 @endsection
@@ -27,45 +28,45 @@
                <div class="row">
                   <div class="col-md-6 col-lg">
                      <div class="d-flex align-items-center mb-3 mb-lg-0">
-                        <div class="rounded-circle iq-card-icon iq-bg-primary mr-3"> <i class="ri-message-line"></i></div>
+                        <div class="rounded-circle iq-card-icon iq-bg-primary mr-3" href="{{ route('policies.index') }}" > <i class="ri-message-line"></i></div>
                         <div class="text-left">
-                           <h4>{{ $policies_count }}</h4>
+                           <h4 id="icon-text-policy">{{ $policies_count }}</h4>
                            <p class="mb-0">Total Policies</p>
                         </div>
                      </div>
                   </div>
                   <div class="col-md-6 col-lg">
                      <div class="d-flex align-items-center mb-3 mb-lg-0">
-                        <div class="rounded-circle iq-card-icon iq-bg-success mr-3"> <i class="ri-base-station-line"></i></div>
+                        <div class="rounded-circle iq-card-icon iq-bg-success mr-3" href="{{ route('gateways.index') }}" > <i class="ri-base-station-line"></i></div>
                         <div class="text-left">
-                           <h4>{{ $readers_count }}</h4>
+                           <h4 id="icon-text-reader">{{ $readers_count }}</h4>
                            <p class="mb-0">Total Gateways</p>
                         </div>
                      </div>
                   </div>
                   <div class="col-md-6 col-lg">
                      <div class="d-flex align-items-center mb-3 mb-md-0">
-                        <div class="rounded-circle iq-card-icon iq-bg-info mr-3"> <i class="ri-share-line"></i></div>
+                        <div class="rounded-circle iq-card-icon iq-bg-info mr-3" href="{{ route('beacons.index') }}" > <i class="ri-share-line"></i></div>
                         <div class="text-left">
-                           <h4>{{ $tags_count }}</h4>
+                           <h4 id="icon-text-tag">{{ $tags_count }}</h4>
                            <p class="mb-0">Total Beacons</p>
                         </div>
                      </div>
                   </div>
                   <div class="col-md-6 col-lg">
                      <div class="d-flex align-items-center mb-3 mb-md-0">
-                        <div class="rounded-circle iq-card-icon iq-bg-warning mr-3"> <i class="ri-group-line"></i></div>
+                        <div class="rounded-circle iq-card-icon iq-bg-warning mr-3" href="{{ route('residents.index') }}" > <i class="ri-group-line"></i></div>
                         <div class="text-left">
-                           <h4>{{ $residents_count }}</h4>
+                           <h4 id="icon-text-resident">{{ $residents_count }}</h4>
                            <p class="mb-0">Total Residents</p>
                         </div>
                      </div>
                   </div>
                   <div class="col-md-6 col-lg">
                      <div class="d-flex align-items-center mb-3 mb-md-0">
-                        <div class="rounded-circle iq-card-icon iq-bg-danger mr-3"> <i class="ri-alarm-warning-line"></i></div>
+                        <div class="rounded-circle iq-card-icon iq-bg-danger mr-3" href="{{ route('alerts.index') }}" > <i class="ri-alarm-warning-line"></i></div>
                         <div class="text-left">
-                           <h4>{{ $alerts_count }}</h4>
+                           <h4 id="icon-text-alert">{{ $alerts_count }}</h4>
                            <p class="mb-0">Total Alerts</p>
                         </div>
                      </div>
@@ -271,6 +272,7 @@
    $(function(){
       $('#body').addClass(['sidebar-main-active', 'right-column-fixed', 'header-top-bgcolor']);
 
+      let timer_icon = setInterval(reloadIconData, 30000);
       let timer_tables = setInterval(reloadTableData, 30000);
       let timer_alerts = setInterval(getNewAlerts, 30000);
       let timer_alerts_diff = setInterval(updateTimeDiff, 60000);
@@ -314,6 +316,37 @@
       }
    });
 
+   $('.iq-card-icon').on('click', function(){
+      window.location.href = $(this).attr('href');
+   })
+
+   function reloadIconData(){
+      let result = {
+         _token: $('meta[name="csrf-token"]').attr('content')
+      };
+
+      $.ajax({
+         url: '{{ route("home.icon") }}',
+         type: "GET",
+         data: result,
+         success:function(response){
+            let errors = response['errors'];
+            if($.isEmptyObject(response['success'])){
+               console.log(errors);
+            } else {
+               $('#icon-text-policy').html(response['policy']);
+               $('#icon-text-reader').html(response['reader']);
+               $('#icon-text-tag').html(response['tag']);
+               $('#icon-text-resident').html(response['resident']);
+               $('#icon-text-alert').html(response['alert']);
+            }
+         },
+         error:function(error){
+            console.log(error);
+         }
+      });
+   }
+
    function reloadTableData(){
       if($('#attendance-table').is(":visible")){
          let refresh_btn = $('#refresh-attendance');
@@ -338,7 +371,6 @@
    
    $(document).on('click','.li-alert', function(){
       if($(this).hasClass('active')){
-         console.log('has class')
          $(this).find('div.timeline-dots').removeClass('border-danger');
          $(this).find('h6').removeClass('text-danger');
          $(this).find('div.d-flex p.badge').removeClass('badge-danger');
@@ -673,7 +705,6 @@
             events: {
                dataPointSelection: function(event, chartContext, config) {
                   let label = config.w.config.labels[config.dataPointIndex];
-                  console.log(label);
                   $('#attendance-data').val(label);
                   $('#attendance-form').submit();
                }, 
@@ -727,7 +758,6 @@
             if($.isEmptyObject(response['success'])){
                console.log(errors);
             } else {
-               console.log(response)
                if(response["labels_data"].length > 0){
                   /* Hide deleted attendance policy */
                   let attendances_id = @json($attendance_policies->pluck('rules_id')->all());

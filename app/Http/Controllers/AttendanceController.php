@@ -316,7 +316,7 @@ class AttendanceController extends Controller
         }
 
         return response()->json([
-            "success" => "Badge updated successfully.",
+            "success" => "Chart updated successfully.",
             "series_data" => $attendance,
             "labels_data" => $attendance_policies->pluck('description')->all(),
             "exist" => $attendance_policies->pluck('rules_id')->all(),

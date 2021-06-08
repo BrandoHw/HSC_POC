@@ -133,4 +133,35 @@ class HomeController extends Controller
             'attendance_policies', 'attendance_alerts', 'attendance', 'colors', 'whole', 'fraction'
         ));
     }
+
+    /**
+     * Refresh icon data.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function show_icon(Request $request){
+        $today = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');
+        
+        $alerts = Alert::where('occured_at', '>=', $today)
+            ->orderBy('occured_at', 'desc')
+            ->with(['reader', 'reader.location', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
+            ->get();
+        $alerts_count = $alerts->count();
+
+        $policies_count = Policy::count();
+        $readers_count = Reader::count();
+        $tags_count = Tag::count();
+        $residents_count = Resident::count();
+
+        return response()->json([
+            "success" => "Icon data updated successfully.",
+            "alert" => $alerts_count,
+            "policy" => $policies_count,
+            "reader" => $readers_count,
+            "tag" => $tags_count,
+            "resident" => $residents_count,
+        ], 200);
+
+    }
 }
