@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
-
+use App\UserType;
+use App\UserRight;
 class User extends Authenticatable
 {
     use Notifiable;
@@ -51,7 +52,7 @@ class User extends Authenticatable
      */
     public function userRight()
     {
-        return $this->belongsTo(userRight::class, 'right_id', 'user_right_id')->withTrashed();
+        return $this->belongsTo(UserRight::class, 'right_id', 'user_right_id')->withTrashed();
     }
 
     /**
@@ -59,7 +60,7 @@ class User extends Authenticatable
      */
     public function userType()
     {
-        return $this->belongsTo(userType::class, 'type_id', 'user_type_id')->withTrashed();
+        return $this->belongsTo(UserType::class, 'type_id', 'user_type_id')->withTrashed();
     }
 
     /**

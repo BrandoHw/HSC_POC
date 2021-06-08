@@ -169,8 +169,8 @@
                                             <tr>
                                                 <td>{{ $user->full_name}}</td>
                                                 <td>{{ $user->username}}</td>
-                                                <td>{{ $user->user_type->type ?? "-"}}</td>
-                                                <td>{{ $user->user_right->description ?? "-"}}</td>
+                                                <td>{{ $user->userType->type ?? "-"}}</td>
+                                                <td>{{ $user->userRight->description ?? "-"}}</td>
                                                 <td>{{ $user->email}}</td>
                                                 <td>{{ $user->phone_number }}</td> 
                                             </tr>
@@ -243,7 +243,8 @@
     // Create chart instance
     var pie_chart = am4core.create("chart-div", am4charts.PieChart);
     var tab = "home-tab-one"
-
+    var users =  <?php echo $users; ?>;
+    console.log(users);
     $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
         $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
         console.log(e.target.id);
