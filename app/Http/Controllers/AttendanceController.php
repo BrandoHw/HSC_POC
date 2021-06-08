@@ -26,10 +26,15 @@ class AttendanceController extends Controller
     /**
     * Display a listing of the resource.
     *
+    * @param  \Illuminate\Http\Request  $request
     * @return \Illuminate\Http\Response
     */
-    public function index()
-    {
+    public function index(Request $request)
+    {   
+        if(isset($request['data'])){
+            $request->session()->flash('dashboard', $request['data']);
+        }
+
         $attendance_policies = Policy::where('rules_type_id', '1')->orderBy('description', 'asc')
             ->with(['scope', 'scope.tags', 'scope.tags.user', 'scope.tags.resident', 'alerts'])
             ->get();
@@ -90,30 +95,65 @@ class AttendanceController extends Controller
      */
     public function show_date(Request $request)
     {
-        $policy = Policy::find($request['rule_id']);
-        $date = $request['date'];
-        $num = $request['num'];
-        
-        $now = Carbon::now();
-        $today = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');
-        
-        if($date == -1){
-            $date_carbon = $today;
+        $policy = Policy::find($request['rule_id']) ?? null;
+        $data_update = collect();
+
+        if(!isset($policy)){
+            $data = collect([
+                'name' => '-',
+                'type' => '-',
+                'attendance' => '-',
+                'curr_loc' => '-',
+                'detected_at' => '-',
+            ]);
+
+            $data_update->push($data);
         } else {
-            $date_carbon = Carbon::parse($request['date'], 'Asia/Kuala_Lumpur');
-        }
-
-        $start_time = Carbon::parse($policy->datetime_at_utc);
-        $policy['absent'] = -1;
-
-        if($num == -1){
-            $targets = $policy->scope->tags;
-        } else {
-            $targets = $policy->scope->tags->sortByDesc('updated_at')->take($num); 
-        }
-
-        if($date_carbon >= $today){
-            if($now > $start_time){
+            $date = $request['date'];
+            $num = $request['num'];
+            
+            $now = Carbon::now();
+            $today = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');
+            
+            if($date == -1){
+                $date_carbon = $today;
+            } else {
+                $date_carbon = Carbon::parse($request['date'], 'Asia/Kuala_Lumpur');
+            }
+    
+            $start_time = Carbon::parse($policy->datetime_at_utc);
+            $policy['absent'] = -1;
+    
+            if($num == -1){
+                $targets = $policy->scope->tags;
+            } else {
+                $targets = $policy->scope->tags->sortByDesc('updated_at')->take($num); 
+            }
+    
+            if($date_carbon >= $today){
+                if($now > $start_time){
+                    if($policy->attendance != 0){
+                        $policy['absent'] = count($policy->all_targets) - ($policy->alerts->where('occured_at', '>=', date($policy->datetime_at_utc))->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))->unique('beacon_id')->count());
+                        foreach($targets as $target){
+                            $target['found'] = $policy->alerts
+                            ->where('beacon_id', $target->beacon_id)
+                            ->where('occured_at', '>=', date($policy->datetime_at_utc))
+                            ->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))
+                            ->first() ?? null;
+                        }
+                    } else {
+                        $policy['absent'] = $policy->alerts->where('occured_at', '>=', date($policy->datetime_at_utc))->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))->unique('beacon_id')->count();
+                        foreach($targets as $target){
+                            $target['found'] = $policy->alerts
+                            ->where('beacon_id', $target->beacon_id)
+                            ->where('occured_at', '>=', date($policy->datetime_at_utc))
+                            ->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))
+                            ->last() ?? null;
+                        }
+                    }
+                }
+            } else {
+                $today_check = false;
                 if($policy->attendance != 0){
                     $policy['absent'] = count($policy->all_targets) - ($policy->alerts->where('occured_at', '>=', date($policy->datetime_at_utc))->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))->unique('beacon_id')->count());
                     foreach($targets as $target){
@@ -133,45 +173,31 @@ class AttendanceController extends Controller
                         ->last() ?? null;
                     }
                 }
+    
             }
-        } else {
-            $today_check = false;
-            if($policy->attendance != 0){
-                $policy['absent'] = count($policy->all_targets) - ($policy->alerts->where('occured_at', '>=', date($policy->datetime_at_utc))->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))->unique('beacon_id')->count());
-                foreach($targets as $target){
-                    $target['found'] = $policy->alerts
-                    ->where('beacon_id', $target->beacon_id)
-                    ->where('occured_at', '>=', date($policy->datetime_at_utc))
-                    ->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))
-                    ->first() ?? null;
+    
+            foreach($targets as $target){
+                if(!empty($target->user)){
+                    $full_name = $target->user->full_name ?? '-';
+                    $type = "Staff";
+                } else {
+                    $full_name = $target->resident->full_name ?? '-';
+                    $type = "Resident";
                 }
-            } else {
-                $policy['absent'] = $policy->alerts->where('occured_at', '>=', date($policy->datetime_at_utc))->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))->unique('beacon_id')->count();
-                foreach($targets as $target){
-                    $target['found'] = $policy->alerts
-                    ->where('beacon_id', $target->beacon_id)
-                    ->where('occured_at', '>=', date($policy->datetime_at_utc))
-                    ->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))
-                    ->last() ?? null;
-                }
-            }
-
-        }
-
-        $data_update = collect();
-
-        foreach($targets as $target){
-            if(!empty($target->user)){
-                $full_name = $target->user->full_name ?? '-';
-                $type = "Staff";
-            } else {
-                $full_name = $target->resident->full_name ?? '-';
-                $type = "Resident";
-            }
-
-            if($date_carbon >= $today){
-                if($now < $start_time){
-                    $attendance_badge = '<span class="badge badge-pill badge-secondary">N/A</span>';
+    
+                if($date_carbon >= $today){
+                    if($now < $start_time){
+                        $attendance_badge = '<span class="badge badge-pill badge-secondary">N/A</span>';
+                    } else {
+                        if($policy->attendance == 0){
+                            $color = (isset($target->found)) ? 'danger':'success';
+                            $attend = (isset($target->found)) ? 'Absent':'Present';
+                        } else {
+                            $color = (isset($target->found)) ? 'success':'danger';
+                            $attend = (isset($target->found)) ? 'Present':'Absent';
+                        }
+                        $attendance_badge = '<span class="badge badge-pill badge-'.$color.'">'.$attend.'</span>';
+                    }
                 } else {
                     if($policy->attendance == 0){
                         $color = (isset($target->found)) ? 'danger':'success';
@@ -182,27 +208,20 @@ class AttendanceController extends Controller
                     }
                     $attendance_badge = '<span class="badge badge-pill badge-'.$color.'">'.$attend.'</span>';
                 }
-            } else {
-                if($policy->attendance == 0){
-                    $color = (isset($target->found)) ? 'danger':'success';
-                    $attend = (isset($target->found)) ? 'Absent':'Present';
-                } else {
-                    $color = (isset($target->found)) ? 'success':'danger';
-                    $attend = (isset($target->found)) ? 'Present':'Absent';
-                }
-                $attendance_badge = '<span class="badge badge-pill badge-'.$color.'">'.$attend.'</span>';
+    
+                $data = collect([
+                    'name' => $full_name,
+                    'type' => $type,
+                    'attendance' => $attendance_badge,
+                    'curr_loc' => $target->current_location ?? '-',
+                    'detected_at' => $target->found->occured_at_tz ?? '-',
+                ]);
+    
+                $data_update->push($data);
             }
 
-            $data = collect([
-                'name' => $full_name,
-                'type' => $type,
-                'attendance' => $attendance_badge,
-                'curr_loc' => $target->current_location ?? '-',
-                'detected_at' => $target->found->occured_at_tz ?? '-',
-            ]);
-
-            $data_update->push($data);
         }
+
 
         return response()->json([
             "success" => "Attendance updated successfully.",
@@ -255,6 +274,52 @@ class AttendanceController extends Controller
         return response()->json([
             "success" => "Badge updated successfully.",
             "badge_data" => $badge_data
+        ], 200);
+
+    }
+
+    /**
+     * Display the specified resources from storage based on date.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function show_chart(Request $request){
+        $attendance_policies = Policy::where('rules_type_id', '1')->orderBy('description', 'asc')
+            ->with(['scope', 'scope.tags', 'scope.tags.user', 'scope.tags.resident', 'alerts'])
+            ->get();
+
+        /* Radial Chart Series */
+        $attendance = array();
+        $now = Carbon::now()->toDateTimeString();
+        foreach($attendance_policies as $policy){
+            $start_time = Carbon::parse($policy->datetime_at_utc);
+            $percentage = 0;
+            if($now >= $start_time){
+                if($policy->attendance == 0){
+                    $absent = $policy->alerts
+                        ->where('occured_at', '>=', date($policy->datetime_at_utc))
+                        ->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))
+                        ->unique('beacon_id')
+                        ->count();
+                } else {
+                    $absent = count($policy->all_targets) 
+                        - ($policy->alerts
+                            ->where('occured_at', '>=', date($policy->datetime_at_utc))
+                            ->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))
+                            ->unique('beacon_id')
+                            ->count());
+                }
+                $percentage = (1 - $absent/count($policy->all_targets)) * 100;
+            }
+            array_push($attendance, $percentage);
+        }
+
+        return response()->json([
+            "success" => "Badge updated successfully.",
+            "series_data" => $attendance,
+            "labels_data" => $attendance_policies->pluck('description')->all(),
+            "exist" => $attendance_policies->pluck('rules_id')->all(),
         ], 200);
 
     }

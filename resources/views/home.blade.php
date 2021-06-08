@@ -14,6 +14,7 @@
    .ri-refresh-line { font-size: 20px; }
    .fa-custom { font-size: 17px; margin-top: 5px}
    .custom-btn { height: 40px; width: 40px; padding: 0; border-radius: 10px; }
+   .apexcharts-series { cursor: pointer }
 
 </style>
 @endsection
@@ -89,7 +90,11 @@
                </div>
             </div>
             <div class="iq-card-body">
-               <div>
+               <div class="text-center align-middle" style="margin-top: 5rem; margin-bottom: 8rem" id="no-attendance-div" {{ (count($attendance_policies) < 1) ? "":"hidden"}}>
+                  <div data-icon="*" style="font-size: 55px" class="icon text-secondary" ></div>
+                  <p>No Attendance Policy Found!</p>
+               </div>
+               <div id="attendance-table" {{ (count($attendance_policies) < 1) ? "hidden":""}}>
                   <ul class="nav nav-tabs justify-content-right" id="attendance-nav" role="tablist">
                         @foreach($attendance_policies as $policy)
                         <li class="nav-item">
@@ -131,14 +136,21 @@
          <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
             <div class="iq-card-header d-flex justify-content-between">
                <div class="iq-header-title">
-                  <h4 class="card-title">Attendance</h4>
+                  <h4 class="card-title">Attendance Chart</h4>
                </div>
                <div class="iq-card-header-toolbar d-flex align-items-center">
-                  <button type="button" class="btn custom-btn iq-bg-primary" id="refresh-attendance" onClick="reloadTableData()"><i class="ri-refresh-line mr-0"></i></button>
+                  <button type="button" class="btn custom-btn iq-bg-primary" id="refresh-attendance" onClick="reloadTableData()" {{ (count($attendance_policies) < 1) ? "hidden":""}}><i class="ri-refresh-line mr-0"></i></button>
                </div>
             </div>
             <div class="iq-card-body">
-               <div id="home-perfomer-chart"></div>
+               <div class="text-center align-middle" style="margin-top: 5rem; margin-bottom: 8rem" id="no-attendance-chart-div" {{ (count($attendance_policies) < 1) ? "":"hidden"}}>
+                  <div data-icon="&#xe002" style="font-size: 55px" class="icon text-secondary" ></div>
+                  <p>No Attendance Policy Found!</p>
+               </div>
+               <div id="home-perfomer-chart" {{ (count($attendance_policies) < 1) ? "hidden":""}}></div>
+               <form method="get" name="form" id="attendance-form" action="{{ route('attendance.index') }}">
+                  <input type="text" name="data" id="attendance-data" value='0' hidden>
+               </form>
             </div>
          </div>
       </div>
@@ -262,6 +274,7 @@
       let timer_tables = setInterval(reloadTableData, 30000);
       let timer_alerts = setInterval(getNewAlerts, 30000);
       let timer_alerts_diff = setInterval(updateTimeDiff, 60000);
+
    });
 
    @foreach($attendance_policies as $policy)
@@ -302,24 +315,25 @@
    });
 
    function reloadTableData(){
-      console.log('reload');
-      let refresh_btn = $('#refresh-attendance');
-      refresh_btn.html('<i class="fa fa-custom fa-circle-o-notch fa-spin mr-0"></i>');
-      refresh_btn.addClass('custom-disabled');
-
-      @foreach($attendance_policies as $policy)
-         table_{{ $policy->rules_id }}.ajax.reload();
-      @endforeach
-
-      setTimeout(function() {
-         refresh_btn.html('<i class="fa fa-custom fa-check mr-0"></i>');
-         // notyf.success('Attendance updated successfully');
-      }, 500);
-      setTimeout(function() {
-         // let refresh_btn = $('#refresh-attendance');
-         refresh_btn.html('<i class="ri-refresh-line mr-0"></i>');
-         refresh_btn.removeClass('custom-disabled');
-      }, 1000);
+      if($('#attendance-table').is(":visible")){
+         let refresh_btn = $('#refresh-attendance');
+         refresh_btn.html('<i class="fa fa-custom fa-circle-o-notch fa-spin mr-0"></i>');
+         refresh_btn.addClass('custom-disabled');
+   
+         reloadChartData();
+         @foreach($attendance_policies as $policy)
+            table_{{ $policy->rules_id }}.ajax.reload();
+         @endforeach
+   
+         setTimeout(function() {
+            refresh_btn.html('<i class="fa fa-custom fa-check mr-0"></i>');
+            // notyf.success('Attendance updated successfully');
+         }, 500);
+         setTimeout(function() {
+            refresh_btn.html('<i class="ri-refresh-line mr-0"></i>');
+            refresh_btn.removeClass('custom-disabled');
+         }, 1000);
+      }
    }
    
    $(document).on('click','.li-alert', function(){
@@ -650,112 +664,103 @@
 
    if($('#home-perfomer-chart').length){
       let options = {
+         // series: [1, 10, 20, 30, 40, 50, 60],
          series: @json($attendance),
          chart: {
+            id: 'home-perfomer-chart',
             height: 350,
             type: 'radialBar',
+            events: {
+               dataPointSelection: function(event, chartContext, config) {
+                  let label = config.w.config.labels[config.dataPointIndex];
+                  console.log(label);
+                  $('#attendance-data').val(label);
+                  $('#attendance-form').submit();
+               }, 
+            }
          },
-         colors: ['#827af3','#e64141','#ffd400','#00d0ff', '#ffd400','#00d0ff','#00d0ff'],
+         colors: @json($colors),
          plotOptions: {
             radialBar: {
                dataLabels: {
-               name: {
-                  fontSize: '22px',
-               },
-               value: {
-                  fontSize: '16px',
-               },
-               total: {
-                  show: true,
-                  label: 'Total',
-                  formatter: function (w) {
-                     // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
-                     return 249
+                  name: {
+                     fontSize: '22px',
+                  },
+                  value: {
+                     fontSize: '16px',
+                  },
+                  total: {
+                     show: true,
+                     label: 'Overall',
+                     formatter: function (w) {
+                        let series = w.config.series;
+                        let avg = 0;
+                        series.forEach(function(item){
+                           avg += item;
+                        }, avg);
+                        avg /= series.length;
+                        return avg.toFixed(2) + "%";
+                     }
                   }
-               }
                }
             }
          },
          labels: @json($attendance_policies->pluck('description')->all()),
-         events: {
-            click: function(event, chartContext, config){
-               console.log("detect");
-               // window.location.href = '{{ route("attendance.index") }}';
-            }
-         }
+         
       };
 
       var chart = new ApexCharts(document.querySelector("#home-perfomer-chart"), options);
       chart.render();
     }
 
-    if(jQuery('#progress-chart-3').length){
-    	
-		
-		var options = {
-		  chart: {
-			type: 'radialBar',
-			//width:320,
-			height: 300,
-			offsetY: 0,
-			offsetX: 0,
-			
-		  },
-		  plotOptions: {
-			radialBar: {
-			  size: undefined,
-			  inverseOrder: false,
-			  hollow: {
-				margin: 0,
-				size: '20%',
-				background: 'transparent',
-			  },
-			  
-			  
-			  
-			  track: {
-				show: true,
-				background: '#e1e5ff',
-				strokeWidth: '15%',
-				opacity: 1,
-				margin: 15, // margin is in pixels
-			  },
+    function reloadChartData(){
+      let result = {
+         _token: $('meta[name="csrf-token"]').attr('content')
+      };
 
+      $.ajax({
+         url: '{{ route("attendance.chart") }}',
+         type: "GET",
+         data: result,
+         success:function(response){
+            let errors = response['errors'];
+            if($.isEmptyObject(response['success'])){
+               console.log(errors);
+            } else {
+               console.log(response)
+               if(response["labels_data"].length > 0){
+                  /* Hide deleted attendance policy */
+                  let attendances_id = @json($attendance_policies->pluck('rules_id')->all());
+                  let not_exist = $.grep(attendances_id, function(i){return $.inArray(i, response['exist']) == -1});
 
-			},
-		  },
-		  responsive: [{
-          breakpoint: 480,
-          options: {
-			chart: {
-			offsetY: 0,
-			offsetX: 0
-		  },	
-            legend: {
-              position: 'bottom',
-              offsetX:0,
-              offsetY: 0
+                  if(not_exist.length > 0){
+                        not_exist.forEach(function(item){
+                           $('#attendance-' + item).prop("hidden", true);
+                           $('#tab-' + item).prop("hidden", true);
+                        })
+                  }
+
+                  /* Update attendance chart */
+                  ApexCharts.exec('home-perfomer-chart', 'updateOptions', {
+                     labels: response["labels_data"],
+                     series: response["series_data"]
+                  }, false, true);
+
+               } else {
+                  $('#home-perfomer-chart').prop('hidden', true);
+                  $('#attendance-table').prop('hidden', true);
+                  $('#refresh-attendance').prop('hidden', true);
+
+                  $('#no-attendance-chart-div').prop('hidden', false);
+                  $('#no-attendance-div').prop('hidden', false);
+               }
             }
-          }
-        }],
-		
-		fill: {
-          opacity: 1
-        },
-		
-		colors:['#827af3', '#27b345', '#6ce6f4'],
-		series: [75, 70, 72],
-		labels: ['Total', 'Panding', 'Success'],
-		legend: {
-			fontSize: '16px',  
-			show: false,
-		  },		 
-		}
-
-        var chart = new ApexCharts(document.querySelector("#progress-chart-3"), options);
-        chart.render();
+         },
+         error:function(error){
+            console.log(error);
+         }
+      });
     }
-   
 </script>
 
 @endsection

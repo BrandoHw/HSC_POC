@@ -102,6 +102,8 @@ Route::group(['middleware' => ['auth']], function() {
         ->name('attendance.date');
     Route::get('attendance/badge', [AttendanceController::class, 'show_badge'])
         ->name('attendance.badge');
+    Route::get('attendance/chart', [AttendanceController::class, 'show_chart'])
+        ->name('attendance.chart');
 
     Route::resource('policies', PolicyController::class)
         ->name('*', 'policies')
