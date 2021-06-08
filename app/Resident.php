@@ -85,6 +85,11 @@ class Resident extends Model
      */
     public function getContactNumbersAttribute()
     {
-        return $this->contact_phone_num_1."\n".$this->contact_phone_num_2;
+        if ($this->contact_phone_num_1 === null){
+            return null;
+        }
+        else{
+            return $this->contact_phone_num_1."\n".$this->contact_phone_num_2;
+        }
     }
 }

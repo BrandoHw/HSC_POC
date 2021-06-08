@@ -100,7 +100,7 @@
                                     <tbody>
                                         @foreach ($gateways as $gateway)
                                             <tr>
-                                                <td>{{ $gateway->serial}}</td>
+                                                <td>{{ $gateway->serial ?? "-"}}</td>
                                                 <td>{{ $gateway->mac_addr}}</td>
                                                 <td>{{ $gateway->location->location_description ?? "-" }}</td>
                                                 <td>{{ $gateway->reader_ip ?? "-" }}</td>
