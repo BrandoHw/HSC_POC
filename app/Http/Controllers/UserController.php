@@ -15,6 +15,7 @@ use App\Tag;
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -173,6 +174,21 @@ class UserController extends Controller
         $user = User::find($request['user_id']);
         $user->update($request->all());
         $permissions = $user->getPermissionsViaRoles()->pluck('name')->all();
+
+        $image_id = "image-input";
+        if ($request->hasFile($image_id)) {
+            $extension = $request[$image_id]->extension();
+            $filename = "user-".$user->user_id.".".$extension;
+            if ($request->file($image_id)->isValid()) {
+                $validated = $request->validate([
+                    'image-input' => 'mimes:jpeg,png|max:16384',
+                ]);
+                $image_url = Storage::disk('s3')->putFileAs(
+                'users', $request->file('image-input'), $filename,
+                );
+                $user->update(['image_url' => $image_url]);
+            }
+        }
 
         if(in_array('user-edit', $permissions) || in_array('beacon-edit', $permissions)){
             if(!empty($request['role'])){

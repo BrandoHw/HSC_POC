@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use App\UserType;
 use App\UserRight;
+use Illuminate\Support\Facades\Storage;
 class User extends Authenticatable
 {
     use Notifiable;
@@ -37,7 +38,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'fName', 'lName', 'phone_number', 'email',
-        'username', 'password', 'gender'
+        'username', 'password', 'gender',
+        'image_url',
     ];
 
     /**
@@ -87,6 +89,10 @@ class User extends Authenticatable
     public function getFullNameAttribute()
     {
         return ucfirst($this->fName)." ".ucfirst($this->lName);
+    }
+
+    public function getThumbnail(){
+        return Storage::disk('s3-resized')->url("resized-".$this->image_url);
     }
     
 }

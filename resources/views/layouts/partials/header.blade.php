@@ -109,7 +109,8 @@ div#notif-bell svg path { stroke: var(--iq-primary); }
             <ul class="navbar-list">
                 <li>
                     <a href="#" class="search-toggle iq-waves-effect d-flex align-items-center bg-primary rounded">
-                        <img src="{{ Auth::user()->gender == 'M' ? asset('img/avatars/default-profile-m.jpg'):asset('img/avatars/default-profile-f.jpg') }}" class="img-fluid rounded mr-3" alt="user">
+                        <img src="{{ Auth::user()->image_url === null ? 
+                            asset('img/avatars/default-profile-m.jpg') : Auth::user()->getThumbnail() }}"  class="img-fluid rounded mr-3" alt="user">>
                         <div class="caption">
                             <h6 class="mb-0 line-height text-white">{{ Auth::user()->full_name }}</h6>
                         </div>

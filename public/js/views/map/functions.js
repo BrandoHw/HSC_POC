@@ -266,7 +266,8 @@ function drawUserLocation(data, drawnLayers, gatewayZones, floorIndex, redIcon){
     // });
 
     // Insert whatever you want into the container, using whichever approach you prefer
-    container.html("<b>Name</b>: ".concat("<a href='#' class='smallPolygonLink'>", full_name, "</a>"));
+    //container.html("<b>Name</b>: ".concat("<a href='#' class='smallPolygonLink'>", full_name, "</a>"));
+    container.html("<b>Name</b>: ".concat(full_name));
     container.append($('<span class="bold">').append(string))
 
     var link = $('<a href="#" class="speciallink">TestLink</a>').on('click', function() {

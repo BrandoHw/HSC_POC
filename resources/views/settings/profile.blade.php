@@ -16,7 +16,7 @@
                             </div>
                         </div>
                         <div class="iq-card-body">
-                            {!! Form::model($user, ['method' => 'POST', 'route' => ['users.profile']]) !!}
+                            {!! Form::model($user, ['method' => 'POST', 'route' => ['users.profile'], 'enctype'=>"multipart/form-data"]) !!}
                                 <input type="hidden" value="{{ $user->user_id }}" name="user_id" />
                                 <div class=" row align-items-center">
                                     <div class="form-group col-sm-6">
@@ -88,6 +88,11 @@
                                                 </script>
                                             @enderror
                                         </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label for="image-input" >Profile Picture</label>
+                                        <input id="image-input" type="file" class="form-control" name="image-input">
+                                        <img src="#" alt = "" id="img-preview" width="200px" />   <!--for preview purpose -->
                                     </div>
                                 </div>
                                 <div class="text-center mt-5">
