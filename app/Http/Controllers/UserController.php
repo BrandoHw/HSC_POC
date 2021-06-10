@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Role;
 use App\User;
 use App\UserType;
 use App\Tag;
-use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
 use Illuminate\Support\Facades\Storage;
@@ -285,6 +285,14 @@ class UserController extends Controller
     {
         $ids = $request->users_id;
 
+        $users = User::find(ids);
+
+        foreach($users as $user){
+            if(isset($user->tag)){
+                $user->tag()->dissociate()->save();
+            }
+        }
+        
         User::destroy($ids);
 
         if(count($ids) > 1){

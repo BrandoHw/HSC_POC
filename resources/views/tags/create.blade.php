@@ -30,20 +30,12 @@
                             </div>
                         </div>
                         <div class="form-group" id="target-div" hidden>
-                            <select class="form-control" id="target" name="target">
-                                @foreach($residents as $resident)
-                                    <option value="R-{{ $resident->resident_id }}">
-                                    R{{ $resident->resident_id }} - {{ $resident->full_name }}</option>
-                                @endforeach
-                                @foreach($users as $user)
-                                    <option value="U-{{ $user->user_id }}">
-                                    U{{ $user->user_id }} - {{ $user->full_name }}</option>
-                                @endforeach
-                            </select>
+                            {!! Form::select('target', $targetsNull, null, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'target']) !!}
                             @error('target')
                                 <script>
                                     $('#assign').prop("checked", true);
                                     $('#target-div').prop("hidden", false);
+                                    $('#target').trigger('change');
                                 </script>
                             @enderror
                         </div>
@@ -63,6 +55,7 @@
     <script>
         $(function(){
             $('#target').select2();
+            $('#target').val('').trigger('change');
             
             /* Display select2 error */
             let message = "Error Message";
@@ -71,7 +64,6 @@
             message = @json($message);
             $('#target').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
             $('#target').siblings('span').after('<div class="invalid-feedback" id="invalid-target" style="display:block">'+ message +'</div>');
-            $('#target').val('').trigger('change');
             @enderror
         })
 

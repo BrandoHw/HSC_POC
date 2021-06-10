@@ -11,6 +11,14 @@ class Resident extends Model
     use HasFactory;
     use SoftDeletes;
   
+    const relationship = [
+        "S" => "Spouse",
+        "P" => "Parent", 
+        "C" => "Children",
+        "R" => "Relative",
+        "O" => "Others"
+    ];
+
     /**
      * The table associated with the model.
      *
@@ -58,6 +66,12 @@ class Resident extends Model
     {
         return $this->belongsTo(Tag::class, 'beacon_id', 'beacon_id')->withTrashed();
     }
+
+    public function room()
+    {
+        return $this->belongsTo(Location::class, 'location_room_id', 'location_master_id')->withTrashed();
+    }
+
     /**
      * Get the resident's full name.
      *

@@ -36,7 +36,17 @@
                                     {{ $user->getRoleNames()[0] }}
                                 </span>
                             </td>
-                            <td class="info-user">{{ $user->tag->beacon_mac ?? "-" }}</td>
+                            <td class="info-user">
+                                @if(isset($user->tag))
+                                    <span {{ $user->tag->trashed() ? 'class=text-secondary style=font-style:italic':''}}>{{ $user->tag->beacon_mac }}
+                                        @if($user->tag->trashed())
+                                        <small><em>[Deleted]</em></small>
+                                        @endif
+                                    </span>
+                                @else
+                                    -
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

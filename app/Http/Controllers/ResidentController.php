@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ResidentRequest;
+use App\Http\Requests\AddResidentRequest;
+use App\Http\Requests\UpdateResidentRequest;
+use App\Location;
 use App\Resident;
 use App\Tag;
 use Illuminate\Http\Request;
@@ -23,11 +25,11 @@ class ResidentController extends Controller
      */
     public function index()
     {
-        $residents = Resident::orderBy('resident_id', 'asc')->with('tag')->get();
-
+        $residents = Resident::orderBy('resident_id', 'asc')->with('tag', 'room')->get();
         foreach($residents as $resident){
             $resident->resized_url = Storage::disk('s3-resized')->url("resized-".$resident->image_url);
         }
+    
         return view('residents.index', compact('residents'));
     }
 
@@ -47,15 +49,17 @@ class ResidentController extends Controller
             $available = false;
         }
         
-        $relationship = [
-            "S" => "Spouse",
-            "P" => "Parent", 
-            "C" => "Children",
-            "R" => "Relative",
-            "O" => "Others"
-        ];
-        
-        return view('residents.create',compact('tagsNull', 'available', 'relationship'));
+        $relationship = Resident::relationship;
+
+        $rooms_ori = Location::where('location_description', 'like', 'Room _')->get();
+        $rooms = [];
+        foreach($rooms_ori as $room){
+            $id = $room->location_master_id;
+            $name = 'L'.$room->floor.' - '.$room->location_description;
+            $rooms[$id] = $name;
+        }
+
+        return view('residents.create',compact('tagsNull', 'available', 'relationship', 'rooms'));
     }
 
     /**
@@ -64,11 +68,14 @@ class ResidentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AddResidentRequest $request)
     {
         
         $resident = Resident::create($request->all());
 
+        $room = Location::find($request['location_room_id']);
+        $resident->room()->associate($room)->save();
+        
         if(!empty($request['beacon_id'])){
             $tag = Tag::find($request['beacon_id']);
             $resident->tag()->associate($tag)->save();
@@ -128,19 +135,21 @@ class ResidentController extends Controller
             $available = false;
         }
 
-        $relationship = [
-            "S" => "Spouse",
-            "P" => "Parent", 
-            "C" => "Children",
-            "R" => "Relative",
-            "O" => "Others"
-        ];
+        $relationship = Resident::relationship;
+
+        $rooms_ori = Location::where('location_description', 'like', 'Room _')->get();
+        $rooms = [];
+        foreach($rooms_ori as $room){
+            $id = $room->location_master_id;
+            $name = 'L'.$room->floor.' - '.$room->location_description;
+            $rooms[$id] = $name;
+        }
 
         if ($resident->image_url != null){
             $resident->image_url = Storage::disk('s3')->url($resident->image_url);
         }
-
-        return view('residents.edit', compact('resident', 'tagsNull', 'current', 'available', 'relationship'));
+        
+        return view('residents.edit', compact('resident', 'tagsNull', 'current', 'available', 'relationship', 'rooms'));
     }
 
     /**
@@ -150,9 +159,16 @@ class ResidentController extends Controller
      * @param  \App\Tag  $resident
      * @return \Illuminate\Http\Response
      */
-    public function update(ResidentRequest $request, Resident $resident)
+    public function update(UpdateResidentRequest $request, Resident $resident)
     {
         $resident->update($request->all());
+
+        if(!empty($resident->room)){
+            $resident->room()->dissociate()->save();
+        }
+
+        $room = Location::find($request['location_room_id']);
+        $resident->room()->associate($room)->save();
 
         /** Remove the tag associated with this user */
         if(!empty($resident->tag)){
@@ -204,6 +220,14 @@ class ResidentController extends Controller
     public function destroys(Request $request)
     {
         $ids = $request->residents_id;
+
+        $residents = Resident::find(ids);
+
+        foreach($residents as $resident){
+            if(isset($resident->tag)){
+                $resident->tag()->dissociate()->save();
+            }
+        }
 
         Resident::destroy($ids);
 

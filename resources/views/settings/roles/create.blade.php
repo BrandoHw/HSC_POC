@@ -23,17 +23,13 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="color">Color:</label>
-                                <div class="input-group">
-                                {!! Form::color('color', null, array('placeholder' => 'Click to select color', 'class' => "form-control", 'id' => 'color')) !!}
+                                {!! Form::select('color_id', $colors, null, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'color']) !!}
+                                <!-- <div class="input-group">
+                                    {!! Form::select('color_id', $colors, null, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'color', 'style' => 'width:80%']) !!}
                                     <div class="input-group-append">
-                                        <span class="input-group-text" id='color-code' style="width:100px">#000000</span>
+                                        <div class="input-group-text" id='color-code' style="width:75px"></div>
                                     </div>
-                                </div>
-                                @error('color')
-                                    <script>$('#color').addClass("is-invalid");</script>
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    <script>$('#color-code').css("border", "1px solid red");</script>
-                                @enderror
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -123,6 +119,25 @@
 <script>
 
     $(function () {
+        $('#color').select2({
+            templateResult: formatState,
+            templateSelection: formatState
+        });
+
+        function formatState (state){
+            if (!state.id) {
+                return state.text;
+            }
+            let code = state.text.split('-')[0];
+            let name = state.text.split('-')[1];
+            
+            let $state = $(
+                '<span><i class="ri-bookmark-fill" style="color:'+ code + '"></i>  ' + name +'</span>'
+            )
+
+            return $state
+        }
+
         /* Initiate dataTable */
         let table = $('#permissionTable').DataTable({
             responsive: true,
@@ -143,12 +158,18 @@
             check_all('all-' + @json($module['name']));
         @endforeach
 
+        @error('color_id')
+        message = @json($message);
+        $('#color').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
+        $('#color').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');
+        @enderror
+
     })
 
-    $('#color').on('change', function(event) {
-        let color_code = $('#color').val().toUpperCase();
-        $('#color-code').html(color_code);
-    });
+    // $('#color').on('change', function(event) {
+    //     let color_code = $('#color').val();
+    //     $('#color-code').css('background-color', color_code);
+    // });
 
     function check_all(id){
         let is_all = true;
@@ -209,57 +230,5 @@
         }
         check_all(id);
     };
-
-    // function saveRole(){
-    //     console.log('inside save role');
-    //     let items = [
-    //         'name',
-    //         'color',
-    //         'permission'
-    //     ];
-
-    //     let result = {};
-    //     items.forEach(function(item){
-    //         result[item] = validateRoleInput(item);
-    //     });
-    // }
-
-    // function validateRoleInput(id){
-    //     console.log('inside validate role input');
-    //     let obj = $('#' + id);
-    //     switch(id){
-    //         case 'name':
-    //             addInvalid('name');
-    //             break;
-    //         case 'color':
-    //             addInvalid('color');
-    //             break;
-    //         case 'permission':
-    //             addInvalid('permission');
-    //             break;
-    //     }
-    //     console.log('validate');
-    // }
-    
-    // function addInvalid(id){
-    //     let obj = $('#' + id);
-    //     if(id != "permission"){
-    //         if(!obj.hasClass('is-invalid')){
-    //             obj.addClass('is-invalid');
-
-    //             if(id == "color"){
-    //                 $('#color-code').css('border', '1px solid #dc3545');
-    //                 $('#color-code').css('border-radius', '0 0.25rem 0.25rem 0');
-    //                 obj.siblings('.input-group-append').after('<div class="invalid-feedback" id="invalid-' + id +'">Please select the color for this role.</div>');
-    //             } else {
-    //                 obj.after('<div class="invalid-feedback" id="invalid-' + id +'">Please enter a name in the input field.</div>');
-    //             }
-    //         }
-
-    //     } else {
-    //         console.log(permission);
-    //     }
-        
-    // }
 </script>
 @endsection

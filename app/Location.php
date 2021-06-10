@@ -35,6 +35,14 @@ class Location extends Model
         return $this->belongsToMany(Scope::class, 'scope_locations_master_table', 'location_id', 'scope_id')->withTrashed();
     }
 
+    /**
+     * Get the scopes associated with the location
+     */
+    public function residents()
+    {
+        return $this->hasMany(Residents::class, 'residents_table', 'location_room_id', 'location_master_id')->withTrashed();
+    }
+
 
 }
 

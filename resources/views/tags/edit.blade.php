@@ -32,21 +32,12 @@
                         </div>
                         <div class="form-group" id="target-div" {{ $current ? '':'hidden' }}>
                             <label for="target">Target:</label>
-                            <select class="form-control" id="target" name="target">
-                                @foreach($residents->sortBy('resident_fName') as $resident)
-                                    <option value="R-{{ $resident->resident_id }}">
-                                    R{{ $resident->resident_id }} - {{ $resident->full_name }}</option>
-                                @endforeach
-                                @foreach($users->sortBy('fName') as $user)
-                                    <option value="U-{{ $user->user_id }}">
-                                    U{{ $user->user_id }} - {{ $user->full_name }}</option>
-                                @endforeach
-                            </select>
+                            {!! Form::select('target', $targetsNull, null, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'target']) !!}
                             @error('target')
                                 <script>
                                     $('#assign').prop("checked", true);
                                     $('#target-div').prop("hidden", false);
-                                    $('#target').val('').trigger('change');
+                                    $('#target').trigger('change');
                                 </script>
                             @enderror
                         </div>

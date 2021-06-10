@@ -57,6 +57,7 @@ Auth::routes(['register' => false, 'reset' => false]);
 Route::group(['middleware' => ['auth']], function() { 
     
     Route::get('/', [HomeController::class, 'index'])->name('home')->block();
+    Route::get('/icon', [HomeController::class, 'show_icon'])->name('home.icon');
     
     //Route::resource('dashboard', DashboardController::class);
 
@@ -104,6 +105,8 @@ Route::group(['middleware' => ['auth']], function() {
         ->name('attendance.date');
     Route::get('attendance/badge', [AttendanceController::class, 'show_badge'])
         ->name('attendance.badge');
+    Route::get('attendance/chart', [AttendanceController::class, 'show_chart'])
+        ->name('attendance.chart');
 
     Route::resource('policies', PolicyController::class)
         ->name('*', 'policies')

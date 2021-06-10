@@ -53,6 +53,10 @@
                                 {!! Form::select('resident_gender', ['M' => 'Male', 'F' => 'Female'], $resident->resident_gender, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'gender']) !!}
                             </div>
                             <div class="form-group col-sm-6">
+                                <label for="room">Room:</label>
+                                {!! Form::select('location_room_id', $rooms, null, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'room']) !!}
+                            </div>
+                            <div class="form-group col-sm-6">
                                 <label>External Support:</label>
                                 <div class="row align-items-center ml-2" id="support-row">
                                     <div class="custom-control custom-checkbox mr-3">
@@ -65,7 +69,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group col-sm-6">
+                            <div class="form-group col-sm-6 mt-2">
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input" value="0" id="assign" name="assign" {{ $available ? '':'disabled' }} {{ $current ? 'checked':'' }}>
                                     <label class="custom-control-label" for="assign">Assign a beacon</label>
@@ -151,6 +155,7 @@
             });
 
             $('#gender').select2();
+            $('#room').select2();
             $('#tag').select2();
             $('#relationship').select2();
 
@@ -170,6 +175,7 @@
                 $('#l-name').prop('disabled', true);
                 $('#dob').prop('disabled', true);
                 $('#gender').prop('disabled', true);
+                $('#room').prop('disabled', true);
                 $('#wheelchair').prop('disabled', true);
                 $('#walking-cane').prop('disabled', true);
                 $('#assign').prop('disabled', true);
@@ -193,6 +199,12 @@
             message = @json($message);
             $('#gender').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
             $('#gender').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');
+            @enderror
+
+            @error('location_room_id')
+            message = @json($message);
+            $('#room').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
+            $('#room').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');
             @enderror
 
             @error('contact_relationship')

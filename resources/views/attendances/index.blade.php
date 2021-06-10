@@ -41,7 +41,17 @@
 @section('content')
 <div class="container-fluid relative">
     <div class="row">
-        <div class="col-lg-3">
+        <div class="col-lg-12" id="no-attendance-div" {{ (count($attendance_policies) < 1) ? "":"hidden"}}>
+            <div class="iq-card">  
+                <div class="iq-card-body">
+                    <div class="text-center align-middle" style="margin-top: 10rem; margin-bottom: 12rem">
+                        <div data-icon="*" style="font-size: 75px" class="icon text-secondary" ></div>
+                        <p>No Attendance Policy Found!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3" id="attendance-label-div" {{ (count($attendance_policies) < 1) ? "hidden":""}}>
             <div class="iq-card">
                 <div class="iq-card-body">
                     <div class="iq-email-list">
@@ -75,7 +85,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-9 mail-box-detail">
+        <div class="col-lg-9 mail-box-detail" id="attendance-table-div" {{ (count($attendance_policies) < 1) ? "hidden":""}}>
             <div class="iq-card">
                 <div class="iq-card-body p-0">
                     <div class="iq-email-to-list p-3" style="margin-bottom: -1rem!important">
@@ -104,8 +114,8 @@
                             </div>
                             <ul>
                                 <li></li>
-                                <li data-toggle="tooltip" data-placement="top" title="Reload"><a href="#" id="refresh-attendance" onClick="reloadTableData()"><i class="ri-refresh-line"></i></a></li>
-                                <li data-toggle="tooltip" data-placement="top" title="Download">
+                                <li data-toggle="tooltip" data-placement="top" title="Reload" id="reload-tooltip"><a href="#" id="refresh-attendance" onClick="reloadTableData()"><i class="ri-refresh-line"></i></a></li>
+                                <li data-toggle="tooltip" data-placement="top" title="Download" id="download-tooltip">
                                     <div class="dropdown">
                                         <a class="li-button" id="export-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="ri-download-line"></i>
@@ -172,6 +182,17 @@
             }
         );
         let timer = setInterval(reloadTableData, 30000);
+
+        @if(session('dashboard'))
+            console.log(@json(session('dashboard')));
+            let attendance = @json(session('dashboard'));
+            console.log($('span:contains("' + attendance + '")'));
+            let id = $('span:contains("' + attendance + '")')[0].id.split('-')[1];
+            $('#attendance-' + id).tab('show');
+            $('#collapse-' + id).collapse();
+            $('#tab-' + id).tab('show');
+            @php(Session::forget('dashboard'))
+        @endif
     })
 
     @foreach($attendance_policies as $policy)
@@ -289,16 +310,17 @@
     });
 
     function reloadTableData(){
-        console.log('reload');
-        let refresh_btn = $('#refresh-attendance');
-        refresh_btn.html('<i class="fa fa-circle-o-notch fa-spin mr-0"></i>');
-        refresh_btn.addClass('custom-disabled');
-
-        @foreach($attendance_policies as $policy)
-            table_{{ $policy->rules_id }}.ajax.reload();
-        @endforeach
-
-        reloadAttendanceBadge();
+        if($('#attendance-label-div').is(":visible")){
+            let refresh_btn = $('#refresh-attendance');
+            refresh_btn.html('<i class="fa fa-circle-o-notch fa-spin mr-0"></i>');
+            refresh_btn.addClass('custom-disabled');
+    
+            @foreach($attendance_policies as $policy)
+                table_{{ $policy->rules_id }}.ajax.reload();
+            @endforeach
+    
+            reloadAttendanceBadge();
+        }
     }
 
     function adjustTableColumn(){
@@ -323,23 +345,51 @@
                     console.log(errors);
                 } else {
                     let badge_data = response['badge_data'];
-                    Object.keys(badge_data).forEach(function(key){
-                        let num = badge_data[key];
-                        if(num>0){
-                            $('#absent-badge-' + key).html(num);
-                            $('#absent-badge-' + key).prop('hidden', false);
-                        } else {
-                            $('#absent-badge-' + key).prop('hidden', true);
-                        }
-                    });
+                    let length = Object.keys(badge_data).length;
 
-                    let refresh_btn = $('#refresh-attendance');
-                    refresh_btn.html('<i class="fa fa-custom fa-check mr-0"></i>');
-                    notyf.success('Attendance updated successfully');
-                    setTimeout(function() {
-                        refresh_btn.html('<i class="ri-refresh-line mr-0"></i>');
-                        refresh_btn.removeClass('custom-disabled');
-                    }, 1000);
+                    if(Object.keys(badge_data).length > 0){
+                        /* Hide deleted attendance policy */
+                        let attendances_id = @json($attendance_policies->pluck('rules_id')->all());
+                        
+                        let update_keys = [];
+                        Object.keys(badge_data).forEach(function(key){ update_keys.push(parseInt(key)) }, update_keys);
+                        let not_exist = $.grep(attendances_id, function(i){return $.inArray(i, update_keys) == -1});
+
+                        if(not_exist.length > 0){
+                            not_exist.forEach(function(item){
+                                $('#attendance-' + item).prop("hidden", true);
+                                $('#collapse-' + item).prop("hidden", true);
+                                $('#tab-' + item).prop("hidden", true);
+                            })
+                        }
+                        
+                        /* Update badges */
+                        Object.keys(badge_data).forEach(function(key){
+                            let num = badge_data[key];
+                            if(num>0){
+                                $('#absent-badge-' + key).html(num);
+                                $('#absent-badge-' + key).prop('hidden', false);
+                            } else {
+                                $('#absent-badge-' + key).prop('hidden', true);
+                            }
+                        });
+                        
+                        let refresh_btn = $('#refresh-attendance');
+                        refresh_btn.html('<i class="fa fa-custom fa-check mr-0"></i>');
+                        notyf.success('Attendance updated successfully');
+                        setTimeout(function() {
+                            refresh_btn.html('<i class="ri-refresh-line mr-0"></i>');
+                            refresh_btn.removeClass('custom-disabled');
+                        }, 1000);
+                    } else {
+                        $('#no-attendance-div').prop('hidden', false);
+
+                        $('#attendance-label-div').prop('hidden', true);
+                        $('#attendance-table-div').prop('hidden', true);
+                        $('#reload-tooltip').tooltip('hide');
+                        $('download-tooltip').tooltip('hide');
+                    }
+
                 }
             },
             error:function(error){
@@ -347,8 +397,6 @@
             }
         });
     }
-
-    
 
 </script>
 @endsection

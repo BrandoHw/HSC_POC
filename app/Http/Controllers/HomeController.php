@@ -89,6 +89,7 @@ class HomeController extends Controller
             ->with(['reader', 'reader.location', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
             ->get();
 
+        /* Radial Chart Series */
         $attendance = array();
         $now = Carbon::now()->toDateTimeString();
         foreach($attendance_policies as $policy){
@@ -114,11 +115,59 @@ class HomeController extends Controller
             array_push($attendance, $percentage);
         }
 
+        /* Radial chart color */
+        $colors_default = ["#827af3", "#6ce6f4", "#a09e9e", "#fbc647"];
+        $num =  count($attendance_policies)/4;
+        $whole = floor($num);
+        $fraction = $num - $whole; 
+
+        $colors = [];
+        for($i = 0; $i <= $whole; $i++){
+            if($i == $whole ){
+                for($j = 0; $j < $fraction * 4; $j++){
+                    array_push($colors, $colors_default[$j]);
+                };
+            } else {
+                array_push($colors, $colors_default[0], $colors_default[1], $colors_default[2], $colors_default[3]);
+            }
+        }
+
         return view('home', compact('gatewayZones', 'building', 'floors', 
-        'alerts', 'alerts_count', 'alerts_last', 'policies_count', 'tags_count', 'residents_count', 'readers_count', 
-        'attendance_policies', 'attendance_alerts', 'attendance'
+            'alerts', 'alerts_count', 'alerts_last', 'policies_count', 'tags_count', 'residents_count', 'readers_count', 
+            'attendance_policies', 'attendance_alerts', 'attendance', 'colors', 'whole', 'fraction'
         ));
         
        
+    }
+
+    /**
+     * Refresh icon data.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function show_icon(Request $request){
+        $today = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');
+        
+        $alerts = Alert::where('occured_at', '>=', $today)
+            ->orderBy('occured_at', 'desc')
+            ->with(['reader', 'reader.location', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
+            ->get();
+        $alerts_count = $alerts->count();
+
+        $policies_count = Policy::count();
+        $readers_count = Reader::count();
+        $tags_count = Tag::count();
+        $residents_count = Resident::count();
+
+        return response()->json([
+            "success" => "Icon data updated successfully.",
+            "alert" => $alerts_count,
+            "policy" => $policies_count,
+            "reader" => $readers_count,
+            "tag" => $tags_count,
+            "resident" => $residents_count,
+        ], 200);
+
     }
 }

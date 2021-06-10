@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ResidentRequest extends FormRequest
+class UpdateResidentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,6 +28,7 @@ class ResidentRequest extends FormRequest
             'resident_lName' => 'required',
             'resident_dob' => 'required|date',
             'resident_gender' => 'required',
+            'location_room_id' => 'required',
             'contact_name' => 'required',
             'contact_phone_num_1' => 'required',
             'contact_address' => 'required',
@@ -35,7 +36,7 @@ class ResidentRequest extends FormRequest
         ];
 
         if($this->request->get('assign') == '1'){
-            $rules['beacon_id'] = 'required';
+            $rules['beacon_id'] = ['required', new IsUniqueTag($resident->tag ?? null)];
         }
 
         return $rules;
@@ -53,6 +54,7 @@ class ResidentRequest extends FormRequest
             'resident_fName' => 'last name',
             'resident_dob' => 'date of birth',
             'resident_gender' => 'gender',
+            'location_room_id' => 'room',
             'contact_name' => 'name',
             'contact_phone_num_1' => 'phone number',
             'contact_address' => 'address',
@@ -76,6 +78,7 @@ class ResidentRequest extends FormRequest
         $custom_messages = [
             'resident_dob.required' => 'Please select the :attribute.',
             'resident_gender.required' => 'Please select the :attribute.',
+            'location_room_id.required' => 'Please select the :attribute.',
             'contact_relationship.required' => 'Please select the :attribute.',
         ];
 

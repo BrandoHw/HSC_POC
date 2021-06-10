@@ -72,7 +72,7 @@
                                         <div class="text-secondary"><i class="ri-information-fill text-warning"></i> <em>Cannot assign right now. No available beacon. </em></div>
                                     @endif
                                 </div>
-                                <div class="mt-2" id="tag-div" hidden>
+                                <div class="mt-2" id="tag-div">
                                     {!! Form::select('beacon_id', $tagsNull, null, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'tag']) !!}
                                     @error('beacon_id')
                                         <script>

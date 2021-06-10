@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AddUserRequest extends FormRequest
+class AddResidentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,13 +24,15 @@ class AddUserRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'fName' => 'required',
-            'lName' => 'required',
-            'username' => 'required|unique:users_table,username,NULL,user_id,deleted_at,NULL',
-            'gender' => 'required',
-            'email' => 'required|email|unique:users_table,email,NULL,user_id,deleted_at,NULL',
-            'phone_number' => 'required|unique:users_table,phone_number,NULL,user_id,deleted_at,NULL',
-            'role' => 'required'
+            'resident_fName' => 'required',
+            'resident_lName' => 'required',
+            'resident_dob' => 'required|date',
+            'resident_gender' => 'required',
+            'location_room_id' => 'required',
+            'contact_name' => 'required',
+            'contact_phone_num_1' => 'required',
+            'contact_address' => 'required',
+            'contact_relationship' => 'required',
         ];
 
         if($this->request->get('assign') == '1'){
@@ -48,9 +50,15 @@ class AddUserRequest extends FormRequest
     public function attributes()
     {
         $custom_attributes = [
-            'fName' => 'first name',
-            'lName' => 'last name',
-            'phone_number' => 'phone number',
+            'resident_fName' => 'first name',
+            'resident_fName' => 'last name',
+            'resident_dob' => 'date of birth',
+            'resident_gender' => 'gender',
+            'location_room_id' => 'room',
+            'contact_name' => 'name',
+            'contact_phone_num_1' => 'phone number',
+            'contact_address' => 'address',
+            'contact_relationship' => 'relationship',
         ];
 
         if($this->request->get('assign') == '1'){
@@ -68,8 +76,10 @@ class AddUserRequest extends FormRequest
     public function messages()
     {
         $custom_messages = [
-            'gender.required' => 'Please select the :attribute.',
-            'role.required' => 'Please select the :attribute.',
+            'resident_dob.required' => 'Please select the :attribute.',
+            'resident_gender.required' => 'Please select the :attribute.',
+            'location_room_id.required' => 'Please select the :attribute.',
+            'contact_relationship.required' => 'Please select the :attribute.',
         ];
 
         if($this->request->get('assign') == '1'){

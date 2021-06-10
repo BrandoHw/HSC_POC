@@ -1,5 +1,6 @@
 <div class="iq-card">
     <div class="iq-card-body">
+        <p><i class="ri-information-fill"></i> Only allow a maximum of 20 roles in this system.</p>
         <div class="iq-search-bar row justify-content-between">
             <form action="#" class="searchbox">
                 <input type="text" id="roleCustomSearchBox" class="text search-input" placeholder="Type here to search...">
@@ -7,7 +8,7 @@
             </form>
             <div class="col-4 row justify-content-end">
                 @can('role-create')
-                <a class="btn btn-primary" href="{{ route('roles.create') }}" style="margin-right: 10px;"><i class="ri-add-line"></i>Add Role</a>
+                <a class="btn btn-primary" href="{{ route('roles.create') }}" style="margin-right: 10px;" {{ ($roles_count < 20) ? '':'hidden' }}><i class="ri-add-line"></i>Add Role</a>
                 @endcan
                 @can('role-delete')
                 <a class="btn btn-danger" href="#" id="deleteRole">Delete</a>
@@ -29,7 +30,7 @@
                         <tr id="role-{{ $role->id }}" href="{{ route('roles.edit',$role->id) }}">
                             <td>{{ $role->id }}</td>
                             <td class="info-role">{{ $role->name }}</td>
-                            <td class="info-role"><span class="badge badge-dark" style="background-color: {{ $role->color }} !important">{{ Str::upper($role->color) }}</span></td>
+                            <td class="info-role"><span class="badge badge-dark" style="background-color: {{ $role->color->color_code }} !important">{{ $role->color->color_name }}</span></td>
                             <td class="info-role">
                                 @if(!empty($rolePermissions))
                                     {{ $rolePermissions->where("role_id", $role->id)->count() }}

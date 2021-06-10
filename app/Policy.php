@@ -136,7 +136,7 @@ class Policy extends Model
             case 'user-only':
                 return 'User(s) Only';
             case 'custom':
-                return 'Cusrom';
+                return 'Custom';
             
         }
     }

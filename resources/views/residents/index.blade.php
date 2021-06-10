@@ -31,6 +31,7 @@
                                     <th scope="col">Wheelchair</th>
                                     <th scope="col">Walking Cane</th>
                                     <th scope="col">Beacon</th>
+                                    <th scope="col">Room</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -47,6 +48,7 @@
                                         <td class='info align-middle'>{{ ($resident->wheelchair) ? "Yes":"No" }}</td>
                                         <td class='info align-middle'>{{ ($resident->walking_cane) ? "Yes":"No" }}</td>
                                         <td class='info align-middle'>{{ $resident->tag->beacon_mac ?? "-" }}</td>
+                                        <td class='info align-middle'>{{ $resident->room->location_description ?? "-" }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
