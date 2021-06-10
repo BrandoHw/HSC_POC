@@ -129,7 +129,7 @@
             {data: 'first_seen'},
             {data: 'last_seen'},
             {data: 'gateway.location.location_description'},
-            {data: 'duration'},
+            {data: 'time_missing'},
         ],
     
     })

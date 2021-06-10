@@ -29,6 +29,7 @@ class AttendanceKliaController extends Controller
 
         foreach ($attendance as $att){
             $att->full_name = $att->tag->resident->resident_fName." ". $att->tag->resident->resident_lName;
+            $att->time_missing = Carbon::parse($att->last_seen)->diffForHumans();
         }
         return response()->json([
             'data' => $attendance,

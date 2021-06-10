@@ -278,12 +278,14 @@ class AlertController extends Controller
                 return strtotime($b->occured_at) - strtotime($a->occured_at);
             });
 
+            $type = config('app.type');
+
         }else{
             $alerts = Alert::where('alert_id', '==', $id)->get();
         }
 
         $counts = $alert_r_count + $alert_s_count;
-        return compact('alerts', 'counts');
+        return compact('alerts', 'counts', 'type');
     }
     /**
      * Remove the specified resources from storage.

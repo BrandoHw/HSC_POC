@@ -879,6 +879,7 @@ $(function() {
                 $("#notification-card").children('.iq-sub-card').remove();
                 data = data_array['alerts'];
                 var length = data.length;
+                var type = data_array['type'];
                 if (length > 5)
                     length = 5;
                 if (data.length > 0){
@@ -915,7 +916,11 @@ $(function() {
                         container2.on('click', function(event) {
                             var id = $(this).attr("id");
                             //window.location.href = "alerts/".concat(id, "/edit");
-                            window.location.href = "alerts/"
+                            if (type === 'klia'){
+                                window.location.href = "alerts-klia/"
+                            }else{
+                                window.location.href = "alerts/"
+                            }
                         });
                     
                         if (data.length > 0){
