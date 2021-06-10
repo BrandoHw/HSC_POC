@@ -6,6 +6,8 @@ use App\Resident;
 use App\Tag;
 use App\TagType;
 use App\User;
+use App\Services\TagTargetService;
+use App\Rules\IsUniqueTarget;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
@@ -41,16 +43,17 @@ class TagController extends Controller
     *
     * @return \Illuminate\Http\Response
     */
-    public function create()
+    public function create(TagTargetService $tagTargetService)
     {
         $users = User::doesntHave('tag')->orderBy('fName', 'asc')->get();
         $residents = Resident::doesntHave('tag')->orderBy('resident_fName', 'asc')->get();
         
+        $targetsNull = $tagTargetService->generateTagTarget($residents ,$users, NULL);
         $available = true;
         if($users->isEmpty() && $residents->isEmpty()){
             $available = false;
         }
-        return view('tags.create',compact('users', 'residents', 'available'));
+        return view('tags.create',compact('users', 'residents', 'available', 'targetsNull'));
     }
     
     /**
@@ -61,12 +64,12 @@ class TagController extends Controller
     */
     public function store(Request $request)
     {
-        $rules = ['beacon_mac' => 'required|string|min:12|max:12|unique:beacons_table,beacon_mac'];
+        $rules = ['beacon_mac' => 'required|string|min:12|max:12|unique:beacons_table,beacon_mac,NULL,beacon_id,deleted_at,NULL'];
         $messages = [];
 
         if($request['assign'] == '1'){
-            $rules['target'] = 'required';
-            $messages['target.request'] = 'Please select at least one target.';
+            $rules['target'] = ['required', new IsUniqueTarget(null)];
+            $messages['target.required'] = 'Please select at least one target.';
         }
 
         request()->validate($rules, $messages, ['beacon_mac' => 'mac address']);
@@ -111,30 +114,28 @@ class TagController extends Controller
     * @param  \App\Tag  $tag
     * @return \Illuminate\Http\Response
     */
-    public function edit(Tag $tag)
+    public function edit(Tag $tag, TagTargetService $tagTargetService)
     {
         $users = User::doesntHave('tag')->get();
         $residents = Resident::doesntHave('tag')->get();
 
-        $current = null;
         /** Concat the current user of this tag, if exist */
         if(!empty($tag->user)){
             $current = $tag->user;
-            $users->push($current);
+        } elseif (!empty($tag->resident)){
+            $current = $tag->resident;
+        } else {
+            $current = null;
         }
 
-        /** Concat the current resident of this tag, if exist */
-        if(!empty($tag->resident)){
-            $current = $tag->resident;
-            $residents->push($current)->all();
-        }
+        $targetsNull = $tagTargetService->generateTagTarget($residents ,$users, $current);
 
         $available = true;
         if($users->isEmpty() && $residents->isEmpty()){
             $available = false;
         }
 
-        return view('tags.edit',compact('tag', 'users', 'current', 'residents', 'available'));
+        return view('tags.edit',compact('tag', 'users', 'current', 'residents', 'available', 'targetsNull'));
     }
     
     /**
@@ -146,12 +147,20 @@ class TagController extends Controller
     */
     public function update(Request $request, Tag $tag)
     {
-        $rules = ['beacon_mac' => 'required|string|min:12|max:12|unique:beacons_table,beacon_mac,'.$tag->beacon_id.',beacon_id'];
+        $rules = ['beacon_mac' => 'required|string|min:12|max:12|unique:beacons_table,beacon_mac,'.$tag->beacon_id.',beacon_id,deleted_at,NULL'];
         $messages = [];
 
+        if(isset($tag->user)){
+            $current = $tag->user;
+        } elseif (isset($tag->resident)){
+            $current = $tag->resident;
+        } else {
+            $current = null;
+        }
+
         if($request['assign'] == '1'){
-            $rules['target'] = 'required';
-            $messages['target.request'] = 'Please select at least one target.';
+            $rules['target'] = ['required', new IsUniqueTarget($current)];
+            $messages['target.required'] = 'Please select at least one target.';
         }
 
         request()->validate($rules, $messages, ['beacon_mac' => 'mac address']);
@@ -204,6 +213,15 @@ class TagController extends Controller
     public function destroys(Request $request)
     {
         $ids = $request->beacons_id;
+
+        $tags = Tag::find($ids);
+        foreach($tags as $tag){
+            if(isset($tag->user)){
+                $tag->user->tag()->dissociate()->save();
+            } else {
+                $tag->resident->tag()->dissociate()->save();
+            }
+        }
 
         Tag::destroy($ids);
 

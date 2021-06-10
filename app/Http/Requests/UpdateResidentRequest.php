@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ResidentRequest extends FormRequest
+class UpdateResidentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -35,7 +35,7 @@ class ResidentRequest extends FormRequest
         ];
 
         if($this->request->get('assign') == '1'){
-            $rules['beacon_id'] = 'required';
+            $rules['beacon_id'] = ['required', new IsUniqueTag($resident->tag ?? null)];
         }
 
         return $rules;

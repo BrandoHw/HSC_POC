@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ResidentRequest;
+use App\Http\Requests\AddResidentRequest;
+use App\Http\Requests\UpdateResidentRequest;
 use App\Resident;
 use App\Tag;
 use Illuminate\Http\Request;
@@ -60,7 +61,7 @@ class ResidentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ResidentRequest $request)
+    public function store(AddResidentRequest $request)
     {
         $resident = Resident::create($request->all());
 
@@ -125,7 +126,7 @@ class ResidentController extends Controller
      * @param  \App\Tag  $resident
      * @return \Illuminate\Http\Response
      */
-    public function update(ResidentRequest $request, Resident $resident)
+    public function update(UpdateResidentRequest $request, Resident $resident)
     {
         $resident->update($request->all());
 
@@ -163,6 +164,14 @@ class ResidentController extends Controller
     public function destroys(Request $request)
     {
         $ids = $request->residents_id;
+
+        $residents = Resident::find(ids);
+
+        foreach($residents as $resident){
+            if(isset($resident->tag)){
+                $resident->tag()->dissociate()->save();
+            }
+        }
 
         Resident::destroy($ids);
 

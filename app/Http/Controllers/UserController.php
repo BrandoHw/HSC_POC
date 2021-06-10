@@ -269,6 +269,14 @@ class UserController extends Controller
     {
         $ids = $request->users_id;
 
+        $users = User::find(ids);
+
+        foreach($users as $user){
+            if(isset($user->tag)){
+                $user->tag()->dissociate()->save();
+            }
+        }
+        
         User::destroy($ids);
 
         if(count($ids) > 1){

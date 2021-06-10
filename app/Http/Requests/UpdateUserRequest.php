@@ -43,7 +43,7 @@ class UpdateUserRequest extends FormRequest
             $rules['role'] = 'required';
 
             if($this->request->get('assign') == '1'){
-                $rules['beacon_id'] = 'required';
+                $rules['beacon_id'] = ['required', new IsUniqueTag($user->tag ?? null)];
             }
         }
 
