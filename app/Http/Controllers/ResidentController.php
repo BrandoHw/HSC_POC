@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AddResidentRequest;
 use App\Http\Requests\UpdateResidentRequest;
+use App\Location;
 use App\Resident;
 use App\Tag;
 use Illuminate\Http\Request;
@@ -24,7 +25,7 @@ class ResidentController extends Controller
      */
     public function index()
     {
-        $residents = Resident::orderBy('resident_id', 'asc')->with('tag')->get();
+        $residents = Resident::orderBy('resident_id', 'asc')->with('tag', 'room')->get();
         return view('residents.index', compact('residents'));
     }
 
@@ -44,15 +45,17 @@ class ResidentController extends Controller
             $available = false;
         }
         
-        $relationship = [
-            "S" => "Spouse",
-            "P" => "Parent", 
-            "C" => "Children",
-            "R" => "Relative",
-            "O" => "Others"
-        ];
-        
-        return view('residents.create',compact('tagsNull', 'available', 'relationship'));
+        $relationship = Resident::relationship;
+
+        $rooms_ori = Location::where('location_description', 'like', 'Room _')->get();
+        $rooms = [];
+        foreach($rooms_ori as $room){
+            $id = $room->location_master_id;
+            $name = 'L'.$room->floor.' - '.$room->location_description;
+            $rooms[$id] = $name;
+        }
+
+        return view('residents.create',compact('tagsNull', 'available', 'relationship', 'rooms'));
     }
 
     /**
@@ -65,6 +68,9 @@ class ResidentController extends Controller
     {
         $resident = Resident::create($request->all());
 
+        $room = Location::find($request['location_room_id']);
+        $resident->room()->associate($room)->save();
+        
         if(!empty($request['beacon_id'])){
             $tag = Tag::find($request['beacon_id']);
             $resident->tag()->associate($tag)->save();
@@ -108,15 +114,17 @@ class ResidentController extends Controller
             $available = false;
         }
 
-        $relationship = [
-            "S" => "Spouse",
-            "P" => "Parent", 
-            "C" => "Children",
-            "R" => "Relative",
-            "O" => "Others"
-        ];
+        $relationship = Resident::relationship;
 
-        return view('residents.edit', compact('resident', 'tagsNull', 'current', 'available', 'relationship'));
+        $rooms_ori = Location::where('location_description', 'like', 'Room _')->get();
+        $rooms = [];
+        foreach($rooms_ori as $room){
+            $id = $room->location_master_id;
+            $name = 'L'.$room->floor.' - '.$room->location_description;
+            $rooms[$id] = $name;
+        }
+
+        return view('residents.edit', compact('resident', 'tagsNull', 'current', 'available', 'relationship', 'rooms'));
     }
 
     /**
@@ -129,6 +137,13 @@ class ResidentController extends Controller
     public function update(UpdateResidentRequest $request, Resident $resident)
     {
         $resident->update($request->all());
+
+        if(!empty($resident->room)){
+            $resident->room()->dissociate()->save();
+        }
+
+        $room = Location::find($request['location_room_id']);
+        $resident->room()->associate($room)->save();
 
         /** Remove the tag associated with this user */
         if(!empty($resident->tag)){
