@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Role;
 use App\Tag;
 use App\User;
 use App\UserType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use DB;
 use Session;
@@ -42,9 +42,10 @@ class SettingController extends Controller
         $roles = Role::orderBy('id','asc')->get();
         $rolePermissions = DB::table("role_has_permissions")
             ->get();
+        $roles_count = count($roles);
 
         return view('settings.index', compact('user', 'users', 'tagsNull',
-            'roles', 'rolePermissions', 'current', 'available'));
+            'roles', 'rolePermissions', 'roles_count', 'current', 'available'));
     }
 
     /**

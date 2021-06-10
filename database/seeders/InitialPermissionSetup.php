@@ -3,11 +3,12 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Color;
+use App\Role;
 use App\User;
 use App\Tag;
 use App\UserType;
 use App\UserRight;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
 class InitialPermissionSetup extends Seeder
@@ -39,11 +40,13 @@ class InitialPermissionSetup extends Seeder
             Permission::firstOrCreate(['name' => $permission]);
         }
 
-        // /* Admin */
-        $admin = Role::create([
-            'name' => 'Admin',
-            'color' => '#09D58A']);
+        /* Admin */
+        $admin = Role::create(['name' => 'Admin']);
         // $admin = Role::find(2);
+
+        $color_aqua = Color::find('color_name', 'Aqua');
+        $color_aqua->role()->save($admin);
+
         $permission_admin = Permission::pluck('id', 'id')->all();
         $admin->syncPermissions($permission_admin);
 
@@ -67,6 +70,10 @@ class InitialPermissionSetup extends Seeder
             'name' => 'Default',
             'color' => '#874EFE']);
         // $default = Role::find(1);
+
+        $color_black = Color::find('color_name', 'Black');
+        $color_black->role()->save($default);
+
         $permission_default = Permission::whereIn('name', $permissions_name_default)->pluck('id', 'id')->all();
         $default->syncPermissions($permission_default);
 

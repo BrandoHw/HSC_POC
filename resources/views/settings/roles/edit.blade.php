@@ -15,7 +15,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="name">Name:</label>
-                                {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control', 'id' => 'editName')) !!}
+                                {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control', 'id' => 'name')) !!}
                                 @error('name')
                                     <script>$('#name').addClass("is-invalid");</script>
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -23,17 +23,7 @@
                             </div>
                         <div class="form-group col-md-6">
                             <label for="color">Color:</label>
-                            <div class="input-group">
-                            {!! Form::color('color', null, array('placeholder' => 'Click to select color', 'class' => "form-control", 'id' => 'color')) !!}
-                                <div class="input-group-append">
-                                    <span class="input-group-text" id='color-code' style="width:100px">#000000</span>
-                                </div>
-                            </div>
-                            @error('color')
-                                <script>$('#color').addClass("is-invalid");</script>
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                <script>$('#color-code').css("border", "1px solid red");</script>
-                            @enderror
+                            {!! Form::select('color_id', $colors, null, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'color']) !!}
                         </div>
                     </div>
                 </div>
@@ -124,6 +114,28 @@
 <script type="text/javascript">
 
     $(function () {
+        $('#color').select2({
+            templateResult: formatState,
+            templateSelection: formatState
+        });
+
+        let selected_color = @json($role->color->color_id);
+        $('#color').val(selected_color).trigger('change');
+
+        function formatState (state){
+            if (!state.id) {
+                return state.text;
+            }
+            let code = state.text.split('-')[0];
+            let name = state.text.split('-')[1];
+            
+            let $state = $(
+                '<span><i class="ri-bookmark-fill" style="color:'+ code + '"></i>  ' + name +'</span>'
+            )
+
+            return $state;
+        };
+
         /* Initiate dataTable */
         var table = $('#permissionTable').DataTable({
             responsive: true,
@@ -131,7 +143,7 @@
             paging: false,
             searching: false,
             info: false,
-            order: [0, 'asc']
+            order: [0, 'asc'],
             columnDefs:[{
                 targets: 'noSort',
                 orderable: false
@@ -147,9 +159,15 @@
         @cannot('role-edit')
             $('#name').prop('disabled', true);
             $('#color').prop('disabled', true);
-            $('#color-code').prop('disabled', true);
+            // $('#color-code').prop('disabled', true);
             $('input:checkbox').prop('disabled', true);
         @endcan
+
+        @error('color_id')
+        message = @json($message);
+        $('#color').siblings('span').find('.select2-selection').css('border', '1px solid #dc3545');
+        $('#color').siblings('span').after('<div class="invalid-feedback" style="display:block">'+ message +'</div>');
+        @enderror
     })
 
     $('#color').on('change', function(event) {
