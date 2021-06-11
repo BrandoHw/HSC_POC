@@ -51,7 +51,7 @@ class User extends Authenticatable
      */
     public function userRight()
     {
-        return $this->belongsTo(userRight::class, 'right_id', 'user_right_id')->withTrashed();
+        return $this->belongsTo(userRight::class, 'right_id', 'user_right_id');
     }
 
     /**
@@ -59,7 +59,7 @@ class User extends Authenticatable
      */
     public function userType()
     {
-        return $this->belongsTo(userType::class, 'type_id', 'user_type_id')->withTrashed();
+        return $this->belongsTo(userType::class, 'type_id', 'user_type_id');
     }
 
     /**
@@ -67,7 +67,7 @@ class User extends Authenticatable
      */
     public function tag()
     {
-        return $this->belongsTo(Tag::class, 'beacon_id', 'beacon_id')->withTrashed();
+        return $this->belongsTo(Tag::class, 'beacon_id', 'beacon_id');
     }
 
       /**

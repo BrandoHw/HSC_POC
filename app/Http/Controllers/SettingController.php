@@ -39,7 +39,7 @@ class SettingController extends Controller
             $available = false;
         }
 
-        $roles = Role::orderBy('id','asc')->get();
+        $roles = Role::orderBy('id','asc')->with('color')->get();
         $rolePermissions = DB::table("role_has_permissions")
             ->get();
         $roles_count = count($roles);

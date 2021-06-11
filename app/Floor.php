@@ -37,7 +37,7 @@ class Floor extends Model
      */
 	public function building()
 	{
-		return $this->belongsTo(Building::class, 'building_id', 'building_id')->withTrashed();
+		return $this->belongsTo(Building::class, 'building_id', 'building_id');
     }
 
     /**

@@ -39,7 +39,7 @@ class Building extends Model
    */
   public function floors()
   {
-  return $this->hasMany(Floor::class)->withTrashed();
+  return $this->hasMany(Floor::class);
   }
 
   /**

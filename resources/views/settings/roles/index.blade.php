@@ -30,7 +30,7 @@
                         <tr id="role-{{ $role->id }}" href="{{ route('roles.edit',$role->id) }}">
                             <td>{{ $role->id }}</td>
                             <td class="info-role">{{ $role->name }}</td>
-                            <td class="info-role"><span class="badge badge-dark" style="background-color: {{ $role->color->color_code }} !important">{{ $role->color->color_name }}</span></td>
+                            <td class="info-role"><span class="badge badge-dark" style="background-color: {{ $role->color->color_code ?? 'None' }} !important">{{ $role->color->color_name ?? '-' }}</span></td>
                             <td class="info-role">
                                 @if(!empty($rolePermissions))
                                     {{ $rolePermissions->where("role_id", $role->id)->count() }}

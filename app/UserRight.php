@@ -45,6 +45,6 @@ class UserRight extends Model
      */
     public function user()
     {
-        return $this->hasMany(User::class, 'right_id', 'user_right_id')->withTrashed();
+        return $this->hasMany(User::class, 'right_id', 'user_right_id');
     }
 }

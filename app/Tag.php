@@ -52,7 +52,7 @@ class Tag extends Model
      */
     public function user()
     {
-        return $this->hasOne(User::class, 'beacon_id', 'beacon_id')->withTrashed();
+        return $this->hasOne(User::class, 'beacon_id', 'beacon_id');
     }
 
     /**
@@ -61,16 +61,16 @@ class Tag extends Model
 
     public function staff()
     {
-        return $this->hasOne(User::class, 'beacon_id', 'beacon_id')->withTrashed();
+        return $this->hasOne(User::class, 'beacon_id', 'beacon_id');
     }
 
     public function resident()
     {
-        return $this->hasOne(Resident::class, 'beacon_id', 'beacon_id')->withTrashed();
+        return $this->hasOne(Resident::class, 'beacon_id', 'beacon_id');
     }
 
     public function gateway(){
-        return $this->hasOne(Reader::class, 'gateway_id', 'current_loc')->withTrashed();
+        return $this->hasOne(Reader::class, 'gateway_id', 'current_loc');
     }
 
     /**
