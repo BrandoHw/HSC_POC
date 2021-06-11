@@ -45,7 +45,7 @@ class Reader extends Model
      */
     public function location()
     {
-        return $this->belongsTo(Location::class, 'location_id', 'location_master_id')->withTrashed();
+        return $this->belongsTo(Location::class, 'location_id', 'location_master_id');
     }
 
     /**

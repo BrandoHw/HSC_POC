@@ -32,7 +32,7 @@ class Location extends Model
      */
     public function scopes()
     {
-        return $this->belongsToMany(Scope::class, 'scope_locations_master_table', 'location_id', 'scope_id')->withTrashed();
+        return $this->belongsToMany(Scope::class, 'scope_locations_master_table', 'location_id', 'scope_id');
     }
 
     /**
@@ -40,7 +40,7 @@ class Location extends Model
      */
     public function residents()
     {
-        return $this->hasMany(Residents::class, 'residents_table', 'location_room_id', 'location_master_id')->withTrashed();
+        return $this->hasMany(Residents::class, 'residents_table', 'location_room_id', 'location_master_id');
     }
 
 

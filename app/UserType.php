@@ -45,7 +45,7 @@ class UserType extends Model
      */
     public function user()
     {
-        return $this->hasMany(User::class, 'type_id', 'user_type_id')->withTrashed();
+        return $this->hasMany(User::class, 'type_id', 'user_type_id');
     }
 
 }

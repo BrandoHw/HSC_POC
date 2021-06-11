@@ -96,15 +96,14 @@ class RoleController extends Controller
     /**
     * Show the form for editing the specified resource.
     *
-    * @param  int  $id
+    * @param  \App\Role $role
     * @return \Illuminate\Http\Response
     */
-    public function edit(PermissionService $permissionService, $id)
+    public function edit(PermissionService $permissionService, Role $role)
     {
-        $role = Role::find($id);
         $permissions = Permission::get();
         $rolePermissions = DB::table("role_has_permissions")
-            ->where("role_has_permissions.role_id",$id)
+            ->where("role_has_permissions.role_id",$role->id)
             ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
             ->all();
         $modules = $permissionService->organise_permissions($permissions);
@@ -112,6 +111,7 @@ class RoleController extends Controller
         
         $colors_raw = Color::doesntHave('role')->orderBy('color_id', 'asc')->get();
         $colors = [];
+        
         $colors[$role->color->color_id] = $role->color->code_and_name;
         foreach($colors_raw as $color){
             $colors[$color->color_id] = $color->code_and_name;

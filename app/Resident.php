@@ -59,17 +59,17 @@ class Resident extends Model
      */
     public function tag()
     {
-        return $this->belongsTo(Tag::class, 'beacon_id', 'beacon_id')->withTrashed();
+        return $this->belongsTo(Tag::class, 'beacon_id', 'beacon_id');
     }
 
     public function beacon()
     {
-        return $this->belongsTo(Tag::class, 'beacon_id', 'beacon_id')->withTrashed();
+        return $this->belongsTo(Tag::class, 'beacon_id', 'beacon_id');
     }
 
     public function room()
     {
-        return $this->belongsTo(Location::class, 'location_room_id', 'location_master_id')->withTrashed();
+        return $this->belongsTo(Location::class, 'location_room_id', 'location_master_id');
     }
 
     /**
