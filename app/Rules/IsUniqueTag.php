@@ -34,7 +34,7 @@ class IsUniqueTag implements Rule
             ->all();
 
         if(isset($current)){
-            array_push($tagsNull, $current->beacon_id)
+            array_push($tagsNull, $current->beacon_id);
         }
 
         return in_array($value, $tagsNull);

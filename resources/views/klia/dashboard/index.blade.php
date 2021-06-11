@@ -42,7 +42,7 @@
                                             <th>First Seen</th>
                                             <th>Last Seen</th>
                                             <th>Location</th>
-                                            <th>Duration</th>
+                                            {{-- <th>Duration</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -129,7 +129,7 @@
             {data: 'first_seen'},
             {data: 'last_seen'},
             {data: 'gateway.location.location_description'},
-            {data: 'time_missing'},
+            // {data: 'time_missing'},
         ],
     
     })

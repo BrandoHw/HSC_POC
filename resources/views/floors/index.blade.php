@@ -111,7 +111,7 @@
                                                 <font color='gray'><em>Not Assigned</em></font>
                                             @else
                                                 <div>
-                                                    <a class="image_holder" href="#" data-image={{$floor->map->url}}>{{$floor->map->url}}</a>
+                                                    <a class="image_holder" href="#" data-image={{$floor->map->url}}>[Hover to View Image]</a>
                                                 </div>
                                             @endif
                                         </td>

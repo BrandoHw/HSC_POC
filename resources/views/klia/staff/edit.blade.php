@@ -49,6 +49,10 @@
                                 </div>
                             </div>
                             <div class="form-group col-sm-6" style="display: none">
+                                <label for="room">Room:</label>
+                                {!! Form::select('location_room_id', ['M' => 'Male', 'F' => 'Female'], $resident->resident_gender, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'room']) !!}
+                            </div>
+                            <div class="form-group col-sm-6" style="display: none">
                                 <label for="gender">Gender:</label>
                                 {!! Form::select('resident_gender', ['M' => 'Male', 'F' => 'Female'], $resident->resident_gender, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'gender']) !!}
                             </div>

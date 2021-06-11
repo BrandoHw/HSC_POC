@@ -54,11 +54,7 @@ class User extends Authenticatable
      */
     public function userRight()
     {
-<<<<<<< HEAD
-        return $this->belongsTo(UserRight::class, 'right_id', 'user_right_id')->withTrashed();
-=======
         return $this->belongsTo(userRight::class, 'right_id', 'user_right_id');
->>>>>>> 632cf823b16b84c5019543519a79735b4e4fff01
     }
 
     /**
@@ -66,11 +62,7 @@ class User extends Authenticatable
      */
     public function userType()
     {
-<<<<<<< HEAD
-        return $this->belongsTo(UserType::class, 'type_id', 'user_type_id')->withTrashed();
-=======
         return $this->belongsTo(userType::class, 'type_id', 'user_type_id');
->>>>>>> 632cf823b16b84c5019543519a79735b4e4fff01
     }
 
     /**

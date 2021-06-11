@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ResidentRequest;
+use App\Http\Requests\UpdateResidentRequest;
 use App\Resident;
 use App\Tag;
 use Illuminate\Http\Request;
@@ -152,8 +152,9 @@ class StaffController extends Controller
      * @param  \App\Tag  $resident
      * @return \Illuminate\Http\Response
      */
-    public function update(ResidentRequest $request, $id)
+    public function update(UpdateResidentRequest $request, $id)
     {
+        
         $resident = Resident::find($id);
         $resident->update($request->all());
 
