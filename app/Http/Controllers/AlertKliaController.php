@@ -25,7 +25,12 @@ class AlertKliaController extends Controller
     public function index()
     {
         // $alerts = Alert::orderBy('alert_id', 'asc')->with(['reader', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])->get();
-        $alerts = Alert::where('alert_id', '<=', 3170)->orderBy('alert_id', 'asc')->with(['reader', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])->get();
+        //$alerts = Alert::where('alert_id', '<=', 3170)
+        $alerts = Alert::orderBy('alert_id', 'asc')
+        ->with(['reader', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
+        ->has('tag.resident')
+        ->get();
+
         $alerts_last = $alerts->last()->alert_id ?? 0;
         return view('klia.alerts.index', compact('alerts', 'alerts_last'));
     }
@@ -381,7 +386,9 @@ class AlertKliaController extends Controller
     {
         $last_id = $request->last_id;
 
-        $alerts_new = Alert::where('alert_id', '>', $last_id)->get();
+        $alerts_new = Alert::where('alert_id', '>', $last_id)
+        ->has('tag.resident')
+        ->get();
 
         $alerts_num = 0;
         if(count($alerts_new) > 0){
