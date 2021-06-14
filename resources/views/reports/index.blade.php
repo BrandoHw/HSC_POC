@@ -423,7 +423,7 @@
             pie_chart.series.removeIndex(
                 pie_chart.series.indexOf(series)
             ).dispose();
-            series = pie_chart.series.push(new am4charts.series());
+            series = pie_chart.series.push(new am4charts.PieSeries());
             series.dataFields.value = "count";
             series.slices.template.stroke = am4core.color("#fff");
             series.slices.template.strokeWidth = 2;

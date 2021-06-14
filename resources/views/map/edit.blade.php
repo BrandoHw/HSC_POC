@@ -157,7 +157,7 @@
                             data:selectData.filter(gateway => gateway.alias == currentFloor || gateway.alias == null)
                         });
 
-                        notyf.success("Sucessful Deletion");  
+                        notyf.success("Successful Deletion");  
                     },
                     headers: {
                         'X-CSRF-Token': '{{ csrf_token() }}',
