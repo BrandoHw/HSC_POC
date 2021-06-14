@@ -20,15 +20,14 @@ class AttendanceKliaController extends Controller
         $date_end = new Carbon(explode(' - ', $request['date_range'])[1]);
         $date_end = $date_end->addDays(1)->subSecond(1);
      
-        $attendance = json_decode(json_encode(Attendance_KLIA::with('tag', 'tag.resident', 'gateway', 'gateway.location')
-                ->has('tag.resident')
-                ->has('gateway.location')
-                ->whereBetween('first_seen', [$date_start, $date_end])
-                ->orderBy('first_seen', 'desc')
+        $attendance = json_decode(json_encode(Attendance_KLIA::whereBetween('first_seen', [$date_start, $date_end])
+        ->whereNotNull('staff_name')
+        ->whereNotNull('location_name')
+        ->orderBy('first_seen', 'desc')
                 ->get()));
 
         foreach ($attendance as $att){
-            $att->full_name = $att->tag->resident->resident_fName." ". $att->tag->resident->resident_lName;
+            //$att->full_name = $att->tag->resident->resident_fName." ". $att->tag->resident->resident_lName;
             $att->time_missing = Carbon::parse($att->last_seen)->diffForHumans();
         }
         return response()->json([
