@@ -82,7 +82,7 @@ class Alert extends Model
     {
         $date = Carbon::createFromFormat('Y-m-d H:i:s', $this->occured_at, 'UTC');
         $date->setTimezone('Asia/Kuala_Lumpur');
-        return $date->format('Y-m-d H:i:s');
+        return $date->format('Y-m-d g:i:s A');
     }
 
     /**
