@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Floor extends Model
 {
-     use SoftDeletes;
+     // use SoftDeletes;
      
      /**
      * The table associated with the model.
@@ -61,6 +61,6 @@ class Floor extends Model
      */
 	public function locations()
 	{
-		return $this->hasMany(Location::class);
+		return $this->hasMany(Location::class, 'floor', 'floor_id');
 	}
 }

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Floor;
+use App\GatewayZone;
+use App\Location;
 use App\MapFile;
+use App\Reader;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -70,9 +73,19 @@ class FloorController extends Controller
                 },
             ],
         ]);
+      
         if ($validator->fails()) {
             //
             Session::flash('failure', $validator->errors()->first());
+            return Redirect::back();
+        }
+        $imageValidator = Validator::make($request->all(), [
+            'image-input' => 'mimes:jpeg,png|max:16384',
+        ]);
+        
+        if ($imageValidator->fails()) {
+            //
+            Session::flash('image-failure', $imageValidator->errors()->first());
             return Redirect::back();
         }
 
@@ -86,14 +99,6 @@ class FloorController extends Controller
 
         if ($request->hasFile($image_id)) {
             if ($request->file($image_id)->isValid()) {
-                $validated = $request->validate([
-                    'image' => 'mimes:jpeg,png|max:16384',
-                ]);
-                // $extension = $request[$image_id]->extension();//Get Extension
-                // $current = Carbon::now()->format('Y-m-d-H-i-s'); //Get Time for filename
-                // $request[$image_id]->storeAs('/public', $current.".".$extension); //Store in File System, with concatenated name
-                // $url = Storage::url($current.".".$extension); // Get Url
-
                 $filename = Storage::disk('s3')->putFile('floor', $request[$image_id]);
                 $url = Storage::disk('s3')->url($filename);
 
@@ -104,9 +109,13 @@ class FloorController extends Controller
                 ]);
                 Session::flash('success', "Success!");
                 return Redirect::back();
+            }else{
+                Session::flash('failure', "Failure");
+                return Redirect::back();
             }
         }
-        abort(500, 'Could not upload floor plan');
+        Session::flash('success', "Success");
+        return Redirect::back();
     }
 
     /**
@@ -180,7 +189,8 @@ class FloorController extends Controller
             Session::flash('failure', "Invalid");
             return Redirect::back();
         }
-
+      
+     
         $floor = Floor::find($id);
         $floor->number = $floor_number;
         $floor->alias = $alias;
@@ -189,14 +199,16 @@ class FloorController extends Controller
         $floor_id = $id;
         if ($request->hasFile($image_id)) {
             if ($request->file($image_id)->isValid()) {
-                $validated = $request->validate([
-                    'image' => 'mimes:jpeg,png|max:16384',
+                $imageValidator = Validator::make($request->all(), [
+                    $image_id => 'mimes:jpeg,png|max:16384',
                 ]);
-                // $extension = $request[$image_id]->extension();
-                // $current = Carbon::now()->format('Y-m-d-H-i-s');
-                // $request[$image_id]->storeAs('/public', $current.".".$extension);
-                // $url = Storage::url($current.".".$extension);
+                if ($imageValidator->fails()) {
+                    Session::flash('image-failure', "Invalid");
+                    return Redirect::back();
+                }
+                $oldUrl = MapFile::where('floor_id', $floor_id)->get()[0]->name;
                 $filename = Storage::disk('s3')->putFile('floor', $request[$image_id]);
+                Storage::disk('s3')->delete($oldUrl);
                 $url = Storage::disk('s3')->url($filename);
                 $file = MapFile::updateOrCreate(
                     ['floor_id' => $floor_id],
@@ -207,7 +219,8 @@ class FloorController extends Controller
                 return Redirect::back();
             }
         }
-        abort(500, 'Could not upload floor plan');
+        Session::flash('success-update', "Success!");
+        return Redirect::back();
     }
 
     /**
@@ -235,6 +248,29 @@ class FloorController extends Controller
     public function destroyHref($id)
     {
         //
+        $floor_id = Floor::find($id)->floor_id;
+        $oldUrl = MapFile::where('floor_id', $floor_id)->get()[0]->name;
+        Storage::disk('s3')->delete($oldUrl);
+
+        //Find and delete all locations, unassign all gateways, delete all zones
+        $floor = Floor::with('locations')->find($id);
+        $ids = [];
+
+        foreach ($floor->locations as $location){
+            array_push($ids, $location->location_master_id);
+        }
+        $gateways = Reader::whereIn('location_id', $ids)->get();
+    
+        $gatewayMacs = $gateways->pluck('mac_addr');
+        $gatewayZones = GatewayZone::whereIn('mac_addr', $gatewayMacs)->get();
+        foreach($gatewayZones as $gatewayZone){
+            $gatewayZone->delete();
+        }
+        foreach($gateways as $gateway){
+            $gateway->update(['location_id' => null]);
+        }
+        $deletedRows = Location::whereIn('location_master_id', $ids)->delete();
+
         Floor::destroy($id);
         Session::flash('success-destroy', "Success!");
         return Redirect::back();
