@@ -323,7 +323,6 @@ class AlertController extends Controller
 
         $today = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');
         $alerts = Alert::where('occured_at', '>=', $today)
-            ->whereNull('resolved_at')
             ->orderBy('occured_at', 'desc')
             ->with(['reader', 'reader.location', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
             ->get();
@@ -332,24 +331,34 @@ class AlertController extends Controller
         $tags = $alerts->unique('beacon_id')->pluck('tag');
         
         $alerts_grouped = collect();
+        $alerts_num = 0;
         $alerts_by_tag = $alerts_new->groupBy('beacon_id');
-        foreach($alerts_by_tag as $alerts){
-            $id = $alerts->first()->beacon_id;
-            $counts = $alerts->countBy('rules_id');
-            
-            $filters = $alerts->unique('rules_id');
-            foreach($filters as $filter){
-                $filter['time_diff_tz'] = $filter->time_diff_tz;
-                $filter['occured_at_time_tz'] = $filter->occured_at_time_tz;
-                $filter['counts'] = $counts[$filter->rules_id];
-            }
+        foreach($alerts_by_tag as $alerts_tag){
+            $id = $alerts_tag->first()->beacon_id;
 
+            $filters = collect();
             $all_counts = 0;
-            foreach($counts as $count){
-                $all_counts += $count;
-            }
+            foreach($alerts_tag->groupBy('rules_id') as $alerts_rule){
+                $rule_id = $alerts_rule->first()->rule_id;
+                $unresolved = $alerts_rule->whereNull('resolved_at');
+                $resolved = $alerts_rule->whereNotNull('resolved_at');
+                
+                $data = null;
+                if($unresolved->count() > 0){
+                    $data = $unresolved->first();
+                    $data['counts'] = $unresolved->count();
+                } else {
+                    $data = $resolved->first();
+                    $data['counts'] = 0;
+                }
+                $data['time_diff_tz'] = $data->time_diff_tz;
+                $data['occured_at_time_tz'] = $data->occured_at_time_tz;
+                $all_counts += $data['counts'];
 
-            $alerts_grouped->put($id, [$filters, $alerts->first()->tag->current_location, $all_counts]);
+                $filters->put($rule_id, $data);
+            }
+            $alerts_num += $all_counts;
+            $alerts_grouped->put($id, [$filters, $alerts_tag->first()->tag->current_location, $all_counts]);
         }
 
         foreach($tags as $tag){
@@ -358,9 +367,7 @@ class AlertController extends Controller
             }
         }
 
-        $alerts_num = 0;
         if(count($alerts_new) > 0){
-            $alerts_num = count($alerts_new);
             $last_id = $alerts_new->sortBy('alert_id')->last()->alert_id;
         }
 
@@ -499,7 +506,8 @@ class AlertController extends Controller
         $policy_id = $request['rule_id'];
 
         $today = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');
-        $alerts = Alert::where('occured_at', '>=', $today)
+        // $alerts = Alert::where('occured_at', '>=', $today)
+        $alerts = Alert::where('alert_id', '>=', '3382')
             ->where('beacon_id', $tag_id)
             ->where('rules_id', $policy_id)
             ->whereNull('resolved_at')

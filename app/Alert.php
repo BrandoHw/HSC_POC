@@ -107,7 +107,7 @@ class Alert extends Model
         if(isset($this->resolved_at)){
             $date = Carbon::createFromFormat('Y-m-d H:i:s', $this->resolved_at, 'UTC');
             $date->setTimezone('Asia/Kuala_Lumpur');
-            return $date->format('Y-m-d H:i:s');
+            return $date->format('Y-m-d g:i:s A');
         } else {
             return "-";
         }

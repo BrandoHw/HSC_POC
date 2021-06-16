@@ -185,79 +185,15 @@
          </div>
       </div>
       <div class="chat-sidebar-channel scroller pl-3 pr-3" style="height:calc(100vh - 5rem)">
-         <div class="text-center align-middle" style="margin-top: 12rem" id="no-alert-div" {{ (count($alerts) < 1) ? "":"hidden"}}>
+         <div class="text-center align-middle" style="margin-top: 12rem" id="no-alert-div" {{ ($alerts_count < 1) ? "":"hidden"}}>
             <div data-icon="x" style="font-size: 85px" class="icon text-secondary" ></div>
             <p>No Alert Right Now!</p>
          </div>
          <ul class=" list-inline p-0 m-0" id="alert-all" {{ (count($alerts) >= 1) ? "":"hidden"}}>
-            @if(count($alerts) >= 1)
-               @foreach($alerts->groupBy('beacon_id') as $alerts_person)
-                  @php($person = $alerts_person->first()->tag->resident ? $alerts_person->first()->tag->resident: $alerts_person->first()->tag->user)
-                  <li class="mb-3 sell-list border-info rounded" id="main-group-{{ $person->tag->beacon_id }}">
-                     <div class="d-flex p-3 align-items-center alert-main">
-                        <div class="user-img img-fluid">
-                           <img src="{{ asset('img/avatars/default-profile-m.jpg') }}" alt="story-img" class="img-fluid rounded-circle avatar-40">
-                        </div>
-                        <div class="media-support-info ml-3">
-                           <h6>{{ $person->full_name}}</h6>
-                           <p class="mb-0 tag_loc">{{ $person->tag->current_location }}</p>
-                        </div>
-                        <div class="media-support-amount ml-3">
-                           <div class="text-secondary small">{{ $alerts_person->first()->occured_at_time_tz }}</div>
-                           <div class="badge badge-pill badge-danger all-alert-num" style="float: right" {{ $alerts_person->whereNull('resolved_at')->count() > 0 ? '':'hidden' }}>{{ $alerts_person->whereNull('resolved_at')->count() }}</div>
-                        </div>
-                     </div>
-                     <button id="resolve-by-tag-{{ $person->tag->beacon_id }}" onClick="resolveAllAlerts(this.id)" class="btn btn-outline-primary mb-2" style="margin-left: 4.25rem; margin-top:-0.5rem"
-                        {{ $alerts_person->whereNull('resolved_at')->count() > 0 ? '':'hidden' }}>Resolve All</button>
-                     <ul class="list-group alert-ul" id="group-by-tag-{{ $person->tag->beacon_id }}">
-                        @foreach($alerts_person->groupBy('rules_id') as $alerts_grouped)
-                           @switch($alerts_grouped->first()->policy->rules_type_id)
-                           @case(1)
-                              @php($color = $alerts_grouped->first()->policy->attendance ? "success":"warning")
-                              @php($desc = $alerts_grouped->first()->policy->attendance ? "Present":"Absent")
-                              @break
-                           @case(2)
-                              @php($color = "warning")
-                              @php($desc = "<".$alerts_grouped->first()->policy->battery_threshold."%")
-                              @break
-                           @case(3)
-                              @php($color = "danger")
-                              @php($desc = "SOS")
-                              @break
-                           @case(4)
-                              @php($color = "danger")
-                              @php($desc = "Fall")
-                              @break
-                           @case(5)
-                              @php($color = "warning")
-                              @php($desc = $alerts_grouped->first()->policy->geofence ? "Entered":"Left")
-                              @break
-                           @case(6)
-                              @php($color = "danger")
-                              @php($desc = "Violence")
-                              @break
-                           @endswitch
-                           @php($id = $alerts_grouped->first()->beacon_id)
-                           @php($rule = $alerts_grouped->first()->rules_id)
-                           <li class="list-group-item d-flex align-items-center" id="tag-{{ $id }}-rule-{{ $rule }}">
-                              <div class="media-support-info">
-                                 <h6 class="rule-name">{{ $alerts_grouped->first()->policy->description }}</h6>
-                                 <p class="curr-loc">{{ $alerts_grouped->first()->reader->location_full }}</p>
-                              </div>
-                              <div class="media-support-amount ml-3">
-                                 <div class="text-secondary small time-diff"><em>{{ $alerts_grouped->first()->time_diff_tz }}</em></div>
-                                 <div class="badge badge-pill badge-{{ $color }} alert-num" style="float: right" {{ $alerts_grouped->whereNull('resolved_at')->count() > 0 ? '':'hidden'}}>{{ $alerts_grouped->whereNull('resolved_at')->count() }}</div>
-                                 <span class="text-success" {{ $alerts_grouped->whereNull('resolved_at')->count() > 0 ? 'hidden':''}}><i class="ri-check-line"></i>Resolved</span>
-                              </div>
-                              <ul class="alert-resolve" {{ $alerts_grouped->whereNull('resolved_at')->count() > 0 ? '':'hidden'}}>
-                                 <li id="resolve-by-tag-{{ $id }}-rule-{{ $rule }}" onClick="resolveAlerts(this.id)"><a href="#"><i class="ri-checkbox-line"></i></a></li>
-                              </ul>
-                           </li>
-                           @endforeach
-                     </ul>
-                  </li>
-               @endforeach
-            @endif
+            <div class="text-center align-middle" style="margin-top: 12rem" id="loading-alert-div">
+               <div data-icon="&#xe011" style="font-size: 85px" class="icon text-primary" ></div>
+               <p>Loading Alerts!</p>
+            </div>
          </ul>
       </div>
    </div>
@@ -272,6 +208,7 @@
    $(function(){
       $('#body').addClass(['sidebar-main-active', 'right-column-fixed', 'header-top-bgcolor']);
 
+      getNewAlerts(true);
       let timer_icon = setInterval(reloadIconData, 30000);
       let timer_tables = setInterval(reloadTableData, 30000);
       let timer_alerts = setInterval(getNewAlerts, 30000);
@@ -422,7 +359,7 @@
       }
    }
 
-   function getNewAlerts(){
+   function getNewAlerts(first = false){
       let refresh_btn = $('#refresh-alerts');
       refresh_btn.html('<i class="fa fa-custom fa-circle-o-notch fa-spin mr-0"></i>');
       refresh_btn.prop('disabled', true);
@@ -447,15 +384,20 @@
                      $('#no-alert-div').prop('hidden', true);
                      $('#alert-all').prop('hidden', false);
                   }
+                  if(!$('#loading-alert-div').is(":hidden")){
+                     $('#loading-alert-div').prop('hidden', true);
+                  }
+               }
 
-                  let alerts_grouped = response['alerts_grouped'];
-                  last = response['last_id'];
-                  Object.keys(alerts_grouped).forEach(function(key){
-                     let tag_id = key;
-                     let alerts_rule = alerts_grouped[key][0];
-                     let target_loc = alerts_grouped[key][1];
-                     let all_num = alerts_grouped[key][2];
+               let alerts_grouped = response['alerts_grouped'];
+               last = response['last_id'];
+               Object.keys(alerts_grouped).forEach(function(key){
+                  let tag_id = key;
+                  let alerts_rule = alerts_grouped[key][0];
+                  let target_loc = alerts_grouped[key][1];
+                  let all_num = alerts_grouped[key][2];
 
+                  if(alerts_rule.length > 0){
                      if(!$('#main-group-' + tag_id).length){
                         let occured_at = alerts_rule[0]['occured_at_time_tz'];
                         let person = alerts_rule[0]['tag']['user'] ?? alerts_rule[0]['tag']['resident']; 
@@ -482,13 +424,13 @@
                         + '</li>';
 
                         $('#alert-all').prepend(new_alert_main);
+                        
 
-                        alerts_rule.forEach(setNewAlerts);
+                        Object.values(alerts_rule).forEach(setNewAlerts);
                         
                      } else {
 
                         let alert_main = $('#main-group-' + tag_id);
-                        alert_main.find('.media-support-info .tag_loc').html(target_loc);
                         
                         if(alerts_rule.length > 0){
 
@@ -499,18 +441,33 @@
                            alerts_badge.prop('hidden', false);
                            resolve_all_btn.prop('hidden', false);
 
-                           alerts_rule.forEach(setNewAlerts);
+                           Object.values(alerts_rule).forEach(setNewAlerts);
                         }
 
                         alert_main.prependTo($('#alert-all'));
 
                      }
-                  })
-                  notyf.open({
-                     type: 'warning',
-                     message: response['success'],
-                  });
+
+                     if(all_num < 1 ){
+                        $('#resolve-by-tag-' + tag_id).hide();
+                        let alerts_badge = $('#main-group-' + tag_id).find('.media-support-amount .all-alert-num');
+                        alerts_badge.prop('hidden', true);
+                     }
+                  }
+
+                  $('#main-group-' + tag_id).find('.media-support-info .tag_loc').html(target_loc);
+
+               })
+
+               if(response['alerts_num'] != 0){
+                  if(!first){
+                     notyf.open({
+                        type: 'warning',
+                        message: response['success'],
+                     });
+                  }
                }
+               
                refresh_btn.html('<i class="fa fa-custom fa-check mr-0"></i>');
                setTimeout(function() {
                   refresh_btn.html('<i class="ri-refresh-line mr-0"></i>');
@@ -589,6 +546,17 @@
 
          alert_div.prependTo($('#group-by-tag-' + tag_id));
 
+      }
+
+      if(num < 1){
+         let alert_div = $('#tag-' + tag_id + "-rule-" + rule_id);
+         let alert_badge = alert_div.find('.media-support-amount .alert-num');
+         let alert_span = alert_div.find('.media-support-amount span');
+         let resolve_btn = alert_div.find('.alert-resolve');
+         alert_badge.prop('hidden', true);
+         alert_badge.html('0');
+         alert_span.prop('hidden', false);
+         resolve_btn.prop('hidden', true);
       }
    }
 

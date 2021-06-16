@@ -66,13 +66,10 @@ class HomeController extends Controller
 
         $today = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');
 
-        $alerts = Alert::where('occured_at', '>=', $today)
-            ->orderBy('occured_at', 'desc')
-            ->with(['reader', 'reader.location', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
-            ->get();
+        $alerts = Alert::where('occured_at', '>=', $today)->orderBy('alert_id', 'asc')->get();
       
         $alerts_count = $alerts->count();
-        $alerts_last = Alert::orderBy('alert_id', 'desc')->first()->alert_id ?? 0;
+        $alerts_last = ($alerts->first()->alert_id ?? 0) - 1;
 
         $policies_count = Policy::count();
         $readers_count = Reader::count();
@@ -81,14 +78,9 @@ class HomeController extends Controller
 
         $attendance_policies = Policy::where('rules_type_id', '1')
             ->orderBy('description', 'asc')
-            ->with(['scope', 'scope.tags'])
+            ->with(['scope', 'scope.tags', 'alerts'])
             ->get();
         
-        $attendance_alerts= Alert::orderBy('occured_at', 'asc')
-            ->whereIn('rules_id', $attendance_policies)
-            ->with(['reader', 'reader.location', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
-            ->get();
-
         /* Radial Chart Series */
         $attendance = array();
         $now = Carbon::now()->toDateTimeString();
@@ -134,7 +126,7 @@ class HomeController extends Controller
 
         return view('home', compact('gatewayZones', 'building', 'floors', 
             'alerts', 'alerts_count', 'alerts_last', 'policies_count', 'tags_count', 'residents_count', 'readers_count', 
-            'attendance_policies', 'attendance_alerts', 'attendance', 'colors', 'whole', 'fraction'
+            'attendance_policies', 'attendance', 'colors', 'whole', 'fraction'
         ));
         
        
