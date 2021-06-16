@@ -32,7 +32,7 @@
                             <td class="info-user">{{ $user->fName }}</td>
                             <td class="info-user">{{ $user->lName }}</td>
                             <td class="info-user">
-                                <span class="badge badge-dark" style="background-color: {{ $user->roles[0]->color }} !important">
+                                <span class="badge badge-dark" style="background-color: {{ $user->roles[0]->color->color_code }} !important">
                                     {{ $user->getRoleNames()[0] }}
                                 </span>
                             </td>
