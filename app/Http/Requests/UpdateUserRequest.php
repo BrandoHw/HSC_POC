@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\User;
+use App\Rules\IsUniqueTag;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
