@@ -7,6 +7,7 @@ use App\Resident;
 use App\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Carbon;
 
 class StaffController extends Controller
 {
@@ -28,6 +29,11 @@ class StaffController extends Controller
 
         foreach($residents as $resident){
             $resident->resized_url = Storage::disk('s3-resized')->url("resized-".$resident->image_url);
+            if ($resident->tag != null && $resident->tag->current_loc != null){
+                $resident->last_seen = Carbon::parse($resident->tag->updated_at)->diffForHumans();
+            }else{
+                $resident->last_seen = null;
+            }
         }
         return view('klia.staff.index', compact('residents'));
     }

@@ -45,8 +45,7 @@
                         <thead>
                                 <tr>
                                     <th scope="col" style="width:10%" id="checkbox-all">#</th>
-                                    <th scope="col">Subject</th>
-                                    <th scope="col">Location</th>
+                                    <th scope="col">Staff Name</th>
                                     <th scope="col">Occurred at</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Resolved at</th>
@@ -57,13 +56,8 @@
                                     <tr id="alert-{{ $alert->alert_id }}">
                                         <td id="checkbox-{{ $alert->alert_id }}">{{ $alert->alert_id }}</td>
                                         <td>
-                                            @if($alert->tag->beacon_type == 1)
-                                                {{ $alert->tag->resident->full_name ?? '-' }}
-                                            @else
-                                                {{ $alert->tag->user->full_name ?? '-' }}
-                                            @endif
+                                            {{ $alert->tag->resident->full_name ?? '-' }}
                                         </td>
-                                        <td>{{ $alert->reader->location_full ?? "-" }}</td>
                                         <td>{{ $alert->occured_at_tz }}</td>
                                         <td id="status-{{ $alert->alert_id }}">
                                             <span class="badge badge-pill iq-bg-{{ $alert->resolved_at ? 'success':'danger' }}">
@@ -99,7 +93,7 @@
 
     /* Initiate dataTable */
     let dTable = $('#alertTable').DataTable({
-        order: [[5, 'desc']],
+        order: [[4, 'desc']],
     })
 
     $('#myCustomSearchBox').keyup(function(){  
@@ -142,7 +136,7 @@
         };
 
         $.ajax({
-            url: '{{ route("alerts.new_table") }}',
+            url: '{{ route("alerts.klia.new_table") }}',
             type: "POST",
             data: result,
             success:function(response){
@@ -166,7 +160,6 @@
                             dTable.row.add([
                                 id,
                                 item['subject'],
-                                item['location'],
                                 item['occured_at'],
                                 item['status'],
                                 item['resolved_at'],

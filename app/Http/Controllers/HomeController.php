@@ -124,6 +124,12 @@ class HomeController extends Controller
             }
         }
 
+        // foreach ($alerts as $alert){
+        //     $alert->test = $alert->getOccuredAtTzAttribute();
+        //     $alert->test2= $alert->getOccuredAtTimeTzAttribute();
+        // }
+
+        // return $alerts;
         return view('home', compact('gatewayZones', 'building', 'floors', 
             'alerts', 'alerts_count', 'alerts_last', 'policies_count', 'tags_count', 'residents_count', 'readers_count', 
             'attendance_policies', 'attendance', 'colors', 'whole', 'fraction'

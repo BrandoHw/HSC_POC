@@ -87,19 +87,19 @@
     });
 
     // Setup - add a text input to each footer cell
-    // $('#alertTable thead tr').clone(true).appendTo( '#alertTable thead' );
-    // $('#alertTable thead tr:eq(1) th').each( function (i) {
-    //     var title = $(this).text();
-    //     $(this).html( '<div class="iq-search-bar row justify-content-between"> <input type="text" class="text search-input" placeholder="Filter"> </div>' );
-    //     $( 'input', this ).on( 'keyup change', function () {
-    //         if ( alertTable.column(i).search() !== this.value ) {
-    //             alertTable
-    //                 .column(i)
-    //                 .search( this.value )
-    //                 .draw();
-    //         }
-    //     } );
-    // } );
+    $('#attendanceTable thead tr').clone(true).appendTo( '#attendanceTable thead' );
+    $('#attendanceTable thead tr:eq(1) th').each( function (i) {
+        var title = $(this).text();
+        $(this).html( '<div class="iq-search-bar row justify-content-between"> <input type="text" class="text search-input" placeholder="Filter"> </div>' );
+        $( 'input', this ).on( 'keyup change', function () {
+            if ( attendanceTable.column(i).search() !== this.value ) {
+                attendanceTable
+                    .column(i)
+                    .search( this.value )
+                    .draw();
+            }
+        } );
+    } );
 
     
     /* Initiate dataTable */
@@ -124,13 +124,15 @@
             }
         },
         columns:[
-            {data: 'full_name'},
+            {data: 'staff_name'},
             {data: 'tag_mac'},
             {data: 'first_seen'},
             {data: 'last_seen'},
-            {data: 'gateway.location.location_description'},
+            {data: 'location_name'},
             // {data: 'time_missing'},
         ],
+        orderCellsTop: true,
+        fixedHeader: true,
     
     })
 

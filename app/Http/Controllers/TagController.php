@@ -215,10 +215,11 @@ class TagController extends Controller
         $ids = $request->beacons_id;
 
         $tags = Tag::find($ids);
+        
         foreach($tags as $tag){
             if(isset($tag->user)){
                 $tag->user->tag()->dissociate()->save();
-            } else {
+            } elseif (isset($tag->resident)){
                 $tag->resident->tag()->dissociate()->save();
             }
         }

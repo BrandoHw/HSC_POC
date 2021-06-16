@@ -221,12 +221,14 @@ class ResidentController extends Controller
     {
         $ids = $request->residents_id;
 
-        $residents = Resident::find(ids);
+        $residents = Resident::find($ids);
 
         foreach($residents as $resident){
             if(isset($resident->tag)){
                 $resident->tag()->dissociate()->save();
             }
+            Storage::disk('s3')->delete($resident->image_url);
+            Storage::disk('s3-resized')->delete("resized-".$resident->image_url);
         }
 
         Resident::destroy($ids);

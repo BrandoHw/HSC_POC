@@ -94,6 +94,7 @@ class Alert extends Model
     {
         $date = $this->occured_at_tz;
         $string = explode(' ', $date);
+        //return $string;
         return $string[1].' '.$string[2];
     }
 

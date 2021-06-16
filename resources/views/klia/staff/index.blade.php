@@ -27,6 +27,7 @@
                                     <th scope="col" style="width:10%">#</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Beacon</th>
+                                    <th scope="col">Last Seen</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -39,6 +40,7 @@
                                             alt="profile"> {{ $resident->full_name }}
                                         </td>
                                         <td class='info align-middle'>{{ $resident->tag->beacon_mac ?? "-" }}</td>
+                                        <td class='align-middle'>{{ $resident->last_seen ?? "-"}}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<script src="{{ asset('js/notyf.js') }}"></script>
+{{-- <script src="{{ asset('js/notyf.js') }}"></script> --}}
 {{-- <script src="{{ asset('js/jquery.js') }}"></script> --}}
 
     <!-- Display alert -->
@@ -51,7 +51,8 @@
     @if ($message = Session::get('failure'))
 
         <script>
-            
+              
+            //var message = <?php echo $message; ?>;
             var notyf2 = new Notyf({
                 position:{
                     x: 'center',
@@ -62,6 +63,24 @@
             
             const notification = notyf2.error("There was an error with your operation");
         </script>
+
+    @endif
+
+    @if ($message = Session::get('image-failure'))
+
+    <script>
+          
+        //var message = <?php echo $message; ?>;
+        var notyf2 = new Notyf({
+            position:{
+                x: 'center',
+                y: 'top',
+                duration: 4000,
+            },
+        });
+        
+        const notification = notyf2.error("Only JPEG Or PNG Format Accepted");
+    </script>
 
     @endif
   
@@ -237,6 +256,8 @@
 
         $( "#createFloorButton" ).click(function() {
             $('#createFloorModal').modal('show');
+            $('#loading-indicator').hide();
+            $('#submit').show();
         });
 
     $('#myCustomSearchBox').keyup(function(){  
@@ -254,7 +275,7 @@
             $(this).parent('div').children('div.image').show();
         } else {
             var image_name=$(this).data('image');
-            var imageTag='<div class="image" style="position:relative;left: 50%;transform: translateX(-50%);">'+'<img src="'+image_name+'" alt="image" height="300" />'+'</div>';
+            var imageTag='<div class="image" style="position: absolute;left: 140px; top: 110px;">'+'<img src="'+image_name+'" alt="image" height="300" />'+'</div>';
             $(this).parent('div').append(imageTag);
         }
     });
