@@ -43,8 +43,10 @@
                                         <td class="info">
                                             @if(!empty($tag->user))
                                                 {{ $tag->user->full_name ?? '-' }}
-                                            @else
+                                            @elseif(!empty($tag->resident))
                                                 {{ $tag->resident->full_name ?? '-' }}
+                                            @else
+                                                -  
                                             @endif
                                         </td>
                                     </tr>

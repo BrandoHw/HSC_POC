@@ -14,39 +14,150 @@ use App\GatewayZone;
 use App\Alert;
 use App\Resident;
 use App\Tag;
+use App\Policy;
 class GeneralController extends Controller
 {
     //
 
     public function index (){
+        $request = [];
+
+        $request['rule_id'] = 26;
+        $request['date'] = -1;
+        $request['num'] = 5;
+
+        $policy = Policy::find($request['rule_id']) ?? null;
+        $data_update = collect();
+
+        if(!isset($policy)){
+            $data = collect([
+                'name' => '-',
+                'type' => '-',
+                'attendance' => '-',
+                'curr_loc' => '-',
+                'detected_at' => '-',
+            ]);
+
+            $data_update->push($data);
+        } else {
+            $date = $request['date'];
+            $num = $request['num'];
+            
+            $now = Carbon::now();
+            $today = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');
+            
+            if($date == -1){
+                $date_carbon = $today;
+            } else {
+                $date_carbon = Carbon::parse($request['date'], 'Asia/Kuala_Lumpur');
+            }
     
-     
+            $start_time = Carbon::parse($policy->datetime_at_utc);
+            $policy['absent'] = -1;
+    
+            if($num == -1){
+                $targets = $policy->scope->tags;
+            } else {
+                $targets = $policy->scope->tags->sortByDesc('updated_at')->take($num); 
+            }
+    
+            if($date_carbon >= $today){
+                if($now > $start_time){
+                    if($policy->attendance != 0){
+                        $policy['absent'] = count($policy->all_targets) - ($policy->alerts->where('occured_at', '>=', date($policy->datetime_at_utc))->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))->unique('beacon_id')->count());
+                        foreach($targets as $target){
+                            $target['found'] = $policy->alerts
+                            ->where('beacon_id', $target->beacon_id)
+                            ->where('occured_at', '>=', date($policy->datetime_at_utc))
+                            ->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))
+                            ->first() ?? null;
+                        }
+                    } else {
+                        $policy['absent'] = $policy->alerts->where('occured_at', '>=', date($policy->datetime_at_utc))->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))->unique('beacon_id')->count();
+                        foreach($targets as $target){
+                            $target['found'] = $policy->alerts
+                            ->where('beacon_id', $target->beacon_id)
+                            ->where('occured_at', '>=', date($policy->datetime_at_utc))
+                            ->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))
+                            ->last() ?? null;
+                        }
+                    }
+                }
+            } else {
+                $today_check = false;
+                if($policy->attendance != 0){
+                    $policy['absent'] = count($policy->all_targets) - ($policy->alerts->where('occured_at', '>=', date($policy->datetime_at_utc))->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))->unique('beacon_id')->count());
+                    foreach($targets as $target){
+                        $target['found'] = $policy->alerts
+                        ->where('beacon_id', $target->beacon_id)
+                        ->where('occured_at', '>=', date($policy->datetime_at_utc))
+                        ->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))
+                        ->first() ?? null;
+                    }
+                } else {
+                    $policy['absent'] = $policy->alerts->where('occured_at', '>=', date($policy->datetime_at_utc))->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))->unique('beacon_id')->count();
+                    foreach($targets as $target){
+                        $target['found'] = $policy->alerts
+                        ->where('beacon_id', $target->beacon_id)
+                        ->where('occured_at', '>=', date($policy->datetime_at_utc))
+                        ->where('occured_at', '<', date('Y-m-d H:i:s', strtotime($policy->datetime_at_utc . ' +1 day')))
+                        ->last() ?? null;
+                    }
+                }
+    
+            }
+    
+            foreach($targets as $target){
+                if(!empty($target->user)){
+                    $full_name = $target->user->full_name ?? '-';
+                    $type = "Staff";
+                } else {
+                    $full_name = $target->resident->full_name ?? '-';
+                    $type = "Resident";
+                }
+    
+                if($date_carbon >= $today){
+                    if($now < $start_time){
+                        $attendance_badge = '<span class="badge badge-pill badge-secondary">N/A</span>';
+                    } else {
+                        if($policy->attendance == 0){
+                            $color = (isset($target->found)) ? 'danger':'success';
+                            $attend = (isset($target->found)) ? 'Absent':'Present';
+                        } else {
+                            $color = (isset($target->found)) ? 'success':'danger';
+                            $attend = (isset($target->found)) ? 'Present':'Absent';
+                        }
+                        $attendance_badge = '<span class="badge badge-pill badge-'.$color.'">'.$attend.'</span>';
+                    }
+                } else {
+                    if($policy->attendance == 0){
+                        $color = (isset($target->found)) ? 'danger':'success';
+                        $attend = (isset($target->found)) ? 'Absent':'Present';
+                    } else {
+                        $color = (isset($target->found)) ? 'success':'danger';
+                        $attend = (isset($target->found)) ? 'Present':'Absent';
+                    }
+                    $attendance_badge = '<span class="badge badge-pill badge-'.$color.'">'.$attend.'</span>';
+                }
+    
+                $data = collect([
+                    'name' => $full_name,
+                    'type' => $type,
+                    'attendance' => $attendance_badge,
+                    'curr_loc' => $target->current_location ?? '-',
+                    'detected_at' => $target->found->occured_at_tz ?? '-',
+                ]);
+    
+                $data_update->push($data);
+            }
 
-        $id = 11;
-      
-        // $beacon = json_decode(json_encode(Tag::with(['resident', 'staff', 'gateway', 'gateway.location'])->where('beacon_id', $id)->get()));
-        // $beacon[0]->grey_marker2 = Carbon::parse($beacon[0]->updated_at)->lt(Carbon::now()->subMinutes(5));
-        // $beacon[0]->BBBBBB= $beacon[0]->updated_at;
-        // $beacon[0]->AAAAAA= Carbon::parse($beacon[0]->updated_at)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
-        // $beacon[0]->updated_at = Carbon::parse($beacon[0]->updated_at)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
-        // $beacon[0]->grey_marker = Carbon::parse($beacon[0]->updated_at)->tz('UTC')->lt(Carbon::now()->subMinutes(5));
-        // $beacon[0]->atest = Carbon::parse($beacon[0]->updated_at)->timezone('UTC');
-        // $beacon[0]->atest2 = Carbon::now()->timezone('Europe/Stockholm');
-        // $beacon[0]->atest3 = Carbon::now();
-        
-        //                    // UTC
-        // $beacon[0]->first = Carbon::create(2012, 9, 5, 23, 26, 11);
-        // $beacon[0]->second = Carbon::create(2012, 9, 5, 20, 26, 11)->timezone('Asia/Kuala_Lumpur');                           // America/Vancouver
+        }
 
-        // $beacon[0]->first->setDateTime(2012, 1, 1, 10, 0, 0); //10am
-        // $beacon[0]->second->setDateTime(2012, 1, 1, 10, 0, 0)->timezone('Asia/Kuala_Lumpur'); //  2am
-        // $beacon[0]->third = $beacon[0]->first->lessThan($beacon[0]->second);
-        // $beacon[0]->atest4 = $beacon[0]->second->timezone;
 
-        $resident = Resident::find(11);
-        $resident_dob = $resident->age;
-        return $resident_dob;
-        //return view('test.test');
+        return response()->json([
+            "success" => "Attendance updated successfully.",
+            "data" => $data_update
+        ], 200);
     }
 
      /**

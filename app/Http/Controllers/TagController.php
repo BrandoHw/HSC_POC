@@ -33,7 +33,7 @@ class TagController extends Controller
     */
     public function index()
     {
-        $tags = Tag::orderBy('beacon_id', 'asc')->get();
+        $tags = Tag::with('resident', 'user')->orderBy('beacon_id', 'asc')->get();
 
         return view('tags.index',compact('tags'));
     }

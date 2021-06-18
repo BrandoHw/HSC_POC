@@ -30,7 +30,7 @@ class ReaderController extends Controller
     */
     public function index()
     {
-        $readers = Reader::orderBy('gateway_id', 'asc')
+        $readers = Reader::with('location', 'location.floor_level')->orderBy('gateway_id', 'asc')
                     ->get();
 
         return view('readers.index',compact('readers'));
