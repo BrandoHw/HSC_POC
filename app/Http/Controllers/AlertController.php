@@ -327,6 +327,7 @@ class AlertController extends Controller
             ->with(['reader', 'reader.location', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
             ->get();
 
+        $total_alerts_num = $alerts->count();
         $alerts_new = $alerts->where('alert_id', '>', $last_id);
         $tags = $alerts->unique('beacon_id')->pluck('tag');
         
@@ -374,7 +375,8 @@ class AlertController extends Controller
         return response()->json([
             "success" => $alerts_num.' New Alerts!',
             "alerts_grouped" => $alerts_grouped,
-            "alerts_num" => $alerts_num,
+            "new_alerts_num" => $alerts_num,
+            "total_alerts_num" => $total_alerts_num,
             "last_id" => $last_id,
             "today" => $today,
         ], 200);

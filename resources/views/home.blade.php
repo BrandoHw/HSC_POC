@@ -378,7 +378,7 @@
             if($.isEmptyObject(response['success'])){
                console.log(errors);
             } else {
-               if(response['alerts_num'] != 0){
+               if(response['total_alerts_num'] != 0){
                   /* Check whether there is existing alerts */
                   if($("#alert-all").is(":hidden")){
                      $('#no-alert-div').prop('hidden', true);
@@ -459,7 +459,7 @@
 
                })
 
-               if(response['alerts_num'] != 0){
+               if(response['new_alerts_num'] != 0){
                   if(!first){
                      notyf.open({
                         type: 'warning',

@@ -9,6 +9,7 @@ use App\Resident;
 use App\Scope;
 use App\Tag;
 use App\User;
+use App\Services\TagTargetService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -47,12 +48,21 @@ class PolicyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(TagTargetService $tagTargetService)
     {
-        $residents = Resident::whereHas('tag')->orderBy('resident_fName', 'asc')->get();
-        $users = User::whereHas('tag')->orderBy('fName', 'asc')->get();
+        $residents = Resident::whereHas('tag')->with('tag')->orderBy('resident_fName', 'asc')->get();
+        $residents_all_count = Resident::count();
+        $residents_count = $residents->count();
+
+        $users = User::whereHas('tag')->with('tag')->orderBy('fName', 'asc')->get();
+        $users_all_count = User::count();
+        $users_count = $users->count();
+
+        $targets = $tagTargetService->generateTagTarget($residents ,$users, NULL);
+
         $locations = Location::orderBy('location_master_id', 'asc')->get();
-        return view('policies.create', compact('residents', 'users', 'locations'));
+        return view('policies.create', compact('targets', 'residents_all_count', 'residents_count',
+            'users_all_count', 'users_count', 'locations'));
     }
 
     /**

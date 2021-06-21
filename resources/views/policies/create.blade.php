@@ -1,5 +1,12 @@
 @extends('layouts.app')
 
+@section('style')
+<style>
+    .select2-container .select2-results__option.optInvisible {
+        display: none;
+    }
+</style>
+@endsection
 @section('content')
 <div class="container-fluid relative">
     <div class="row">
@@ -139,16 +146,8 @@
                         </div>
                         <div class="form-group" id="custom-target-div" hidden>
                             <label for="custom-target">Custom Target(s):</label>
-                            <select class="form-control" id="custom-target" onInput="validatePolicyInput(this.id)">
-                                @foreach($residents as $resident)
-                                    <option value="R-{{ $resident->resident_id }}">
-                                    R{{ $resident->resident_id }} - {{ $resident->full_name }}</option>
-                                @endforeach
-                                @foreach($users as $user)
-                                    <option value="U-{{ $user->user_id }}">
-                                    U{{ $user->user_id }} - {{ $user->full_name }}</option>
-                                @endforeach
-                            </select>
+                            {!! Form::select('target', $targets, null, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'custom-target',
+                                'onInput' => 'validatePolicyInput(this.id)']) !!}
                         </div>
                         <div class="form-group">
                             <label for="day">Day(s):</label>
@@ -249,6 +248,75 @@
             </div>
         </div>
     </div>
+    <!-- No user & resident found -->
+    <div class="modal fade" id="no-found-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body" style="margin-left: -15px; margin-right: -15px; margin-top: -15px">
+                    <div class="container-fluid bd-example-row">
+                        <div class="row justify-content-center iq-bg-primary">
+                            <i class="ri-error-warning-fill text-primary" style="font-size: 85px; margin: -15px"></i>
+                        </div>
+                        <div class="row mt-3 justify-content-center mt-2">
+                            <div class="h4 font-weight-bold">No user and resident found!</div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="">Add at least one user or resident in the system with assigned beacon.</div>
+                        </div>
+                        <div class="row mt-5 justify-content-center">
+                            <a href='{{ route("policies.index") }}' class="btn btn-secondary m-1">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- No user & resident with assigned beacon found -->
+    <div class="modal fade" id="no-tag-found-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body" style="margin-left: -15px; margin-right: -15px; margin-top: -15px">
+                    <div class="container-fluid bd-example-row">
+                        <div class="row justify-content-center iq-bg-primary">
+                            <i class="ri-error-warning-fill text-primary" style="font-size: 85px; margin: -15px"></i>
+                        </div>
+                        <div class="row mt-3 justify-content-center mt-2">
+                            <div class="h4 font-weight-bold">Noone is assigned with beacon!</div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="">Assign at least one beacon to user or resident in the system.</div>
+                        </div>
+                        <div class="row mt-5 justify-content-center">
+                            <a href='{{ route("policies.index") }}' class="btn btn-secondary m-1">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- No locations found -->
+    <div class="modal fade" id="no-location-found-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body" style="margin-left: -15px; margin-right: -15px; margin-top: -15px">
+                    <div class="container-fluid bd-example-row">
+                        <div class="row justify-content-center iq-bg-primary">
+                            <i class="ri-error-warning-fill text-primary" style="font-size: 85px; margin: -15px"></i>
+                        </div>
+                        <div class="row mt-3 justify-content-center mt-2">
+                            <div class="h4 font-weight-bold">No location found!</div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="">Add at least one location with assigned gateway in the system.</div>
+                        </div>
+                        <div class="row mt-5 justify-content-center">
+                            <a href='{{ route("policies.index") }}' class="btn btn-secondary m-1">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection 
 
@@ -264,6 +332,14 @@
                 dateFormat: "G:i K",
             }
         );
+
+        @if($users_count <= 0)
+            $('option[value="user-only"]').remove();
+        @endif
+
+        @if($residents_count <= 0)
+            $('option[value="resident-only"]').remove();
+        @endif
 
         /* Initialise select2 */
         $('#type').select2();
@@ -295,6 +371,29 @@
         $('#y-value').inputSpinner();
         $('#z-value').inputSpinner();
         $('#duration').inputSpinner();
+
+        @if(($residents_count <= 0 && $users_count <= 0) || $locations->count() <= 0)
+            let disabled_items = ['name', 'alert', 'type', 'battery',
+                'x-axis', 'y-axis', 'z-axis', 'x-value', 'y-value', 'z-value', 'frequency',
+                'target', 'custom-target',
+                'day', 'sun', 'mon', 'tue', 'wed', 'thurs', 'fri', 'sat', 
+                'start-time', 'duration', 'location', 'save-btn'];
+
+            disabled_items.forEach(function(item){
+                $('#' + item).prop('disabled', true);
+            });
+
+            $('input[name="attendance-option"]').prop('disabled', true);
+            $('input[name="geofence-option"]').prop('disabled', true);
+            
+            @if($residents_all_count <= 0 && $users_all_count <= 0)
+                $('#no-found-modal').modal("toggle");
+            @elseif($locations->count() <= 0)
+                $('#no-location-found-modal').modal("toggle");
+            @else
+                $('#no-tag-found-modal').modal("toggle");
+            @endif
+        @endif
     });
 
     /* If target is custom, show custom target */
