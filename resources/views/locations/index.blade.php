@@ -106,6 +106,7 @@
 @endsection 
 
 @section("script")
+<script src="{{ asset('js/mix/dialog.js') }}"></script>
 <script>
     /* Initiate dataTable */
     var dTable = $('#locationTable').DataTable({

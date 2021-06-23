@@ -1,22 +1,14 @@
 
-<!-- <html>
-    <head> -->
-        <link href="{{ asset('css/map/leaflet.css') }}" rel="stylesheet">
-        <link href="{{ asset('css/map/leaflet.draw.css') }}" rel="stylesheet">
-        <link href="{{ asset('css/map/map.css') }}" rel="stylesheet">
-        <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">  -->
-        
-        <!-- <script src="{{ asset('js/jquery.js') }}"></script> -->
-        <!-- <script src="{{ asset('js/leaflet.js') }}"></script> -->
-        <!-- <script src="{{ asset('js/app.js') }}"></script> -->
-        <script src="{{ asset('js/views/map/functions.js')}}"></script>
-      <!-- <meta charset="utf-8" />
+    <link href="{{ asset('css/map/leaflet.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/map/leaflet.draw.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/map/map.css') }}" rel="stylesheet">
 
-      <title>A Leaflet map!</title>
+    <script src="{{ asset('js/mix/leaflet.js') }}"></script>
+    <script src="{{ asset('js/mix/moment.js') }}"></script>
+    <script src="{{ asset('js/mix/dialog.js') }}"></script>
 
-    </head> -->
-
-    <!-- <body> -->
+    <script src="{{ asset('js/views/map/functions.js')}}"></script>
+    
     <div>
         <form>
             <div class="form-group" id="selUserHolder">
@@ -28,7 +20,6 @@
             <div id="map" style="width: 100%;"></div>
         </div>
     </div>
-    <!-- </body> -->
 
 
     <script>

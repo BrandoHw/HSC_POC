@@ -167,6 +167,9 @@
 @endsection 
 
 @section("script")
+<script src="{{ asset('js/mix/flatpickr.js') }}"></script>
+<script src="{{ asset('js/mix/pdfmake.js') }}"></script>
+<script src="{{ asset('js/mix/jszip.js') }}"></script>
 <script>
     let filename = '';
     let title = '';
@@ -181,7 +184,7 @@
                 defaultDate: "today"
             }
         );
-        let timer = setInterval(reloadTableData, 30000);
+        let timer = setInterval(reloadTableData, 120000);
 
         @if(session('dashboard'))
             console.log(@json(session('dashboard')));

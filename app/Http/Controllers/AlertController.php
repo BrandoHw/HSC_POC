@@ -14,7 +14,8 @@ class AlertController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:alert-list|alert-delete', ['only' => ['index','show', 'updates']]);
+        $this->middleware('permission:alert-list|alert-delete', 
+            ['only' => ['index','show', 'updates', 'getAlerts', 'new_alerts', 'new_alerts_table', 'resolve', 'resolve_all']]);
         $this->middleware('permission:alert-delete', ['only' => ['destroys']]);
     }
 

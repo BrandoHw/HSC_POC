@@ -132,6 +132,7 @@
 @endsection
 
 @section('script')
+<script src="{{ asset('js/mix/input-spinner.js') }}"></script>
     <script>
         $(function(){
             $('#age').inputSpinner();
