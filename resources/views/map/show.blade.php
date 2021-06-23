@@ -4,31 +4,16 @@
     <link href="{{ asset('css/map/leaflet.css') }}" rel="stylesheet">
     <link href="{{ asset('css/map/leaflet.draw.css') }}" rel="stylesheet">
     <link href="{{ asset('css/map/map.css') }}" rel="stylesheet">
+
+    <script src="{{ asset('js/mix/leaflet.js') }}"></script>
+    <script src="{{ asset('js/mix/moment.js') }}"></script>
+    <script src="{{ asset('js/mix/dialog.js') }}"></script>
+    
     <script src="{{ asset('js/views/map/functions.js')}}"></script>
-    <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> -->
-    <!-- <script src="{{ asset('js/leaflet.js') }}"></script> -->
     <script src="{{ asset('js/views/map/edit_functions.js')}}"></script>
 
 @endsection
 @section('content')
- <!-- <html>
-    <head>
-        <link href="{{ asset('css/map/leaflet.css') }}" rel="stylesheet">
-        <link href="{{ asset('css/map/leaflet.draw.css') }}" rel="stylesheet">
-        <link href="{{ asset('css/map/map.css') }}" rel="stylesheet">
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        
-{{--         
-        <script src="{{ asset('js/jquery.js') }}"></script> --}}
-        <script src="{{ asset('js/leaflet.js') }}"></script>
-        <script src="{{ asset('js/views/map/functions.js')}}"></script>
-        
-        <script src="{{ asset('js/views/map/edit_functions.js')}}"></script>
-      <meta charset="utf-8" />
-
-    </head>
-
-    <body> -->
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12 col-lg-12">
@@ -58,7 +43,6 @@
         </div>
     </div>
 </div>
-    <!-- </body> -->
 
 @endsection
 @section('script')

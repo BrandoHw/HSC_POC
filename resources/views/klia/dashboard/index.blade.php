@@ -59,6 +59,8 @@
 @endsection 
 
 @section("script")
+<script src="{{ asset('js/mix/moment.js') }}"></script>
+<script src="{{ asset('js/mix/daterangepicker.js') }}"></script>
 <script>
     
     //Date Picker Setup

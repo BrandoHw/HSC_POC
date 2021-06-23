@@ -24,12 +24,6 @@
         <link href="{{ asset('template/css/style.css') }}" rel="stylesheet">
         <!-- Reponsive CSS -->
         <link href="{{ asset('template/css/responsive.css') }}" rel="stylesheet">
-        <!-- Full calendar -->
-        <!-- <link href="{{ asset('template/fullcalendar/core/main.css') }} " rel='stylesheet' /> -->
-        <!-- <link href="{{ asset('template/fullcalendar/daygrid/main.css') }} " rel='stylesheet' /> -->
-        <!-- <link href="{{ asset('template/fullcalendar/timegrid/main.css') }} " rel='stylesheet' /> -->
-        <!-- <link href="{{ asset('template/fullcalendar/list/main.css') }} " rel='stylesheet' /> -->
-        <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> -->
 
         <!-- Developer Defined Style -->
         <link href="{{ asset('css/custom/datatable.css') }}" rel="stylesheet">
@@ -38,8 +32,6 @@
 
         @yield('style')
 
-        <!-- Customise Select2 Style -->
-        
         <script src="{{ asset('js/app.js') }}"></script>
         
     </head>
@@ -64,27 +56,12 @@
         <!-- Required javascript for custom.js -->
         <!-- Appear JavaScript -->
         <script src="{{ asset('template/js/jquery.appear.js') }}"></script>
-        <!-- Countdown JavaScript -->
-        <script src="{{ asset('template/js/countdown.min.js') }}"></script>
-        <!-- Counterup JavaScript -->
-        <script src="{{ asset('template/js/waypoints.min.js') }}"></script>
-        <script src="{{ asset('template/js/jquery.counterup.min.js') }}"></script>
-        <!-- Wow JavaScript -->
-        <script src="{{ asset('template/js/wow.min.js') }}"></script>
-        <!-- Apexcharts JavaScript -->
-        <script src="{{ asset('template/js/apexcharts.js') }}"></script>
-        <!-- Slick JavaScript -->
-        <script src="{{ asset('template/js/slick.min.js') }}"></script>
-        <!-- Owl Carousel JavaScript -->
-        <script src="{{ asset('template/js/owl.carousel.min.js') }}"></script>
-        <!-- Magnific Popup JavaScript -->
-        <script src="{{ asset('template/js/jquery.magnific-popup.min.js') }}"></script>
         <!-- Smooth S../crollbar JavaScript -->
         <script src="{{ asset('template/js/smooth-scrollbar.js') }}"></script>
-        <!-- lottie JavaScript -->
-        <script src="{{ asset('template/js/lottie.js') }}"></script>
+        <!-- Owl Carousel -->
+        <script src="{{ asset('template/js/owl.carousel.min.js') }}"></script>
         <!-- Custom JavaScript -->
-        <script src="{{ asset('template/js/custom.js') }}"></script>
+        <script src="{{ asset('template/js/custom-modified.js') }}"></script>
 
         <!-- Header Js -->
         <script src="{{ asset('js/views/header/header.js')}}"></script>

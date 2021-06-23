@@ -136,6 +136,7 @@
 @endsection
 
 @section('script')
+<script src="{{ asset('js/mix/flatpickr.js') }}"></script>
     <script>
         $(function(){
             $('#dob').flatpickr({

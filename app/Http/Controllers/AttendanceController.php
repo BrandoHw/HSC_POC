@@ -19,7 +19,7 @@ class AttendanceController extends Controller
     */
     function __construct()
     {
-        $this->middleware('permission:attendance-list|attendance-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:attendance-list|attendance-delete', ['only' => ['index','show_date', 'show_badge', 'show_chart']]);
         $this->middleware('permission:attendance-delete', ['only' => ['destroy']]);
     }
     
@@ -35,7 +35,9 @@ class AttendanceController extends Controller
             $request->session()->flash('dashboard', $request['data']);
         }
 
-        $attendance_policies = Policy::where('rules_type_id', '1')->orderBy('description', 'asc')
+        $attendance_policies = Policy::where('rules_type_id', '1')
+            ->where('alert_action', 1)
+            ->orderBy('description', 'asc')
             ->with(['scope', 'scope.tags', 'scope.tags.user', 'scope.tags.resident', 'alerts'])
             ->get();
         $attendance_alerts= Alert::orderBy('occured_at', 'asc')->whereIn('rules_id', $attendance_policies)
@@ -236,7 +238,9 @@ class AttendanceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show_badge(Request $request){
-        $attendance_policies = Policy::where('rules_type_id', '1')->orderBy('description', 'asc')
+        $attendance_policies = Policy::where('rules_type_id', '1')
+            ->where('alert_action', 1)
+            ->orderBy('description', 'asc')
             ->with(['scope', 'scope.tags', 'scope.tags.user', 'scope.tags.resident', 'alerts'])
             ->get();
 
@@ -285,7 +289,9 @@ class AttendanceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show_chart(Request $request){
-        $attendance_policies = Policy::where('rules_type_id', '1')->orderBy('description', 'asc')
+        $attendance_policies = Policy::where('rules_type_id', '1')
+            ->where('alert_action', 1)
+            ->orderBy('description', 'asc')
             ->with(['scope', 'scope.tags', 'scope.tags.user', 'scope.tags.resident', 'alerts'])
             ->get();
 

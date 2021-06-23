@@ -16,9 +16,9 @@
    .custom-btn { height: 40px; width: 40px; padding: 0; border-radius: 10px; }
    .apexcharts-series { cursor: pointer }
    .iq-card-icon { cursor: pointer }
-
 </style>
 @endsection
+
 @section('content')
 <div class="container-fluid">
    <div class="row">
@@ -165,7 +165,6 @@
          </div>
       </div>
       @endcan
-      
    </div>
 </div>
 
@@ -202,20 +201,28 @@
 @endsection
 
 @section('script')
+<!-- Apexcharts JavaScript -->
+<script src="{{ asset('js/mix/apexcharts.js') }}"></script>
 <script>
    let last = @json($alerts_last);
    
    $(function(){
       $('#body').addClass(['sidebar-main-active', 'right-column-fixed', 'header-top-bgcolor']);
 
-      getNewAlerts(true);
       let timer_icon = setInterval(reloadIconData, 30000);
+      
+      @can('attendance-list')
       let timer_tables = setInterval(reloadTableData, 30000);
+      @endcan
+      
+      @can('alert-list')
+      getNewAlerts(true);
       let timer_alerts = setInterval(getNewAlerts, 30000);
       let timer_alerts_diff = setInterval(updateTimeDiff, 60000);
-
+      @endcan
    });
 
+   @can('attendance-list')
    @foreach($attendance_policies as $policy)
    /* Initiate dataTable */
    let table_{{ $policy->rules_id }} = $('#table-{{ $policy->rules_id }}').DataTable({
@@ -252,6 +259,7 @@
          @endforeach
       }
    });
+   @endcan
 
    $('.iq-card-icon').on('click', function(){
       window.location.href = $(this).attr('href');
@@ -284,6 +292,7 @@
       });
    }
 
+   @can('attendance-list')
    function reloadTableData(){
       if($('#attendance-table').is(":visible")){
          let refresh_btn = $('#refresh-attendance');
@@ -305,7 +314,9 @@
          }, 1000);
       }
    }
+   @endcan
    
+   @can('alert-list')
    $(document).on('click','.li-alert', function(){
       if($(this).hasClass('active')){
          $(this).find('div.timeline-dots').removeClass('border-danger');
@@ -661,7 +672,9 @@
          }
       });
    }
+   @endcan
 
+   @can('attendance-list')
    if($('#home-perfomer-chart').length){
       let options = {
          // series: [1, 10, 20, 30, 40, 50, 60],
@@ -759,6 +772,7 @@
          }
       });
     }
+   @endcan
 </script>
 
 @endsection
