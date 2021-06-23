@@ -227,7 +227,7 @@
 
         var map = L.map("map", {
             crs: L.CRS.Simple,
-            minZoom: -2,
+            minZoom: -3,
             maxBoundsViscosity: 1.0,
         }); //CRS simple referring to normal coordinate value
 

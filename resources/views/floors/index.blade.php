@@ -1,6 +1,88 @@
 @extends('layouts.app')
 
 @section('content')
+
+<style>
+     /* Style the Image Used to Trigger the Modal */
+.image-holder{
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.image-holder:hover {opacity: 0.7;}
+
+/* The Modal (background) */
+.image-modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (Image) */
+.image-modal-content {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+}
+
+/* Caption of Modal Image (Image Text) - Same Width as the Image */
+#caption {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
+  height: 150px;
+}
+
+/* Add Animation - Zoom in the Modal */
+.image-modal-content, #caption {
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+@keyframes zoom {
+  from {transform:scale(0)}
+  to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px){
+  .image-modal-content {
+    width: 100%;
+  }
+} 
+</style>
 {{-- <script src="{{ asset('js/notyf.js') }}"></script> --}}
 {{-- <script src="{{ asset('js/jquery.js') }}"></script> --}}
 
@@ -129,9 +211,43 @@
                                             @if(empty($floor->map))
                                                 <font color='gray'><em>Not Assigned</em></font>
                                             @else
-                                                <div>
+                                                {{-- <div>
                                                     <a class="image_holder" href="#" data-image={{$floor->map->url}}>[Hover to View Image]</a>
+                                                </div> --}}
+                                                <img class ="image-holder" id="myImg-{{$floor->id}}" src="{{$floor->map->url}}"  style="width:100%;max-width:200px">
+
+                                                <!-- The Modal -->
+                                                <div id="myModal-{{$floor->id}}" class="image-modal">
+
+                                                <!-- The Close Button -->
+                                                <span id="close-{{$floor->id}}" class="close">&times;</span>
+
+                                                <!-- Modal Content (The Image) -->
+                                                <img class="image-modal-content" id="img-{{$floor->id}}">
+
+                                                <!-- Modal Caption (Image Text) -->
+                                                <div id="caption-{{$floor->id}}"></div>
                                                 </div>
+                                                <script>
+                                                        var modal = document.getElementById('myModal-{{$floor->id}}');
+                                                        // Get the image and insert it inside the modal - use its "alt" text as a caption
+                                                        var img = document.getElementById('myImg-{{$floor->id}}');
+                                                        var modalImg = document.getElementById('img-{{$floor->id}}');
+                                                        var captionText = document.getElementById("caption-{{$floor->id}}");
+                                                        img.onclick = function(){
+                                                            modal.style.display = "block";
+                                                            modalImg.src = this.src;
+                                                            captionText.innerHTML = this.alt;
+                                                        }
+
+                                                        // Get the <span> element that closes the modal
+                                                        var span = document.getElementById('close-{{$floor->id}}');
+
+                                                        // When the user clicks on <span> (x), close the modal
+                                                        modalImg.onclick = function() {
+                                                            modal.style.display = "none";
+                                                        } 
+                                                </script>
                                             @endif
                                         </td>
                                         <td class="table-action row" style="margin:0px">
@@ -270,21 +386,22 @@
     });
 
     //Preview Floor Plan in datatable
-    $(".image_holder").mouseenter(function(){
-        if ($(this).parent('div').children('div.image').length) {
-            $(this).parent('div').children('div.image').show();
-        } else {
-            var image_name=$(this).data('image');
-            var imageTag='<div class="image" style="position: absolute;left: 140px; top: 110px;">'+'<img src="'+image_name+'" alt="image" height="300" />'+'</div>';
-            $(this).parent('div').append(imageTag);
-        }
-    });
+    // $(".image_holder").mouseenter(function(){
+    //     if ($(this).parent('div').children('div.image').length) {
+    //         $(this).parent('div').children('div.image').show();
+    //     } else {
+    //         var image_name=$(this).data('image');
+    //         var imageTag='<div class="image" style="position: absolute;left: 140px; top: 110px;">'+'<img src="'+image_name+'" alt="image" height="300" />'+'</div>';
+    //         $(this).parent('div').append(imageTag);
+    //     }
+    // });
 
-    $(".image_holder").mouseleave(function(){
-        $(this).parent('div').children('div.image').hide();
-    });
-
-    //Create Floor modal
+    // $(".image_holder").mouseleave(function(){
+    //     $(this).parent('div').children('div.image').hide();
+    // });
+        // Get the modal
+        
+    //Image Preview in Create Floor modal
     function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
