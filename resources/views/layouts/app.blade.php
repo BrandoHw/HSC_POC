@@ -60,6 +60,8 @@
         <script src="{{ asset('template/js/smooth-scrollbar.js') }}"></script>
         <!-- Owl Carousel -->
         <script src="{{ asset('template/js/owl.carousel.min.js') }}"></script>
+        <!-- Lottie -->
+        <script src="{{ asset('template/js/lottie.js') }}"></script>
         <!-- Custom JavaScript -->
         <script src="{{ asset('template/js/custom-modified.js') }}"></script>
 
