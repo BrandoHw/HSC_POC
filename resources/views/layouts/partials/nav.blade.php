@@ -2,7 +2,11 @@
 <div class="iq-sidebar">
     <div class="iq-sidebar-logo d-flex justify-content-between">
         <a href="../">
+            @if(env('APP_TYPE') == 'klia')
+            <img src="{{ asset('img/icons/wecare.png') }}" alt="logo">
+            @else
             <img src="{{ asset('img/icons/WeCare-Logo-Blue.png') }}" alt="logo">
+            @endif
             <span>WeCare</span>
         </a>
         <div class="iq-menu-bt-sidebar">
@@ -100,12 +104,12 @@
                 @endcan
 
                 @if(env('APP_TYPE') == 'klia')
+                    <li class="{{ Request::segment(1) === 'reports' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('reports.index') }}" class="iq-waves-effect"><i class="ri-file-chart-fill"></i><span>Reports</span></a></li>
                 @else
                     @can('report-list')
                     <li class="{{ Request::segment(1) === 'reports' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('reports.index') }}" class="iq-waves-effect"><i class="ri-file-chart-fill"></i><span>Reports</span></a></li>
                     @endcan
                 @endif
-
                 <li class="{{ Request::segment(1) === 'settings' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('settings.index') }}" class="iq-waves-effect"><i class="ri-settings-4-fill"></i><span>Settings</span></a></li>
             </ul>
         </nav>

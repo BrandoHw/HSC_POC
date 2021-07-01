@@ -25,6 +25,11 @@ class ReportController extends Controller
      */
     public function index()
     {
+
+        if(config('app.type') === 'klia') {
+            return view('klia.dashboard.index');
+        }
+        
         $date_start = Carbon::today()->subDays(6);
         $date_end = Carbon::tomorrow()->subSecond(1);
         $alerts = Alert::orderBy('alert_id', 'asc')

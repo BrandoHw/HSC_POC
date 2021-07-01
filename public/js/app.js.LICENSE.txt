@@ -4,11 +4,6 @@ object-assign
 @license MIT
 */
 
-/* @preserve
- * Leaflet 1.7.1, a JS library for interactive maps. http://leafletjs.com
- * (c) 2010-2019 Vladimir Agafonkin, (c) 2010-2011 CloudMade
- */
-
 /*!
   * Bootstrap v4.6.0 (https://getbootstrap.com/)
   * Copyright 2011-2021 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
@@ -236,12 +231,6 @@ object-assign
  * Released under the MIT license.
  * http://jquery.org/license
  */
-
-/*!
-FullCalendar v5.3.2
-Docs & License: https://fullcalendar.io/
-(c) 2020 Adam Shaw
-*/
 
 /*! 
  * jQuery DataTables Checkboxes (https://www.gyrocode.com/projects/jquery-datatables-checkboxes/)

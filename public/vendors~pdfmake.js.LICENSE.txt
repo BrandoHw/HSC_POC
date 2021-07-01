@@ -20,7 +20,9 @@ object-assign
 
 /*! http://mths.be/fromcodepoint v0.1.0 by @mathias */
 
-/*! pdfmake v0.1.68, @license MIT, @link http://pdfmake.org */
+/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
+
+/*! pdfmake v0.1.71, @license MIT, @link http://pdfmake.org */
 
 /** @preserve
 	 * Counter block mode compatible with  Dr Brian Gladman fileenc.c

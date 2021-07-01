@@ -147,7 +147,9 @@
 @section("script")
 <script>
 
-
+@if ($success != null)
+            notyf.success(@json($success));
+        @endif
 
 var monkeyList = new List('test-list', {
   valueNames: ['name'],

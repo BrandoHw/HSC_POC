@@ -35,10 +35,6 @@ class HomeController extends Controller
     public function index()
     {
 
-        if(config('app.type') === 'klia') {
-            return view('klia.dashboard.index');
-        }
-        
         $id = 1;
         $gatewayZones = GatewayZone::with(['gateway', 
         'gateway.location', 

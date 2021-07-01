@@ -35,6 +35,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\AlertKliaController;
+use App\Http\Controllers\HomeKliaController;
 use App\UserLastSeen;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -56,7 +57,15 @@ Auth::routes(['register' => false, 'reset' => false]);
 
 Route::group(['middleware' => ['auth']], function() { 
     
-    Route::get('/', [HomeController::class, 'index'])->name('home')->block();
+    if(config('app.type') === 'klia') {
+        Route::get('/', [HomeKliaController::class, 'index'])->name('home')->block();
+        Route::get('active-tags', [HomeKliaController::class, 'activeTags'])->name('home.activeTags')->block();
+        Route::get('attendance-week', [HomeKliaController::class, 'attendanceWeek'])->name('home.attendanceWeek')->block();
+        Route::get('location-presence', [HomeKliaController::class, 'locationPresence'])->name('home.locationPresence')->block();
+    }else{
+        Route::get('/', [HomeController::class, 'index'])->name('home')->block();
+    }
+
     Route::get('/icon', [HomeController::class, 'show_icon'])->name('home.icon');
     
     //Route::resource('dashboard', DashboardController::class);

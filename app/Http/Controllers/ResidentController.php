@@ -9,6 +9,8 @@ use App\Resident;
 use App\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 class ResidentController extends Controller
 {
     function __construct()
@@ -29,7 +31,6 @@ class ResidentController extends Controller
         foreach($residents as $resident){
             $resident->resized_url = Storage::disk('s3-resized')->url("resized-".$resident->image_url);
         }
-    
         return view('residents.index', compact('residents'));
     }
 
@@ -95,10 +96,40 @@ class ResidentController extends Controller
                 $resident->update(['image_url' => $image_url]);
             }
         }
-      
+
+        $tagsNull = Tag::doesntHave('resident')
+            ->doesntHave('user')
+            ->pluck('beacon_mac', 'beacon_id');
         
-        return redirect()->route('residents.index')
-            ->with('success', $resident->full_name.' updated successfully.');
+        $current = null;
+        if(!empty($resident->tag)){
+            $current = collect([$resident->tag->beacon_id => $resident->tag->beacon_mac]);
+            $tagsNull = $current->concat($tagsNull);
+        }
+
+        $available = true;
+        if($tagsNull->isEmpty()){
+            $available = false;
+        }
+
+        $relationship = Resident::relationship;
+
+        $rooms_ori = Location::where('location_description', 'like', 'Room _')->get();
+        $rooms = [];
+        foreach($rooms_ori as $room){
+            $id = $room->location_master_id;
+            $name = 'L'.$room->floor.' - '.$room->location_description;
+            $rooms[$id] = $name;
+        }
+
+        if ($resident->image_url != null){
+            $resident->image_url = Storage::disk('s3')->url($resident->image_url);
+        }
+        
+        return view('residents.edit', compact('resident', 'tagsNull', 'current', 'available', 'relationship', 'rooms'),
+                    ['success' => $resident->full_name.' created successfully.']);
+        // return redirect()->route('residents.index')
+        //     ->with('success', $resident->full_name.' updated successfully.');
     }
 
     /**
@@ -196,8 +227,9 @@ class ResidentController extends Controller
             }
         }
 
-        return redirect()->route('residents.index')
-            ->with('success', $resident->full_name.' updated successfully');
+        return Redirect::back()->with('success', $resident->full_name.' updated successfully.');
+        // return redirect()->route('residents.index')
+        //     ->with('success', $resident->full_name.' updated successfully');
     }
 
     /**
