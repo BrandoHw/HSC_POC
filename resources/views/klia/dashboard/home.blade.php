@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@section('style')
+<style>
+   .iq-card-icon { cursor: pointer }
+</style>
+@endsection
 
 @section('content')
 <script src="{{ asset('js/mix/apexcharts.js') }}"></script>
@@ -39,7 +44,7 @@
                     </div>
                     <div class="col-md-6 col-lg">
                         <div class="d-flex align-items-center mb-3 mb-md-0">
-                            <div class="rounded-circle iq-card-icon iq-bg-danger mr-3" href="{{ route('alerts.index') }}" > <i class="ri-alarm-warning-line"></i></div>
+                            <div class="rounded-circle iq-card-icon iq-bg-danger mr-3" href="{{ route('alerts-klia.index') }}" > <i class="ri-alarm-warning-line"></i></div>
                             <div class="text-left">
                             <h4 id="icon-text-alert">{{ $alerts_count }}</h4>
                             <p class="mb-0">Total Alerts</p>
@@ -91,6 +96,10 @@
 <script>
 $(function(){
     $('#body').addClass(['sidebar-main-active', 'right-column-fixed', 'header-top-bgcolor']);
+})
+
+$('.iq-card-icon').on('click', function(){
+      window.location.href = $(this).attr('href');
 })
 </script>
 

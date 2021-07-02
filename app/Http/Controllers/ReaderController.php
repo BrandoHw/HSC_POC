@@ -56,7 +56,7 @@ class ReaderController extends Controller
     {
         request()->validate([
             'serial' => 'required|unique:gateways_table,serial, NULL,gateway_id,deleted_at,NULL',
-            'mac_addr' => 'required|string|min:12|max:12|unique:gateways_table,mac_addr, NULL,gateway_id,deleted_at,NULL',
+            'mac_addr' => 'required|string|min:12|max:12|unique:gateways_table,mac_addr,NULL,gateway_id,deleted_at,NULL',
         ], [], [
             'serial' => 'serial number',
             'mac_addr' => 'mac address',
@@ -102,8 +102,8 @@ class ReaderController extends Controller
     public function update(Request $request, Reader $reader)
     {
         request()->validate([
-            'serial' => 'required|unique:gateways_table,serial,'.$reader->gateway_id.',gateway_id, deleted_at,NULL',
-            'mac_addr' => 'required|string|min:12|max:12|unique:gateways_table,mac_addr,'.$reader->gateway_id.',gateway_id, deleted_at,NULL',
+            'serial' => 'required|unique:gateways_table,serial,'.$reader->gateway_id.',gateway_id,deleted_at,NULL',
+            'mac_addr' => 'required|string|min:12|max:12|unique:gateways_table,mac_addr,'.$reader->gateway_id.',gateway_id,deleted_at,NULL',
         ], [], [
             'serial' => 'serial number',
             'mac_addr' => 'mac address',

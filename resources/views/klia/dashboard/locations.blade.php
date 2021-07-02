@@ -1,24 +1,39 @@
+<style>
+    
+</style>
 <div class="col-sm-12 col-lg-12">
     <div class="iq-card">
+        <div class="iq-card-header d-flex justify-content-between">
+            <div class="iq-header-title">
+               <h4 class="card-title">Locations</h4>
+            </div>
+         </div>
         <div class="iq-card-body">
             <div style='display: flex; height: 100vh;'>
-
-                <div class ="scroller" style="line-height:3em;overflow:scroll;padding:5px;background-color: rgb(255, 255, 255);display: inline-block;">
+                <div class ="scroller" style="margin-bottom: 4em;line-height:3em;overflow:scroll;background-color: rgb(255, 255, 255);display: inline-block;">
                     <div id="location-list-holder">
-                        <input type="text" class="search form-control round" placeholder="Search" />
+                        <div style=" position: sticky;top: 0px; height: 4em; background-color: rgb(255, 255, 255)">
+                        <input  type="text" class="search form-control round" placeholder="Search" />
+                        </div>
+                        <ul id="location-list" class="list iq-chat-ui nav flex-column nav-pills" style="display: inline-block">
 
-                    <ul id="location-list" class="list iq-chat-ui nav flex-column nav-pills" style="display: inline-block">
-
-                        <li id = "first-item">
-                            <img class="rounded img-fluid avatar-40"src={{asset('img/avatars/default-profile-m.jpg')}} alt="N/A"> 
-                            <h3 class="name">Name</h3>
-                            <h5 class="location">Location</h5>
-                            <p class="tag">Tag</p>
-                        </li>
-                    </ul> 
-                    <ul class="pagination">
-                    </ul>
-                    
+                            <li id ="first-item" class="d-flex mb-4 align-items-center">
+                                <span>
+                                    <img class="image rounded img-fluid avatar-40"src={{asset('img/avatars/default-profile-m.jpg')}} alt="N/A"> 
+                                </span>
+                                <div class="media-support-info ml-3">
+                                   <h6 class="location_name">Location Name</h6>
+                                   <p class="serial mb-0">Serial</p>
+                                </div>
+                                {{-- <div class="media-support-amount ml-3">
+                                   <h6 class="text-primary">+ 250</h6>
+                                   <p class="mb-0">USD</p>
+                                </div> --}}
+                             </li>
+                        </ul> 
+                        <ul class="pagination">
+                        </ul>
+                        
                     </div>
                 </div>
 
@@ -30,9 +45,10 @@
 <script>
     var options = {
         valueNames: [
-            'name', 
-            'location',
-            'tag',
+            { attr: 'src', name: 'image' },
+            'location_name', 
+            'serial',
+            // 'tag',
         ],
         page: 10,
         pagination: true
@@ -40,11 +56,36 @@
 
    locationList = new List('location-list-holder', options);
 
-   for (let i = 0; i < 15; i++){
-        locationList.add({
-                        name: "rawr",
-                        location : "gweyhr",
-                        tag: i,
-                    });
+    getLocationData = function(){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: '{{ route("home.locationPresence")}}',
+            type: "get",
+            success:function(response){
+                locationList.clear();
+                $gateways = response['gateways'];
+                console.log($gateways);
+                $gateways.forEach((location) => {
+                    if (location['icon'])
+                        location['image'] = "{{asset('img/icons/greencheck.png')}}";
+                    else
+                        location['image'] = "{{asset('img/icons/redcross.png')}}";
+                    locationList.add(location);
+                });
+            },
+            error:function(error){
+                console.log(error)
+            }
+        })
+        .always(function () {
+            setTimeout(getLocationData, 60000);
+        });
     }
+
+    getLocationData();
+
 </script>

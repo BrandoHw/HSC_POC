@@ -60,7 +60,7 @@ class HomeKliaController extends Controller
         $floors = Floor::where('building_id', $id)->with('map')->orderBy('number', 'asc')->get();
 
         $today = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');
-        $alerts = Alert::where('occured_at', '>=', $today)->orderBy('alert_id', 'asc')->get();
+        $alerts = Alert::where('resolved_at', '=', null)->orderBy('alert_id', 'asc')->get();
       
         $alerts_count = $alerts->count();
         $alerts_last = ($alerts->first()->alert_id ?? 0) - 1;
@@ -98,7 +98,7 @@ class HomeKliaController extends Controller
             array_push($dates, Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->subDays($i)->toDateString());
         }
         $dates = array_reverse($dates);
-        $attendance = Attendance_KLIA::where('date' ,'>=', $start_date)->get();
+        $attendance = Attendance_KLIA::where('date' ,'>=', $start_date)->get(); //->whereNotNull('staff_name')->whereNotNull('location_name')
         $arr = array();
 
         foreach ($attendance as $key => $item) {
@@ -141,17 +141,28 @@ class HomeKliaController extends Controller
     //Mark the gateways that have a staff member within it's vicinity
     public function locationPresence(){
         $gateways = Reader::where('assigned', 1)->with('location')->get();
-        $beacons = Tag::where('updated_at', '>=', Carbon::now()->subMinutes(14400))->get();
+        $beacons = Tag::where('updated_at', '>=', Carbon::now()->subMinutes(14400))
+                    ->where('current_loc', '!=', null)
+                    ->with('gateway')
+                    ->get();
+        $gateways_array = array();
 
-        foreach ( $gateways as $element ) {
-            if ( $id == $element->mac_addr ) {
-                return $element;
-            }
+        foreach ($gateways as $gateway){
+            $gateways_array[$gateway->mac_addr] = $gateway;
+            $gateways_array[$gateway->mac_addr]->icon = false;
+            $gateways_array[$gateway->mac_addr]->location_name = $gateway->location->location_description;
         }
 
+        foreach ($beacons as $beacon){
+            $key = $beacon->gateway->mac_addr;
+            if (array_key_exists($key, $gateways_array)){
+                $gateways_array[$key]->icon = true;
+            }
+        }
         return response()->json([
             'gateways' => $gateways,
             'beacons' => $beacons,
+            'gateways_array' => $gateways_array,
         ], 200);
 
     }
