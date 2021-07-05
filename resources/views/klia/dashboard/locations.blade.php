@@ -1,5 +1,5 @@
 <style>
-    
+
 </style>
 <div class="col-sm-12 col-lg-12">
     <div class="iq-card">
@@ -8,7 +8,13 @@
                <h4 class="card-title">Locations</h4>
             </div>
          </div>
-        <div class="iq-card-body">
+         <div id="overlay" class="iq-card-body">
+            <div style='display: flex; height: 80vh; justify-content: center; align-items: center; flex-direction: column'>
+                <img src="{{asset('img/icons/loading-small.gif')}}" >
+                <h4>Loading...</h4>
+            </div>
+        </div>
+        <div id="location-list-div" class="iq-card-body">
             <div style='display: flex; height: 100vh;'>
                 <div class ="scroller" style="margin-bottom: 4em;line-height:3em;overflow:scroll;background-color: rgb(255, 255, 255);display: inline-block;">
                     <div id="location-list-holder">
@@ -57,6 +63,8 @@
    locationList = new List('location-list-holder', options);
 
     getLocationData = function(){
+        $( "#location-list-div" ).hide();
+        $( "#overlay" ).show();
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -76,6 +84,8 @@
                         location['image'] = "{{asset('img/icons/redcross.png')}}";
                     locationList.add(location);
                 });
+                $( "#location-list-div" ).show();
+                $( "#overlay" ).hide();
             },
             error:function(error){
                 console.log(error)
@@ -85,6 +95,7 @@
             setTimeout(getLocationData, 60000);
         });
     }
+
 
     getLocationData();
 
