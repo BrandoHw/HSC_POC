@@ -22,7 +22,7 @@ NOTE: This file contains the styling for responsive Template.
 	.chat-sidebar-name span{font-size: 12px;}
 
 }
-@media(min-width:1300px) {
+@media(min-width:1279px) {
 	body.icon-with-text .iq-sidebar-logo a{margin: 0 auto;}
 	.iq-sidebar-menu .iq-menu .iq-menu-title i { display: none; }
 	body.sidebar-main .iq-sidebar-menu .iq-menu .iq-menu-title i { font-size: 20px; display: block; }

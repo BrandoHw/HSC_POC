@@ -3,9 +3,9 @@
 </style>
 <div class="col-sm-12 col-lg-12">
     <div class="iq-card">
-        <div class="iq-card-header d-flex justify-content-between">
-            <div class="iq-header-title">
-               <h4 class="card-title">Locations</h4>
+        <div class="iq-card-header d-flex justify-content-center">
+            <div class="iq-header-title" style="margin-right: 10px">
+                <h4 class="card-title">Locations</h4>
             </div>
          </div>
          <div id="overlay" class="iq-card-body">
@@ -14,7 +14,7 @@
                 <h4>Loading...</h4>
             </div>
         </div>
-        <div id="location-list-div" class="iq-card-body">
+        <div id="location-list-div">
             <div style='display: flex; height: 100vh;'>
                 <div class ="scroller" style="margin-bottom: 4em;line-height:3em;overflow:scroll;background-color: rgb(255, 255, 255);display: inline-block;">
                     <div id="location-list-holder">
@@ -56,15 +56,15 @@
             'serial',
             // 'tag',
         ],
-        page: 10,
+        page: 50,
         pagination: true
     };
 
    locationList = new List('location-list-holder', options);
 
     getLocationData = function(){
-        $( "#location-list-div" ).hide();
-        $( "#overlay" ).show();
+        // $( "#location-list-div" ).hide();
+        // $( "#overlay" ).show();
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -74,15 +74,27 @@
             url: '{{ route("home.locationPresence")}}',
             type: "get",
             success:function(response){
-                locationList.clear();
                 $gateways = response['gateways'];
                 console.log($gateways);
                 $gateways.forEach((location) => {
-                    if (location['icon'])
-                        location['image'] = "{{asset('img/icons/greencheck.png')}}";
-                    else
-                        location['image'] = "{{asset('img/icons/redcross.png')}}";
-                    locationList.add(location);
+                    var item = locationList.get("serial", location['serial']);
+                    if (item.length > 0){
+                        if (location['icon']){
+                            item[0].values({
+                                'image': "{{asset('img/icons/greencheck.png')}}",
+                            })
+                        }else{
+                            item[0].values({
+                                'image': "{{asset('img/icons/redcross.png')}}",
+                            })
+                        }
+                    }else{
+                        if (location['icon'])
+                            location['image'] = "{{asset('img/icons/greencheck.png')}}";
+                        else
+                            location['image'] = "{{asset('img/icons/redcross.png')}}";
+                        locationList.add(location);
+                    }
                 });
                 $( "#location-list-div" ).show();
                 $( "#overlay" ).hide();
@@ -96,7 +108,9 @@
         });
     }
 
-
+    locationList.clear();
+    $( "#location-list-div" ).hide();
+    $( "#overlay" ).show();
     getLocationData();
 
 </script>

@@ -21,6 +21,10 @@
                             @enderror
                         </div> 
                         <div class="form-group">
+                            <label for="beacon-type">Beacon Type:</label>
+                            {!! Form::select('beacon_type', ['1' => 'Wristband', '2' => 'Card'], null, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'beacon-type']) !!}
+                        </div>
+                        <div class="form-group">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" value="0" id="assign" name="assign" {{ $available ? '':'disabled' }}>
                                 <label class="custom-control-label" for="assign">Assign to someone</label>
@@ -56,7 +60,7 @@
         $(function(){
             $('#target').select2();
             $('#target').val('').trigger('change');
-            
+            $('#beacon-type').select2();
             /* Display select2 error */
             let message = "Error Message";
 

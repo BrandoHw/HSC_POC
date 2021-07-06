@@ -76,9 +76,9 @@ class TagController extends Controller
         
         $tag = Tag::create($request->all());
 
-        /** Save the wristband tag type */
-        $tag_type = TagType::find(1);
-        $tag->tagType()->associate($tag_type)->save();
+        // /** Save the wristband tag type */
+        // $tag_type = TagType::find(1);
+        // $tag->tagType()->associate($tag_type)->save();
 
         if(!empty($request['target'])){
             $target_type = explode('-', $request['target'])[0];

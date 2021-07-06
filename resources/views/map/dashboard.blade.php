@@ -1,7 +1,7 @@
 
     <link href="{{ asset('css/map/leaflet.css') }}" rel="stylesheet">
     <link href="{{ asset('css/map/leaflet.draw.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/map/map.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/map/dashboard.css') }}" rel="stylesheet">
 
     <script src="{{ asset('js/mix/leaflet.js') }}"></script>
     <script src="{{ asset('js/mix/moment.js') }}"></script>

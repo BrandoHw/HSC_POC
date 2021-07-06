@@ -75,7 +75,7 @@ class HomeKliaController extends Controller
     }
 
     // Return the number of Active and Inactive tags to display on a pie chart
-    // An Active tag is a tag that has been visible to gateway within the past day
+    // An Active tag is a tag that has been visible to a gateway within the past day
     public function activeTags()
     {
         $today = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');
@@ -141,7 +141,7 @@ class HomeKliaController extends Controller
     //Mark the gateways that have a staff member within it's vicinity
     public function locationPresence(){
         $gateways = Reader::where('assigned', 1)->with('location')->get();
-        $beacons = Tag::where('updated_at', '>=', Carbon::now()->subMinutes(14400))
+        $beacons = Tag::where('updated_at', '>=', Carbon::now()->subMinutes(5))
                     ->where('current_loc', '!=', null)
                     ->with('gateway')
                     ->get();
