@@ -154,7 +154,7 @@
             notyf.success(@json($message));
         @endif
         
-        @if ($success != null)
+        @if (@isset($success))
             notyf.success(@json($success));
         @endif
 
