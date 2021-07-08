@@ -11,8 +11,12 @@
     }
 </style>
 
-
-<div id="column-chart">
+<div class="row">
+    <div id="column-chart" style="width:95%">
+    </div>
+    <a href="#" data-toggle="tooltip" data-placement="right" title="Attendance is only recorded if the Tag/Gateway have been assigned a User/Location" style="cursor: pointer; left-padding:0">
+        <i class="ri-information-fill"></i>
+    </a>
 </div>
 
 <script>
@@ -27,6 +31,7 @@
         noData: {
             text: 'Loading...'
         },
+        colors:['#0ABAB5',  '#00726F'],
     }
 
     var columnChart = new ApexCharts(document.querySelector("#column-chart"), options);
@@ -48,9 +53,9 @@
                         type: 'bar'
                     },
                     xaxis: {
-                        categories: response['dates']
-                    }
-                    }
+                        categories: response['labels']
+                    },
+                }
                 columnChart.updateOptions(options);
                 columnChart.updateSeries([{
                     name: 'Attendance',

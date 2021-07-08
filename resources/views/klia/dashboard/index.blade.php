@@ -76,6 +76,7 @@
                 'This Month': [moment().startOf('month'), moment().endOf('month')],
                 'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
             },
+            linkedCalendars: false,
             alwaysShowCalendars: true,
             startDate: moment().subtract(6, 'days'),
             endDate: moment(),

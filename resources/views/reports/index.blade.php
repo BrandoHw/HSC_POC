@@ -124,6 +124,7 @@
                                             <th scope="col">DoB</th>
                                             <th scope="col">Age</th>
                                             <th scope="col">Gender</th>
+                                            <th scope="col">Room</th>
                                             <th scope="col">Wheelchair</th>
                                             <th scope="col">Walking Cane</th>
                                             <th scope="col">Contact Name</th>
@@ -139,6 +140,7 @@
                                                 <td>{{ $resident->resident_dob}}</td>
                                                 <td>{{ $resident->age}}</td>
                                                 <td>{{ $resident->resident_gender ?? "-" }}</td>
+                                                <td>{{ $resident->room->location_description ?? "-" }}</td>
                                                 <td class='info align-middle'>{{ ($resident->wheelchair) ? "Yes":"No" }}</td>
                                                 <td class='info align-middle'>{{ ($resident->walking_cane) ? "Yes":"No" }}</td>
                                                 <td>{{ $resident->contact_name ?? "-" }}</td>
@@ -230,6 +232,7 @@
                 'This Month': [moment().startOf('month'), moment().endOf('month')],
                 'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
             },
+            linkedCalendars: false,
             alwaysShowCalendars: true,
             startDate: moment().subtract(6, 'days'),
             endDate: moment(),

@@ -55,14 +55,14 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-5">
             <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
                 <div class="iq-card-body">
                     @include ("klia.dashboard.pie")
                 </div>
             </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-7">
             <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
                 <div class="iq-card-body">
                     @include ("klia.dashboard.column")
@@ -83,8 +83,8 @@
 
 @section('extra')
 @can('alert-list')
-<div class="iq-right-fixed">
-   <div class="iq-card" style="box-shadow: none;">
+<div class="iq-right-fixed" style="background-color: var(--iq-body-bg)">
+   <div style="background-color: var(--iq-body-bg)">
       @include("klia.dashboard.locations")
    </div>
 </div>

@@ -2,10 +2,10 @@
 
 </style>
 <div class="col-sm-12 col-lg-12">
-    <div class="iq-card">
+    <div class="iq-card" style ="background-color: var(--iq-primary-right)">
         <div class="iq-card-header d-flex justify-content-center">
             <div class="iq-header-title" style="margin-right: 10px">
-                <h4 class="card-title">Locations</h4>
+                <h4 class="card-title" style= "font-family: 'Trebuchet MS', sans-serif;">Locations</h4>
             </div>
          </div>
          <div id="overlay" class="iq-card-body">
@@ -15,11 +15,11 @@
             </div>
         </div>
         <div id="location-list-div">
-            <div style='display: flex; height: 100vh;'>
-                <div class ="scroller" style="margin-bottom: 4em;line-height:3em;overflow:scroll;background-color: rgb(255, 255, 255);display: inline-block;">
+            <div style='display: flex; height: 101vh;'>
+                <div class ="scroller" style="width:100%;margin-bottom: 4em;line-height:3em;overflow:scroll;background-color: var(--iq-primary-right);display: inline-block;">
                     <div id="location-list-holder">
-                        <div style=" position: sticky;top: 0px; height: 4em; background-color: rgb(255, 255, 255)">
-                        <input  type="text" class="search form-control round" placeholder="Search" />
+                        <div style=" position: sticky;top: 0px; height: 4em; background-color: var(--iq-primary-right)">
+                            <input  type="text" class="search form-control round" placeholder="Search" />
                         </div>
                         <ul id="location-list" class="list iq-chat-ui nav flex-column nav-pills" style="display: inline-block">
 
@@ -37,9 +37,9 @@
                                 </div> --}}
                              </li>
                         </ul> 
-                        <ul class="pagination">
-                        </ul>
-                        
+                        <div style="position: sticky;height: 4em; bottom: -0px;background-color: var(--iq-primary-right)">
+                            <ul class="pagination"></ul>
+                        </div> 
                     </div>
                 </div>
 

@@ -21,6 +21,10 @@
                             @enderror
                         </div>
                         <div class="form-group">
+                            <label for="beacon-type">Beacon Type:</label>
+                            {!! Form::select('beacon_type', ['1' => 'Wristband', '2' => 'Card'], null, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'beacon-type']) !!}
+                        </div>
+                        <div class="form-group">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" value="{{ $current ? '1':'0' }}" id="assign" name="assign" 
                                     {{ $available ? '':'disabled' }} {{ $current ? 'checked':'' }}>

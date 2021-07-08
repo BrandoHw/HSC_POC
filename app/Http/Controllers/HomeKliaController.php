@@ -93,12 +93,18 @@ class HomeKliaController extends Controller
         $start_date = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC')->subDays(5)->toDateString();
 
         $dates = array();
-
+        $labels = array();
         for ($i = 0; $i < 7; $i++){
-            array_push($dates, Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->subDays($i)->toDateString());
+            $date = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->subDays($i)->toDateString();
+            array_push($labels, substr($date, 5));
+            array_push($dates, $date);
         }
         $dates = array_reverse($dates);
-        $attendance = Attendance_KLIA::where('date' ,'>=', $start_date)->get(); //->whereNotNull('staff_name')->whereNotNull('location_name')
+        $labels = array_reverse($labels);
+        $attendance = Attendance_KLIA::where('date' ,'>=', $start_date)
+                                    ->whereNotNull('staff_name')
+                                    ->whereNotNull('location_name')
+                                    ->get();
         $arr = array();
 
         foreach ($attendance as $key => $item) {
@@ -133,6 +139,7 @@ class HomeKliaController extends Controller
             'series' => $series,
             'tags' => $tmp,
             'dates' => $dates,
+            'labels' => $labels,
             'start_date' => $start_date
         ], 200);
     }

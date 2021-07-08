@@ -11,13 +11,18 @@
     }
 </style>
 
-
-<div id="pie-chart">
+<div class="row">
+    <div id="pie-chart" style="width:95%">
+    </div>
+    <a href="#" data-toggle="tooltip" data-placement="right" title="A tag is consider Active if it has appeared within range of a gateway" style="cursor: pointer; left-padding:0">
+        <i class="ri-information-fill"></i>
+    </a>
 </div>
 
 <script>
- 
-  var options = {
+$(function() {
+
+    var options = {
         title: {
             text: 'Currently Active Tags',
         },
@@ -29,6 +34,11 @@
           type: 'pie',
         },
         labels: ['Active Beacons', 'Inactive Beacons'],
+        legend: {
+            show: true,
+            position: 'bottom',
+        },
+        colors:['#0ABAB5',  '#00726F'],
         // Responsive options create graphical errors when updating with AJAX
         // responsive: [{
         //   breakpoint: 240,
@@ -68,5 +78,5 @@
     }
 
     getPieChartData();
-
+});
 </script>

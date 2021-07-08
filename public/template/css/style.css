@@ -439,6 +439,7 @@ body.sidebar-main .iq-sidebar:hover .iq-sidebar-menu .iq-menu li a span, body.si
 .right-block .image-absulute.image-absulute-2 { position: absolute; left: auto; right: 330px; top: 30px; }
 .iq-right-fixed .iq-card .iq-card-header { border-color: rgba(255, 255, 255, 0.2); }
 
+
 /*--------------------*/
 .iq-card-header-list { margin: 0; padding: 0; float: right; }
 .iq-card-header-list li { list-style-type: none; float: left; display: inline-block; font-size: 20px; margin: 0 0 0 8px; }

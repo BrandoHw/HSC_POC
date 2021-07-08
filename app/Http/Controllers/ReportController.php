@@ -48,7 +48,7 @@ class ReportController extends Controller
             }
         }
 
-        $residents = Resident::get();
+        $residents = Resident::with('room')->get();
         $users = User::with(['userType', 'userRight'])->get();
         //return $users;
         return view('reports.index', compact('alerts', 'gateways', 'residents', 'users'));
