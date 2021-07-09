@@ -215,14 +215,16 @@ class ResidentController extends Controller
  
         if ($request->hasFile($image_id)) {
             $extension = $request[$image_id]->extension();
-            $filename = "resident-".$resident->resident_id.".".$extension;
             if ($request->file($image_id)->isValid()) {
                 $validated = $request->validate([
                     'image-input' => 'mimes:jpeg,png|max:16384',
                 ]);
-                $image_url = Storage::disk('s3')->putFileAs(
-                'residents', $request->file('image-input'), $filename,
-                );
+                if ($resident->image_url != null){
+                    $image_url = Storage::disk('s3')->delete($resident->image_url);
+                    Storage::disk('s3-resized')->delete("resized-".$resident->image_url);
+                }
+                // return $image_url;
+                $image_url = Storage::disk('s3')->putFile('residents', $request->file('image-input'));
                 $resident->update(['image_url' => $image_url]);
             }
         }

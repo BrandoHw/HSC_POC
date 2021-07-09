@@ -150,6 +150,14 @@
 @section('script')
 <script src="{{ asset('js/mix/flatpickr.js') }}"></script>
     <script>
+        @if ($message = Session::get('success'))
+            notyf.success(@json($message));
+        @endif
+        
+        @if (@isset($success))
+            notyf.success(@json($success));
+        @endif
+
         $(function(){
             $('#dob').flatpickr({
                 maxDate: 'today'

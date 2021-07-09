@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddResidentRequest;
 use App\Http\Requests\UpdateResidentRequest;
+use App\Location;
 use App\Resident;
 use App\Tag;
+use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 
 class StaffController extends Controller
 {
@@ -94,10 +98,40 @@ class StaffController extends Controller
                 $resident->update(['image_url' => $image_url]);
             }
         }
-      
+
+        $tagsNull = Tag::doesntHave('resident')
+        ->doesntHave('user')
+        ->pluck('beacon_mac', 'beacon_id');
         
-        return redirect()->route('staff.index')
-            ->with('success', $resident->full_name.' updated successfully.');
+        $current = null;
+        if(!empty($resident->tag)){
+            $current = collect([$resident->tag->beacon_id => $resident->tag->beacon_mac]);
+            $tagsNull = $current->concat($tagsNull);
+        }
+
+        $available = true;
+        if($tagsNull->isEmpty()){
+            $available = false;
+        }
+
+        $relationship = Resident::relationship;
+
+        $rooms_ori = Location::where('location_description', 'like', 'Room _')->get();
+        $rooms = [];
+        foreach($rooms_ori as $room){
+            $id = $room->location_master_id;
+            $name = 'L'.$room->floor.' - '.$room->location_description;
+            $rooms[$id] = $name;
+        }
+
+        if ($resident->image_url != null){
+            $resident->image_url = Storage::disk('s3')->url($resident->image_url);
+        }
+      
+        return view('klia.staff.edit', compact('resident', 'tagsNull', 'current', 'available', 'relationship', 'rooms'),
+        ['success' => $resident->full_name.' created successfully.']);
+    //     return redirect()->route('staff.index')
+    //         ->with('success', $resident->full_name.' updated successfully.');
     }
 
     /**
@@ -177,20 +211,23 @@ class StaffController extends Controller
         $image_id = "image-input";
         if ($request->hasFile($image_id)) {
             $extension = $request[$image_id]->extension();
-            $filename = "resident-".$resident->resident_id.".".$extension;
             if ($request->file($image_id)->isValid()) {
                 $validated = $request->validate([
                     'image-input' => 'mimes:jpeg,png|max:16384',
                 ]);
-                $image_url = Storage::disk('s3')->putFileAs(
-                'residents', $request->file('image-input'), $filename,
-                );
+                if ($resident->image_url != null){
+                    $image_url = Storage::disk('s3')->delete($resident->image_url);
+                    Storage::disk('s3-resized')->delete("resized-".$resident->image_url);
+                }
+                // return $image_url;
+                $image_url = Storage::disk('s3')->putFile('residents', $request->file('image-input'));
                 $resident->update(['image_url' => $image_url]);
             }
         }
 
-        return redirect()->route('staff.index')
-            ->with('success', $resident->full_name.' updated successfully');
+        return Redirect::back()->with('success', $resident->full_name.' updated successfully.');
+        // return redirect()->route('staff.index')
+        //     ->with('success', $resident->full_name.' updated successfully');
     }
 
     /**
@@ -213,6 +250,16 @@ class StaffController extends Controller
     public function destroys(Request $request)
     {
         $ids = $request->residents_id;
+
+        $residents = Resident::find($ids);
+
+        foreach($residents as $resident){
+            if(isset($resident->tag)){
+                $resident->tag()->dissociate()->save();
+            }
+            Storage::disk('s3')->delete($resident->image_url);
+            Storage::disk('s3-resized')->delete("resized-".$resident->image_url);
+        }
 
         Resident::destroy($ids);
 

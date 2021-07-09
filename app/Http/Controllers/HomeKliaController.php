@@ -60,7 +60,7 @@ class HomeKliaController extends Controller
         $floors = Floor::where('building_id', $id)->with('map')->orderBy('number', 'asc')->get();
 
         $today = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');
-        $alerts = Alert::where('resolved_at', '=', null)->orderBy('alert_id', 'asc')->get();
+        $alerts = Alert::where('resolved_at', '=', null) ->has('tag.resident')->orderBy('alert_id', 'asc')->get();
       
         $alerts_count = $alerts->count();
         $alerts_last = ($alerts->first()->alert_id ?? 0) - 1;

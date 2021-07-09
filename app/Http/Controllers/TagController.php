@@ -166,7 +166,6 @@ class TagController extends Controller
         request()->validate($rules, $messages, ['beacon_mac' => 'mac address']);
 
         $tag->update($request->all());
-
         /** Remove the user/resident associated with this tag */
         if(!empty($tag->user)){
             $tag->user->tag()->dissociate()->save();
