@@ -52,7 +52,7 @@ class UpdateResidentRequest extends FormRequest
     {
         $custom_attributes = [
             'resident_fName' => 'first name',
-            'resident_fName' => 'last name',
+            'resident_lName' => 'last name',
             'resident_dob' => 'date of birth',
             'resident_gender' => 'gender',
             'location_room_id' => 'room',

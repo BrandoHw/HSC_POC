@@ -137,7 +137,7 @@
                             @can('resident-edit')
                             <button type="submit" class="btn btn-primary">Update Staff Member</button>
                             @endcan
-                            <a href="{{ route('residents.index') }}" class="btn btn-secondary">Cancel</a>
+                            <a href="{{ route('staff.index') }}" class="btn btn-secondary">Cancel</a>
                         </div>
                     {!! Form::close() !!}
                 </div>

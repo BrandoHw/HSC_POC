@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddResidentRequest;
+use App\Http\Requests\AddStaffRequest;
 use App\Http\Requests\UpdateResidentRequest;
 use App\Location;
 use App\Resident;
@@ -75,7 +76,7 @@ class StaffController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AddStaffRequest $request)
     {
         
         $resident = Resident::create($request->all());

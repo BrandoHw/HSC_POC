@@ -127,8 +127,14 @@ Route::group(['middleware' => ['auth']], function() {
     // Route::resource('tracking', TrackingController::class);
     Route::resource('tracking', MapController::class);
     
-    Route::resource('reports', ReportController::class);
-    Route::get('report-data', [ReportController::class, 'getData'])->name('report.data');
+
+    if(config('app.type') === 'klia') {
+        Route::get('reports', [AttendanceKliaController::class, 'index'])->name('reports.index');
+    }else{
+        Route::resource('reports', ReportController::class);
+        Route::get('report-data', [ReportController::class, 'getData'])->name('report.data');
+    }
+
     Route::resource('alerts', AlertController::class)
         ->except(['create', 'store', 'edit', 'update', 'destroy']);
     Route::patch('alerts/updates', [AlertController::class, 'updates'])
