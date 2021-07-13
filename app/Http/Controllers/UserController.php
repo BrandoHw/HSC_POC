@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AddUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Role;
+use App\Scope;
 use App\User;
 use App\UserType;
 use App\Tag;
@@ -51,14 +52,15 @@ class UserController extends Controller
     {
         $tagsNull = Tag::doesntHave('resident')
             ->doesntHave('user')
-            ->pluck('beacon_mac', 'beacon_id');
+            ->pluck('beacon_mac', 'beacon_id')
+            ->all();
         
         $roles = Role::orderBy('id','asc')->get();
         $rolePermissions = DB::table("role_has_permissions")
             ->get();
         
         $available = true;
-        if($tagsNull->isEmpty()){
+        if(count($tagsNull) < 1){
             $available = false;
         }
 
@@ -83,8 +85,17 @@ class UserController extends Controller
         }
 
         if(!empty($request['beacon_id'])){
-            $tag = Tag::find($request['beacon_id']);
+            $tag = Tag::find((int)$request['beacon_id']);
             $tag->user()->save($user);
+
+            $scopes = Scope::whereHas('policy', function($q){
+                $q->where('deleted_at', null);
+            })->whereNotIn('target_type', ['R', 'C'])->get();
+
+            foreach($scopes as $scope){
+                $scope->tags()->attach($tag);
+                $scope->policy->save();
+            }
         }
 
         $request->session()->flash('user', true);
@@ -102,16 +113,17 @@ class UserController extends Controller
     {   
         $tagsNull = Tag::doesntHave('resident')
             ->doesntHave('user')
-            ->pluck('beacon_mac', 'beacon_id');
+            ->pluck('beacon_mac', 'beacon_id')
+            ->all();
         
         $current = null;
         if(!empty($user->tag)){
             $current = collect([$user->tag->beacon_id => $user->tag->beacon_mac]);
-            $tagsNull = $current->concat($tagsNull);
+            $tagsNull = Arr::prepend($tagsNull, $user->tag->beacon_mac, $user->tag->beacon_id);
         }
 
         $available = true;
-        if($tagsNull->isEmpty()){
+        if(count($tagsNull) < 1){
             $available = false;
         }
 
@@ -148,14 +160,60 @@ class UserController extends Controller
             $user->assignRole([$request['role']]);
         }
 
-        /** Remove the tag associated with this user */
+        /** Remove the tag associated with this user then save new tag (if exist) to user and scopes associated with this user*/
         if(!empty($user->tag)){
+            $pre_tag_id = $user->tag->beacon_id;
             $user->tag()->dissociate()->save();
-        }
 
-        if(!empty($request['beacon_id'])){
-            $tag = Tag::find($request['beacon_id']);
-            $tag->user()->save($user);
+            $scopes = Scope::whereHas('policy', function($q){
+                $q->where('deleted_at', null);
+            })->whereNotIn('target_type', ['R'])->get();
+
+            if(!empty($request['beacon_id'])){
+                $tag = Tag::find((int)$request['beacon_id']);
+                $tag->user()->save($user);
+
+                foreach($scopes as $scope){
+                    if($scope->target_type == "C"){
+                        if($scope->tags->contains('beacon_id', $pre_tag_id)){
+                            $scope->tags()->detach($pre_tag_id);
+                            $scope->tags()->attach($tag->beacon_id);
+                            $scope->policy->save();
+                        }
+                    } else {
+                        $scope->tags()->detach($pre_tag_id);
+                        $scope->tags()->attach($tag->beacon_id);
+                        $scope->policy->save();
+                    }
+                }
+                
+            } else {
+                foreach($scopes as $scope){
+                    if($scope->target_type == "C"){
+                        if($scope->tags->contains('beacon_id', $pre_tag_id)){
+                            $scope->tags()->detach($pre_tag_id);
+                            $scope->policy->save();
+                        }
+                    } else {
+                        $scope->tags()->detach($pre_tag_id);
+                        $scope->policy->save();
+                    }
+                }
+            }
+        } else {
+            if(!empty($request['beacon_id'])){
+                $tag = Tag::find((int)$request['beacon_id']);
+                $tag->user()->save($user);
+
+                $scopes = Scope::whereHas('policy', function($q){
+                    $q->where('deleted_at', null);
+                })->whereIn('target_type', ['A', 'U'])->get();
+    
+                foreach($scopes as $scope){
+                    $scope->tags()->attach($tag->beacon_id);
+                    $scope->policy->save();
+                }
+            }
         }
 
         $request->session()->flash('user', true);
@@ -289,7 +347,24 @@ class UserController extends Controller
 
         foreach($users as $user){
             if(isset($user->tag)){
+                $pre_tag_id = $user->tag->beacon_id;
                 $user->tag()->dissociate()->save();
+
+                $scopes = Scope::whereHas('policy', function($q){
+                    $q->where('deleted_at', null);
+                })->whereNotIn('target_type', ['R'])->get();
+
+                foreach($scopes as $scope){
+                    if($scope->target_type == "C"){
+                        if($scope->tags->contains('beacon_id', $pre_tag_id)){
+                            $scope->tags()->detach($pre_tag_id);
+                            $scope->policy->save();
+                        }
+                    } else {
+                        $scope->tags()->detach($pre_tag_id);
+                        $scope->policy->save();
+                    }
+                }
             }
         }
         

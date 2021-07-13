@@ -77,6 +77,7 @@ class HomeController extends Controller
         $residents_count = Resident::count();
 
         $attendance_policies = Policy::where('rules_type_id', '1')
+            ->where('alert_action', 1)
             ->orderBy('description', 'asc')
             ->with(['scope', 'scope.tags', 'alerts'])
             ->get();
@@ -102,7 +103,11 @@ class HomeController extends Controller
                             ->unique('beacon_id')
                             ->count());
                 }
-                $percentage = (1 - $absent/count($policy->all_targets)) * 100;
+                if(count($policy->all_targets) == 0){
+                    $percentage = 0;
+                } else {
+                    $percentage = (1 - $absent/count($policy->all_targets)) * 100;
+                }
             }
             array_push($attendance, $percentage);
         }

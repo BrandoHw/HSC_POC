@@ -40,7 +40,8 @@ class PolicyController extends Controller
     public function index()
     {
         $policies = Policy::orderBy('rules_id', 'asc')->get();
-        return view('policies.index', compact('policies'));
+        $target_type = Policy::target_type;
+        return view('policies.index', compact('policies', 'target_type'));
     }
 
     /**
@@ -50,6 +51,9 @@ class PolicyController extends Controller
      */
     public function create(TagTargetService $tagTargetService)
     {
+        $policy_type = PolicyType::pluck('rules_type_desc', 'rules_type_id')->all();
+        $frequency = Policy::frequency;
+
         $residents = Resident::whereHas('tag')->with('tag')->orderBy('resident_fName', 'asc')->get();
         $residents_all_count = Resident::count();
         $residents_count = $residents->count();
@@ -58,11 +62,20 @@ class PolicyController extends Controller
         $users_all_count = User::count();
         $users_count = $users->count();
 
-        $targets = $tagTargetService->generateTagTarget($residents ,$users, NULL);
+        $target_type = Policy::target_type;
+        if($users_count <= 0){
+            unset($target_type['U']);
+        }
+        if($residents_count <= 0){
+            unset($target_type['R']);
+        }
 
+        $targets = $tagTargetService->generateTagTarget($residents ,$users, NULL);
+        
+        $day_type = Policy::day_type;
         $locations = Location::orderBy('location_master_id', 'asc')->get();
-        return view('policies.create', compact('targets', 'residents_all_count', 'residents_count',
-            'users_all_count', 'users_count', 'locations'));
+        return view('policies.create', compact('policy_type','targets', 'residents_all_count', 'residents_count',
+            'users_all_count', 'users_count','frequency','locations', 'target_type', 'day_type'));
     }
 
     /**
@@ -118,7 +131,7 @@ class PolicyController extends Controller
             }
         }
 
-        if($request['target'] == 'custom'){
+        if($request['target'] == 'C'){
             $target_validator = Validator::make($request->all(), ['custom-target' => 'required|array']);
             if($target_validator->fails()){
                 return response()->json([
@@ -176,6 +189,7 @@ class PolicyController extends Controller
             'days' => (int)$request['day'],
             'start_time' => Carbon::createFromFormat('g:i A', $request['start-time'])->format('H:i:s'),
             'duration' => (int)$request['duration'],
+            'target_type' => $request['target'],
         ]);
         $scope->policy()->save($policy);
 
@@ -183,17 +197,17 @@ class PolicyController extends Controller
         $residents = [];
         $users = [];
         switch($request['target']){
-            case "all":
+            case "A":
                 $residents = Resident::whereHas('tag')->get();
                 $users = User::whereHas('tag')->get();
                 break;
-            case "user-only":
+            case "U":
                 $users = User::whereHas('tag')->get();
                 break;
-            case "resident-only":
+            case "R":
                 $residents = Resident::whereHas('tag')->get();
                 break;
-            case "custom":
+            case "C":
                 foreach($request['custom-target'] as $target){
                     $input = explode('-', $target);
                     if($input[0] == "R"){
@@ -249,12 +263,31 @@ class PolicyController extends Controller
      * @param  App\Policy  $policy
      * @return \Illuminate\Http\Response
      */
-    public function edit(Policy $policy)
+    public function edit(TagTargetService $tagTargetService, Policy $policy)
     {
+        $policy_type = PolicyType::pluck('rules_type_desc', 'rules_type_id')->all();
+        $frequency = Policy::frequency;
+        $day_type = Policy::day_type;
+
         $residents = Resident::whereHas('tag')->orderBy('resident_fName', 'asc')->get();
+        $residents_all_count = Resident::count();
+        $residents_count = $residents->count();
+
         $users = User::whereHas('tag')->orderBy('fName', 'asc')->get();
+        $users_all_count = User::count();
+        $users_count = $users->count();
+        
+        $target_type = Policy::target_type;
+        if($users_count <= 0){
+            unset($target_type['U']);
+        }
+        if($residents_count <= 0){
+            unset($target_type['R']);
+        }
+        $targets = $tagTargetService->generateTagTarget($residents ,$users, NULL);
+
         $locations = Location::orderBy('location_master_id', 'asc')->get();
-        return view('policies.edit', compact('policy', 'residents', 'users', 'locations'));
+        return view('policies.edit', compact('policy', 'users_all_count' , 'users_count', 'residents_all_count', 'residents_count', 'policy_type', 'frequency','locations', 'target_type', 'day_type', 'targets'));
     }
 
     /**
@@ -312,7 +345,7 @@ class PolicyController extends Controller
                 }
             }
     
-            if($request['target'] == 'custom'){
+            if($request['target'] == 'C'){
                 $target_validator = Validator::make($request->all(), ['custom-target' => 'required|array']);
                 if($target_validator->fails()){
                     return response()->json([
@@ -376,23 +409,24 @@ class PolicyController extends Controller
             $scope->days = (int)$request['day'];
             $scope->start_time = Carbon::createFromFormat('g:i A', $request['start-time'])->format('H:i:s');
             $scope->duration = (int)$request['duration'];
+            $scope->target_type = $request['target'];
             $scope->save();
             
             /* Get target data */
             $residents = [];
             $users = [];
             switch($request['target']){
-                case "all":
+                case "A":
                     $residents = Resident::whereHas('tag')->get();
                     $users = User::whereHas('tag')->get();
                     break;
-                case "user-only":
+                case "U":
                     $users = User::whereHas('tag')->get();
                     break;
-                case "resident-only":
+                case "R":
                     $residents = Resident::whereHas('tag')->get();
                     break;
-                case "custom":
+                case "C":
                     foreach($request['custom-target'] as $target){
                         $input = explode('-', $target);
                         if($input[0] == "R"){

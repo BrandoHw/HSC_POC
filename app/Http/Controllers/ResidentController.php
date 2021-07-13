@@ -6,8 +6,10 @@ use App\Http\Requests\AddResidentRequest;
 use App\Http\Requests\UpdateResidentRequest;
 use App\Location;
 use App\Resident;
+use App\Scope;
 use App\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 class ResidentController extends Controller
 {
@@ -42,10 +44,11 @@ class ResidentController extends Controller
     {
         $tagsNull = Tag::doesntHave('resident')
             ->doesntHave('user')
-            ->pluck('beacon_mac', 'beacon_id');
+            ->pluck('beacon_mac', 'beacon_id')
+            ->all();
         
         $available = true;
-        if($tagsNull->isEmpty()){
+        if(count($tagsNull) < 1){
             $available = false;
         }
         
@@ -75,11 +78,21 @@ class ResidentController extends Controller
 
         $room = Location::find($request['location_room_id']);
         $resident->room()->associate($room)->save();
-        
+
         if(!empty($request['beacon_id'])){
-            $tag = Tag::find($request['beacon_id']);
-            $resident->tag()->associate($tag)->save();
+            $tag = Tag::find((int)$request['beacon_id']);
+            $tag->resident()->save($resident);
+
+            $scopes = Scope::whereHas('policy', function($q){
+                $q->where('deleted_at', null);
+            })->whereNotIn('target_type', ['U', 'C'])->get();
+
+            foreach($scopes as $scope){
+                $scope->tags()->attach($tag);
+                $scope->policy->save();
+            }
         }
+
         $image_id = "image-input";
     
         if ($request->hasFile($image_id)) {
@@ -122,16 +135,17 @@ class ResidentController extends Controller
     {
         $tagsNull = Tag::doesntHave('resident')
             ->doesntHave('user')
-            ->pluck('beacon_mac', 'beacon_id');
+            ->pluck('beacon_mac', 'beacon_id')
+            ->all();
         
         $current = null;
         if(!empty($resident->tag)){
             $current = collect([$resident->tag->beacon_id => $resident->tag->beacon_mac]);
-            $tagsNull = $current->concat($tagsNull);
+            $tagsNull = Arr::prepend($tagsNull, $resident->tag->beacon_mac, $resident->tag->beacon_id);
         }
 
         $available = true;
-        if($tagsNull->isEmpty()){
+        if(count($tagsNull) < 1){
             $available = false;
         }
 
@@ -170,14 +184,60 @@ class ResidentController extends Controller
         $room = Location::find($request['location_room_id']);
         $resident->room()->associate($room)->save();
 
-        /** Remove the tag associated with this user */
+        /** Remove the tag associated with this resident then save new tag (if exist) to resident and scopes associated with this resident*/
         if(!empty($resident->tag)){
+            $pre_tag_id = $resident->tag->beacon_id;
             $resident->tag()->dissociate()->save();
-        }
 
-        if(!empty($request['beacon_id'])){
-            $tag = Tag::find($request['beacon_id']);
-            $tag->resident()->save($resident);
+            $scopes = Scope::whereHas('policy', function($q){
+                $q->where('deleted_at', null);
+            })->whereNotIn('target_type', ['U'])->get();
+
+            if(!empty($request['beacon_id'])){
+                $tag = Tag::find((int)$request['beacon_id']);
+                $tag->resident()->save($resident);
+
+                foreach($scopes as $scope){
+                    if($scope->target_type == "C"){
+                        if($scope->tags->contains('beacon_id', $pre_tag_id)){
+                            $scope->tags()->detach($pre_tag_id);
+                            $scope->tags()->attach($tag->beacon_id);
+                            $scope->policy->save();
+                        }
+                    } else {
+                        $scope->tags()->detach($pre_tag_id);
+                        $scope->tags()->attach($tag->beacon_id);
+                        $scope->policy->save();
+                    }
+                }
+                
+            } else {
+                foreach($scopes as $scope){
+                    if($scope->target_type == "C"){
+                        if($scope->tags->contains('beacon_id', $pre_tag_id)){
+                            $scope->tags()->detach($pre_tag_id);
+                            $scope->policy->save();
+                        }
+                    } else {
+                        $scope->tags()->detach($pre_tag_id);
+                        $scope->policy->save();
+                    }
+                }
+            }
+        } else {
+            if(!empty($request['beacon_id'])){
+                $tag = Tag::find((int)$request['beacon_id']);
+                $tag->resident()->save($resident);
+
+                $scopes = Scope::whereHas('policy', function($q){
+                    $q->where('deleted_at', null);
+                })->whereIn('target_type', ['A', 'R'])->get();
+    
+                foreach($scopes as $scope){
+                    $scope->tags()->attach($tag->beacon_id);
+                    $scope->policy->save();
+                }
+            }
         }
 
         $image_id = "image-input";
@@ -225,7 +285,24 @@ class ResidentController extends Controller
 
         foreach($residents as $resident){
             if(isset($resident->tag)){
+                $pre_tag_id = $resident->tag->beacon_id;
                 $resident->tag()->dissociate()->save();
+
+                $scopes = Scope::whereHas('policy', function($q){
+                    $q->where('deleted_at', null);
+                })->whereNotIn('target_type', ['U'])->get();
+
+                foreach($scopes as $scope){
+                    if($scope->target_type == "C"){
+                        if($scope->tags->contains('beacon_id', $pre_tag_id)){
+                            $scope->tags()->detach($pre_tag_id);
+                            $scope->policy->save();
+                        }
+                    } else {
+                        $scope->tags()->detach($pre_tag_id);
+                        $scope->policy->save();
+                    }
+                }
             }
             Storage::disk('s3')->delete($resident->image_url);
             Storage::disk('s3-resized')->delete("resized-".$resident->image_url);

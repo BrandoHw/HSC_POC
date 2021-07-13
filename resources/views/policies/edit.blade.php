@@ -25,14 +25,8 @@
                         <hr>
                         <div class="form-group">
                             <label for="type">Policy Type:</label>
-                            <select class="form-control" id="type" onChange="validatePolicyInput(this.id)">
-                                <option {{ ($policy->rules_type_id == "1") ? 'selected':'' }} value="1">Attendance</option>
-                                <option {{ ($policy->rules_type_id == "2") ? 'selected':'' }} value="2">Battery</option>
-                                <option {{ ($policy->rules_type_id == "3") ? 'selected':'' }} value="3">Duress Button</option>
-                                <option {{ ($policy->rules_type_id == "4") ? 'selected':'' }} value="4">Fall</option>
-                                <option {{ ($policy->rules_type_id == "5") ? 'selected':'' }} value="5">Geofence</option>
-                                <option {{ ($policy->rules_type_id == "6") ? 'selected':'' }} value="6">Violence</option>
-                            </select>
+                            {!! Form::select('type', $policy_type, $policy->policyType->rules_type_id, ['class' => 'form-control', 'id' => 'type',
+                                'onInput' => 'validatePolicyInput(this.id)']) !!}
                         </div>
                         <div class="form-group" id="trigger-option-attendance" {{ ($policy->rules_type_id == '1') ? '':'hidden' }}>
                             <label>Attendance Option:</label>
@@ -94,7 +88,7 @@
                                     <label class="custom-control-label" for="x-axis">x-axis</label>
                                 </div>
                                 <div class="col-sm-6" id="x-axis-div" {{ isset($policy->x_threshold) ? '':'hidden' }}>
-                                    <input type="number" min="0" max="2" data-decimals="1" step="0.1" class="form-control form-control-sm" id="x-value" placeholder="Enter g-value" 
+                                    <input type="number" min="0" max="2" data-decimals="2" step="0.01" class="form-control form-control-sm" id="x-value" placeholder="Enter g-value" 
                                         onInput="validatePolicyInput(this.id)"
                                         value="{{ isset($policy->x_threshold) ? $policy->x_threshold:'' }}">
                                 </div>
@@ -107,7 +101,7 @@
                                     <label class="custom-control-label" for="y-axis">y-axis</label>
                                 </div>
                                 <div class="col-sm-6" id="y-axis-div" {{ isset($policy->y_threshold) ? '':'hidden' }}>
-                                    <input type="number" min="0" max="2" data-decimals="1" step="0.1" class="form-control form-control-sm" id="y-value" placeholder="Enter g-value" 
+                                    <input type="number" min="0" max="2" data-decimals="2" step="0.01" class="form-control form-control-sm" id="y-value" placeholder="Enter g-value" 
                                         onInput="validatePolicyInput(this.id)"
                                         value="{{ isset($policy->y_threshold) ? $policy->y_threshold:'' }}">
                                 </div>
@@ -120,7 +114,7 @@
                                     <label class="custom-control-label" for="z-axis">z-axis</label>
                                 </div>
                                 <div class="col-sm-6" id="z-axis-div" {{ isset($policy->z_threshold) ? '':'hidden' }}>
-                                    <input type="number" min="0" max="2" data-decimals="1" step="0.1" class="form-control form-control-sm" id="z-value" placeholder="Enter g-value" 
+                                    <input type="number" min="0" max="2" data-decimals="2" step="0.01" class="form-control form-control-sm" id="z-value" placeholder="Enter g-value" 
                                         onInput="validatePolicyInput(this.id)"
                                         value="{{ isset($policy->z_threshold) ? $policy->z_threshold:'' }}">
                                 </div>
@@ -131,21 +125,8 @@
                             <a href="#" data-toggle="tooltip" data-placement="right" title="" style="cursor: pointer; left-padding:0" data-original-title="The policy will violate after it fulfill the parameters set for this frequency of time.">
                                 <i class="ri-information-fill"></i>
                             </a>
-                            <select class="form-control" id="frequency" onChange="validatePolicyInput(this.id)">
-                                @if(isset($policy->frequency))
-                                    <option {{ ($policy->frequency == "1") ? 'selected':'' }} value=1>1 second</option>
-                                    <option {{ ($policy->frequency == "5") ? 'selected':'' }} value=5>5 seconds</option>
-                                    <option {{ ($policy->frequency == "10") ? 'selected':'' }} value=10>10 seconds</option>
-                                    <option {{ ($policy->frequency == "15") ? 'selected':'' }} value=15>15 seconds</option>
-                                    <option {{ ($policy->frequency == "20") ? 'selected':'' }} value=20>20 seconds</option>
-                                @else
-                                    <option value=1>1 second</option>
-                                    <option value=5>5 seconds</option>
-                                    <option value=10>10 seconds</option>
-                                    <option value=15>15 seconds</option>
-                                    <option value=20>20 seconds</option>
-                                @endif
-                            </select>
+                            {!! Form::select('frequency', $frequency, $policy->frequency ?? null, ['class' => 'form-control', 'id' => 'frequency',
+                                'onInput' => 'validatePolicyInput(this.id)']) !!}
                         </div>
                     </form>
                 </div>
@@ -158,36 +139,18 @@
                     <form>
                         <div class="form-group">
                             <label for="target">Target(s):</label>
-                            <select class="form-control" id="target" onChange="validatePolicyInput(this.id)">
-                                <option {{ ($policy->target_type == 'all') ? 'selected':'' }} value="all">Everyone</option>
-                                <option {{ ($policy->target_type == 'user-only') ? 'selected':'' }} value="user-only">User Only</option>
-                                <option {{ ($policy->target_type == 'resident-only') ? 'selected':'' }} value="resident-only">Resident Only</option>
-                                <option {{ ($policy->target_type == 'custom') ? 'selected':'' }} value="custom">Custom</option>
-                            </select>
+                            {!! Form::select('target_type', $target_type, $policy->scope->target_type ?? null, ['class' => 'form-control', 'id' => 'target',
+                                'onInput' => 'validatePolicyInput(this.id)']) !!}
                         </div>
                         <div class="form-group" id="custom-target-div" {{ ($policy->target_type == 'custom') ? '':'hidden' }}>
                             <label for="custom-target">Custom Target(s):</label>
-                            <select class="form-control" id="custom-target" onInput="validatePolicyInput(this.id)">
-                                @foreach($residents as $resident)
-                                    <option value="R-{{ $resident->resident_id }}">
-                                        R{{ $resident->resident_id }} - {{ $resident->full_name }}
-                                    </option>
-                                @endforeach
-                                @foreach($users as $user)
-                                    <option value="U-{{ $user->user_id }}">
-                                        U{{ $user->user_id }} - {{ $user->full_name }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            {!! Form::select('target', $targets, null, ['class' => 'form-control', 'id' => 'custom-target',
+                                'onInput' => 'validatePolicyInput(this.id)']) !!}
                         </div>
                         <div class="form-group">
                             <label for="day">Day(s):</label>
-                            <select class="form-control" id="day" onChange="validatePolicyInput(this.id)" {{ ($policy->rules_type_id == '2') ? 'disabled':'' }}>
-                                <option {{ ($policy->day_type == "daily") ? 'selected':'' }} value="daily">Daily</option>
-                                <option {{ ($policy->day_type == "weekdays") ? 'selected':'' }} value="weekdays">Monday to Friday</option>
-                                <option {{ ($policy->day_type == "weekends") ? 'selected':'' }} value="weekends">Saturday to Sunday</option>
-                                <option {{ ($policy->day_type == "custom") ? 'selected':'' }} value="custom">Custom</option>
-                            </select>
+                            {!! Form::select('day', $day_type, $policy->day_type, ['class' => 'form-control', 'id' => 'day',
+                                'onInput' => 'validatePolicyInput(this.id)']) !!}
                         </div>
                         <div class="form-group" id="custom-day-div" {{ ($policy->day_type == 'custom') ? '':'hidden' }}>
                             <label for="custom-day">Custom Day(s):</label>
@@ -259,7 +222,13 @@
                                 {{ ($policy->rules_type_id == '2') ? 'disabled':'' }}>
                         </div>
                         <div class="form-group mt-2">
-                            <label for="location">Location(s):</label>
+                            <div class="form-inline mb-2">
+                                <label for="location">Location(s):</label>
+                                <div class="ml-3 custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="location-all" name="location-all">
+                                    <label class="custom-control-label" for="location-all">Select all</label>
+                                </div>
+                            </div>
                             <select class="form-control" id="location" onInput="validatePolicyInput(this.id)" {{ ($policy->rules_type_id == '2') ? 'disabled':'' }}>
                                 @foreach($locations as $location)
                                     <option value="{{ $location->location_master_id }}">
@@ -301,6 +270,113 @@
             </div>
         </div>
     </div>
+    <!-- No user & resident found -->
+    <div class="modal fade" id="no-found-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body" style="margin-left: -15px; margin-right: -15px; margin-top: -15px">
+                    <div class="container-fluid bd-example-row">
+                        <div class="row justify-content-center iq-bg-primary">
+                            <i class="ri-error-warning-fill text-primary" style="font-size: 85px; margin: -15px"></i>
+                        </div>
+                        <div class="row mt-3 justify-content-center mt-2">
+                            <div class="h4 font-weight-bold">No user and resident found!</div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="">Add at least one user or resident in the system with assigned beacon.</div>
+                        </div>
+                        <div class="row justify-content-center mt-3">
+                            <div class="iq-bg-warning"><em class="text-danger"> This policy is disabled automatically.</em></div>
+                        </div>
+                        <div class="row mt-5 justify-content-center">
+                            <a href='{{ route("policies.index") }}' class="btn btn-secondary m-1">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- No user & resident with assigned beacon found -->
+    <div class="modal fade" id="no-tag-found-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body" style="margin-left: -15px; margin-right: -15px; margin-top: -15px">
+                    <div class="container-fluid bd-example-row">
+                        <div class="row justify-content-center iq-bg-primary">
+                            <i class="ri-error-warning-fill text-primary" style="font-size: 85px; margin: -15px"></i>
+                        </div>
+                        <div class="row mt-3 justify-content-center mt-2">
+                            <div class="h4 font-weight-bold">Noone is assigned with beacon!</div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="">Assign at least one beacon to user or resident in the system.</div>
+                        </div>
+                        <div class="row justify-content-center mt-3">
+                            <div class="iq-bg-warning"><em class="text-danger"> This policy is disabled automatically.</em></div>
+                        </div>
+                        <div class="row mt-5 justify-content-center">
+                            <a href='{{ route("policies.index") }}' class="btn btn-secondary m-1">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- No locations found -->
+    <div class="modal fade" id="no-location-found-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body" style="margin-left: -15px; margin-right: -15px; margin-top: -15px">
+                    <div class="container-fluid bd-example-row">
+                        <div class="row justify-content-center iq-bg-primary">
+                            <i class="ri-error-warning-fill text-primary" style="font-size: 85px; margin: -15px"></i>
+                        </div>
+                        <div class="row mt-3 justify-content-center mt-2">
+                            <div class="h4 font-weight-bold">No location found!</div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="">Add at least one location with assigned gateway in the system.</div>
+                        </div>
+                        <div class="row justify-content-center mt-3">
+                            <div class="iq-bg-warning"><em class="text-danger"> This policy is disabled automatically.</em></div>
+                        </div>
+                        <div class="row mt-5 justify-content-center">
+                            <a href='{{ route("policies.index") }}' class="btn btn-secondary m-1">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- No locations found -->
+    <div class="modal fade" id="no-target-set-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body" style="margin-left: -15px; margin-right: -15px; margin-top: -15px">
+                    <div class="container-fluid bd-example-row">
+                        <div class="row justify-content-center iq-bg-primary">
+                            <i class="ri-error-warning-fill text-primary" style="font-size: 85px; margin: -15px"></i>
+                        </div>
+                        <div class="row mt-3 justify-content-center mt-2">
+                            <div class="h4 font-weight-bold">No target set!</div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="">Someone removed the targets or changed targets' beacons.</div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="">Please <strong class="text-primary">update</strong> the policy with selected target.</div>
+                        </div>
+                        <div class="row justify-content-center mt-3">
+                            <div class="iq-bg-warning"><em class="text-danger"> This policy is disabled automatically.</em></div>
+                        </div>
+                        <div class="row mt-5 justify-content-center">
+                        <button type="button" class="btn btn-secondary m-1" data-dismiss="modal">Dismiss</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection 
 
@@ -328,6 +404,10 @@
 
         let selected_location = new Array(@json($policy->all_locations));
         $('#location').select2('val', selected_location);
+
+        @if(count($policy->all_locations) == count($locations))
+        $('#location-all').prop('checked', true);
+        @endif
         
         /* Initialise inputSpinner for number input*/
         $('#battery').inputSpinner();
@@ -342,9 +422,15 @@
         $('#target').select2();
         $('#day').select2();
 
-        @if($policy->target_type == "custom")
+        @if(!isset($policy->scope->target_type))
+        $('#target').val('').trigger('change');
+        $('#no-target-set-modal').modal("toggle");
+        @endif
+
+        @if($policy->scope->target_type == "C")
             /* Initialise custom-target select2 */
-            if($('#target').val() == "custom"){
+            if($('#target').val() == "C"){
+                $('#target').trigger('change');
                 $('#custom-target').select2({
                     multiple: true,
                     closeOnSelect: false,
@@ -354,6 +440,29 @@
                 let selected_target = new Array(@json($policy->all_targets));
                 $('#custom-target').select2('val', selected_target)
             }
+        @endif
+
+        @if(($residents_count <= 0 && $users_count <= 0) || $locations->count() <= 0)
+            let disabled_items = ['name', 'alert', 'type', 'battery',
+                'x-axis', 'y-axis', 'z-axis', 'x-value', 'y-value', 'z-value', 'frequency',
+                'target', 'custom-target',
+                'day', 'sun', 'mon', 'tue', 'wed', 'thurs', 'fri', 'sat', 
+                'start-time', 'duration', 'location', 'location-all', 'save-btn'];
+
+            disabled_items.forEach(function(item){
+                $('#' + item).prop('disabled', true);
+            });
+
+            $('input[name="attendance-option"]').prop('disabled', true);
+            $('input[name="geofence-option"]').prop('disabled', true);
+            
+            @if($residents_all_count <= 0 && $users_all_count <= 0)
+                $('#no-found-modal').modal("toggle");
+            @elseif($locations->count() <= 0)
+                $('#no-location-found-modal').modal("toggle");
+            @else
+                $('#no-tag-found-modal').modal("toggle");
+            @endif
         @endif
 
         @cannot('policy-edit')
@@ -375,7 +484,7 @@
 
     /* If target is custom, show custom target */
     $('#target').on('change', function(){
-        if($('#target').val() == "custom"){
+        if($('#target').val() == "C"){
             if($('#custom-target').hasClass("select2-hidden-accessible")){
                 $('#custom-target').select2('destroy');
             }
@@ -393,6 +502,14 @@
             $('#custom-target').val('').trigger('change');
         } else {
             $('#custom-target-div').prop('hidden', true);
+        }
+    })
+
+    $('#location-all').on('change', function(){
+        if($('#location-all').is(':checked')){
+            $('#location').val(@json($locations->pluck('location_master_id')->all())).trigger('change');
+        } else {
+            $('#location').val('').trigger('change');
         }
     })
 
@@ -706,18 +823,36 @@
             case "violence":
                 removeInvalid(id);
                 let violence_option = ['x-axis', 'y-axis', 'z-axis'];
-                let violence_checked = false;
+                let violence_checked = {};
                 violence_option.forEach(function(item){
                     if($('#' + item).is(':checked')){
-                        violence_checked = true;
+                        violence_checked[item] = true;
                     }
                 })
-                if(!violence_checked){
-                    addInvalid(id);
-                    return false
+
+                let check = 0;
+                Object.keys(violence_checked).forEach(function(key){
+                    if(violence_checked[key] == true){
+                        check += 1;
+                    }
+                })
+
+                if($('#type').val() == "4"){
+                    if(check < 1){
+                        addInvalid(id, "fall");
+                        return false
+                    } else {
+                        removeInvalid(id, "fall");
+                        return true
+                    }
                 } else {
-                    removeInvalid(id);
-                    return true
+                    if(check < 2){
+                        addInvalid(id, "violence");
+                        return false
+                    } else {
+                        removeInvalid(id, "violence");
+                        return true
+                    }
                 }
 
             case "target":
@@ -807,7 +942,7 @@
     }
 
     /* Add invalid styling and error message */
-    function addInvalid(id){
+    function addInvalid(id, from = null){
         switch(id){
             case "attendance-option":
                 if (!$('#invalid-attendance-option').length){
@@ -829,7 +964,11 @@
                     axis.forEach(function(item){
                         $('#' + item).addClass('is-invalid');
                     });
-                    $('#z-axis-row').after('<div class="invalid-feedback" id="invalid-' + id +'" style="display:block">Please select at least one axis.</div>');
+                    if(from == "fall"){
+                        $('#z-axis-row').after('<div class="invalid-feedback" id="invalid-' + id +'" style="display:block">Please select at least one axis.</div>');
+                    } else {
+                        $('#z-axis-row').after('<div class="invalid-feedback" id="invalid-' + id +'" style="display:block">Please select at least two axis.</div>');
+                    }
                 }
                 break;
             case "custom-day":

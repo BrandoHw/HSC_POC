@@ -316,7 +316,11 @@ class AttendanceController extends Controller
                             ->unique('beacon_id')
                             ->count());
                 }
-                $percentage = (1 - $absent/count($policy->all_targets)) * 100;
+                if(count($policy->all_targets) == 0){
+                    $percentage = 0;
+                } else {
+                    $percentage = (1 - $absent/count($policy->all_targets)) * 100;
+                }
             }
             array_push($attendance, $percentage);
         }

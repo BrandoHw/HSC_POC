@@ -34,7 +34,7 @@ class Scope extends Model
      * @var array
      */
     protected $fillable = [
-        'gateway_dwell_time', 'days', 'start_time', 'duration'
+        'gateway_dwell_time', 'days', 'start_time', 'duration', 'target_type'
     ];
 
     /**

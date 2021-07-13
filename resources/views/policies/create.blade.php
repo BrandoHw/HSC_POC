@@ -91,7 +91,7 @@
                                     <label class="custom-control-label" for="x-axis">x-axis</label>
                                 </div>
                                 <div class="col-sm-6" id="x-axis-div" hidden>
-                                    <input type="number" min="0" max="2" data-decimals="1" step="0.1" class="form-control form-control-sm" id="x-value" placeholder="Enter g-value" onInput="validatePolicyInput(this.id)">
+                                    <input type="number" min="0" max="2" data-decimals="2" step="0.01" class="form-control form-control-sm" id="x-value" placeholder="Enter g-value" onInput="validatePolicyInput(this.id)">
                                 </div>
                             </div>
                             <div class="form-group row align-items-center ml-3" id="y-axis-row">
@@ -100,7 +100,7 @@
                                     <label class="custom-control-label" for="y-axis">y-axis</label>
                                 </div>
                                 <div class="col-sm-6" id="y-axis-div" hidden>
-                                    <input type="number" min="0" max="2" data-decimals="1" step="0.1" class="form-control form-control-sm" id="y-value" placeholder="Enter g-value" onInput="validatePolicyInput(this.id)">
+                                    <input type="number" min="0" max="2" data-decimals="2" step="0.01" class="form-control form-control-sm" id="y-value" placeholder="Enter g-value" onInput="validatePolicyInput(this.id)">
                                 </div>
                             </div>
                             <div class="form-group row align-items-center ml-3" id="z-axis-row">
@@ -109,7 +109,7 @@
                                     <label class="custom-control-label" for="z-axis">z-axis</label>
                                 </div>
                                 <div class="col-sm-6" id="z-axis-div" hidden>
-                                    <input type="number" min="0" max="2" data-decimals="1" step="0.1" class="form-control form-control-sm" id="z-value" placeholder="Enter g-value" onInput="validatePolicyInput(this.id)">
+                                    <input type="number" min="0" max="2" data-decimals="2" step="0.01" class="form-control form-control-sm" id="z-value" placeholder="Enter g-value" onInput="validatePolicyInput(this.id)">
                                 </div>
                             </div>
                         </div>
@@ -118,13 +118,8 @@
                             <a href="#" data-toggle="tooltip" data-placement="right" title="" style="cursor: pointer; left-padding:0" data-original-title="The policy will violate after it fulfill the parameters set for this frequency of time.">
                                 <i class="ri-information-fill"></i>
                             </a>
-                            <select class="form-control" id="frequency" onChange="validatePolicyInput(this.id)">
-                                <option value=1>1 second</option>
-                                <option value=5>5 seconds</option>
-                                <option value=10>10 seconds</option>
-                                <option value=15>15 seconds</option>
-                                <option value=20>20 seconds</option>
-                            </select>
+                            {!! Form::select('frequency', $frequency, null, ['class' => 'form-control', 'id' => 'frequency',
+                                'onInput' => 'validatePolicyInput(this.id)']) !!}
                         </div>
                     </form>
                 </div>
@@ -137,26 +132,18 @@
                     <form>
                         <div class="form-group">
                             <label for="target">Target(s):</label>
-                            <select class="form-control" id="target" onChange="validatePolicyInput(this.id)">
-                                <option value="all">Everyone</option>
-                                <option value="user-only">User Only</option>
-                                <option value="resident-only">Resident Only</option>
-                                <option value="custom">Custom</option>
-                            </select>
+                            {!! Form::select('target_type', $target_type, null, ['class' => 'form-control', 'id' => 'target',
+                                'onInput' => 'validatePolicyInput(this.id)']) !!}
                         </div>
                         <div class="form-group" id="custom-target-div" hidden>
                             <label for="custom-target">Custom Target(s):</label>
-                            {!! Form::select('target', $targets, null, ['placeholder' => 'Please select...', 'class' => 'form-control', 'id' => 'custom-target',
+                            {!! Form::select('target', $targets, null, ['class' => 'form-control', 'id' => 'custom-target',
                                 'onInput' => 'validatePolicyInput(this.id)']) !!}
                         </div>
                         <div class="form-group">
                             <label for="day">Day(s):</label>
-                            <select class="form-control" id="day" onChange="validatePolicyInput(this.id)">
-                                <option value="daily">Daily</option>
-                                <option value="weekdays">Monday to Friday</option>
-                                <option value="weekend">Saturday to Sunday</option>
-                                <option value="custom">Custom</option>
-                            </select>
+                            {!! Form::select('day', $day_type, null, ['class' => 'form-control', 'id' => 'day',
+                                'onInput' => 'validatePolicyInput(this.id)']) !!}
                         </div>
                         <div class="form-group" id="custom-day-div" hidden>
                             <label for="custom-day">Custom Day(s):</label>
@@ -208,7 +195,13 @@
                             <input type="number" min="1" max="24" class="form-control" name="duration" id="duration" step="1" onInput="validatePolicyInput(this.id)" placeholder="Enter duration">
                         </div>
                         <div class="form-group mt-2">
-                            <label for="location">Location(s):</label>
+                            <div class="form-inline mb-2">
+                                <label for="location">Location(s):</label>
+                                <div class="ml-3 custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="location-all" name="location-all">
+                                    <label class="custom-control-label" for="location-all">Select all</label>
+                                </div>
+                            </div>
                             <select class="form-control" id="location" onInput="validatePolicyInput(this.id)">
                                 @foreach($locations as $location)
                                     <option value="{{ $location->location_master_id }}">
@@ -216,6 +209,9 @@
                                 @endforeach
                             </select>
                         </div>
+                        <!-- <div class="form-group">
+                            
+                        </div> -->
                     </form>
                 </div>
                 <div class="iq-card-body d-flex justify-content-center">
@@ -335,14 +331,6 @@
             }
         );
 
-        @if($users_count <= 0)
-            $('option[value="user-only"]').remove();
-        @endif
-
-        @if($residents_count <= 0)
-            $('option[value="resident-only"]').remove();
-        @endif
-
         /* Initialise select2 */
         $('#type').select2();
         $('#frequency').select2();
@@ -400,7 +388,7 @@
 
     /* If target is custom, show custom target */
     $('#target').on('change', function(){
-        if($('#target').val() == "custom"){
+        if($('#target').val() == "C"){
             if($('#custom-target').hasClass("select2-hidden-accessible")){
                 $('#custom-target').select2('destroy');
             }
@@ -436,6 +424,14 @@
             $('#custom-day-div').prop('hidden', false);
         } else {
             $('#custom-day-div').prop('hidden', true);
+        }
+    })
+
+    $('#location-all').on('change', function(){
+        if($('#location-all').is(':checked')){
+            $('#location').val(@json($locations->pluck('location_master_id')->all())).trigger('change');
+        } else {
+            $('#location').val('').trigger('change');
         }
     })
 
@@ -482,7 +478,7 @@
                 break;
             case "2":
                 option['battery'] = true;
-                $('#day').val("daily");
+                $('#day').val("daily").trigger('change');
                 $('#start-time').val("12:00 AM");
                 $('#duration').val(24);
                 $('#location').val(@json($locations->pluck('location_master_id')->all())).trigger('change');
@@ -605,7 +601,7 @@
                 break;
         }
 
-        if(result['target'] == 'custom'){
+        if(result['target'] == 'C'){
             result['custom-target'] = validatePolicyInput('custom-target');
         }
 
@@ -730,18 +726,36 @@
             case "violence":
                 removeInvalid(id);
                 let violence_option = ['x-axis', 'y-axis', 'z-axis'];
-                let violence_checked = false;
+                let violence_checked = {};
                 violence_option.forEach(function(item){
                     if($('#' + item).is(':checked')){
-                        violence_checked = true;
+                        violence_checked[item] = true;
                     }
                 })
-                if(!violence_checked){
-                    addInvalid(id);
-                    return false
+
+                let check = 0;
+                Object.keys(violence_checked).forEach(function(key){
+                    if(violence_checked[key] == true){
+                        check += 1;
+                    }
+                })
+
+                if($('#type').val() == "4"){
+                    if(check < 1){
+                        addInvalid(id, "fall");
+                        return false
+                    } else {
+                        removeInvalid(id, "fall");
+                        return true
+                    }
                 } else {
-                    removeInvalid(id);
-                    return true
+                    if(check < 2){
+                        addInvalid(id, "violence");
+                        return false
+                    } else {
+                        removeInvalid(id, "violence");
+                        return true
+                    }
                 }
 
             case "target":
@@ -831,7 +845,7 @@
     }
 
     /* Add invalid styling and error message */
-    function addInvalid(id){
+    function addInvalid(id, from = null){
         switch(id){
             case "attendance-option":
                 if (!$('#invalid-attendance-option').length){
@@ -853,7 +867,11 @@
                     axis.forEach(function(item){
                         $('#' + item).addClass('is-invalid');
                     });
-                    $('#z-axis-row').after('<div class="invalid-feedback" id="invalid-' + id +'" style="display:block">Please select at least one axis.</div>');
+                    if(from == "fall"){
+                        $('#z-axis-row').after('<div class="invalid-feedback" id="invalid-' + id +'" style="display:block">Please select at least one axis.</div>');
+                    } else {
+                        $('#z-axis-row').after('<div class="invalid-feedback" id="invalid-' + id +'" style="display:block">Please select at least two axis.</div>');
+                    }
                 }
                 break;
             case "custom-day":

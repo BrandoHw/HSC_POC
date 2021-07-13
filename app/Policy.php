@@ -12,6 +12,31 @@ class Policy extends Model
 {
     use SoftDeletes;
 
+    const frequency = [
+        1 => "1 second",
+        2 => "2 seconds",
+        3 => "3 seconds",
+        4 => "4 seconds",
+        5 => "5 seconds",
+        10 => "10 seconds",
+        15 => "15 seconds",
+        20 => "20 seconds",
+    ];
+
+    const target_type = [
+        "A" => "Everyone",
+        "U" => "User(s) Only", 
+        "R" => "Resident(s) Only",
+        "C" => "Custom",
+    ];
+
+    const day_type = [
+        "daily" => "Daily",
+        "weekend" => "Monday to Friday", 
+        "weekdays" => "Saturday to Sunday",
+        "custom" => "Custom",
+    ];
+
     /**
      * The table associated with the model.
      *
@@ -85,59 +110,14 @@ class Policy extends Model
      *
      * @return string
      */
-    public function getTargetTypeAttribute()
-    {
-        $residents_all = false;
-        $users_all = false;
-
-        $residents_count = $this->scope->tags->whereNotNull('resident')->count();
-        $users_count = $this->scope->tags->whereNotNull('user')->count();
-
-        if($residents_count == Resident::whereHas('tag')->count()){
-            $residents_all = true;
-        }
-
-        if($users_count == User::whereHas('tag')->count()){
-            $users_all = true;
-        }
-
-        if($residents_all && $users_all){
-            return 'all';
-        } elseif ($residents_all && !$users_all){
-            if($users_count != 0){
-                return 'custom';
-            }
-            return 'resident-only';
-        }elseif (!$residents_all && $users_all){
-            if($residents_count != 0){
-                return 'custom';
-            }
-            return 'user-only';
-        } else {
-            return 'custom';
-        }
-
-    }
-
-    /**
-     * Get the policy's target.
-     *
-     * @return string
-     */
     public function getTargetTypeNameAttribute()
     {
-        $target_type = $this->target_type;
-
-        switch($target_type){
-            case 'all':
-                return 'Everyone';
-            case 'resident-only':
-                return 'Resident(s) Only';
-            case 'user-only':
-                return 'User(s) Only';
-            case 'custom':
-                return 'Custom';
-            
+        $target_type = Policy::target_type;
+        $val = $this->scope->target_type;
+        if(isset($val)){
+            return $target_type[$val];
+        } else {
+            return "-";
         }
     }
 
