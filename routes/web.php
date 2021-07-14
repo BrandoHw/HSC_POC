@@ -131,6 +131,9 @@ Route::group(['middleware' => ['auth']], function() {
     if(config('app.type') === 'klia') {
         Route::get('reports', [AttendanceKliaController::class, 'index'])->name('reports.index');
         Route::get('timeline', [AttendanceKliaController::class, 'getTimeline'])->name('reports.timeline');
+        Route::get('get-attendance-klia', [AttendanceKliaController::class, 'getAttendanceKLIA'])->name('klia.get');
+        Route::get('get-select', [AttendanceKliaController::class, 'getSelect'])->name('reports.getSelect');
+
     }else{
         Route::resource('reports', ReportController::class);
         Route::get('report-data', [ReportController::class, 'getData'])->name('report.data');
@@ -183,13 +186,10 @@ Route::group(['middleware' => ['auth']], function() {
 
    
     //KLIA Controllers
-    Route::get('get-attendance-klia', [AttendanceKliaController::class, 'getAttendanceKLIA'])->name('klia.get');
-
     Route::resource('staff', StaffController::class)
     ->except(['show', 'destroy']);
     Route::delete('staff/destroys', [StaffController::class, 'destroys'])
     ->name('staff.destroys');
-
 
     Route::resource('alerts-klia', AlertKliaController::class)
         ->except(['create', 'store', 'edit', 'update', 'destroy']);

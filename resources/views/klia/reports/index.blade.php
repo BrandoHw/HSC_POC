@@ -6,36 +6,44 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12">
-            {{-- <div class="iq-card">
+            <div id="timeline-chart-holder" class="iq-card">
                 <div class="iq-card-body">
                     @include ("klia.reports.timeline")
                 </div>
-            </div> --}}
+            </div>
             <div class="iq-card">
                 <div class="iq-card-body">
-                    <div class="row align-items-center" style="justify-content: space-between">
-                        <div class="col-4">
+                    <div class="row align-items-center m-1" style="justify-content: space-between">
+                        <div class="col-5 row align-items-center">
                             <label class="sr-only">Date</label>
-                            <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group mt-1 mb-1 mr-sm-2" style="width: 90%">
                                 <div class="input-group-text">Date</div>
                                 <input type="text" class="form-control" id="datepicker" kl_vkbd_parsed="true">
                             </div>
+                            <a href="#" data-toggle="tooltip" data-placement="right" title="Select a single day to view timeline chart" style="cursor: pointer; left-padding:0">
+                                <i class="ri-information-fill"></i>
+                            </a>
+                        </div>
+                        <div id = "draw-holder" class="col-7 row" style="justify-content: flex-end">
+                            <div id="selHolder" class="col-9 row" style="justify-content: flex-end">
+                                <label class="col-form-label col-sm-3 text-sm-right">
+                                    User:
+                                    </label>
+                                <select id='selUser' class="col-sm-4" style="width: 70% margin-right: 15px"name ="select" ></select>
+                            </div>
+                            <button id ="draw-btn" class="btn btn-primary" style="margin-left: 15px; float: right; align-items: center;" href="#">Draw</button>
                         </div>
                     </div>
-                    {{-- <ul class="nav nav-tabs" role="tablist">
+                    <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab-one" 
-                            data-toggle="tab" href="#tab-table1" role="tab" aria-controls="home" aria-selected="true">Alerts</a>
+                            data-toggle="tab" href="#tab-table1" role="tab" aria-controls="home" aria-selected="true">Attendance</a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="nav-link" id="home-tab-two" 
                             data-toggle="tab" href="#tab-table2" role="tab" aria-controls="home" aria-selected="true">Gateways</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="home-tab-three" 
-                            data-toggle="tab" href="#tab-table3" role="tab" aria-controls="home" aria-selected="true">Residents</a>
-                        </li>
-                    </ul> --}}
+                        </li> --}}
+                    </ul>
                   
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab-table1">
@@ -72,6 +80,11 @@
 <script>
     
     //Date Picker Setup
+    var startDate;
+    var endDate;
+    // $('#timeline-chart-holder').hide();
+    // $('#draw-holder').hide();
+    $('#selUser').select2({data: [{id: '', text: ''}]});
     $('#datepicker').daterangepicker({
             showDropdowns: true,
             ranges: {
@@ -90,6 +103,46 @@
             }, 
             function(start, end, label) {
                 console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+                startDate = start.format('D MMMM YYYY');
+                endDate = end.format('D MMMM YYYY'); 
+                if (startDate === endDate){
+                    $('#timeline-chart-holder').show();
+                    $('#draw-holder').show();
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        url: '{{ route("reports.getSelect")}}',
+                        type: "get",
+                        data: { 
+                        date_range: startDate,
+                        },
+                        success:function(response){
+                            console.log(response);
+                            console.log(response['select']['results'].length)
+                            if (response['select']['results'].length > 0){
+                                $('#selUser').html('').select2({data: [{id: '', text: ''}]});
+                                $('#selUser').val(null).trigger('change');
+                                $("#selUser").select2({
+                                    data:response['select']['results'],
+                                    minimumResultsForSearch: Infinity,
+                                });
+                            }else{
+                                console.log("changing")
+                                $('#selUser').html('').select2({data: [{id: '', text: ''}]});
+                                $('#selUser').val(null).trigger('change');
+                            }
+                        },
+                        error:function(error){
+                            console.log(error)
+                        }
+                    })
+                }else{
+                    $('#timeline-chart-holder').hide();
+                    $('#draw-holder').hide();
+                }
             }
     );
     $('#datepicker').on("change",function(){
@@ -147,7 +200,6 @@
     
     })
 
- 
 
 </script>
 @endsection

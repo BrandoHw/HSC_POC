@@ -20,7 +20,7 @@ class AttendanceKliaController extends Controller
         $date_end = new Carbon(explode(' - ', $request['date_range'])[1]);
         $date_end = $date_end->addDays(1)->subSecond(1);
      
-        $attendance = json_decode(json_encode(Attendance_KLIA::whereBetween('first_seen', [$date_start, $date_end])
+        $attendance = json_decode(json_encode(Attendance_KLIA::whereBetween('date', [$date_start, $date_end])
         ->whereNotNull('staff_name')
         ->whereNotNull('location_name')
         ->orderBy('first_seen', 'desc')
@@ -43,8 +43,8 @@ class AttendanceKliaController extends Controller
 
     public function getTimeline(Request $request)
     {
-        $request['date_range'] = "07/09/2021 - 07/09/2021";
-        $request['tag_mac'] = "AC233FA8C2EE";
+        // $request['date_range'] = "07/09/2021 - 07/09/2021";
+        // $request['tag_mac'] = "AC233FA8C2EE";
         $date_start = new Carbon(explode(' - ', $request['date_range'])[0]);
         $date_end = new Carbon(explode(' - ', $request['date_range'])[1]);
         $date_end = $date_end->addDays(1)->subSecond(1);
@@ -62,17 +62,17 @@ class AttendanceKliaController extends Controller
             $data_object = (object)[];
             $data_object->x = $att->location_name;
             $data_object->y[0] = ((int)Carbon::createFromFormat('Y-m-d H:i:s', $att->first_seen, 'UTC')
-                                    ->setTimezone('Asia/Kuala_Lumpur')
+                                    //->setTimezone('Asia/Kuala_Lumpur') //Set timezone only changes the output of format() if it returns a string
+                                    ->addHours(8) // Must instead add 8 hours to convert the underlying millisecond count to UTC+8
                                     ->format('Uu')) 
                                     / 1000;
             $data_object->y[1] = ((int) Carbon::createFromFormat('Y-m-d H:i:s', $att->last_seen, 'UTC')
-                                    ->setTimezone('Asia/Kuala_Lumpur')
+                                    ->addHours(8)
                                     ->format('Uu'))
                                     / 1000;
             $att->time_missing = Carbon::parse($att->last_seen)->diffForHumans();
             array_push($timeline_data, $data_object);
         }
-
 
         //The required series object for an ApexChart Timeline Series is
         //An Single Item Array containing
@@ -88,6 +88,38 @@ class AttendanceKliaController extends Controller
         return response()->json([
             'data' => $attendance,
             'timeline' => $timeline,
+        ], 200);
+    }
+
+    public function getSelect(Request $request)
+    {
+        $date = new Carbon($request['date_range']);
+        //$date = new Carbon("07/14/2021");
+        $attendance = Attendance_KLIA::where('date', $date)
+        ->whereNotNull('staff_name')
+        ->whereNotNull('location_name')
+        ->orderBy('first_seen', 'desc')
+        ->get();
+
+        $arr = array();
+        foreach ($attendance as $key => $item) {
+           $arr[$item['tag_mac']] = $item;
+        }
+        ksort($arr, SORT_NUMERIC);
+     
+        $select_object = (object)[];
+        $select_object->results = array();
+        $i = 0;
+        foreach ($arr as $tag => $att){
+            $object = (object)[];
+            $object->id = $i;
+            $object->text = $att->staff_name;
+            $object->tag_mac = $tag;
+            $select_object->results[$i] = $object;
+            $i++;
+        }
+        return response()->json([
+            'select' => $select_object,
         ], 200);
     }
 }

@@ -23,15 +23,15 @@
                                 <input type="text" class="form-control" id="datepicker" kl_vkbd_parsed="true">
                             </div>
                         </div>
-                            <div class="col-8 row" style="justify-content: flex-end">
-                                <div id="selHolder" class="col-9 row" style="justify-content: flex-end">
-                                    <label class="col-form-label col-sm-3 text-sm-right">
-                                        Category:
-                                        </label>
-                                    <select id='selCategory' class="col-sm-4" style="margin-right: 15px"name ="select" ></select>
-                                </div>
-                                <button id ="draw-btn" class="btn btn-primary" style="margin-left: 15px; float: right; align-items: center;" href="#">Draw</button>
+                        <div class="col-8 row" style="justify-content: flex-end">
+                            <div id="selHolder" class="col-9 row" style="justify-content: flex-end">
+                                <label class="col-form-label col-sm-3 text-sm-right">
+                                    Category:
+                                    </label>
+                                <select id='selCategory' class="col-sm-4" style="margin-right: 15px"name ="select" ></select>
                             </div>
+                            <button id ="draw-btn" class="btn btn-primary" style="margin-left: 15px; float: right; align-items: center;" href="#">Draw</button>
+                        </div>
                     </div>
 
                     <ul class="nav nav-tabs" role="tablist">
@@ -220,7 +220,7 @@
         minimumResultsForSearch: Infinity,
     });
 
-        console.log($('#selCategory').select2('data')[0]);
+    console.log($('#selCategory').select2('data')[0]);
     //Date Picker Setup
     $('#datepicker').daterangepicker({
             showDropdowns: true,
@@ -345,7 +345,6 @@
         order: [[0, 'asc']],
     });
 
-    
     var residentTable = $('#residentTable').DataTable({
         dom: "<'row'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6'>>" +
             "<'row'<'col-sm-12'tr>>" +
