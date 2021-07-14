@@ -24,6 +24,10 @@
                 <li class="{{ Request::is('/') ? 'sidebar-item active' : 'sidebar-item' }}">
                     <a href="{{ route('home') }}" class="iq-waves-effect"><i class="ri-home-4-fill"></i><span>Dashboard</span></a>
                 </li>
+                @can('tracking-list')
+                <li class="{{ Request::segment(1) === 'tracking' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('tracking.index') }}" class="iq-waves-effect"><i class="ri-map-pin-user-fill"></i><span>Tracking</span></a></li>
+                @endcan
+                
                 @if(Request::segment(1) === 'residents')
                     @canany(['resident-list', 'attendance-list'])
                     <li class="active">
@@ -97,11 +101,6 @@
                         <li class="{{ Request::segment(1) === 'alerts' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('alerts.index') }}" class="iq-waves-effect"><i class="ri-alarm-warning-fill"></i><span>Alerts</span></a></li>
                     @endcan
                 @endif
-
-
-                @can('tracking-list')
-                <li class="{{ Request::segment(1) === 'tracking' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('tracking.index') }}" class="iq-waves-effect"><i class="ri-map-pin-user-fill"></i><span>Tracking</span></a></li>
-                @endcan
 
                 @if(env('APP_TYPE') == 'klia')
                     <li class="{{ Request::segment(1) === 'reports' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('reports.index') }}" class="iq-waves-effect"><i class="ri-file-chart-fill"></i><span>Reports</span></a></li>

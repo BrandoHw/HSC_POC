@@ -6,11 +6,11 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12">
-            <div class="iq-card">
+            {{-- <div class="iq-card">
                 <div class="iq-card-body">
                     @include ("klia.reports.timeline")
                 </div>
-            </div>
+            </div> --}}
             <div class="iq-card">
                 <div class="iq-card-body">
                     <div class="row align-items-center" style="justify-content: space-between">

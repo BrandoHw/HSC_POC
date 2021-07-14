@@ -130,6 +130,7 @@ Route::group(['middleware' => ['auth']], function() {
 
     if(config('app.type') === 'klia') {
         Route::get('reports', [AttendanceKliaController::class, 'index'])->name('reports.index');
+        Route::get('timeline', [AttendanceKliaController::class, 'getTimeline'])->name('reports.timeline');
     }else{
         Route::resource('reports', ReportController::class);
         Route::get('report-data', [ReportController::class, 'getData'])->name('report.data');

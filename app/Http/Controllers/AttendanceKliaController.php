@@ -24,7 +24,7 @@ class AttendanceKliaController extends Controller
         ->whereNotNull('staff_name')
         ->whereNotNull('location_name')
         ->orderBy('first_seen', 'desc')
-                ->get()));
+        ->get()));
 
         foreach ($attendance as $att){
             //$att->full_name = $att->tag->resident->resident_fName." ". $att->tag->resident->resident_lName;
@@ -43,24 +43,51 @@ class AttendanceKliaController extends Controller
 
     public function getTimeline(Request $request)
     {
-        $request['date_range'] = "08/07/2021 - 08/07/2021";
+        $request['date_range'] = "07/09/2021 - 07/09/2021";
         $request['tag_mac'] = "AC233FA8C2EE";
         $date_start = new Carbon(explode(' - ', $request['date_range'])[0]);
         $date_end = new Carbon(explode(' - ', $request['date_range'])[1]);
         $date_end = $date_end->addDays(1)->subSecond(1);
      
-        $attendance = json_decode(json_encode(Attendance_KLIA::whereBetween('first_seen', [$date_start, $date_end])
+        $attendance = json_decode(json_encode(Attendance_KLIA::whereBetween('date', [$date_start, $date_end])
         ->whereNotNull('staff_name')
         ->whereNotNull('location_name')
+        ->where('tag_mac', $request['tag_mac'])
         ->orderBy('first_seen', 'desc')
-                ->get()));
+        ->get()));
 
+        $timeline_data = array();
         foreach ($attendance as $att){
             //$att->full_name = $att->tag->resident->resident_fName." ". $att->tag->resident->resident_lName;
+            $data_object = (object)[];
+            $data_object->x = $att->location_name;
+            $data_object->y[0] = ((int)Carbon::createFromFormat('Y-m-d H:i:s', $att->first_seen, 'UTC')
+                                    ->setTimezone('Asia/Kuala_Lumpur')
+                                    ->format('Uu')) 
+                                    / 1000;
+            $data_object->y[1] = ((int) Carbon::createFromFormat('Y-m-d H:i:s', $att->last_seen, 'UTC')
+                                    ->setTimezone('Asia/Kuala_Lumpur')
+                                    ->format('Uu'))
+                                    / 1000;
             $att->time_missing = Carbon::parse($att->last_seen)->diffForHumans();
+            array_push($timeline_data, $data_object);
         }
+
+
+        //The required series object for an ApexChart Timeline Series is
+        //An Single Item Array containing
+        //An Object with property Data
+        //Data is an array of objects
+        //Each object in Data has property X and Y
+        //X is the vertical label (Location)
+        //Y is the horizontal time label (Duration)
+        $timeline = array();
+        $timeline_object = (object)[];
+        $timeline_object->data = $timeline_data;
+        array_push($timeline, $timeline_object);
         return response()->json([
             'data' => $attendance,
+            'timeline' => $timeline,
         ], 200);
     }
 }
