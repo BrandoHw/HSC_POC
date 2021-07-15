@@ -22,6 +22,7 @@ class Tag extends Model
      * @var string
      */
     protected $primaryKey = 'beacon_id';
+    protected $keyType = 'int';
 
    /**
      * The storage format of the model's date columns.
@@ -95,9 +96,13 @@ class Tag extends Model
      */
     public function getCurrentLocationAttribute()
     {
-        $location = $this->gateway->location;
-        if(isset($location)){
-            return $location->floor."F - ".$location->location_description;
+        if(isset($this->gateway)){
+            $location = $this->gateway->location;
+            if(isset($location)){
+                return $location->floor."F - ".$location->location_description;
+            } else {
+                return "-";
+            }
         } else {
             return "-";
         }

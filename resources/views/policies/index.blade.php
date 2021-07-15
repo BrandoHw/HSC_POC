@@ -28,6 +28,7 @@
                                     <th scope="col">Name</th>
                                     <th scope="col">Type</th>
                                     <th scope="col">Parameters</th>
+                                    <th scope="col">Targets</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Created</th>
                                     <th scope="col">Updated</th>
@@ -61,6 +62,8 @@
                                                     @break  
                                             @endswitch
                                         </td>
+                                        <!-- <td class="info">{{ $policy->target_type_name }}</td> -->
+                                        <td class="info">{{ count($policy->all_targets) }}</td>
                                         <td class="info">
                                             <span class="badge badge-pill iq-bg-{{ ($policy->alert_action == 1) ? 'success':'secondary' }}">
                                                 {{ ($policy->alert_action == 1) ? 'Enabled':'Disabled' }}
@@ -157,7 +160,7 @@
 <script>
     /* Initiate dataTable */
     let dTable = $('#policyTable').DataTable({
-        order: [[5, 'asc']],
+        order: [[5, 'desc']],
     })
 
     $('#myCustomSearchBox').keyup(function(){  

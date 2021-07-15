@@ -389,11 +389,21 @@
             if($.isEmptyObject(response['success'])){
                console.log(errors);
             } else {
+               console.log(response);
                if(response['total_alerts_num'] != 0){
                   /* Check whether there is existing alerts */
                   if($("#alert-all").is(":hidden")){
                      $('#no-alert-div').prop('hidden', true);
                      $('#alert-all').prop('hidden', false);
+                  }
+                  if(!$('#loading-alert-div').is(":hidden")){
+                     $('#loading-alert-div').prop('hidden', true);
+                  }
+               } else {
+                  /* Check whether there is existing alerts */
+                  if(!$("#alert-all").is(":hidden")){
+                     $('#no-alert-div').prop('hidden', false);
+                     $('#alert-all').prop('hidden', true);
                   }
                   if(!$('#loading-alert-div').is(":hidden")){
                      $('#loading-alert-div').prop('hidden', true);
@@ -596,6 +606,7 @@
             if($.isEmptyObject(response['success'])){
                console.log(errors);
             } else {
+               console.log(response);
                alerts_list.each(function(){
                   $(this).find('.media-support-amount .alert-num').html('0');
                   $(this).find('.media-support-amount .alert-num').prop('hidden', true);

@@ -27,16 +27,17 @@ class SettingController extends Controller
 
         $tagsNull = Tag::doesntHave('resident')
             ->doesntHave('user')
-            ->pluck('beacon_mac', 'beacon_id');
+            ->pluck('beacon_mac', 'beacon_id')
+            ->all();
         
         $current = null;
         if(!empty($user->tag)){
             $current = collect([$user->tag->beacon_id => $user->tag->beacon_mac]);
-            $tagsNull = $current->concat($tagsNull);
+            $tagsNull = Arr::prepend($tagsNull, $user->tag->beacon_mac, $user->tag->beacon_id);
         }
 
         $available = true;
-        if($tagsNull->isEmpty()){
+        if(count($tagsNull) < 1){
             $available = false;
         }
 
