@@ -83,7 +83,9 @@ function addTooltip(data, drawnLayers, gatewayZones, max_count, current_count, d
         })
      }
      if (isMarkerDrawn){
-      marker.addTo(drawnLayers[floor]);
+      if (data.draw){
+        marker.addTo(drawnLayers[floor]);
+      }
     }
   }
 }

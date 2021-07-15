@@ -195,7 +195,6 @@ class UserLastSeenController extends Controller
         $threshold = 5;
         //Convert from object to array, (array) typecasting unsuitable, it returns associative array, 
         //need numerical array for array_merge
-
         $beacons = json_decode(json_encode(Tag::with(['staff', 'gateway', 'gateway.location'])->has('staff')->has('gateway')->get()));
         $beacons_r = json_decode(json_encode(Tag::with(['resident', 'gateway', 'gateway.location'])->has('resident')->has('gateway')->get()));
        
@@ -218,8 +217,10 @@ class UserLastSeenController extends Controller
         foreach ($beacons as $user){
             $user->grey_marker = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->lt(Carbon::now()->subMinutes(5));
             $user->updated_at = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
+            $user->draw = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->gt(Carbon::now()->subMinutes(60));
             if (array_key_exists($user->gateway->mac_addr, $userCount)){
-                $userCount[$user->gateway->mac_addr] = $userCount[$user->gateway->mac_addr] + 1;
+                if ($user->draw)
+                    $userCount[$user->gateway->mac_addr] = $userCount[$user->gateway->mac_addr] + 1;
             }else{
                 $userCount[$user->gateway->mac_addr] = 1;
                 $userRunningCount[$user->gateway->mac_addr] = 0;
