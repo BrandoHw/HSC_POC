@@ -7,6 +7,7 @@ use App\Tag;
 use App\User;
 use App\UserType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Permission;
 use DB;
