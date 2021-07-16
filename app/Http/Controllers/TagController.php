@@ -209,7 +209,8 @@ class TagController extends Controller
         $scopes_custom = $scopes->where('target_type', 'C');
         $scopes_custom_with_tag = collect();
         foreach($scopes_custom as $scope){
-            if($scope->tags()->contains('beacon_id', $tag->beacon_id)){
+            return $scope->policy;
+            if($scope->tags->contains('beacon_id', $tag->beacon_id)){
                 $scopes_custom_with_tag->push($scope);
             }
         }
