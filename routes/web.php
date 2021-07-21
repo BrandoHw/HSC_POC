@@ -133,6 +133,7 @@ Route::group(['middleware' => ['auth']], function() {
         Route::get('timeline', [AttendanceKliaController::class, 'getTimeline'])->name('reports.timeline');
         Route::get('get-attendance-klia', [AttendanceKliaController::class, 'getAttendanceKLIA'])->name('klia.get');
         Route::get('get-select', [AttendanceKliaController::class, 'getSelect'])->name('reports.getSelect');
+        Route::get('get-alerts', [AttendanceKliaController::class, 'getAlerts'])->name('reports.getAlerts');
 
     }else{
         Route::resource('reports', ReportController::class);

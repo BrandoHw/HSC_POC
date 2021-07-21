@@ -11,6 +11,11 @@
                     @include ("klia.reports.timeline")
                 </div>
             </div>
+            <div id="alert-chart-holder" class="iq-card">
+                <div class="iq-card-body">
+                    @include ("klia.reports.alert-chart")
+                </div>
+            </div>
             <div class="iq-card">
                 <div class="iq-card-body">
                     <div class="row align-items-center m-1" style="justify-content: space-between">
@@ -39,10 +44,10 @@
                             <a class="nav-link active" id="home-tab-one" 
                             data-toggle="tab" href="#tab-table1" role="tab" aria-controls="home" aria-selected="true">Attendance</a>
                         </li>
-                        {{-- <li class="nav-item">
+                        <li class="nav-item">
                             <a class="nav-link" id="home-tab-two" 
-                            data-toggle="tab" href="#tab-table2" role="tab" aria-controls="home" aria-selected="true">Gateways</a>
-                        </li> --}}
+                            data-toggle="tab" href="#tab-table2" role="tab" aria-controls="home" aria-selected="true">Alerts</a>
+                        </li>
                     </ul>
                   
                     <div class="tab-content">
@@ -57,6 +62,22 @@
                                             <th>Last Seen</th>
                                             <th>Location</th>
                                             {{-- <th>Duration</th> --}}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table> 
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab-table2">
+                            <div class="table-responsive" style="margin-top: 15px">
+                                <table style="width:100%" class="table table-stripe table-bordered hover" id="alertTable">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Staff Name</th>
+                                            <th scope="col">Occurred at</th>
+                                            <th scope="col">Resolved at</th>
+                                            <th scope="col">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -82,7 +103,26 @@
     //Date Picker Setup
     var startDate;
     var endDate;
-    // $('#timeline-chart-holder').hide();
+    var options = {
+            title: {
+                text: 'Alerts By Staff',
+            },
+            series: [],
+            noData: {
+                text: 'Loading...'
+            },
+            chart: {
+              type: 'pie',
+            },
+            legend: {
+                show: true,
+            },
+
+        };
+    var alertChart = new ApexCharts(document.querySelector("#alert-chart"), options);
+    alertChart.render();
+    $('#timeline-chart-holder').hide();
+    $('#alert-chart-holder').hide();
     // $('#draw-holder').hide();
     $('#selUser').select2({data: [{id: '', text: ''}]});
     $('#datepicker').daterangepicker({
@@ -150,6 +190,26 @@
             attendanceTable.ajax.reload();
     });
 
+    //Setup Tabs
+    var tab = "home-tab-one"
+    $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
+        $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
+        console.log(e.target.id);
+        if (e.target.id === "home-tab-one"){
+            $('#selHolder').show();
+            $('#timeline-chart-holder').show();
+            $('#alert-chart-holder').hide();
+            // $('#draw-btn').show();
+            tab = "home-tab-one";
+            // console.log($('#selCategory').select2('data')[0]);
+        }else if (e.target.id === "home-tab-two"){
+            $('#selHolder').hide();
+            $('#timeline-chart-holder').hide();
+            $('#alert-chart-holder').show();
+            // $('#draw-btn').show();
+            tab = "home-tab-two";
+        }
+    });
     // Setup - add a text input to each footer cell
     $('#attendanceTable thead tr').clone(true).appendTo( '#attendanceTable thead' );
     $('#attendanceTable thead tr:eq(1) th').each( function (i) {
@@ -165,7 +225,82 @@
         } );
     } );
 
-    
+    // Setup - add a text input to each footer cell
+    $('#alertTable thead tr').clone(true).appendTo( '#alertTable thead' );
+    $('#alertTable thead tr:eq(1) th').each( function (i) {
+        var title = $(this).text();
+        $(this).html( '<div class="iq-search-bar row justify-content-between"> <input type="text" class="text search-input" placeholder="Filter"> </div>' );
+        $( 'input', this ).on( 'keyup change', function () {
+            if ( alertTable.column(i).search() !== this.value ) {
+                alertTable
+                    .column(i)
+                    .search( this.value )
+                    .draw();
+            }
+        } );
+    } );
+
+
+    /* Initiate dataTable */
+    var alertTable = $('#alertTable').DataTable({
+        columnDefs: [{
+                orderable: false,
+        }],
+        dom: "<'row'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6'>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-12 col-md-5'li><'col-sm-12 col-md-7'p>>",
+        buttons: [{
+            extend: 'excelHtml5',
+            title: 'Data Export Alerts',
+            }
+        ],
+        order: [[0, 'asc']],
+        ajax: {
+            url: '{{ route("reports.getAlerts") }}',
+            data: function(data) {
+                data.date_range = $("#datepicker").val();
+            }
+        },
+        processing: true,
+        serverSide: false,
+        columns:[
+            {data: 'full_name'},
+            {data: 'occured_at'},
+            {
+                data: 'resolved_at',
+                render: function(data, type) {
+                    if (type === 'display') {
+                        if (data) {
+                            return data;
+                        }else{
+                            return '-';
+                        }
+                    }
+                    return data;
+                }
+            },
+            {
+                data: 'status',
+                render: function(data, type) {
+                    if (type === 'display') {
+                        if (data) {
+                            return '<span class="badge badge-pill iq-bg-success' + '' + '">Resolved</span> ';
+                        }else{
+                            return '<span class="badge badge-pill iq-bg-danger' + '' + '">Unresolved</span> ';
+                        }
+                    }
+                    // if (type === 'display') {
+                    //     return '<span class="flag ' + 'country' + '"></span> ' + 'data';
+                    // }
+                    return data;
+                }
+            },
+        ], 
+        autoWidth: true,
+        orderCellsTop: true,
+        fixedHeader: true,
+    });
+
     /* Initiate dataTable */
     attendanceTable = $('#attendanceTable').DataTable({
         columnDefs: [{
@@ -199,6 +334,39 @@
         fixedHeader: true,
     
     })
+
+    $(function() {
+        $('#draw-btn').on('click', function (){
+            if (tab === "home-tab-one"){
+                var selected_data = $('#selUser').select2('data');
+                console.log(selected_data);
+                console.log(selected_data[0].tag_mac);
+                if (selected_data.length > 0)
+                getTimelineChartData(selected_data[0].tag_mac);
+            }else if (tab === "home-tab-two"){
+                var length = alertTable.rows( { search: 'applied' } ).data().length;
+                var counts = [];
+                for (i=0; i<length; i++){
+                    var data = alertTable.rows( { search: 'applied' } ).data()[i];
+                    counts[data['full_name']] = 1 + (counts[data['full_name']] || 0);
+                }
+                var series = [];
+                var labels = []
+                for (const [key, value] of Object.entries(counts)) {
+                    console.log(key, value);
+                    labels.push(key);
+                    series.push(value);
+                }
+                options = {
+                    series: series,
+                    labels: labels,
+                    width: '50%'
+                }
+                alertChart.updateOptions(options);
+            
+            }
+        });
+    });
 
 
 </script>

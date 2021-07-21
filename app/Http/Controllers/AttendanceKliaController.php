@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Attendance_KLIA;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-
+use App\Alert;
 class AttendanceKliaController extends Controller
 {
     public function index (){
@@ -120,6 +120,33 @@ class AttendanceKliaController extends Controller
         }
         return response()->json([
             'select' => $select_object,
+        ], 200);
+    }
+
+    public function getAlerts(Request $request)
+    {
+        $request['date_range'] = "01/01/2021 - 09/01/2021";
+        $date_start = new Carbon(explode(' - ', $request['date_range'])[0]);
+        $date_end = new Carbon(explode(' - ', $request['date_range'])[1]);
+        $date_end = $date_end->addDays(1)->subSecond(1);
+     
+        $alerts = Alert::whereBetween('occured_at', [$date_start, $date_end])
+        ->orderBy('alert_id', 'asc')
+        ->with(['reader', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
+        ->has('tag.resident')
+        ->get();
+
+        foreach ($alerts as $alert){
+            $alert->full_name = $alert->tag->resident->resident_fName." ".$alert->tag->resident->resident_lName;
+            if ($alert->resolved_at != null){
+                $alert->status = true;
+            }else{
+                $alert->status = false;
+            }
+           
+        }
+        return response()->json([
+            'data' => $alerts,
         ], 200);
     }
 }

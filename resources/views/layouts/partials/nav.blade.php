@@ -4,10 +4,12 @@
         <a href="../">
             @if(env('APP_TYPE') == 'klia')
             <img src="{{ asset('img/icons/wecare.png') }}" alt="logo">
+            <span style="font-size: 150%">Sinar Jernih</span>
             @else
             <img src="{{ asset('img/icons/WeCare-Logo-Blue.png') }}" alt="logo">
-            @endif
             <span>WeCare</span>
+            @endif
+        
         </a>
         <div class="iq-menu-bt-sidebar">
             <div class="iq-menu-bt align-self-center">

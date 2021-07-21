@@ -14,7 +14,7 @@
 <div class="row">
     <div id="pie-chart" style="width:95%">
     </div>
-    <a href="#" data-toggle="tooltip" data-placement="right" title="A tag is consider Active if it has appeared within range of a gateway" style="cursor: pointer; left-padding:0">
+    <a href="#" data-toggle="tooltip" data-placement="right" title="A tag is considered Clocked-In if it has appeared within range of a gateway in the current day" style="cursor: pointer; left-padding:0">
         <i class="ri-information-fill"></i>
     </a>
 </div>
@@ -33,7 +33,7 @@ $(function() {
         chart: {
           type: 'pie',
         },
-        labels: ['Active Beacons', 'Inactive Beacons'],
+        labels: ['Clocked-In Beacons', 'Idle Beacons'],
         legend: {
             show: true,
             position: 'bottom',

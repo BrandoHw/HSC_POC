@@ -50,13 +50,13 @@ $(function() {
     })
   }
 
-  $('#draw-btn').on('click', function (){
-    var selected_data = $('#selUser').select2('data');
-    console.log(selected_data);
-    console.log(selected_data[0].tag_mac);
+  // $('#draw-btn').on('click', function (){
+  //   var selected_data = $('#selUser').select2('data');
+  //   console.log(selected_data);
+  //   console.log(selected_data[0].tag_mac);
 
-    if (selected_data.length > 0)
-      getTimelineChartData(selected_data[0].tag_mac);
-  });
+  //   if (selected_data.length > 0)
+  //     getTimelineChartData(selected_data[0].tag_mac);
+  // });
 });
 </script>
