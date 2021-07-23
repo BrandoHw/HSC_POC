@@ -153,6 +153,9 @@ class UserController extends Controller
     */
     public function update(UpdateUserRequest $request, User $user)
     {
+        if(!empty($user->tag)){
+            $pre_tag_id = $user->tag->beacon_id;
+        }
         $user->update($request->all());
 
         if(!empty($request['role'])){

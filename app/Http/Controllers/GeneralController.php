@@ -20,9 +20,7 @@ class GeneralController extends Controller
     //
 
     public function index (){
-        $resident = "test";
-        $tagsNull = "test";
-        return view('test.test', compact('resident', 'tagsNull'), ['success'=>'Property is updated .']);
+        return Carbon::parse("2021-07-22 09:40:03")->tz('Asia/Kuala_Lumpur')->gt(Carbon::now()->subMinutes(60));
     }
 
      /**

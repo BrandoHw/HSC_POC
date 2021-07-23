@@ -184,7 +184,7 @@ class LocationController extends Controller
             $gateway->update(['location_id' => null]);
         }
         $deletedRows = Location::whereIn('location_master_id', $ids)->delete();
-
+        
         $locations = Location::with(['type', 'floor_level'])->get()->sortBy('floor');
         //notyf method for ajax
         return response()->json([

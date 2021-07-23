@@ -55,7 +55,11 @@ class Reader extends Model
      */
     public function getLocationFullAttribute()
     {
+        
         $location = $this->location;
-        return $location->floor."F - ".$location->location_description;
+        if ($location)
+            return $location->floor_level->alias." - ".$location->location_description;
+        else
+            return null;
     }
 }

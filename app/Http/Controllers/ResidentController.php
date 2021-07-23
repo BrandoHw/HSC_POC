@@ -206,6 +206,9 @@ class ResidentController extends Controller
      */
     public function update(UpdateResidentRequest $request, Resident $resident)
     {
+        if(!empty($resident->tag)){
+            $pre_tag_id = $resident->tag->beacon_id;
+        }
         $resident->update($request->all());
 
         if(!empty($resident->room)){
@@ -216,10 +219,8 @@ class ResidentController extends Controller
         $resident->room()->associate($room)->save();
 
         /** Remove the tag associated with this resident then save new tag (if exist) to resident and scopes associated with this resident*/
-        if(!empty($resident->tag)){
-            $pre_tag_id = $resident->tag->beacon_id;
+        if(!empty($resident->tag)){ 
             $resident->tag()->dissociate()->save();
-
             $scopes = Scope::whereHas('policy', function($q){
                 $q->where('deleted_at', null);
             })->whereNotIn('target_type', ['U'])->get();
@@ -227,7 +228,7 @@ class ResidentController extends Controller
             if(!empty($request['beacon_id'])){
                 $tag = Tag::find((int)$request['beacon_id']);
                 $tag->resident()->save($resident);
-
+        
                 foreach($scopes as $scope){
                     if($scope->target_type == "C"){
                         if($scope->tags->contains('beacon_id', $pre_tag_id)){
