@@ -25,18 +25,24 @@
                                 <div class="input-group-text">Date</div>
                                 <input type="text" class="form-control" id="datepicker" kl_vkbd_parsed="true">
                             </div>
-                            <a href="#" data-toggle="tooltip" data-placement="right" title="Select a single day to view timeline chart" style="cursor: pointer; left-padding:0">
+                            <a id="timeline-tooltip" href="#" data-toggle="tooltip" data-placement="right" title="Select a single day to view timeline chart" style="cursor: pointer; left-padding:0">
                                 <i class="ri-information-fill"></i>
                             </a>
                         </div>
                         <div id = "draw-holder" class="col-7 row" style="justify-content: flex-end">
                             <div id="selHolder" class="col-9 row" style="justify-content: flex-end">
-                                <label class="col-form-label col-sm-3 text-sm-right">
+                                <label class="align-items-center col-form-label col-sm-3 text-sm-right">
                                     User:
-                                    </label>
+                                </label>
                                 <select id='selUser' class="col-sm-4" style="width: 70% margin-right: 15px"name ="select" ></select>
                             </div>
                             <button id ="draw-btn" class="btn btn-primary" style="margin-left: 15px; float: right; align-items: center;" href="#">Draw</button>
+                            <div class="form-check" id ="mergeHolder">
+                                <input class="form-check-input" type="checkbox" value="true" id="mergeCheck">
+                                <label class="form-check-label" for="mergeCheckDefault">
+                                  Merged Locations
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <ul class="nav nav-tabs" role="tablist">
@@ -109,7 +115,7 @@
             },
             series: [],
             noData: {
-                text: 'Loading...'
+                text: 'No Data'
             },
             chart: {
               type: 'pie',
@@ -123,6 +129,7 @@
     alertChart.render();
     $('#timeline-chart-holder').hide();
     $('#alert-chart-holder').hide();
+    $('#draw-holder').hide();
     // $('#draw-holder').hide();
     $('#selUser').select2({data: [{id: '', text: ''}]});
     $('#datepicker').daterangepicker({
@@ -145,49 +152,53 @@
                 console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
                 startDate = start.format('D MMMM YYYY');
                 endDate = end.format('D MMMM YYYY'); 
-                if (startDate === endDate){
-                    $('#timeline-chart-holder').show();
-                    $('#draw-holder').show();
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-                    $.ajax({
-                        url: '{{ route("reports.getSelect")}}',
-                        type: "get",
-                        data: { 
-                        date_range: startDate,
-                        },
-                        success:function(response){
-                            console.log(response);
-                            console.log(response['select']['results'].length)
-                            if (response['select']['results'].length > 0){
-                                $('#selUser').html('').select2({data: [{id: '', text: ''}]});
-                                $('#selUser').val(null).trigger('change');
-                                $("#selUser").select2({
-                                    data:response['select']['results'],
-                                    minimumResultsForSearch: Infinity,
-                                });
-                            }else{
-                                console.log("changing")
-                                $('#selUser').html('').select2({data: [{id: '', text: ''}]});
-                                $('#selUser').val(null).trigger('change');
+                if (tab === "home-tab-one"){
+                    if (startDate === endDate){
+                        // $('#timeline-chart-holder').show();
+                        $('#draw-holder').show();
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             }
-                        },
-                        error:function(error){
-                            console.log(error)
-                        }
-                    })
-                }else{
-                    $('#timeline-chart-holder').hide();
-                    $('#draw-holder').hide();
+                        });
+                        $.ajax({
+                            url: '{{ route("reports.getSelect")}}',
+                            type: "get",
+                            data: { 
+                            date_range: startDate,
+                            },
+                            success:function(response){
+                                console.log(response);
+                                console.log(response['select']['results'].length)
+                                if (response['select']['results'].length > 0){
+                                    $('#selUser').html('').select2({data: [{id: '', text: ''}]});
+                                    $('#selUser').val(null).trigger('change');
+                                    $("#selUser").select2({
+                                        data:response['select']['results'],
+                                    });
+                                }else{
+                                    console.log("changing")
+                                    $('#selUser').html('').select2({data: [{id: '', text: ''}]});
+                                    $('#selUser').val(null).trigger('change');
+                                }
+                            },
+                            error:function(error){
+                                console.log(error)
+                            }
+                        })
+                    }else{
+                        $('#selUser').html('').select2({data: [{id: '', text: ''}]});
+                        $('#selUser').val(null).trigger('change');
+                        $('#timeline-chart-holder').hide();
+                        $('#draw-holder').hide();
+                    }
                 }
             }
     );
     $('#datepicker').on("change",function(){
             console.log($(this).val());
             attendanceTable.ajax.reload();
+            alertTable.ajax.reload();
     });
 
     //Setup Tabs
@@ -197,15 +208,25 @@
         console.log(e.target.id);
         if (e.target.id === "home-tab-one"){
             $('#selHolder').show();
-            $('#timeline-chart-holder').show();
+            //$('#timeline-chart-holder').show();
             $('#alert-chart-holder').hide();
             // $('#draw-btn').show();
+            $('#timeline-tooltip').show();
             tab = "home-tab-one";
             // console.log($('#selCategory').select2('data')[0]);
+            if (startDate != endDate){
+                $('#selUser').html('').select2({data: [{id: '', text: ''}]});
+                $('#selUser').val(null).trigger('change');
+                $('#timeline-chart-holder').hide();
+                $('#draw-holder').hide();
+            }
         }else if (e.target.id === "home-tab-two"){
             $('#selHolder').hide();
+            $('#mergeHolder').hide();
+            $('#draw-holder').show();
             $('#timeline-chart-holder').hide();
-            $('#alert-chart-holder').show();
+            $('#timeline-tooltip').hide();
+            //$('#alert-chart-holder').show();
             // $('#draw-btn').show();
             tab = "home-tab-two";
         }
@@ -343,6 +364,8 @@
                 console.log(selected_data[0].tag_mac);
                 if (selected_data.length > 0)
                 getTimelineChartData(selected_data[0].tag_mac);
+                $('#timeline-chart-holder').show();
+                $('#alert-chart-holder').hide();
             }else if (tab === "home-tab-two"){
                 var length = alertTable.rows( { search: 'applied' } ).data().length;
                 var counts = [];
@@ -363,7 +386,8 @@
                     width: '50%'
                 }
                 alertChart.updateOptions(options);
-            
+                $('#timeline-chart-holder').hide();
+                $('#alert-chart-holder').show();
             }
         });
     });

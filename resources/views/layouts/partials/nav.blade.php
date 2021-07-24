@@ -3,8 +3,8 @@
     <div class="iq-sidebar-logo d-flex justify-content-between">
         <a href="../">
             @if(env('APP_TYPE') == 'klia')
-            <img src="{{ asset('img/icons/wecare.png') }}" alt="logo">
-            <span style="font-size: 150%">Sinar Jernih</span>
+            <img src="{{ asset('img/icons/sinarjernihlogo.png') }}" alt="logo">
+            <span style="font-size: 150%;font-family: Georgia, serif;color:green">Sinar Jernih</span>
             @else
             <img src="{{ asset('img/icons/WeCare-Logo-Blue.png') }}" alt="logo">
             <span>WeCare</span>

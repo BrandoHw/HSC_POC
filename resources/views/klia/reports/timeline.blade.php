@@ -21,7 +21,14 @@ $(function() {
   },
   xaxis: {
     type: 'datetime'
-  }
+  },
+  tooltip: {
+    x: {
+          show: true,
+          format: 'HH:mm',
+      },
+  },
+  colors:['#0ABAB5',  '#00726F'],
   };
 
   var timelineChart = new ApexCharts(document.querySelector("#timeline-chart"), options);
@@ -41,8 +48,13 @@ $(function() {
           tag_mac: input_tag_mac,
         },
         success:function(response){
-            console.log(response)
-            timelineChart.updateSeries(response['timeline']);
+            // console.log(response)
+            console.log($("#mergeCheck").is(':checked'));
+            if ($("#mergeCheck").is(':checked')){
+              timelineChart.updateSeries(response['timeline_merged']);
+            }else{
+              timelineChart.updateSeries(response['timeline']);
+            }
         },
         error:function(error){
             console.log(error)

@@ -43,8 +43,8 @@ class AttendanceKliaController extends Controller
 
     public function getTimeline(Request $request)
     {
-        // $request['date_range'] = "07/09/2021 - 07/09/2021";
-        // $request['tag_mac'] = "AC233FA8C2EE";
+        // $request['date_range'] = "07/22/2021 - 07/22/2021";
+        // $request['tag_mac'] = "AC233FA9C171";
         $date_start = new Carbon(explode(' - ', $request['date_range'])[0]);
         $date_end = new Carbon(explode(' - ', $request['date_range'])[1]);
         $date_end = $date_end->addDays(1)->subSecond(1);
@@ -57,21 +57,29 @@ class AttendanceKliaController extends Controller
         ->get()));
 
         $timeline_data = array();
+        $timeline_data_merged = array();
         foreach ($attendance as $att){
             //$att->full_name = $att->tag->resident->resident_fName." ". $att->tag->resident->resident_lName;
             $data_object = (object)[];
+            $data_object_merged = (object)[];
             $data_object->x = $att->location_name;
-            $data_object->y[0] = ((int)Carbon::createFromFormat('Y-m-d H:i:s', $att->first_seen, 'UTC')
+            $data_object_merged->x = substr($att->location_name, 0, strpos($att->location_name, " / "));
+            $first_seen = ((int)Carbon::createFromFormat('Y-m-d H:i:s', $att->first_seen, 'UTC')
                                     //->setTimezone('Asia/Kuala_Lumpur') //Set timezone only changes the output of format() if it returns a string
                                     ->addHours(8) // Must instead add 8 hours to convert the underlying millisecond count to UTC+8
                                     ->format('Uu')) 
                                     / 1000;
-            $data_object->y[1] = ((int) Carbon::createFromFormat('Y-m-d H:i:s', $att->last_seen, 'UTC')
+            $last_seen = ((int) Carbon::createFromFormat('Y-m-d H:i:s', $att->last_seen, 'UTC')
                                     ->addHours(8)
                                     ->format('Uu'))
                                     / 1000;
+            $data_object->y[0] = $first_seen;
+            $data_object->y[1] = $last_seen;
+            $data_object_merged->y[0] = $first_seen;
+            $data_object_merged->y[1] = $last_seen;
             $att->time_missing = Carbon::parse($att->last_seen)->diffForHumans();
             array_push($timeline_data, $data_object);
+            array_push($timeline_data_merged, $data_object_merged);
         }
 
         //The required series object for an ApexChart Timeline Series is
@@ -84,10 +92,15 @@ class AttendanceKliaController extends Controller
         $timeline = array();
         $timeline_object = (object)[];
         $timeline_object->data = $timeline_data;
+        $timeline_merged = array();
+        $timeline_object_merged = (object)[];
+        $timeline_object_merged->data = $timeline_data_merged;
         array_push($timeline, $timeline_object);
+        array_push($timeline_merged, $timeline_object_merged);
         return response()->json([
             'data' => $attendance,
             'timeline' => $timeline,
+            'timeline_merged' => $timeline_merged,
         ], 200);
     }
 
@@ -125,7 +138,7 @@ class AttendanceKliaController extends Controller
 
     public function getAlerts(Request $request)
     {
-        $request['date_range'] = "01/01/2021 - 09/01/2021";
+        // $request['date_range'] = "01/01/2021 - 09/01/2021";
         $date_start = new Carbon(explode(' - ', $request['date_range'])[0]);
         $date_end = new Carbon(explode(' - ', $request['date_range'])[1]);
         $date_end = $date_end->addDays(1)->subSecond(1);
