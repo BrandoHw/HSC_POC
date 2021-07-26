@@ -69,6 +69,7 @@
                 </div>
             </div>
         </div>
+        @can('tracking-list')
         <div class="col-lg-12">
             <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
                <div class="iq-card-body">
@@ -76,13 +77,14 @@
                </div>
             </div>
          </div>
+         @endcan
     </div>
 </div>
 
 @endsection
 
 @section('extra')
-@can('alert-list')
+@can('tracking-list')
 <div class="iq-right-fixed" style="background-color: var(--iq-body-bg)">
    <div style="background-color: var(--iq-body-bg)">
       @include("klia.dashboard.locations")

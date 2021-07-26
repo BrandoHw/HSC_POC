@@ -32,7 +32,7 @@ class AlertKliaController extends Controller
         ->get();
 
         $alerts_last = $alerts->last()->alert_id ?? 0;
-        return view('klia.alerts.index', compact('alerts', 'alerts_last'));
+        return response()->view('klia.alerts.index', compact('alerts', 'alerts_last'), 404);
     }
 
     /**

@@ -60,7 +60,9 @@
                     @endcanany
                 @else
                     @if(env('APP_TYPE') == 'klia')
-                        <li class="{{ Request::segment(1) === 'staff' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('staff.index') }}" class="iq-waves-effect"><i class="ri-user-fill"></i><span>Staff</span></a></li>
+                        @can('resident-list')
+                            <li class="{{ Request::segment(1) === 'staff' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('staff.index') }}" class="iq-waves-effect"><i class="ri-user-fill"></i><span>Staff</span></a></li>
+                        @endcan
                     @else  
                         @canany(['resident-list', 'attendance-list'])
                         <li class="">
@@ -105,7 +107,9 @@
                 @endif
 
                 @if(env('APP_TYPE') == 'klia')
-                    <li class="{{ Request::segment(1) === 'reports' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('reports.index') }}" class="iq-waves-effect"><i class="ri-file-chart-fill"></i><span>Reports</span></a></li>
+                    @can('report-list')
+                        <li class="{{ Request::segment(1) === 'reports' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('reports.index') }}" class="iq-waves-effect"><i class="ri-file-chart-fill"></i><span>Reports</span></a></li>
+                    @endcan
                 @else
                     @can('report-list')
                     <li class="{{ Request::segment(1) === 'reports' ? 'sidebar-item active' : 'sidebar-item' }}"><a href="{{ route('reports.index') }}" class="iq-waves-effect"><i class="ri-file-chart-fill"></i><span>Reports</span></a></li>
