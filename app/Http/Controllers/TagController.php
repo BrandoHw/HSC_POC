@@ -350,8 +350,11 @@ class TagController extends Controller
         }
     }
 
-    public function userLastSeen(){
-        // $userLastSeen = UserLastSeen::with('user')->get();
-        // return $userLastSeen;
+    public function getBeacons()
+    {
+        $tags = Tag::doesntHave('resident')
+            ->doesntHave('user')
+            ->get();
+        return $tags;
     }
 }

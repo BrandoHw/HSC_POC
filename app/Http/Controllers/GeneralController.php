@@ -15,12 +15,14 @@ use App\Alert;
 use App\Resident;
 use App\Tag;
 use App\Policy;
+use App\Location;
 class GeneralController extends Controller
 {
     //
 
     public function index (){
-        return Carbon::parse("2021-07-22 09:40:03")->tz('Asia/Kuala_Lumpur')->gt(Carbon::now()->subMinutes(60));
+        $rooms = Location::where('location_type_id', 2)->pluck('location_master_id')->all();
+        return in_array(11, $rooms);
     }
 
      /**

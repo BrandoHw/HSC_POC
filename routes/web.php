@@ -107,7 +107,7 @@ Route::group(['middleware' => ['auth']], function() {
         ->except(['show', 'destroy']);
     Route::delete('residents/destroys', [ResidentController::class, 'destroys'])
         ->name('residents.destroys');
-    
+  
     Route::resource('attendance', AttendanceController::class)
         ->only(['index', 'destroy']);
     Route::get('attendance/date', [AttendanceController::class, 'show_date'])
@@ -208,3 +208,4 @@ Route::group(['middleware' => ['auth']], function() {
         ->name('alerts.klia.resolve');
 
 });
+

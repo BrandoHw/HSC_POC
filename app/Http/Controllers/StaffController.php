@@ -258,8 +258,10 @@ class StaffController extends Controller
             if(isset($resident->tag)){
                 $resident->tag()->dissociate()->save();
             }
-            Storage::disk('s3')->delete($resident->image_url);
-            Storage::disk('s3-resized')->delete("resized-".$resident->image_url);
+            if ($resident->image_url != null){
+                Storage::disk('s3')->delete($resident->image_url);
+                Storage::disk('s3-resized')->delete("resized-".$resident->image_url);
+            }
         }
 
         Resident::destroy($ids);
