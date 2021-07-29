@@ -207,5 +207,12 @@ Route::group(['middleware' => ['auth']], function() {
     Route::patch('alerts-klia.resolve', [AlertKliaController::class, 'resolve'])
         ->name('alerts.klia.resolve');
 
+    //Laravel Sanctum API Token
+    Route::post('/tokens/create', function (Request $request) {
+        $request->user()->tokens()->delete();
+        $token = $request->user()->createToken("token_1");
+        return ['token' => str_replace('|', '',strstr($token->plainTextToken, "|"))];
+    })->name('api.generate');
+    
 });
 

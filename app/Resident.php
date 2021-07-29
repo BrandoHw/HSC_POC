@@ -19,6 +19,7 @@ class Resident extends Model
         "O" => "Others"
     ];
 
+    protected $hidden = ['resident_age'];
     /**
      * The table associated with the model.
      *

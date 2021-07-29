@@ -6,7 +6,6 @@
         <div class="col-lg-12">
             <div class="iq-card">
                 <div class="iq-card-body">
-                    <div>
                         <ul class="nav nav-tabs justify-content-right" id="myTab-2" role="tablist">
                             <li class="nav-item">
                                 <a class="nav-link active" id="profile-setting" data-toggle="tab" href="#manage-profile" role="tab" aria-selected="true">Profile</a>

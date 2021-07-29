@@ -11,11 +11,13 @@ use Spatie\Permission\Traits\HasRoles;
 use App\UserType;
 use App\UserRight;
 use Illuminate\Support\Facades\Storage;
+use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use Notifiable;
     use HasRoles;
     use SoftDeletes;
+    use HasApiTokens;
 
     /**
      * The table associated with the model.

@@ -20,11 +20,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/residents', [ResidentController::class, 'getResidents']);
-Route::post('/residents', [ResidentController::class, 'createResident']);
-Route::put('/residents/{id}', [ResidentController::class, 'updateResident']);
-Route::delete('/residents/{id}', [ResidentController::class, 'destroyResidents']);
-Route::get('/rooms', [ResidentController::class, 'getRooms']);
-Route::get('/beacons', [TagController::class, 'getBeacons']);
+Route::middleware('auth:sanctum')->get('/residents', [ResidentController::class, 'getResidents']);
+Route::middleware('auth:sanctum')->post('/residents', [ResidentController::class, 'createResident']);
+Route::middleware('auth:sanctum')->put('/residents/{id}', [ResidentController::class, 'updateResident']);
+Route::middleware('auth:sanctum')->delete('/residents/{id}', [ResidentController::class, 'destroyResidents']);
+Route::middleware('auth:sanctum')->get('/rooms', [ResidentController::class, 'getRooms']);
+Route::middleware('auth:sanctum')->get('/beacons', [TagController::class, 'getBeacons']);
+
+
 
 

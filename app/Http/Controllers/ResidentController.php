@@ -458,7 +458,12 @@ class ResidentController extends Controller
 
     public function updateResident(ApiUpdateResidentRequest $request, $id)
     {
-        $resident = Resident::where('resident_id', $id)->get()[0];
+        $resident = Resident::find($id);
+        if (!$resident) { 
+            return response()->json([
+                "failure" => "Resident ID not found"
+        ], 200);
+        }
         if(!empty($resident->tag)){
             $pre_tag_id = $resident->tag->beacon_id;
         }
