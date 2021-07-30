@@ -45,6 +45,11 @@ class ReportController extends Controller
         }
 
         $residents = Resident::with('room')->get();
+        $relationship = Resident::relationship;
+        foreach ($residents as $resident){
+            if ($resident->contact_relationship != null)
+            $resident->contact_relationship = $relationship[$resident->contact_relationship];
+        }
         $users = User::with(['userType', 'userRight'])->get();
         //return $users;
         return view('reports.index', compact('alerts', 'gateways', 'residents', 'users'));

@@ -5,12 +5,12 @@
         <a id="generate-tooltip" href="#" data-toggle="tooltip" data-placement="right" 
         title="Only one API Token may exist per user.
          Generating a new token will invalidate the old token.
-         The API token cannot be retrieve again after generation." style="cursor: pointer; left-padding:0">
+         The API token cannot be retrieved again after generation." style="cursor: pointer; left-padding:0">
             <i class="ri-information-fill"></i>
         </a>
     <!-- Target -->
     <div class="col-sm-6" style="padding: 0px">
-        <input id="token-display" class="form-control" value="">
+        <input id="token-display" class="form-control" placeholder="API Token Generated Here">
     </div>
     <!-- Trigger -->
     <button type="button" class="copy-btn btn btn-light" data-clipboard-target="#token-display">
@@ -22,14 +22,14 @@ new ClipboardJS('.copy-btn');
 
 $('#generate').on('click', function(){
     $.ajax({
-            url: '{{ route("api.generate") }}',
-            type: "POST",
-            success:function(response){
-                $('#token-display').val(response['token']);
-            },
-            error:function(error){
-                console.log(error);
-            }
-        });
+        url: '{{ route("api.generate") }}',
+        type: "POST",
+        success:function(response){
+            $('#token-display').val(response['token']);
+        },
+        error:function(error){
+            console.log(error);
+        }
+    });
 });
 </script>

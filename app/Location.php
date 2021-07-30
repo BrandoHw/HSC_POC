@@ -12,6 +12,8 @@ class Location extends Model
     use SoftDeletes;
      
     protected $table ='locations_master_table';
+    
+    protected $hidden = ['parent_location_id'];
     protected $fillable = [
         'location_type_id', 'location_description', 'floor'
     ];

@@ -5,7 +5,11 @@
                 <div class="nav flex-column nav-pills text-center mt-lg-5" id="v-pills-tab" role="tablist" aria-orientation="vertical" style="border: 1px solid var(--iq-dark-border);border-radius:10px">
                     <a class="nav-link active" id="manage-personal" data-toggle="pill" href="#personal-tab" role="tab" aria-controls="v-pills-home" aria-selected="true" style="border-radius: 10px 10px 0 0">Personal Information</a>
                     <a class="nav-link" id="manage-password" data-toggle="pill" href="#password-tab" role="tab" aria-controls="v-pills-profile" aria-selected="false" style="border-radius: 0 0 10px 10px">Change Password</a>
-                    <a class="nav-link" id="generate-token" data-toggle="pill" href="#generate-tab" role="tab" aria-controls="v-pills-profile" aria-selected="false" style="border-radius: 0 0 10px 10px">Generate Token</a>
+                    @if(env('APP_TYPE') == 'hsc')
+                        @can('token-list')
+                            <a class="nav-link" id="generate-token" data-toggle="pill" href="#generate-tab" role="tab" aria-controls="v-pills-profile" aria-selected="false" style="border-radius: 0 0 10px 10px">Generate Token</a>
+                        @endcan
+                    @endif
                 </div>
             </div>
             <div class="col-sm-10">
@@ -177,16 +181,20 @@
                             {!! Form::close() !!}
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="generate-tab" role="tabpanel" aria-labelledby="generate-token">
-                        <div class="iq-card-header d-flex justify-content-between">
-                            <div class="iq-header-title">
-                            <h4 class="card-title">Generate API Token</h4>
+                    @if(env('APP_TYPE') == 'hsc')
+                        @can('token-list')
+                            <div class="tab-pane fade" id="generate-tab" role="tabpanel" aria-labelledby="generate-token">
+                                <div class="iq-card-header d-flex justify-content-between">
+                                    <div class="iq-header-title">
+                                    <h4 class="card-title">Generate API Token</h4>
+                                    </div>
+                                </div>
+                                <div class="iq-card-body">
+                                    @include('settings.generate_api')
+                                </div>
                             </div>
-                        </div>
-                        <div class="iq-card-body">
-                            @include('settings.generate_api')
-                        </div>
-                    </div>
+                        @endcan
+                    @endif
                 </div>
             </div>
         </div>

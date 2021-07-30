@@ -547,7 +547,7 @@ class ResidentController extends Controller
                 $resident->update(['image_url' => $image_url]);
             }
         }
-
+        $resident = Resident::with('tag', 'room')->find($id);
         return response()->json([
             "message" => "Resident record updated",
             "resident" => $resident,
