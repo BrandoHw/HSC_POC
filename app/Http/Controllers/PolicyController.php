@@ -39,8 +39,20 @@ class PolicyController extends Controller
      */
     public function index()
     {
-        $policies = Policy::orderBy('rules_id', 'asc')->get();
+        $policies = Policy::orderBy('rules_id', 'asc')
+        ->with('policyType','scope')
+        ->get();
+
+        $scopes = Scope::withCount('tags')->get();
+        $counts = array();
+        foreach ($scopes as $scope){
+            $counts[$scope->scope_id] = $scope->tags_count;
+        }
+      
         $target_type = Policy::target_type;
+        foreach ($policies as $policy){
+            $policy->tags_count = $counts[$policy->scope->scope_id];
+        }
         return view('policies.index', compact('policies', 'target_type'));
     }
 

@@ -97,7 +97,9 @@ class AttendanceController extends Controller
      */
     public function show_date(Request $request)
     {
-        $policy = Policy::find($request['rule_id']) ?? null;
+        $policy = Policy::with('scope', 'scope.tags.user', 'scope.tags.resident', 
+        'scope.tags.gateway.location', 'alerts.reader.location')
+        ->find($request['rule_id']) ?? null;
         $data_update = collect();
 
         if(!isset($policy)){
@@ -221,9 +223,7 @@ class AttendanceController extends Controller
     
                 $data_update->push($data);
             }
-
         }
-
 
         return response()->json([
             "success" => "Attendance updated successfully.",

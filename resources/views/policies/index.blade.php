@@ -63,7 +63,7 @@
                                             @endswitch
                                         </td>
                                         <!-- <td class="info">{{ $policy->target_type_name }}</td> -->
-                                        <td class="info">{{ count($policy->all_targets) }}</td>
+                                        <td class="info">{{ $policy->tags_count }}</td>
                                         <td class="info">
                                             <span class="badge badge-pill iq-bg-{{ ($policy->alert_action == 1) ? 'success':'secondary' }}">
                                                 {{ ($policy->alert_action == 1) ? 'Enabled':'Disabled' }}

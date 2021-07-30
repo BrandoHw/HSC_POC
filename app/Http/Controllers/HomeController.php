@@ -62,7 +62,9 @@ class HomeController extends Controller
 
         $today = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');
 
-        $alerts = Alert::where('occured_at', '>=', $today)->orderBy('alert_id', 'asc')->get();
+        $alerts = Alert::where('occured_at', '>=', $today)
+        ->with(['reader', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
+        ->orderBy('alert_id', 'asc')->get();
       
         $alerts_count = $alerts->count();
         $alerts_last = ($alerts->first()->alert_id ?? 0) - 1;
@@ -75,7 +77,7 @@ class HomeController extends Controller
         $attendance_policies = Policy::where('rules_type_id', '1')
             ->where('alert_action', 1)
             ->orderBy('description', 'asc')
-            ->with(['scope', 'scope.tags', 'alerts'])
+            ->with(['scope', 'scope.tags', 'scope.tags.resident', 'scope.tags.user', 'alerts'])
             ->get();
         
         /* Radial Chart Series */
@@ -124,7 +126,6 @@ class HomeController extends Controller
                 array_push($colors, $colors_default[0], $colors_default[1], $colors_default[2], $colors_default[3]);
             }
         }
-
         return view('home', compact('gatewayZones', 'building', 'floors', 
             'alerts', 'alerts_count', 'alerts_last', 'policies_count', 'tags_count', 'residents_count', 'readers_count', 
             'attendance_policies', 'attendance', 'colors', 'whole', 'fraction'
