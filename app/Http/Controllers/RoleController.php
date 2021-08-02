@@ -117,7 +117,13 @@ class RoleController extends Controller
             $colors[$color->color_id] = $color->code_and_name;
         }
         ksort($colors);
-
+       
+        // return response()->json([
+        //     "p" => $permissions,
+        //     "rp" => $rolePermissions,
+        //     "m" => $modules,
+        //     "rm" => $roleModules,
+        // ], 200);
         return view('settings.roles.edit',compact('role','modules','roleModules', 'colors'));
     }
     
