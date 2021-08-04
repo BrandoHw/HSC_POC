@@ -97,7 +97,11 @@ class AttendanceController extends Controller
      */
     public function show_date(Request $request)
     {
-        $policy = Policy::with('scope', 'scope.tags.user', 'scope.tags.resident', 
+        // $request['rule_id'] = 44;
+        // $request['date'] = "8/4/2021";
+        // $request['num'] = -1;
+
+        $policy = Policy::with('scope', 'scope.tags.user.userType', 'scope.tags.resident', 
         'scope.tags.gateway.location', 'alerts.reader.location')
         ->find($request['rule_id']) ?? null;
         $data_update = collect();
@@ -182,10 +186,21 @@ class AttendanceController extends Controller
     
             foreach($targets as $target){
                 if(!empty($target->user)){
-                    $full_name = $target->user->full_name ?? '-';
-                    $type = "Staff";
+                    $name_text = $target->user->full_name ?? '-';
+                    //$full_name = $target->user->full_name ?? '-';
+                    if ($target->user->userType != null){
+                        $type = $target->user->userType->type;
+                    }else{
+                        $type = "Staff";
+                    }
+                    if ($type === "Nurse")
+                        $full_name = '<span style="color: #008000;">'.$name_text.'</span>';
+                    else
+                        $full_name = '<span style="color: #00008B;">'.$name_text.'</span>';
                 } else {
-                    $full_name = $target->resident->full_name ?? '-';
+                    // $full_name = $target->resident->full_name ?? '-';
+                    $name_text = $target->resident->full_name ?? '-';
+                    $full_name = '<span style="color: #000000;">'.$name_text.'</span>';
                     $type = "Resident";
                 }
     

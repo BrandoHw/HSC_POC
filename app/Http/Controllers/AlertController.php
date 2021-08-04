@@ -232,14 +232,11 @@ class AlertController extends Controller
             foreach($alert_s as $alert){
                 $alert->full_name = $alert->tag->staff->fName." ".$alert->tag->staff->lName;
                 $alert->duration = Carbon::parse($alert->occured_at)->diffForHumans();//gmdate('H:i:s', Carbon::now()->diffInSeconds(Carbon::parse($alert->occured_at)));
-                $alert->image_url = null;
-                if (Storage::disk('s3-resized')->exists('resized'.'-'.'staff'.'-'.$alert->tag->staff->staff_id.'.jpg')) {
-                    $alert->image_url = Storage::disk('s3-resized')->url('resized'.'-'.'staff'.'-'.$alert->tag->staff->staff_id.'.jpg');
-                }else if (Storage::disk('s3-resized')->exists('resized'.'-'.'staff'.'-'.$alert->tag->staff->staff_id.'.jpeg')) {
-                    $alert->image_url = Storage::disk('s3-resized')->url('resized'.'-'.'staff'.'-'.$alert->tag->staff->staff_id.'.jpeg');
-                }else if (Storage::disk('s3-resized')->exists('resized'.'-'.'staff'.'-'.$alert->tag->staff->staff_idd.'.png')) {
-                    $alert->image_url = Storage::disk('s3-resized')->url('resized'.'-'.'staff'.'-'.$alert->tag->staff->staff_id.'.png');
-                }
+                if (Storage::disk('s3-resized')->exists("resized-".$alert->tag->staff->image_url))
+                    $alert->image_url = Storage::disk('s3-resized')->url("resized-".$alert->tag->staff->image_url);
+                else
+                    $alert->image_url = null;
+                $alert->gender = $alert->tag->staff->gender;
             }
 
             $alert_r =
@@ -262,14 +259,11 @@ class AlertController extends Controller
             foreach($alert_r as $alert){
                 $alert->full_name = $alert->tag->resident->resident_fName." ".$alert->tag->resident->resident_lName;
                 $alert->duration = Carbon::parse($alert->occured_at)->diffForHumans();
-                $alert->image_url = null;
-                if (Storage::disk('s3-resized')->exists('resized-residents'.'/'.'resident'.'-'.$alert->tag->resident->resident_id.'.jpg')) {
-                    $alert->image_url = Storage::disk('s3-resized')->url('resized-residents'.'/'.'resident'.'-'.$alert->tag->resident->resident_id.'.jpg');
-                }else if (Storage::disk('s3-resized')->exists('resized-residents'.'/'.'resident'.'-'.$alert->tag->resident->resident_id.'.jpeg')) {
-                    $alert->image_url = Storage::disk('s3-resized')->url('resized-residents'.'/'.'resident'.'-'.$alert->tag->resident->resident_id.'.jpeg');
-                }else if (Storage::disk('s3-resized')->exists('resized-residents'.'/'.'resident'.'-'.$alert->tag->resident->resident_id.'.png')) {
-                    $alert->image_url = Storage::disk('s3-resized')->url('resized-residents'.'/'.'resident'.'-'.$alert->tag->resident->resident_id.'.png');
-                }
+                if (Storage::disk('s3-resized')->exists("resized-".$alert->tag->resident->image_url))
+                    $alert->image_url = Storage::disk('s3-resized')->url("resized-".$alert->tag->resident->image_url);
+                else
+                    $alert->image_url = null;
+                $alert->gender = $alert->tag->resident->resident_gender;
             }
 
             $alert_s = json_decode(json_encode($alert_s));
@@ -326,7 +320,7 @@ class AlertController extends Controller
         $today = Carbon::now('Asia/Kuala_Lumpur')->setTime(0,0,0)->setTimeZone('UTC');
         $alerts = Alert::where('occured_at', '>=', $today)
             ->orderBy('occured_at', 'desc')
-            ->with(['reader', 'reader.location', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
+            ->with(['reader', 'reader.location', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user.userType', 'user'])
             ->get();
 
         $total_alerts_num = $alerts->count();
@@ -374,6 +368,8 @@ class AlertController extends Controller
             $last_id = $alerts_new->sortBy('alert_id')->last()->alert_id;
         }
 
+        $host_url = Storage::disk('s3-resized')->url("resized-");
+
         return response()->json([
             "success" => $alerts_num.' New Alerts!',
             "alerts_grouped" => $alerts_grouped,
@@ -381,6 +377,7 @@ class AlertController extends Controller
             "total_alerts_num" => $total_alerts_num,
             "last_id" => $last_id,
             "today" => $today,
+            "image_host" => $host_url,
         ], 200);
         
     }

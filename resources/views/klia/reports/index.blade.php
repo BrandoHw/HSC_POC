@@ -310,9 +310,6 @@
                             return '<span class="badge badge-pill iq-bg-danger' + '' + '">Unresolved</span> ';
                         }
                     }
-                    // if (type === 'display') {
-                    //     return '<span class="flag ' + 'country' + '"></span> ' + 'data';
-                    // }
                     return data;
                 }
             },

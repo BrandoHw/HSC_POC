@@ -411,13 +411,16 @@
                }
 
                let alerts_grouped = response['alerts_grouped'];
+               let host_url = response['image_host'];
                last = response['last_id'];
                Object.keys(alerts_grouped).forEach(function(key){
                   let tag_id = key;
                   let alerts_rule = alerts_grouped[key][0];
                   let target_loc = alerts_grouped[key][1];
                   let all_num = alerts_grouped[key][2];
-
+                  // console.log("ALERTS RULE");
+                  // console.log(host_url);
+                  console.log(alerts_rule);
                   if(alerts_rule.length > 0){
                      if(!$('#main-group-' + tag_id).length){
                         let occured_at = alerts_rule[0]['occured_at_time_tz'];
@@ -425,14 +428,35 @@
                         let f_name = person['fName'] ?? person['resident_fName'];
                         let l_name = person['lName'] ?? person['resident_lName'];
                         let full_name = f_name + ' ' + l_name;
-
+                        let image_url = person['image_url'];
+                        if (image_url != null)
+                           full_url = host_url + image_url;
+                        else
+                           full_url = '{{ asset("img/avatars/default-profile-m.jpg") }}'
+                        var type;
+                        var color;
+                        if (alerts_rule[0]['tag']['resident'] != null){
+                           type = "Resident";
+                           color = '<h6 style="color:#000000;">';
+                        }else if (person['user_type'] != null){
+                           type = person['user_type']['type'];
+                           if (type === "Nurse")
+                              color ='<h6 style="color:#008000;">';
+                           else
+                              color ='<h6 style="color:#00008b;">';
+                        }else{
+                           type = "Staff"
+                           color ='<h6 style="color:#00008b;">';
+                        }
+                          
+                        console.log(type);
                         let new_alert_main = '<li class="mb-3 sell-list border-info rounded" id="main-group-'+ tag_id  +'">'
                         + '<div class="d-flex p-3 align-items-center alert-main">'
                            + '<div class="user-img img-fluid">'
-                              + '<img src="{{ asset("img/avatars/default-profile-m.jpg") }}" alt="story-img" class="img-fluid rounded-circle avatar-40">'
+                              + '<img src="' + full_url + '" alt="story-img" class="img-fluid rounded-circle avatar-40">'
                            + '</div>'
                            + '<div class="media-support-info ml-3">'
-                              + '<h6>'+ full_name +'</h6>'
+                              + color + full_name +'</h6>'
                               + '<p class="mb-0 tag_loc">'+ target_loc +'</p>'
                            + '</div>'
                            + '<div class="media-support-amount ml-3">'

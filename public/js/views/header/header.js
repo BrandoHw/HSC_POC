@@ -888,8 +888,9 @@ $(function() {
                         var rule = data[i].policy.description;
                         var duration = data[i].duration;
                         var id = data[i].alert_id
+                        var gender = data[i].gender;
                         var imageDefault = "/male.jpg"
-                        if (data[i].tag.resident.gender === "f" || data[i].tag.resident.gender === "F"){
+                        if (gender === "F" || gender === "f"){
                             var imageDefault = "/female.jpg"
                         }
                         var url = imagesUrl.concat(imageDefault);
