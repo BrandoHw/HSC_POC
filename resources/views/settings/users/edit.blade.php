@@ -87,6 +87,10 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div class="form-group col-sm-6">
+                                <label for="type">User Type:</label>
+                                {!! Form::select('type_id', [2 => 'Staff', 1 => 'Nurse'], null, ['class' => 'form-control', 'id' => 'type']) !!}
+                            </div>
                         </div>
                         <div class="text-center mt-5">
                             @can('user-edit')

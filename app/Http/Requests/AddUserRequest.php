@@ -31,7 +31,8 @@ class AddUserRequest extends FormRequest
             'gender' => 'required',
             'email' => 'required|email|unique:users_table,email,NULL,user_id,deleted_at,NULL',
             'phone_number' => 'required|unique:users_table,phone_number,NULL,user_id,deleted_at,NULL',
-            'role' => 'required'
+            'role' => 'required',
+            'type_id' => 'required'
         ];
 
         if($this->request->get('assign') == '1'){
@@ -71,6 +72,7 @@ class AddUserRequest extends FormRequest
         $custom_messages = [
             'gender.required' => 'Please select the :attribute.',
             'role.required' => 'Please select the :attribute.',
+            'type_id.required' => 'Please select the staff type',
         ];
 
         if($this->request->get('assign') == '1'){

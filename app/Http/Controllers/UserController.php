@@ -76,7 +76,6 @@ class UserController extends Controller
     public function store(AddUserRequest $request)
     {
         $request['password'] = Hash::make($request['username'].'@123');
-
         $user = User::create($request->all());
 
         if(!empty($request['role'])){
