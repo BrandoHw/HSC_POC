@@ -36,7 +36,7 @@
                         <div class="col-4 row justify-content-end">
                             <a class="btn btn-primary" href="#" style="margin-right: 10px" id="resolveAlert"><i class="ri-check-line"></i>Mark as Resolved</a>
                             @can('alert-delete')
-                            <a class="btn btn-danger" href="#" id="archiveAlert">Archive</a>
+                            <a class="btn btn-danger" href="#" id="archiveAlert">Delete</a>
                             @endcan
                         </div>
                     </div>
@@ -297,7 +297,7 @@
         } else {
             if(alert_selected.length == 1){
                 $('#cancel-btn').prop('hidden', false);
-                $('#archive-btn').html('Yes, archive it');
+                $('#archive-btn').html('Yes, delete it');
                 $('#archive-btn').prop('disabled', false);
                 $('#archive-btn').css('background-color', 'var(--iq-danger)');
                 $('#archive-btn').css('border-color', 'var(--iq-danger)');
@@ -305,7 +305,7 @@
                 
             } else {
                 $('#cancel-multiple-btn').prop('hidden', false);
-                $('#archive-multiple-btn').html('Yes, archive them');
+                $('#archive-multiple-btn').html('Yes, delete them');
                 $('#archive-multiple-btn').prop('disabled', false);
                 $('#archive-multiple-btn').css('background-color', 'var(--iq-danger)');
                 $('#archive-multiple-btn').css('border-color', 'var(--iq-danger)');
@@ -353,7 +353,7 @@
                 } else {
                     archive_btn.css('background-color', 'var(--iq-success)');
                     archive_btn.css('border-color', 'var(--iq-success)');
-                    archive_btn.html('<i class="fa fa-check"></i>Archived');
+                    archive_btn.html('<i class="fa fa-check"></i>Deleted');
                     setTimeout(function() {
                         modal.modal('toggle');
                     }, 500);

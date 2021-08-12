@@ -181,7 +181,6 @@ class AttendanceController extends Controller
                         ->last() ?? null;
                     }
                 }
-    
             }
     
             foreach($targets as $target){

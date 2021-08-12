@@ -28,5 +28,3 @@ Route::middleware('auth:sanctum')->get('/rooms', [ResidentController::class, 'ge
 Route::middleware('auth:sanctum')->get('/beacons', [TagController::class, 'getBeacons']);
 
 
-
-

@@ -34,7 +34,7 @@ class UserLastSeenController extends Controller
 
 
         foreach ($beacons as $user){
-            $user->grey_marker = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->lt(Carbon::now()->subMinutes(5));
+            $user->grey_marker = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->lt(Carbon::now()->subMinutes(15));
             $user->updated_at = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
             $user->draw = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->gt(Carbon::now()->subMinutes(60));
             if (array_key_exists($user->gateway->mac_addr, $userCount)){
@@ -131,7 +131,7 @@ class UserLastSeenController extends Controller
         //
         $id = $request->input('id');
         $beacon = json_decode(json_encode(Tag::with(['resident', 'staff', 'gateway', 'gateway.location'])->where('beacon_id', $id)->get()));
-        $beacon[0]->grey_marker = Carbon::parse($beacon[0]->updated_at)->tz('Asia/Kuala_Lumpur')->lt(Carbon::now()->subMinutes(5));
+        $beacon[0]->grey_marker = Carbon::parse($beacon[0]->updated_at)->tz('Asia/Kuala_Lumpur')->lt(Carbon::now()->subMinutes(15));
         $beacon[0]->updated_at = Carbon::parse($beacon[0]->updated_at)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
     
         // if (empty($beacon[0]->staff) && !empty($beacon[0]->staff_klia)){
@@ -217,7 +217,7 @@ class UserLastSeenController extends Controller
         $beacons = array_merge((array) $beacons, (array) $beacons_r);//, (array) $beacons_s);
 
         foreach ($beacons as $user){
-            $user->grey_marker = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->lt(Carbon::now()->subMinutes(5));
+            $user->grey_marker = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->lt(Carbon::now()->subMinutes(15));
             $user->updated_at = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
             $user->draw = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->gt(Carbon::now()->subMinutes(60));
             if (array_key_exists($user->gateway->mac_addr, $userCount)){
