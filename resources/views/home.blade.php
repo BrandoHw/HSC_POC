@@ -443,10 +443,10 @@
                            if (type === "Nurse")
                               color ='<h6 style="color:#008000;">';
                            else
-                              color ='<h6 style="color:#00008b;">';
+                              color ='<h6 style="color:#3D63E9;">';
                         }else{
                            type = "Staff"
-                           color ='<h6 style="color:#00008b;">';
+                           color ='<h6 style="color:#3D63E9;">';
                         }
                           
                         console.log(type);
