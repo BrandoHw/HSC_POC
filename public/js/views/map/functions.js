@@ -14,6 +14,14 @@ function addTooltip(data, drawnLayers, gatewayZones, max_count, current_count, d
     }
     else if (data.hasOwnProperty('staff')){
       full_name = data.staff.fName.concat(" ", data.staff.lName)
+      if (data.staff.user_type != null){
+        if (data.staff.user_type.type === "Nurse")
+            full_name = '<span style="color:var(--nurse-color)">' + full_name + '</span>';
+        else
+            full_name = '<span style="color:var(--staff-color)">' + full_name + '</span>';
+        }else{
+            full_name = '<span style="color:var(--staff-color)">' + full_name + '</span>';
+        }
     }
     var tag_mac = data.beacon_mac;
     var last_seen = data.updated_at;
@@ -129,6 +137,14 @@ function fillMarkerList(mac_addr, max_count, dialog){
           }
           else if (users[i].hasOwnProperty('staff')){
               full_name = users[i].staff.fName.concat(" ", users[i].staff.lName)
+              if (users[i].staff.user_type != null){
+                  if (users[i].staff.user_type.type === "Nurse")
+                      full_name = '<h3 class="name" style="color:var(--nurse-color)">' + full_name + '</h3>';
+                  else
+                      full_name = '<h3 class="name" style="color:var(--staff-color)">' + full_name + '</h3>';
+              }else{
+                  full_name = '<h3 class="name" style="color:var(--staff-color)">' + full_name + '</h3>';
+              }
           }
           userListMarker.add({name: full_name, 
             tag: users[i].beacon_mac,
@@ -177,6 +193,7 @@ function drawZones(gatewayZones, drawnLayers, btIcon){
         })
         polygon_s = L.polygon(polygon_coord);
         polygon_s.id = gatewayZone.id;
+        polygon_s.shape_type = "gateway_zone";
         polygon_s.addTo(drawnLayers[floor]);
         var marker = L.marker(gatewayZone.geoJson.marker, {icon: btIcon}).bindTooltip(
             string
@@ -185,6 +202,7 @@ function drawZones(gatewayZones, drawnLayers, btIcon){
             string
         );
         marker.id = gatewayZone.id;
+        marker.shape_type = "gateway";
         marker.addTo(drawnLayers[floor]);
         polygon_coord.forEach( function (item, index){
           item.reverse();
@@ -194,14 +212,14 @@ function drawZones(gatewayZones, drawnLayers, btIcon){
         var radius = gatewayZone.geoJson.radius;
         var circle = L.circle({lng: center[0],lat: center[1]}, {radius: radius});
         circle.id = gatewayZone.id;
-        // circle.setStyle({
-        //   color:'red'
-        // })
+        circle.shape_type = "gateway_zone";
+       
         circle.addTo(drawnLayers[floor]);
         var marker = L.marker(gatewayZone.geoJson.marker, {icon: btIcon}).bindTooltip(
             string
         );
         marker.id = gatewayZone.id;
+        marker.shape_type = "gateway";
         marker.addTo(drawnLayers[floor]);
       }
   }  
@@ -235,6 +253,14 @@ function drawUserLocation(data, drawnLayers, gatewayZones, floorIndex, redIcon){
   }
   else if (!(data.staff === null)){
     full_name = data.staff.fName.concat(" ", data.staff.lName)
+    if (data.staff.user_type != null){
+      if (data.staff.user_type.type === "Nurse")
+          full_name = '<span style="color:var(--nurse-color)">' + full_name + '</span>';
+      else
+          full_name = '<span style="color:var(--staff-color)">' + full_name + '</span>';
+      }else{
+          full_name = '<span style="color:var(--staff-color)">' + full_name + '</span>';
+      }
   }
   
   var tag_mac = data.beacon_mac;
@@ -294,6 +320,18 @@ function removeAll(drawnLayers, id){
     });
   }
 }
+
+//Remove either gateways or gateway zones from a drawn layer
+function removeAllGatewayInfo(drawnLayers, shape_type){
+  for (i = 0;i<drawnLayers.length;i++){
+    drawnLayers[i].eachLayer(function (layer) {
+      if (layer.shape_type === shape_type){
+        drawnLayers[i].removeLayer(layer);
+      } 
+    });
+  }
+}
+
 
 
 

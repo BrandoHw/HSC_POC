@@ -21,8 +21,9 @@ class GeneralController extends Controller
     //
 
     public function index (){
-        $rooms = Location::where('location_type_id', 2)->pluck('location_master_id')->all();
-        return in_array(11, $rooms);
+        // $rooms = Location::where('location_type_id', 2)->pluck('location_master_id')->all();
+        // return in_array(11, $rooms);
+        return view('test.test');
     }
 
      /**

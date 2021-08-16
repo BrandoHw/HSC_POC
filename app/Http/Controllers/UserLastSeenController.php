@@ -23,7 +23,7 @@ class UserLastSeenController extends Controller
         //Convert from object to array, (array) typecasting unsuitable, it returns associative array, 
         //need numerical array for array_merge
 
-        $beacons = json_decode(json_encode(Tag::with(['staff', 'gateway', 'gateway.location'])->has('staff')->has('gateway')->get()));
+        $beacons = json_decode(json_encode(Tag::with(['staff.userType', 'gateway', 'gateway.location'])->has('staff')->has('gateway')->get()));
         $beacons_r = json_decode(json_encode(Tag::with(['resident', 'gateway', 'gateway.location'])->has('resident')->has('gateway')->get()));
         
         usort($beacons_r, function ($a, $b) {
@@ -130,7 +130,7 @@ class UserLastSeenController extends Controller
     {
         //
         $id = $request->input('id');
-        $beacon = json_decode(json_encode(Tag::with(['resident', 'staff', 'gateway', 'gateway.location'])->where('beacon_id', $id)->get()));
+        $beacon = json_decode(json_encode(Tag::with(['resident', 'staff.userType', 'gateway', 'gateway.location'])->where('beacon_id', $id)->get()));
         $beacon[0]->grey_marker = Carbon::parse($beacon[0]->updated_at)->tz('Asia/Kuala_Lumpur')->lt(Carbon::now()->subMinutes(15));
         $beacon[0]->updated_at = Carbon::parse($beacon[0]->updated_at)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
     
@@ -197,7 +197,7 @@ class UserLastSeenController extends Controller
         $threshold = 5;
         //Convert from object to array, (array) typecasting unsuitable, it returns associative array, 
         //need numerical array for array_merge
-        $beacons = json_decode(json_encode(Tag::with(['staff', 'gateway', 'gateway.location'])->has('staff')->has('gateway')->get()));
+        $beacons = json_decode(json_encode(Tag::with(['staff.userType', 'gateway', 'gateway.location'])->has('staff')->has('gateway')->get()));
         $beacons_r = json_decode(json_encode(Tag::with(['resident', 'gateway', 'gateway.location'])->has('resident')->has('gateway')->get()));
        
         // $beacons_s = json_decode(json_encode(Tag::with(['staff_klia', 'gateway', 'gateway.location'])->has('staff_klia')->has('gateway')->get()));

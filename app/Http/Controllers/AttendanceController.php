@@ -193,9 +193,9 @@ class AttendanceController extends Controller
                         $type = "Staff";
                     }
                     if ($type === "Nurse")
-                        $full_name = '<span style="color: #008000;">'.$name_text.'</span>';
+                        $full_name = '<span style="color: var(--nurse-color);">'.$name_text.'</span>';
                     else
-                        $full_name = '<span style="color: #3D63E9;">'.$name_text.'</span>';
+                        $full_name = '<span style="color: var(--staff-color);">'.$name_text.'</span>';
                 } else {
                     // $full_name = $target->resident->full_name ?? '-';
                     $name_text = $target->resident->full_name ?? '-';

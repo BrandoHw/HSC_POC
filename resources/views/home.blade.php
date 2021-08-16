@@ -441,12 +441,12 @@
                         }else if (person['user_type'] != null){
                            type = person['user_type']['type'];
                            if (type === "Nurse")
-                              color ='<h6 style="color:#008000;">';
+                              color ='<h6 style="color:var(--nurse-color);">';
                            else
-                              color ='<h6 style="color:#3D63E9;">';
+                              color ='<h6 style="color:var(--staff-color);">';
                         }else{
                            type = "Staff"
-                           color ='<h6 style="color:#3D63E9;">';
+                           color ='<h6 style="color:var(--staff-color);">';
                         }
                           
                         console.log(type);

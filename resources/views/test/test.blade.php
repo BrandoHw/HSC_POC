@@ -147,14 +147,14 @@
 @section("script")
 <script>
 
-@if ($success != null)
-            notyf.success(@json($success));
-        @endif
-
+values = {};
+values.name = "myop";
 var monkeyList = new List('test-list', {
   valueNames: ['name'],
-  page: 3,
-  pagination: true
+  
+});
+
+monkeyList.add({name: "<li><span class='name'>TEST</span></li>"
 });
 
 

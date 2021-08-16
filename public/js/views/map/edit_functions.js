@@ -33,6 +33,7 @@ function drawGatewayLocation(id, drawnLayers, gatewayZones, floorIndex, icon){
 
     //Do not draw if there is no corresponding zone
     if(typeof result !== 'undefined'){
+      //Remove all temp readers (i.e Reader markers that were create from clicking an item in the list of readers)
         removeAllReaders(drawnLayers, 'temp')
         var floor = result.alias;
 
@@ -54,6 +55,7 @@ function drawGatewayLocation(id, drawnLayers, gatewayZones, floorIndex, icon){
     }
 }
 
+//Removes all reader with corresponding ID
 function removeAllReaders(drawnLayers, id){
   for (var key in drawnLayers){
     drawnLayers[key].eachLayer(function (layer) {

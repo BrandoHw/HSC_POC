@@ -19,14 +19,24 @@
         <div class="col-sm-12 col-lg-12">
             <div class="iq-card">
                 <div class="iq-card-body">
-                    <div style='display: flex; height: 76vh;'>
-
+                    <div style='display: flex; justify-content: flex-end'>
+                        <div class="custom-control custom-switch mr-1">
+                            <input type="checkbox" class="custom-control-input" id="gateway-switch">
+                            <label class="custom-control-label" for="gateway-switch">Hide Gateways</label>
+                          </div>
+                          <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="gateway-zone-switch">
+                            <label class="custom-control-label" for="gateway-zone-switch">Hide boxes</label>
+                          </div>
+                    </div>
+                    <div style='display: flex; height: 72vh;'>
                         <div class ="scroller" style="width:25%; line-height:3em;overflow:scroll;padding:5px;background-color: rgb(255, 255, 255);display: inline-block;">
                             <div id="user-list-holder">
                                 <input type="text" class="search form-control round" placeholder="Search" />
                         
                             <ul id="user-list" class="list iq-chat-ui nav flex-column nav-pills" style="display: inline-block">
-                                <li id = "first-item"><h3 class="name">Name</h3>
+                                <li id = "first-item">
+                                    <h3 class="name">Name</h3>
                                     {{-- <h5 class="location">Location</h5> --}}
                                     <p class="tag">Tag</p>
                                 </li>
@@ -50,6 +60,48 @@
         var imageUrl = "{{url('/css/images/')}}";
         
         $( function() {
+
+            // ii = 0;
+            // $('#test_button').click(function() {
+            //     if ( ii === 0){
+            //         console.log("delete");
+            //         removeAllGatewayInfo(drawnLayersArray, 'gateway');
+            //         removeAllGatewayInfo(drawnLayersArray, 'gateway_zone');
+            //         ii = 1;
+            //     }else{
+            //         console.log("reinsert");
+            //         drawZones(gatewayZones, drawnLayers, btIcon);
+            //         ii = 0;
+            //     }
+            // });
+            // $('#gateway-switch').on('switchChange.bootstrapSwitch', function (event, state) {
+            //     console.log('working');
+            // }); 
+            $('#gateway-switch').prop('checked', false);
+            $('#gateway-zone-switch').prop('checked', false);
+            $('#gateway-switch').click(function(){
+               console.log('working');
+               if($(this).is(':checked')){
+                    removeAllGatewayInfo(drawnLayersArray, 'gateway');
+                } else if ($('#gateway-zone-switch').is(':checked')) {
+                    drawZones(gatewayZones, drawnLayers, btIcon);
+                    removeAllGatewayInfo(drawnLayersArray, 'gateway_zone');
+                } else {
+                    drawZones(gatewayZones, drawnLayers, btIcon);
+                }
+            });
+
+            $('#gateway-zone-switch').click(function(){
+               console.log('working');
+               if($(this).is(':checked')){
+                    removeAllGatewayInfo(drawnLayersArray, 'gateway_zone');
+                } else if ($('#gateway-switch').is(':checked')) {
+                    drawZones(gatewayZones, drawnLayers, btIcon);
+                    removeAllGatewayInfo(drawnLayersArray, 'gateway');
+                } else {
+                    drawZones(gatewayZones, drawnLayers, btIcon);
+                }
+            });
             var dialog, form,
 
             dialog = $( "#dialog-form").dialog({
@@ -93,8 +145,7 @@
                         id: id 
                     },   
                     success: function(data){
-                        // console.log(data);
-                        console.log(data);
+                        //Id 'temp' is given to markers that are generated when clicking the user list
                         removeAll(drawnLayersArray, 'temp');
                         drawUserLocation(data, drawnLayers, gatewayZones, floorIndex, redIcon);
                     },
@@ -127,7 +178,7 @@
                             pagination: true
                         };
 
-                        //ListSet not neccesary if the list needs to be redrawn every refresh
+                        //ListSet is not neccesary if the list needs to be redrawn every refresh
                         if (listSet === false){
                             //var 
                             userList = new List('user-list-holder', options);
@@ -150,6 +201,14 @@
                                 }
                                 else if (users[i].hasOwnProperty('staff')){
                                     full_name = users[i].staff.fName.concat(" ", users[i].staff.lName)
+                                    if (users[i].staff.user_type != null){
+                                        if (users[i].staff.user_type.type === "Nurse")
+                                            full_name = '<h3 class="name" style="color:var(--nurse-color)">' + full_name + '</h3>';
+                                        else
+                                            full_name = '<h3 class="name" style="color:var(--staff-color)">' + full_name + '</h3>';
+                                    }else{
+                                        full_name = '<h3 class="name" style="color:var(--staff-color)">' + full_name + '</h3>';
+                                    }
                                 }
                                 var location = "N/A"
                                 if (users[i].gateway !== null){
@@ -159,6 +218,7 @@
                                         location = "Gateway: ".concat(users[i].gateway.mac_addr);
                                     }
                                 }
+                               
                                 userList.add({name: full_name, 
                                     location : location,
                                     tag: users[i].beacon_mac,
@@ -167,6 +227,7 @@
                             listSet = true;
 
                         }
+                        //ID of tempall is given to markers that are generated for all users
                         removeAll(drawnLayersArray, 'tempall');
                         for (var i = 0; i < users.length; ++i) {
                             // userList.add({name: data[i].user.name, tag: data[i].tag_mac, id: data[i].id});
@@ -176,14 +237,12 @@
                                 iconSize: [50,50],
                                 className: 'blinking'
                                 });
-                            // console.log(userRunningCount[reader_mac]);
                             addTooltip(users[i], drawnLayers, gatewayZones, userCount[reader_mac], userRunningCount[reader_mac], dialog);
 
                             if (users[i].draw){
                                 userRunningCount[reader_mac] = userRunningCount[reader_mac] + 1;
                             }
-                        }
-                        // console.log(userRunningCount);                
+                        }             
                     },
                     headers: {
                         'X-CSRF-Token': '{{ csrf_token() }}',
@@ -205,7 +264,7 @@
         }); //CRS simple referring to normal coordinate value
 
         //Map
-        var drawnLayers = new Object(); //Each drawnLayer contains all the markers and zones of one floor
+        var drawnLayers = new Object(); //Each property of drawnLayer contains all the markers and zones of one floor
         var drawnLayersArray = [] //Array of drawnLayers, essentially an array of every floor (i.e all layers in the map can be found here)
         var floorIndex = new Object();
         var baseLayer = new Object(); //This contains the image overlays for a given floor
@@ -240,17 +299,10 @@
                     }else{
                         bounds[alias] =  [[0,0], [this.height, this.width]];
                     }
-                    console.log(url);
-                    console.log(bounds[alias]);
                     baseLayer[alias] = L.imageOverlay(url, bounds[alias]);
                
-                    // for (var key in drawnLayers){
-                    //     map.removeLayer(drawnLayers[key]);
-                    // }
-                    // map.addLayer(drawnLayers[alias]);
                     currentFloor = alias;
                     map.fitBounds(bounds[alias]);
-                    console.log(baseLayer);
                     layercontrol.remove();
                     layercontrol = L.control.layers(baseLayer).addTo(map);
                     $('.leaflet-control-layers input').get(floorIndex[currentFloor]).click();
