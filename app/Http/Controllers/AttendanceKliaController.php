@@ -31,10 +31,10 @@ class AttendanceKliaController extends Controller
             $att->time_missing = Carbon::parse($att->last_seen)->diffForHumans(); 
             $att->first_seen = Carbon::createFromFormat('Y-m-d H:i:s', $att->first_seen, 'UTC')
             ->setTimezone('Asia/Kuala_Lumpur')
-            ->format('Y-m-d g:i:s A');
+            ->format('Y-m-d H:i:s');
             $att->last_seen = Carbon::createFromFormat('Y-m-d H:i:s', $att->last_seen, 'UTC')
             ->setTimezone('Asia/Kuala_Lumpur')
-            ->format('Y-m-d g:i:s A');
+            ->format('Y-m-d H:i:s');
         }
         return response()->json([
             'data' => $attendance,
@@ -114,6 +114,7 @@ class AttendanceKliaController extends Controller
         ->orderBy('first_seen', 'desc')
         ->get();
 
+        //Get an array of unique tag macs that attended within the date range
         $arr = array();
         foreach ($attendance as $key => $item) {
            $arr[$item['tag_mac']] = $item;
