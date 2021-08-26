@@ -82,10 +82,13 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="form-group col-sm-6">
-                                <label for="type">User Type:</label>
-                                {!! Form::select('type_id', [2 => 'Staff', 1 => 'Nurse'], null, ['class' => 'form-control', 'id' => 'type']) !!}
-                            </div>
+                            
+                            @if(env('APP_TYPE') == 'hsc')
+                                <div class="form-group col-sm-6">
+                                    <label for="type">User Type:</label>
+                                    {!! Form::select('type_id', [2 => 'var(--staff-color)=Staff', 1 => 'var(--nurse-color)=Nurse'], null, ['class' => 'form-control', 'id' => 'type']) !!}
+                                </div>
+                            @endif
                         </div>
                         <div class="text-center mt-5">
                             <button type="submit" class="btn btn-primary">Save User</button>
@@ -105,11 +108,26 @@
     $(function(){
         /* Initialise select2 */
         $('#gender').select2();
-
         $('#role').select2();
-        
         $('#tag').select2();
+        $('#type').select2({
+            templateResult: formatState,
+            templateSelection: formatState
+        });
 
+        function formatState (state){
+            if (!state.id) {
+                return state.text;
+            }
+            let code = state.text.split('=')[0];
+            let name = state.text.split('=')[1];
+            
+            let $state = $(
+                '<span><i class="ri-bookmark-fill" style="color:'+ code + '"></i>  ' + name +'</span>'
+            )
+
+            return $state
+        }
         /* Display select2 error */
         let message = "Error Message";
 
