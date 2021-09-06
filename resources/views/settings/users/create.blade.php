@@ -85,6 +85,9 @@
                             
                             @if(env('APP_TYPE') == 'hsc')
                                 <div class="form-group col-sm-6">
+                                    {{-- <a id="timeline-tooltip" href="#" data-toggle="tooltip" data-placement="right" title="Affects display staff color" style="cursor: pointer; left-padding:0">
+                                        <i class="ri-information-fill"></i>
+                                    </a> --}}
                                     <label for="type">User Type:</label>
                                     {!! Form::select('type_id', [2 => 'var(--staff-color)=Staff', 1 => 'var(--nurse-color)=Nurse'], null, ['class' => 'form-control', 'id' => 'type']) !!}
                                 </div>

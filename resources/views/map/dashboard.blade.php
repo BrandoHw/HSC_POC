@@ -127,7 +127,9 @@
                             var reader_mac = users[i].gateway.mac_addr
                             // console.log(userRunningCount[reader_mac]);
                             addTooltip(users[i], drawnLayers, gatewayZones, userCount[reader_mac], userRunningCount[reader_mac], dialog);
-                            userRunningCount[reader_mac] = userRunningCount[reader_mac] + 1;
+                            if (users[i].draw){
+                                userRunningCount[reader_mac] = userRunningCount[reader_mac] + 1;
+                            }
                         }
                         // console.log(userRunningCount);                
                     },
