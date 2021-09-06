@@ -4,6 +4,10 @@ drawnLayers = The Map Layers which hold the markers
 gatewayZones = The information of each blue gatewayzone
 max_count = The total number of people in a given zone
 current_count = The number of people that have been drawn so far for a given zone
+                for a number of people less than the threshold set in UserLastSeenController
+                the current_count will be 0 to 1 less than the max count
+                If number of people is above the threshold current_count starts at max_count
+                and goes above max_count after the big marker has been drawn
 dialog = Dialog holder to contain the list that appears when multiple markers have converged into one big marker
 */
 function addTooltip(data, drawnLayers, gatewayZones, max_count, current_count, dialog){

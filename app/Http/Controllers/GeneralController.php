@@ -21,9 +21,18 @@ class GeneralController extends Controller
     //
 
     public function index (){
-        // $rooms = Location::where('location_type_id', 2)->pluck('location_master_id')->all();
-        // return in_array(11, $rooms);
-        return view('test.test');
+        $user = Tag::find(1);
+        $last_seen_utc_0 = Carbon::parse($user->last_seen);
+        $user->updated_at = Carbon::parse($user->last_seen)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
+        if ($user->last_seen === null)
+            $user->updated_at = $user->created_at;
+        $user->grey_marker = Carbon::parse($last_seen_utc_0)->tz('Asia/Kuala_Lumpur')->lt(Carbon::now()->subMinutes(15)); 
+        $user->draw = Carbon::parse($last_seen_utc_0)->subDay(1)->tz('Asia/Kuala_Lumpur')->gt(Carbon::now()->subDay(1));
+        $user->z_parse =Carbon::parse($last_seen_utc_0);
+        $user->last_seen_utc_0 = $last_seen_utc_0;
+        $user->z_now = Carbon::now()->subMinutes(15);
+        
+      return $user;
     }
 
      /**
@@ -35,13 +44,12 @@ class GeneralController extends Controller
     public function storeTest(Request $request)
     {
         //
-        $requestall = $request->all();
-        $this->console_log($requestall);
-        $image_id = "image-input";
-        $alias = $request->get('alias');
-        $floor_number = $request->get('number');
-        $this->console_log($request->get('image-input'));
-  
+          $user->updated_at = Carbon::parse($user->last_seen)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
+            if ($user->last_seen === null)
+                $user->updated_at = $user->created_at;
+            $user->grey_marker = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->lt(Carbon::now()->subMinutes(15)); 
+            $user->draw = Carbon::parse($user->updated_at)->tz('Asia/Kuala_Lumpur')->gt(Carbon::now()->subMinutes(60));
+          
 
         // $floor_id = Floor::Create([
         //     'building_id' => 1,
