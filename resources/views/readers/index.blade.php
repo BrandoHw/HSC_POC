@@ -29,7 +29,9 @@
                                     <th scope="col">Mac Address</th>
                                     <th scope="col">Location</th>
                                     <th scope="col">Floor</th>
-                                    <th scope="col">Status</th>
+                                    @if(env('APP_TYPE') != 'klia')
+                                        <th scope="col">Status</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -40,11 +42,14 @@
                                         <td class="info">{{ $reader->mac_addr }}</td>
                                         <td class="info">{{ isset($reader->location) ? $reader->location->location_description : "-"  }}</td>
                                         <td class="info">{{ isset($reader->location) ? $reader->location->floor_level->alias : "-"  }}</td>
-                                        <td class="info">
-                                            <span class="badge badge-pill iq-bg-{{ ($reader->reader_status == true) ? 'success':'danger' }}">
-                                                {{ ($reader->reader_status == true) ? 'Online':'Offline'  }}
-                                            </span>
-                                        </td>
+                                        @if(env('APP_TYPE') != 'klia')
+                                            <td class="info">
+                                                <span class="badge badge-pill iq-bg-{{ ($reader->reader_status == true) ? 'success':'danger' }}">
+                                                    {{ ($reader->reader_status == true) ? 'Online':'Offline'  }}
+                                                </span>
+                                            </td>
+                                        @endif
+                                      
                                     </tr>
                                 @endforeach
                             </tbody>
