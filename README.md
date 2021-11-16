@@ -39,7 +39,9 @@ php artisan key:generate
 
 8. migrate database
 ```
-php artisan migrate
+!!!php artisan migrate!!!
+Because many people have directly changed the AWS database schema the migrations are outdated, the only way to recreate the database is
+to directly import the schema from the AWS database
 ```
 
 9. seed database

@@ -397,11 +397,11 @@ class PolicyController extends Controller
                     }
                     if((float)$request['y-value'] >= 0){
                         $data['y_threshold'] = (float)$request['y-value'];
-                        $data['x_frequency'] = (int)$request['frequency'];
+                        $data['y_frequency'] = (int)$request['frequency'];
                     }
                     if((float)$request['z-value'] >= 0){
-                        $data['_threshold'] = (float)$request['z-value'];
-                        $data['x_frequency'] = (int)$request['frequency'];
+                        $data['z_threshold'] = (float)$request['z-value'];
+                        $data['z_frequency'] = (int)$request['frequency'];
                     }
                     break;
             }
