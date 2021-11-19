@@ -212,11 +212,19 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="duration">Duration (hrs):</label>
+                            {{-- <label for="duration">Duration (hrs):</label>
                             <a href="#" data-toggle="tooltip" data-placement="right" title="The duration of this rule being active since start time. [1 - 24 hrs]" style="cursor: pointer; left-padding:0">
                                 <i class="ri-information-fill"></i>
                             </a>
                             <input type="number" min="1" max="24" class="form-control" name="duration" id="duration" step="1" 
+                                onInput="validatePolicyInput(this.id)" placeholder="Enter duration"
+                                value="{{ $policy->scope->duration }}"
+                                {{ ($policy->rules_type_id == '2') ? 'disabled':'' }}> --}}
+                            <label for="duration">Duration (mins):</label>
+                            <a href="#" data-toggle="tooltip" data-placement="right" title="The duration of this rule being active since start time. [1 - 1440 mins]" style="cursor: pointer; left-padding:0">
+                                <i class="ri-information-fill"></i>
+                            </a>
+                            <input type="number" min="1" max="1440" class="form-control" name="duration" id="duration" step="1" 
                                 onInput="validatePolicyInput(this.id)" placeholder="Enter duration"
                                 value="{{ $policy->scope->duration }}"
                                 {{ ($policy->rules_type_id == '2') ? 'disabled':'' }}>
@@ -578,7 +586,8 @@
                 option['battery'] = true;
                 $('#day').val("daily");
                 $('#start-time').val("00:00");
-                $('#duration').val(24);
+                // $('#duration').val(24);
+                $('#duration').val(1440);
                 $('#location').val(@json($locations->pluck('location_master_id')->all())).trigger('change');
 
                 $('#day').prop('disabled', true);
