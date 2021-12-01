@@ -9,8 +9,7 @@ use App\Alert;
 class AttendanceKliaController extends Controller
 {
     public function index (){
-        $attendance = Attendance_KLIA::latest('last_seen')->get();
-        return view('klia.reports.index', compact('attendance'));
+        return view('klia.reports.index');
     }
 
     public function getAttendanceKLIA(Request $request)

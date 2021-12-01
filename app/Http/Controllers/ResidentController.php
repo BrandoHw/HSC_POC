@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Log;
 use App\Http\Requests\AddResidentRequest;
 use App\Http\Requests\UpdateResidentRequest;
 use App\Http\Requests\ApiCreateResidentRequest;
@@ -386,6 +386,7 @@ class ResidentController extends Controller
     
     public function createResident(ApiCreateResidentRequest $request)
     {
+        Log::channel('apiRequestsLogger')->info([$request]);
         $resident = Resident::create($request->all());
         $room = Location::find($request['location_room_id']);
         $resident->room()->associate($room)->save();
