@@ -115,7 +115,7 @@
                         </div>
                         <div class="form-group" id="trigger-option-frequency" hidden>
                             <label><span class='policy-type-name'></span> Frequency:</label>
-                            <a href="#" data-toggle="tooltip" data-placement="right" title="" style="cursor: pointer; left-padding:0" data-original-title="The policy will violate after it fulfill the parameters set for this frequency of time.">
+                            <a href="#" data-toggle="tooltip" data-placement="right" title="" style="cursor: pointer; left-padding:0" data-original-title="The policy will violate after it fulfill the parameters set for this frequency of occurences.">
                                 <i class="ri-information-fill"></i>
                             </a>
                             {!! Form::select('frequency', $frequency, null, ['class' => 'form-control', 'id' => 'frequency',

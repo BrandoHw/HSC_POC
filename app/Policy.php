@@ -12,15 +12,16 @@ class Policy extends Model
 {
     use SoftDeletes;
 
+
     const frequency = [
-        1 => "1 second",
-        2 => "2 seconds",
-        3 => "3 seconds",
-        4 => "4 seconds",
-        5 => "5 seconds",
-        10 => "10 seconds",
-        15 => "15 seconds",
-        20 => "20 seconds",
+        1 => "1 time",
+        2 => "2 times",
+        3 => "3 times",
+        4 => "4 times",
+        5 => "5 times",
+        10 => "10 times",
+        15 => "15 times",
+        20 => "20 times",
     ];
 
     const target_type = [

@@ -122,7 +122,7 @@
                         </div>
                         <div class="form-group" id="trigger-option-frequency" {{ ($policy->rules_type_id == '4' || $policy->rules_type_id == '6') ? '':'hidden' }}>
                             <label><span class='policy-type-name'>{{ ($policy->rules_type_id == '4') ? 'Fall':'Violence' }}</span> Frequency:</label>
-                            <a href="#" data-toggle="tooltip" data-placement="right" title="" style="cursor: pointer; left-padding:0" data-original-title="The policy will violate after it fulfill the parameters set for this frequency of time.">
+                            <a href="#" data-toggle="tooltip" data-placement="right" title="" style="cursor: pointer; left-padding:0" data-original-title="The policy will violate after it fulfill the parameters set for this frequency of occurences.">
                                 <i class="ri-information-fill"></i>
                             </a>
                             {!! Form::select('frequency', $frequency, $policy->frequency ?? null, ['class' => 'form-control', 'id' => 'frequency',
