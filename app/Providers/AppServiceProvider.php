@@ -27,13 +27,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
      // Log queries
-        if (true) {
-            DB::listen(function ($query) {
-                Log::info(
-                    $query->sql, $query->bindings, $query->time
-                );
-            });
-        }
+        // if (true) {
+        //     DB::listen(function ($query) {
+        //         Log::info(
+        //             $query->sql, $query->bindings, $query->time
+        //         );
+        //     });
+        // }
         if(config('app.env') === 'production') {
             \URL::forceScheme('https');
         }
