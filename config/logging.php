@@ -100,7 +100,7 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
-        'apiRequestsLogger' => [
+        'api_logger' => [
             'driver' => 'daily',
             'path' => storage_path('logs/api_requests.log'),
         ],

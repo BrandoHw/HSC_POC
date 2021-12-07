@@ -386,7 +386,7 @@ class ResidentController extends Controller
     
     public function createResident(ApiCreateResidentRequest $request)
     {
-        // Log::channel('apiRequestsLogger')->info([$request]);
+        Log::channel('api_logger')->info($request);
         $resident = Resident::create($request->all());
         $room = Location::find($request['location_room_id']);
         $resident->room()->associate($room)->save();

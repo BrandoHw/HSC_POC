@@ -26,8 +26,9 @@ class AlertController extends Controller
      */
     public function index()
     {
-        $alerts = Alert::orderBy('alert_id', 'asc')
+        $alerts = Alert::orderBy('alert_id', 'desc')
         ->with(['reader.location.floor_level', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
+        ->limit(5000)
         ->get();
         $alerts_last = $alerts->last()->alert_id ?? 0;
         return view('alerts.index', compact('alerts', 'alerts_last'));

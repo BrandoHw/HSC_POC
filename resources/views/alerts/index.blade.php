@@ -70,11 +70,17 @@
                                             @endif
                                         </td>
                                         <td>
-                                            @if($alert->tag->beacon_type == 1)
+                                            {{-- @if($alert->tag->beacon_type == 1)
                                                 {{ $alert->tag->resident->full_name ?? '-' }}
                                             @else
                                                 {{ $alert->tag->user->full_name ?? '-' }}
-                                            @endif
+                                            @endif --}}
+                                            @isset($alert->tag->resident)
+                                            {{ $alert->tag->resident->full_name ?? '' }}
+                                            @endisset
+                                            @isset($alert->tag->user)
+                                            {{ $alert->tag->user->full_name ?? '' }}
+                                            @endisset
                                         </td>
                                         <td>{{ $alert->reader->location_full ?? "-" }}</td>
                                         <td>{{ $alert->occured_at_tz }}</td>
