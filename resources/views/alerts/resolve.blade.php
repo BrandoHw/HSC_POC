@@ -62,7 +62,7 @@
                     </div>
                     <div class="row mt-5 justify-content-center">
                         <button type="button" class="btn btn-secondary m-1" id="cancel-multiple-btn" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary m-1" id="resolve-multiple-btn" onClick="confirmResolveAlert(this.id)">Yes, resolve them.</button>
+                        <button type="button" class="btn btn-primary m-1" id="resolve-multiple-btn" onClick="confirmResolveAllAlert(this.id)">Yes, resolve them.</button>
                     </div>
                 </div>
             </div>

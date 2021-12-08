@@ -48,6 +48,8 @@
                                 <input type="text" class="form-control" id="datepicker" kl_vkbd_parsed="true">
                             </div>
                         </div>
+
+                        <a class="btn btn-primary" href="#" style="margin-right: 10px" id="resolveAllAlert">Resolve All</a>
                     </div>
                     <div class="iq-search-bar row justify-content-between">
                         <div class="iq-search-bar row justify-content-between">
@@ -88,6 +90,7 @@
             </div>
         </div>
     </div>
+    @include('alerts.resolve_every')
     @include('alerts.resolve')
     @can('alert-delete')
     @include('alerts.archive')
@@ -444,5 +447,59 @@
         });
     };
     @endcan
+
+     /* Resolve All Alerts */
+     $('#resolveAllAlert').on('click', function(){
+        $('#cancel-all-btn').prop('hidden', false);
+        $('#resolve-all-btn').html('Yes, resolve them.');
+        $('#resolve-all-btn').prop('disabled', false);
+        $('#resolve-all-btn').css('background-color', 'var(--iq-primary)');
+        $('#resolve-all-btn').css('border-color', 'var(--iq-primary)');
+        $('#resolve-confirmation-all-modal').modal('toggle');
+    })
+
+    function confirmResolveAllAlert(){
+        let cancel_btn = $('#cancel-all-btn');
+        let resolve_btn = $('#resolve-all-btn');
+        let modal = $('#resolve-confirmation-all-modal');
+
+        cancel_btn.prop('hidden', true);
+        resolve_btn.prop('disabled', true);
+        resolve_btn.html('<i class="fa fa-circle-o-notch fa-spin"></i>Resolving');
+
+        let result = {
+            user_id: @json(auth()->user()->user_id),
+            _token: token
+        };
+
+        $.ajax({
+            url: '{{ route("alerts.resolve_every") }}',
+            type: "PATCH",
+            data: result,
+            success:function(response){
+                let errors = response['errors'];
+                if($.isEmptyObject(response['success'])){
+                    console.log(errors);
+                } else {
+                    resolve_btn.css('background-color', 'var(--iq-success)');
+                    resolve_btn.css('border-color', 'var(--iq-success)');
+                    resolve_btn.html('<i class="fa fa-check"></i>Resolved.');
+                    setTimeout(function() {
+                        modal.modal('toggle');
+                    }, 500);
+
+                    let found = response['found'];
+                    notyf.success(response['success']);
+                    dTable.rows().deselect();
+                    dTable.ajax.reload();
+                }
+            },
+            error:function(error){
+                console.log(error);
+            }
+        });
+
+    }
+
 </script>
 @endsection

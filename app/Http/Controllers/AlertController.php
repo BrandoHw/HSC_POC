@@ -550,12 +550,11 @@ class AlertController extends Controller
         $user = User::find($request['user_id']);
         $resolved_at = Carbon::now();
 
-     
         Alert::where('resolved_at', null)
             ->update(['resolved_at' => $resolved_at,
                     'user_id' => $user->user_id]);
 
-        $message = "Alert resolved successfully.";
+        $message = "Alerts resolved successfully.";
 
         return response()->json([
             "success" => $message,
