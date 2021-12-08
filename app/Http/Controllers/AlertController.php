@@ -206,6 +206,9 @@ class AlertController extends Controller
         //
     }
 
+     /**
+     * Get new alerts for notifcation bell
+     */
     public function getAlerts()
     {
         //
@@ -535,4 +538,55 @@ class AlertController extends Controller
             "tag_id" => $tag_id,
         ], 200);
     }
+
+     /**
+     * Retrieve data for alerts table with ajax and filtered by date 
+     *
+     * @param  \Illuminate\Http\Request  $request
+     */
+    public function getData(Request $request){
+        $date_start = new Carbon(explode(' - ', $request['date_range'])[0]);
+        $date_end = new Carbon(explode(' - ', $request['date_range'])[1]);
+        // $date_start = new Carbon(explode(' - ', "12/01/2021 - 12/07/2021")[0]);
+        // $date_end = new Carbon(explode(' - ', "12/01/2021 - 12/07/2021")[1]);
+        $date_end = $date_end->addDays(1)->subSecond(1);
+     
+        $alerts = json_decode(json_encode(Alert::orderBy('alert_id', 'desc')
+                ->with(['reader.location.floor_level', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])   
+                ->whereBetween('occured_at', [$date_start, $date_end])
+                ->limit(5000)
+                ->get()));
+             
+        foreach ($alerts as $alert){
+            if ($alert->tag->user != null){
+                $alert->name = $alert->tag->staff->fName." ".$alert->tag->staff->lName;
+            }
+            elseif($alert->tag->resident != null){
+                $alert->name = $alert->tag->resident->resident_fName." ".$alert->tag->resident->resident_lName;
+            }
+            else{
+                $alert->name = "-";
+            }  
+            
+            if ($alert->user != null)
+                $alert->resolved_by = $alert->user->fName." ".$alert->user->lName;
+            else
+                $alert->resolved_by = "-";
+        }   
+        
+        foreach($alerts as $alert){
+            // $alert->date = Carbon::parse($alert->occured_at)->setTimezone('Asia/Kuala_Lumpur')->format('Y-m-d');
+            // $alert->time = Carbon::parse($alert->occured_at)->setTimezone('Asia/Kuala_Lumpur')->format('H:i:s');
+            if ($alert->resolved_at != null)
+                $alert->resolved_at_tz = Carbon::parse($alert->resolved_at)->setTimezone('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s A');
+            else
+                $alert->resolved_at_tz = "-";
+            $alert->timestamp = Carbon::parse($alert->occured_at)->setTimezone('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s A');
+        }
+
+        return response()->json([
+            'data' => $alerts,
+        ], 200);
+    }
+    
 }
