@@ -154,7 +154,7 @@ Route::group(['middleware' => ['auth']], function() {
         ->name('alerts.resolve_all');
     Route::patch('alerts/resolve', [AlertController::class, 'resolve'])
         ->name('alerts.resolve');
-    Route::patch('alerts/resolve', [AlertController::class, 'resolve_every'])
+    Route::patch('alerts/resolve-every', [AlertController::class, 'resolve_every'])
         ->name('alerts.resolve_every');
     Route::get('alert-data', [AlertController::class, 'getData'])->name('alert.data');
 
