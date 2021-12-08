@@ -26,14 +26,10 @@ class AlertController extends Controller
      */
     public function index()
     {
-        $alerts = Alert::orderBy('alert_id', 'desc')
-        ->with(['reader.location.floor_level', 'policy', 'policy.policyType', 'tag', 'tag.resident', 'tag.user', 'user'])
-        ->limit(50)
-        ->get();
-
-        $alerts_latest = Alert::latest('alert_id')
+        $alerts = Alert::latest('alert_id')
         ->first();
-        $alerts_last = $alerts_latest->alert_id;
+        
+        $alerts_last = $alerts->alert_id;
         return view('alerts.index', compact('alerts', 'alerts_last'));
     }
 
@@ -155,7 +151,7 @@ class AlertController extends Controller
     }
 
     /**
-     * Update the specified resources in storage.
+     * Update the specified resources in storage. USe to resolve alerts from the alerts index.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -466,7 +462,7 @@ class AlertController extends Controller
     }
 
     /**
-     * Resolve the specified alerts according to tag in storage.
+     * Resolve the specified alerts according to tag in storage. Used in dashboard right sidebar.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -503,7 +499,7 @@ class AlertController extends Controller
     }
 
     /**
-     * Resolve the specified alerts according to tag and policy in storage.
+     * Resolve the specified alerts according to tag and policy in storage. Used in dashboard right sidebar.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -539,6 +535,30 @@ class AlertController extends Controller
         return response()->json([
             "success" => $message,
             "tag_id" => $tag_id,
+        ], 200);
+    }
+
+     /**
+     * Resolves every unresolved alert in the table
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function resolve_every(Request $request)
+    {
+       
+        $user = User::find($request['user_id']);
+        $resolved_at = Carbon::now();
+
+     
+        Alert::where('resolved_at', null)
+            ->update(['resolved_at' => $resolved_at,
+                    'user_id' => $user->user_id]);
+
+        $message = "Alert resolved successfully.";
+
+        return response()->json([
+            "success" => $message,
         ], 200);
     }
 
@@ -581,10 +601,10 @@ class AlertController extends Controller
             // $alert->date = Carbon::parse($alert->occured_at)->setTimezone('Asia/Kuala_Lumpur')->format('Y-m-d');
             // $alert->time = Carbon::parse($alert->occured_at)->setTimezone('Asia/Kuala_Lumpur')->format('H:i:s');
             if ($alert->resolved_at != null)
-                $alert->resolved_at_tz = Carbon::parse($alert->resolved_at)->setTimezone('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s A');
+                $alert->resolved_at_tz = Carbon::parse($alert->resolved_at)->setTimezone('Asia/Kuala_Lumpur')->format('d-m-Y g:i:s A');
             else
                 $alert->resolved_at_tz = "-";
-            $alert->timestamp = Carbon::parse($alert->occured_at)->setTimezone('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s A');
+            $alert->timestamp = Carbon::parse($alert->occured_at)->setTimezone('Asia/Kuala_Lumpur')->format('d-m-Y g:i:s A');
         }
 
         return response()->json([

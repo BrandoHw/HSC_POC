@@ -160,4 +160,4 @@ class ReportController extends Controller
         return response()->json([
             'data' => $alerts,
         ], 200);}
-}
+    }

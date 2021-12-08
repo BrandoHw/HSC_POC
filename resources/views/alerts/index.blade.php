@@ -15,6 +15,22 @@
         background: linear-gradient(to right, var(--iq-primary) 0%, var(--iq-primary-light) 100%);
         border-color: var(--iq-primary);
     }
+
+    table.dataTable tr th.select-checkbox.selected::after {
+        content: "✔";
+        margin-top: -11px;
+        margin-left: -11px;
+        text-align: center;
+        text-shadow: rgb(176, 190, 217) 1px 1px, rgb(176, 190, 217) -1px -1px, rgb(176, 190, 217) 1px -1px, rgb(176, 190, 217) -1px 1px;
+    }
+    table.dataTable thead th.select-checkbox:before {
+        content: "    ";
+        white-space: pre;
+        margin-top: -6px;
+        border: 1px solid black;
+        border-radius: 3px;
+        font-size:10px
+    }
 </style>
 @endsection
 
@@ -24,6 +40,15 @@
         <div class="col-sm-12">
             <div class="iq-card">
                 <div class="iq-card-body">
+                    <div class="row align-items-center" style="justify-content: space-between">
+                        <div class="col-4">
+                            <label class="sr-only">Date</label>
+                            <div class="input-group mb-2 mr-sm-2">
+                                <div class="input-group-text">Date</div>
+                                <input type="text" class="form-control" id="datepicker" kl_vkbd_parsed="true">
+                            </div>
+                        </div>
+                    </div>
                     <div class="iq-search-bar row justify-content-between">
                         <div class="iq-search-bar row justify-content-between">
                             <form action="#" class="searchbox">
@@ -44,7 +69,7 @@
                         <table class="table table-stripe table-bordered hover" id="alertTable">
                         <thead>
                                 <tr>
-                                    <th scope="col" style="width:10%" id="checkbox-all">#</th>
+                                    <th scope="col" style="text-align: center; width:10%" id="checkbox-all"></th>
                                     <th scope="col">Policy Type</th>
                                     <th scope="col">Policy Name</th>
                                     <th scope="col">Subject</th>
@@ -56,43 +81,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($alerts as $alert)
-                                    <tr id="alert-{{ $alert->alert_id }}">
-                                        <td id="checkbox-{{ $alert->alert_id }}">{{ $alert->alert_id }}</td>
-                                        <td>
-                                            {{ $alert->policy->policyType->rules_type_desc }}
-                                        </td>
-                                        <td>
-                                            @if($alert->policy->trashed())
-                                                <span class="text-secondary"><em>{{ $alert->policy->description }} <span class="small text-secondary">[deleted]</span></em></span>
-                                            @else
-                                                {{ $alert->policy->description }}
-                                            @endif
-                                        </td>
-                                        <td>
-                                            {{-- @if($alert->tag->beacon_type == 1)
-                                                {{ $alert->tag->resident->full_name ?? '-' }}
-                                            @else
-                                                {{ $alert->tag->user->full_name ?? '-' }}
-                                            @endif --}}
-                                            @isset($alert->tag->resident)
-                                            {{ $alert->tag->resident->full_name ?? '' }}
-                                            @endisset
-                                            @isset($alert->tag->user)
-                                            {{ $alert->tag->user->full_name ?? '' }}
-                                            @endisset
-                                        </td>
-                                        <td>{{ $alert->reader->location_full ?? "-" }}</td>
-                                        <td>{{ $alert->occured_at_tz }}</td>
-                                        <td id="status-{{ $alert->alert_id }}">
-                                            <span class="badge badge-pill iq-bg-{{ $alert->resolved_at ? 'success':'danger' }}">
-                                                {{ $alert->resolved_at ? 'Resolved':'Unresolved' }}
-                                            </span>
-                                        </td>
-                                        <td id="resolved-by-{{ $alert->alert_id }}">{{ $alert->user->full_name ?? "-" }}</td>
-                                        <td id="resolved-at-{{ $alert->alert_id }}">{{ $alert->resolved_at_tz }}</td>
-                                    </tr>
-                                @endforeach
                             </tbody>
                         </table> 
                     </div>
@@ -108,27 +96,124 @@
 @endsection 
 
 @section("script")
+
+<script src="{{ asset('js/mix/moment.js') }}"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.11.3/sorting/datetime-moment.js"></script>
 <script>
     
     let token = $('meta[name="csrf-token"]').attr('content');
     let last = @json($alerts_last);
+    console.log(last);
 
     $(function(){
         let timer = setInterval(getNewAlerts, 30000);
+        $.fn.dataTable.moment( 'DD-MM-YYYY h:mm:ss A' );
+        $.fn.dataTable.moment( 'DD-MM-YYYY hh:mm:ss A');
+    });
+    $('#datepicker').daterangepicker({
+            showDropdowns: true,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            linkedCalendars: false,
+            alwaysShowCalendars: true,
+            startDate: moment().subtract(6, 'days'),
+            endDate: moment(),
+            maxDate: moment(),
+            }, 
+            function(start, end, label) {
+                console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+            }
+    );
+    $('#datepicker').on("change",function(){
+            console.log($(this).val());
+            dTable.ajax.reload();
+    });
+    /* Initiate dataTable */
+
+    var dTable = $('#alertTable').DataTable({
+        columnDefs: [ {
+            orderable: false,
+            className: 'select-checkbox',
+            targets:  0,
+        } ],
+        select: {
+            style: 'multi-shift',
+            selector: 'td:first-child'
+        },
+        order: [[5, 'desc']],
+        processing: true,
+        language: {
+            loadingRecords: "&nbsp;",
+            processing: '<i style="position: fixed; top:50%; left:50%;"class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span> '
+        },
+        ajax: {
+            url: '{{ route("alert.data") }}',
+            data: function(data) {
+                data.date_range = $("#datepicker").val();
+            }
+        },
+        columns:[
+            {data: null, defaultContent: ''},
+            {data: 'policy.policy_type.rules_type_desc'},
+            {data: 'policy.description'},
+            {data: 'name'},
+            {data: 'reader.location.location_description'},
+            {data: 'timestamp'},
+            {
+                data: 'resolved_at',
+                render: function(data, type){
+                    if (data === null)
+                        return '<span class="badge badge-pill iq-bg-danger"> Unresolved </span>';
+                    else 
+                        return '<span class="badge badge-pill iq-bg-success"> Resolved </span>';
+                }
+            },
+            {data: 'resolved_by'},
+            {data: 'resolved_at_tz'},
+           
+        ],  
+        pageLength: 20, 
+        orderCellsTop: true,
+        fixedHeader: true,
     });
 
-    /* Initiate dataTable */
-    let dTable = $('#alertTable').DataTable({
-        order: [[5, 'desc']],
-    })
+    //Checkbox Header Listener
+    dTable.on("click", "th.select-checkbox", function() {
+        if ($("th.select-checkbox").hasClass("selected")) {
+            dTable.rows().deselect();
+            $("th.select-checkbox").removeClass("selected");
+        } else {
+            dTable.rows({page: 'current'}).select();
+            $("th.select-checkbox").addClass("selected");
+        }
+    }).on("select deselect", function() {
+        ("Some selection or deselection going on")
+        if (dTable.rows({
+                selected: true
+            }).count() !== dTable.rows().count()) {
+            $("th.select-checkbox").removeClass("selected");
+        } else {
+            $("th.select-checkbox").addClass("selected");
+        }
+    });
 
     $('#myCustomSearchBox').keyup(function(){  
         dTable.search($(this).val()).draw();   // this  is for customized searchbox with datatable search feature.
     })
+    
+
 
     /* Resolve Alert */
     $('#resolveAlert').on('click', function(){
-        let alert_selected = dTable.column(0).checkboxes.selected();
+        //let alert_selected = dTable.column(0).checkboxes.selected();
+        let alert_selected = dTable.rows( { selected: true } ).data();
+        // var filteredRows = dTable.rows({page: 'current'});
         if(_.isEmpty(alert_selected)){
             $('#resolve-empty-modal').modal('toggle');
         } else {
@@ -180,28 +265,7 @@
                             duration: 4000
                         });
                     } else {
-                        let alerts = response['data'];
-                        alerts.forEach(function(item){
-                            let id = item['id'];
-                            dTable.row.add([
-                                id,
-                                item['policy_type'],
-                                item['policy'],
-                                item['subject'],
-                                item['location'],
-                                item['occured_at'],
-                                item['status'],
-                                item['resolved_by'],
-                                item['resolved_at'],
-                            ])
-                            .node().id = 'alert-' + id;
-                            dTable.draw(false);
-
-                            $('#alert-'+id+' td:eq(0)').attr('id', 'checkbox-'+id);
-                            $('#alert-'+id+' td:eq(6)').attr('id', 'status-'+id);
-                            $('#alert-'+id+' td:eq(7)').attr('id', 'resolved-by-'+id);
-                            $('#alert-'+id+' td:eq(8)').attr('id', 'resolved-at-'+id);
-                        });
+                        dTable.ajax.reload();
                         notyf.success(response['success']);
                     }
                     
@@ -234,20 +298,25 @@
         resolve_btn.prop('disabled', true);
         resolve_btn.html('<i class="fa fa-circle-o-notch fa-spin"></i>Resolving');
 
-        let selected_row = dTable.column(0).checkboxes.selected();
-
+        //let selected_row = dTable.column(0).checkboxes.selected();
+        // let alerts_id = [];
+        // $.each(selected_row, function(index, value){
+        //     let data = dTable.rows('#alert-'+value).data()[0];
+        //     alerts_id.push(data[0]);
+        // });
+        let selected_row = dTable.rows( { selected: true } ).data();
         let alerts_id = [];
-        $.each(selected_row, function(index, value){
-            let data = dTable.rows('#alert-'+value).data()[0];
-            alerts_id.push(data[0]);
-        });
+        for (let i = 0; i < selected_row.length; i++){
+            let data = selected_row[i].alert_id;
+            alerts_id.push(data);
+        }
         
         let result = {
             alerts_id: alerts_id,
             user_id: @json(auth()->user()->user_id),
             _token: token
         };
-        
+
         $.ajax({
             url: '{{ route("alerts.updates") }}',
             type: "PATCH",
@@ -274,18 +343,10 @@
                             duration: 4000
                         });
                     } else {
-                        let alerts = response['alerts'];
-                        Object.keys(alerts).forEach(function(key) {
-                            let item = alerts[key];
-                            let item_id = item['alert_id'];
-                            $('#alert-' + item_id).removeClass('selected');
-                            $('#status-' + item_id).html('<span class="badge badge-pill iq-bg-success">Resolved</span>');
-                            $('#resolved-by-' + item_id).html(response['user']);
-                            $('#resolved-at-' + item_id).html(response['resolved_at']);
-                        });
                         notyf.success(response['success']);
                     }
-                    dTable.columns().checkboxes.deselect(true);
+                    dTable.rows().deselect();
+                    dTable.ajax.reload();
                 }
             },
             error:function(error){
@@ -297,7 +358,8 @@
     @can('alert-delete')
     /* Archive Alert */
     $('#archiveAlert').on('click', function(){
-        let alert_selected = dTable.column(0).checkboxes.selected();
+        //let alert_selected = dTable.column(0).checkboxes.selected();
+        let alert_selected = dTable.rows( { selected: true } ).data();
         if(_.isEmpty(alert_selected)){
             $('#archive-empty-modal').modal('toggle');
         } else {
@@ -335,13 +397,20 @@
         archive_btn.prop('disabled', true);
         archive_btn.html('<i class="fa fa-circle-o-notch fa-spin"></i>Archiving');
 
-        let selected_row = dTable.column(0).checkboxes.selected();
+        // let selected_row = dTable.column(0).checkboxes.selected();
 
+        // let alerts_id = [];
+        // $.each(selected_row, function(index, value){
+        //     let data = dTable.rows('#alert-'+value).data()[0];
+        //     alerts_id.push(data[0]);
+        // });
+
+        let selected_row = dTable.rows( { selected: true } ).data();
         let alerts_id = [];
-        $.each(selected_row, function(index, value){
-            let data = dTable.rows('#alert-'+value).data()[0];
-            alerts_id.push(data[0]);
-        });
+        for (let i = 0; i < selected_row.length; i++){
+            let data = selected_row[i].alert_id;
+            alerts_id.push(data);
+        }
         
         let result = {
             alerts_id: alerts_id,
@@ -364,12 +433,8 @@
                         modal.modal('toggle');
                     }, 500);
 
-                    alerts_id.forEach(function(item){
-                        dTable
-                            .rows('#alert-'+ item)
-                            .remove()
-                            .draw();
-                    })
+                    dTable.rows().deselect();
+                    dTable.ajax.reload();
 				    notyf.success(response['success']);
                 }
             },
