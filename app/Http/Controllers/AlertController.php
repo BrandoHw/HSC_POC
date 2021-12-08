@@ -581,7 +581,7 @@ class AlertController extends Controller
              
         foreach ($alerts as $alert){
             if ($alert->tag->user != null){
-                $alert->name = $alert->tag->staff->fName." ".$alert->tag->staff->lName;
+                $alert->name = $alert->tag->user->fName." ".$alert->tag->user->lName;
             }
             elseif($alert->tag->resident != null){
                 $alert->name = $alert->tag->resident->resident_fName." ".$alert->tag->resident->resident_lName;
