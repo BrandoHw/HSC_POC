@@ -876,7 +876,7 @@ $(function() {
             method: 'get',             
             success: function(data_array){
                 // console.log("NOTIFICATION BAR");
-                console.log(data_array);
+                // console.log(data_array);
                 $('#notif-count').text(data_array['counts']);
                 $("#notification-card").children('.alert-card').remove();
                 data = data_array['alerts'];
@@ -970,7 +970,7 @@ $(function() {
             method: 'get',             
             success: function(data_array){
                 // console.log("NOTIFICATION BAR");
-                console.log(data_array);
+                // console.log(data_array);
                 $('#notif-count-gw').text(data_array['counts']);
                 $("#notification-card-gw").children('.gw-card').remove();
                 data = data_array['gateways'];
