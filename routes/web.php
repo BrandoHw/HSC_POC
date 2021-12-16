@@ -85,6 +85,8 @@ Route::group(['middleware' => ['auth']], function() {
         ->except(['show', 'destroy']);
     Route::delete('gateways/destroys', [ReaderController::class, 'destroys'])
         ->name('gateways.destroys');
+    Route::get('gateways/disconnected', [ReaderController::class, 'getDisconnected'])
+        ->name('gateways.disconnected');
 
     Route::resource('map', MapController::class);
     Route::resource('locations', LocationController::class);

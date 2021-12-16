@@ -16,47 +16,22 @@ use App\Resident;
 use App\Tag;
 use App\Policy;
 use App\Location;
+use App\Reader;
 class GeneralController extends Controller
 {
     //
 
-    public function index (){
-        $date = Carbon::createFromFormat('Y-m-d H:i:s', "2021-12-08 07:37:58", 'UTC');
-        $date->setTimezone('Asia/Kuala_Lumpur');
-        $today = Carbon::now('Asia/Kuala_Lumpur')->setTimeZone('UTC');
+    public function index (Request $request){
 
-        $diff = $date->diff($today)->format('%H:%i:%s');
-        $hour = explode(':', $diff)[0];
-        $minute = explode(':', $diff)[1];
-        $second = explode(':', $diff)[2];
+        $isAlert = $request->isAlert;
+        $gateways = Reader::whereColumn('down_status', '>', 'up_status')
+        ->orderBy('down_status', 'desc')
+        ->get();
 
-        if($hour == '00' && $minute == '00'){
-            return 'Now';
-        }
-
-        if ($hour == '00'){
-            $hour = '';
-        } else {
-            if($hour[0] == '0'){
-                $hour = $hour[1];
-            }
-            $hour = $hour.'hrs ';
-        }
-
-        if ($minute == '00'){
-            $minute = '';
-        } else {
-            if($minute[0] == '0'){
-                $minute = $minute[1].'ms';
-            } 
-            $minute = $minute.'ms ';
-        }
-
-        return ["time" => $hour.$minute.'ago', "date" => $date, "today" =>$today];
-
-        // return response()->json([
-        //     'data' => $alerts,
-        // ], 200);
+        return response()->json([
+            "gateways" => $gateways,
+            "isAlert" => $isAlert
+        ], 200);
     }
 
      /**

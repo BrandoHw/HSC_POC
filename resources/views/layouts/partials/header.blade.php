@@ -89,6 +89,22 @@ div#notif-bell svg path { stroke: var(--iq-primary); }
             </nav>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto navbar-list">
+                    <li id ="notif-li-gw" class="nav-item">
+                        <a href="#" id = "notif-a-gw" class="search-toggle iq-waves-effect">
+                            <i class="ri-base-station-fill" aria-hidden="true" style=""></i>
+                            <span id ="notif-danger-dots-gw"class="bg-danger dots"></span>
+                        </a>
+                        <div class="iq-sub-dropdown">
+                            <div class="iq-card shadow-none m-0">
+                                <div id ="notification-card-gw" class="iq-card-body p-0 ">
+                                    <div class="bg-primary p-3">
+                                        <h5 class="mb-0 text-white">Disconnected Gateways<small id = "notif-count-gw" class="badge  badge-light float-right pt-1"></small></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
                     <li id ="notif-li" class="nav-item">
                         <a href="#" id = "notif-a" class="search-toggle iq-waves-effect">
                             <div id="notif-bell" style="width: 20px; height: 20px"></div>

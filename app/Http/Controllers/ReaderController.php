@@ -28,12 +28,17 @@ class ReaderController extends Controller
     *
     * @return \Illuminate\Http\Response
     */
-    public function index()
+    public function index(Request $request)
     {
+        $dc = $request->dc;
         $readers = Reader::with('location', 'location.floor_level')->orderBy('gateway_id', 'asc')
                     ->get();
 
-        return view('readers.index',compact('readers'));
+        foreach ($readers as $gateway){
+            $gateway->disconnect = $gateway->last_seen;
+        }
+
+        return view('readers.index',compact('readers', 'dc'));
     }
     
     /**
@@ -153,6 +158,29 @@ class ReaderController extends Controller
                 "success" => "Gateway deleted successfully."
             ], 200);
         }
+    }
+
+    
+    /**
+     * Get a list of all disconnected gateways
+     *
+     */
+    public function getDisconnected()
+    {
+        $gateways = Reader::whereColumn('down_status', '>', 'up_status')
+        ->where('serial', '!=', null)
+        ->orderBy('down_status', 'desc')
+        ->get();
+
+        //Get last seen attribute for use in JSON object
+        foreach ($gateways as $gateway){
+            $gateway->disconnect = $gateway->last_seen;
+        }
+        $counts = Reader::whereColumn('down_status', '>', 'up_status')
+        ->where('serial', '!=', null)
+        ->count();
+
+        return compact('gateways', 'counts');
     }
     
     function console_log( $data ){

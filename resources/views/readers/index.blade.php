@@ -12,6 +12,11 @@
                             <a class="search-link" href="#"><i class="ri-search-line"></i></a>
                         </form>
                         <div class="col-4 row justify-content-end">
+                            <div class="custom-control custom-switch justify-content-center align-items-center" style="margin-right: 8px; display: flex !important">
+                                <input type="checkbox" class="custom-control-input" id="hide-online">
+                                <label class="custom-control-label" for="hide-online">Hide Online</label>
+                            </div>
+
                             @can('gateway-create')
                             <a class="btn btn-primary" href="{{ route('gateways.create') }}" style="margin-right: 10px;"><i class="ri-add-line"></i>Add Gateway</a>
                             @endcan
@@ -31,6 +36,8 @@
                                     <th scope="col">Floor</th>
                                     @if(env('APP_TYPE') != 'klia')
                                         <th scope="col">Status</th>
+                                        <th scope="col">Time Since Disconnect: </th>
+                                        <th scope="col">Seconds Since Disconect: </th>
                                     @endif
                                 </tr>
                             </thead>
@@ -48,8 +55,14 @@
                                                     {{ ($reader->reader_status == true) ? 'Online':'Offline'  }}
                                                 </span>
                                             </td>
+                                            <td class="info">
+                                                    {{ ($reader->last_seen)  }}
+                                            </td>
+                                            <td class="info">
+                                                {{ ($reader->last_seen_seconds) }}
+                                        </td>
                                         @endif
-                                      
+
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -141,9 +154,19 @@
         notyf.success(@json($message));
     @endif
 
+    var dc = @json($dc);
+    var gateways = @json($readers);
     /* Initiate dataTable */
     var dTable = $('#readerTable').DataTable({
             order: [[1, 'asc']],
+            columnDefs: [
+                { 'orderData':[7], 'targets': [6] },
+                {
+                    'targets': [7],
+                    'visible': false,
+                    'searchable': false
+                },
+            ],
         })
 
     $('#myCustomSearchBox').keyup(function(){  
@@ -154,6 +177,21 @@
         window.location.href = $(this).parent('tr').attr('href');
     });
 
+    //Hide Online Check Box listeners
+    if (dc){
+        $('#hide-online').prop('checked', true);
+        dTable.columns(5).search('Offline', true, false).draw();
+        dTable.order([6, 'desc']).draw();
+    }
+    $('#hide-online').click(function(){
+        if($(this).is(':checked')){
+            dTable.columns(5).search('Offline', true, false).draw();
+        } 
+        else {
+            dTable.columns(5).search('', true, false).draw();
+        }
+    });
+   
     @can('gateway-delete')
     $('#deleteGateway').on('click', function(){
         let gateway_selected = dTable.column(0).checkboxes.selected();

@@ -1,5 +1,4 @@
 //Dynamically add and remove notifications here
-// Create an element to hold all your text and markup
 
 $(function() {
     var animationData = {
@@ -858,7 +857,10 @@ $(function() {
     anim = lottie.loadAnimation(params);
     anim.pause();
     $("#notif-danger-dots").hide();
+    $("#notif-danger-dots-gw").hide();
     $("#notif-li").on('click', function(){
+        $(".nav-item").removeClass("iq-show"); //Hide gateway notification dropdown if open
+        $(".navbar-list > li").removeClass("iq-show"); //Hide profile dropdown if open
         $(this).toggleClass('iq-show');
         $('#notif-a').toggleClass('active');
     });
@@ -876,7 +878,7 @@ $(function() {
                 // console.log("NOTIFICATION BAR");
                 console.log(data_array);
                 $('#notif-count').text(data_array['counts']);
-                $("#notification-card").children('.iq-sub-card').remove();
+                $("#notification-card").children('.alert-card').remove();
                 data = data_array['alerts'];
                 var length = data.length;
                 var type = data_array['type'];
@@ -899,7 +901,7 @@ $(function() {
                         if (data[i].image_url != null){
                             url = data[i].image_url;
                         }
-                        var container2 = $('<a/>', {'class': 'iq-sub-card', 'id': id}).append(
+                        var container2 = $('<a/>', {'class': 'iq-sub-card alert-card', 'id': id}).append(
                                 $('<div/>', {'class': 'media align-items-center'}).append(
                                     $('<div/>', {class: ''}).append(
                                         $('<img/>', {class: 'avatar-40 rounded', src: url, alt: ''})
@@ -957,6 +959,79 @@ $(function() {
             setTimeout(getAlerts, 15000);
         });
     }
-
+    getGateways = function(){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: "/gateways/disconnected",
+            method: 'get',             
+            success: function(data_array){
+                // console.log("NOTIFICATION BAR");
+                console.log(data_array);
+                $('#notif-count-gw').text(data_array['counts']);
+                $("#notification-card-gw").children('.gw-card').remove();
+                data = data_array['gateways'];
+                var length = data.length;
+                if (length > 5)
+                    length = 5;
+                if (data.length > 0){
+                    for (var i = 0; i < length; i++) {
+                        var serial = data[i].serial;
+                        var disconnect = data[i].disconnect;
+                        var id = data[i].gateway_id
+                   
+                        var container2 = $('<a/>', {'class': 'iq-sub-card gw-card', 'id': id}).append(
+                                $('<div/>', {'class': 'media align-items-center'}).append(
+                                ).append(
+                                    $('<div/>', {'class': 'media-body ml-3'}).append(
+                                        $('<h6/>', {class: 'mb-0', text: serial})
+                                    ).append(
+                                        $('<small/>', {class: 'float-right font-size-12', text: disconnect})
+                                    ).append(
+                                        $('<p/>', {class:'mb-0', text: "Disconnected Since"})
+                                    )
+                                )
+                            )
+                        container2.on('click', function(event) {
+                            var id = $(this).attr("id");
+                            window.location.href = "gateways?dc=true"
+                        });
+                    
+                        if (data.length > 0){
+                            $("#notif-danger-dots-gw").show();
+                            anim.play();
+                            $("#notification-card-gw").append(container2);
+                        }else{
+                            $("#notif-danger-dots-gw").hide();
+                            anim.stop();
+                        }
+                    }
+                }
+                var container = $('<a/>', {'class': 'iq-sub-card', 'id': 'notif-gw'.concat(i)}).append(
+                    $('<div/>', {'class': 'media align-items-center'}).append(
+                        $('<div/>', {class: '', text: 'No Disconnected Gateways', style: 'text-align: center'})
+                    )
+                )
+                if (data.length > 0){
+                    $("#notif-danger-dots-gw").show();
+                }else{
+                    $("#notif-danger-dots-gw").hide();
+               
+                    $("#notification-card-gw").append(container);
+                }
+            },
+            error: function(xhr, request, error){
+                console.log('error');
+                console.log(xhr.responseText);
+            },
+        })
+        .always(function () {
+            setTimeout(getGateways, 60000);
+        });
+    }
     setTimeout(getAlerts(), 10000);
+    setTimeout(getGateways(), 10000);
 });

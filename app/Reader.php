@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Illuminate\Support\Carbon;
 class Reader extends Model
 {
     //use SoftDeletes;
@@ -61,5 +61,39 @@ class Reader extends Model
             return $location->floor_level->alias." - ".$location->location_description;
         else
             return null;
+    }
+
+    public function getLastSeenAttribute()
+    {
+        if ($this->serial === null)
+            return "N/A";
+        if ($this->up_status != null && $this->down_status != null){
+            $up_timestamp = Carbon::createFromFormat("Y-m-d H:i:s", $this->up_status);
+            $down_timestamp = Carbon::createFromFormat("Y-m-d H:i:s", $this->down_status);
+            if ($down_timestamp > $up_timestamp){
+                return $down_timestamp->diffForHumans();
+            }else{
+                return "N/A";
+            }
+        }else{
+            return "N/A";
+        }
+    }
+
+    public function getLastSeenSecondsAttribute()
+    {
+        if ($this->serial === null)
+            return 0;
+        if ($this->up_status != null && $this->down_status != null){
+            $up_timestamp = Carbon::createFromFormat("Y-m-d H:i:s", $this->up_status);
+            $down_timestamp = Carbon::createFromFormat("Y-m-d H:i:s", $this->down_status);
+            if ($down_timestamp > $up_timestamp){
+                return $down_timestamp->timestamp;
+            }else{
+                return 0;
+            }
+        }else{
+            return 0;
+        }
     }
 }
