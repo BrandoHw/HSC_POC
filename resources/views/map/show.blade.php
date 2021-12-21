@@ -192,7 +192,14 @@
 
                             $('#user-list-marker').on('click', 'li', function() {
                                 //alert(this.getAttribute("data-id")); 
-                                window.location.href = "residents/".concat(this.getAttribute("data-id"), '/edit');   
+                                var isResident =  this.getAttribute("data-type");
+            
+                                if (isResident === 'resident'){
+                                   window.location.href = "residents/".concat(this.getAttribute("data-id"), '/edit');   
+                                }else{
+                                    window.location.href = "users/".concat(this.getAttribute("data-id"), '/edit');   
+                                }
+                                
                             })
                             for (var i = 0; i < users.length; ++i) {
                                 var full_name;

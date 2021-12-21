@@ -123,7 +123,7 @@ function fillMarkerList(mac_addr, max_count, dialog){
           'name', 
           'tag',
           'last_seen',
-          { data: ['id'] }
+          { data: ['id', 'type'] }
           ],
           page: 10,
           pagination: true
@@ -138,6 +138,12 @@ function fillMarkerList(mac_addr, max_count, dialog){
           var full_name;
           if (users[i].hasOwnProperty('resident')){
               full_name = users[i].resident.resident_fName.concat(" ", users[i].resident.resident_lName)
+              userListMarker.add({name: full_name, 
+                tag: users[i].beacon_mac,
+                last_seen: users[i].updated_at,
+                id: users[i].resident.resident_id,
+                type: 'resident'
+              });
           }
           else if (users[i].hasOwnProperty('staff')){
               full_name = users[i].staff.fName.concat(" ", users[i].staff.lName)
@@ -149,12 +155,23 @@ function fillMarkerList(mac_addr, max_count, dialog){
               }else{
                   full_name = '<h3 class="name" style="color:var(--staff-color)">' + full_name + '</h3>';
               }
+              userListMarker.add({name: full_name, 
+                tag: users[i].beacon_mac,
+                last_seen: users[i].updated_at,
+                id: users[i].staff.user_id,
+                type: 'staff'
+              });
           }
-          userListMarker.add({name: full_name, 
-            tag: users[i].beacon_mac,
-            last_seen: users[i].updated_at,
-            id: users[i].beacon_id});
+          // userListMarker.add({name: full_name, 
+          //   tag: users[i].beacon_mac,
+          //   last_seen: users[i].updated_at,
+          //   id: users[i].beacon_id});
         }
+
+        $('.page').each(function(){
+          $(this).attr('href', 'javascript:void(0);');
+        })
+
         $( "#dialog-form" ).dialog({ title: max_count.toString().concat(" Residents in ", users[0].gateway.location.location_description) });
         dialog.dialog('open');
     },

@@ -59,8 +59,14 @@
                 selectionCssClass: 'form-control',
             });
             $('#user-list-marker').on('click', 'li', function() {
-                alert(this.getAttribute("data-id"));    
-                window.location.href = "residents/".concat(this.getAttribute("data-id"), 'edit');
+                //alert(this.getAttribute("data-id"));    
+                var isResident =  this.getAttribute("data-type");
+                if (isResident === 'resident'){
+                window.location.href = "residents/".concat(this.getAttribute("data-id"), '/edit');   
+                }else{
+                    window.location.href = "users/".concat(this.getAttribute("data-id"), '/edit');   
+                }
+            
             })
             $('#selUser').change(function(){
                 selectedData = $('#selUser').select2('data')[0];
