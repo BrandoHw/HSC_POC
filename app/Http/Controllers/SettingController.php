@@ -24,8 +24,8 @@ class SettingController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $users = User::orderBy('user_id', 'asc')->get();
-
+        //$users = User::orderBy('user_id', 'asc')->get();
+        $users = User::all()->except(Auth::id());
         $tagsNull = Tag::doesntHave('resident')
             ->doesntHave('user')
             ->pluck('beacon_mac', 'beacon_id')

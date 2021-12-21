@@ -17,21 +17,18 @@ use App\Tag;
 use App\Policy;
 use App\Location;
 use App\Reader;
+use Illuminate\Support\Facades\Auth;
+use App\User;
 class GeneralController extends Controller
 {
     //
 
     public function index (Request $request){
 
-        $isAlert = $request->isAlert;
-        $gateways = Reader::whereColumn('down_status', '>', 'up_status')
-        ->orderBy('down_status', 'desc')
-        ->get();
-
-        return response()->json([
-            "gateways" => $gateways,
-            "isAlert" => $isAlert
-        ], 200);
+        $user = Auth::user();
+        $users = User::orderBy('user_id', 'asc')->get();
+        $users2 = User::all()->except(Auth::id());
+        return compact('user', 'users', 'users2');
     }
 
      /**
