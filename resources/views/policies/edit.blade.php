@@ -708,7 +708,7 @@
                 break;
         }
 
-        if(result['target'] == 'custom'){
+        if(result['target'] == 'C'){
             result['custom-target'] = validatePolicyInput('custom-target');
         }
 
