@@ -180,6 +180,11 @@ class UserLastSeenController extends Controller
             $user->updated_at = Carbon::parse($user->last_seen)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
             if ($user->last_seen === null)
                 $user->updated_at = Carbon::parse($user->created_at)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
+
+            $last_seen_utc_0 = Carbon::parse($user->last_seen);
+            if ($user->last_seen === null)
+                $last_seen_utc_0 = Carbon::parse($user->created_at);
+            $user->red_text = Carbon::parse($last_seen_utc_0)->lt(Carbon::now()->subMinutes(15)); 
         }
 
      

@@ -136,11 +136,17 @@ function fillMarkerList(mac_addr, max_count, dialog){
 
         for (var i = 0; i < users.length; ++i) {
           var full_name;
+          var last_seen;
+          if (users[i].red_text){
+              last_seen = '<p class="last_seen" style="color:red;">' + users[i].updated_at + '</p>';
+          }else{
+            last_seen = users[i].updated_at;
+          }
           if (users[i].hasOwnProperty('resident')){
               full_name = users[i].resident.resident_fName.concat(" ", users[i].resident.resident_lName)
               userListMarker.add({name: full_name, 
                 tag: users[i].beacon_mac,
-                last_seen: users[i].updated_at,
+                last_seen: last_seen,
                 id: users[i].resident.resident_id,
                 type: 'resident'
               });
@@ -157,7 +163,7 @@ function fillMarkerList(mac_addr, max_count, dialog){
               }
               userListMarker.add({name: full_name, 
                 tag: users[i].beacon_mac,
-                last_seen: users[i].updated_at,
+                last_seen: last_seen,
                 id: users[i].staff.user_id,
                 type: 'staff'
               });
