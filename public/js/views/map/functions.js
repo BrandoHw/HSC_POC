@@ -13,19 +13,34 @@ dialog = Dialog holder to contain the list that appears when multiple markers ha
 function addTooltip(data, drawnLayers, gatewayZones, max_count, current_count, dialog){
     var mac_addr = data.gateway.mac_addr;
     var full_name;
+    var Icon;
     if (data.hasOwnProperty('resident')){
-      full_name = data.resident.resident_fName.concat(" ", data.resident.resident_lName)
+      full_name = data.resident.resident_fName.concat(" ", data.resident.resident_lName);
+      full_name = '<span style="color:var(--resident-color)">' + full_name + '</span>';
+      var Icon = L.icon({
+        iconUrl: imageUrl + "/redmarker.png", 
+        iconSize: [20,25],
+        className: 'blinking'
+      });
     }
     else if (data.hasOwnProperty('staff')){
       full_name = data.staff.fName.concat(" ", data.staff.lName)
+      full_name = '<span style="color:var(--staff-color)">' + full_name + '</span>';
+      var Icon = L.icon({
+        iconUrl: imageUrl + "/orangemarker.png", 
+        iconSize: [20,25],
+        className: 'blinking'
+      });
       if (data.staff.user_type != null){
-        if (data.staff.user_type.type === "Nurse")
-            full_name = '<span style="color:var(--nurse-color)">' + full_name + '</span>';
-        else
-            full_name = '<span style="color:var(--staff-color)">' + full_name + '</span>';
-        }else{
-            full_name = '<span style="color:var(--staff-color)">' + full_name + '</span>';
+        if (data.staff.user_type.type === "Nurse"){
+          full_name = '<span style="color:var(--nurse-color)">' + full_name + '</span>';
+          var Icon = L.icon({
+            iconUrl: imageUrl + "/greenmarker.png", 
+            iconSize: [20,25],
+            className: 'blinking'
+          })
         }
+      }
     }
     var tag_mac = data.beacon_mac;
     var last_seen = data.updated_at;
@@ -55,11 +70,11 @@ function addTooltip(data, drawnLayers, gatewayZones, max_count, current_count, d
       latv = latArray[userCount];
       lngv = lngArray[userCount%3];
 
-      var Icon = L.icon({
-        iconUrl: imageUrl + "/redmarker.png", 
-        iconSize: [20,25],
-        className: 'blinking'
-        });
+      // var Icon = L.icon({
+      //   iconUrl: imageUrl + "/redmarker.png", 
+      //   iconSize: [20,25],
+      //   className: 'blinking'
+      // });
 
       var string = "<b>Name</b>: ".concat(full_name, "<br> <b>Tag Mac</b>: ", tag_mac
                                          ,"<br> <b>Last Seen</b>: ", last_seen);
@@ -143,7 +158,8 @@ function fillMarkerList(mac_addr, max_count, dialog){
             last_seen = users[i].updated_at;
           }
           if (users[i].hasOwnProperty('resident')){
-              full_name = users[i].resident.resident_fName.concat(" ", users[i].resident.resident_lName)
+              full_name = users[i].resident.resident_fName.concat(" ", users[i].resident.resident_lName);
+              full_name = '<h3 class="name" style="color:var(--resident-color)">' + full_name + '</h3>';
               userListMarker.add({name: full_name, 
                 tag: users[i].beacon_mac,
                 last_seen: last_seen,
@@ -153,13 +169,10 @@ function fillMarkerList(mac_addr, max_count, dialog){
           }
           else if (users[i].hasOwnProperty('staff')){
               full_name = users[i].staff.fName.concat(" ", users[i].staff.lName)
+              full_name = '<h3 class="name" style="color:var(--staff-color)">' + full_name + '</h3>';
               if (users[i].staff.user_type != null){
                   if (users[i].staff.user_type.type === "Nurse")
-                      full_name = '<h3 class="name" style="color:var(--nurse-color)">' + full_name + '</h3>';
-                  else
-                      full_name = '<h3 class="name" style="color:var(--staff-color)">' + full_name + '</h3>';
-              }else{
-                  full_name = '<h3 class="name" style="color:var(--staff-color)">' + full_name + '</h3>';
+                    full_name = '<h3 class="name" style="color:var(--nurse-color)">' + full_name + '</h3>';
               }
               userListMarker.add({name: full_name, 
                 tag: users[i].beacon_mac,
@@ -258,38 +271,48 @@ function drawUserLocation(data, drawnLayers, gatewayZones, floorIndex, redIcon){
   var Icon;
   //Look for drawn zone that corresponds to the tag mac
   data = data[0];
+  // console.log(data);
+  // console.log(data.hasOwnProperty('resident'));
+  var mac_addr = data.gateway.mac_addr;
+  var full_name;
+  if (!(data.resident === null)){
+    full_name = data.resident.resident_fName.concat(" ", data.resident.resident_lName)
+    full_name = '<span style="color:var(--resident-color)">' + full_name + '</span>';
+    var Icon = L.icon({
+      iconUrl: imageUrl + "/redmarker.png", 
+      iconSize: [20,25],
+      className: 'blinking'
+    })
+  }
+  else if (!(data.staff === null)){
+    full_name = data.staff.fName.concat(" ", data.staff.lName)
+    full_name = '<span style="color:var(--staff-color)">' + full_name + '</span>';
+    var Icon = L.icon({
+      iconUrl: imageUrl + "/orangemarker.png", 
+      iconSize: [20,25],
+      className: 'blinking'
+    })
+    if (data.staff.user_type != null){
+      if (data.staff.user_type.type === "Nurse"){
+        full_name = '<span style="color:var(--nurse-color)">' + full_name + '</span>';
+        var Icon = L.icon({
+          iconUrl: imageUrl + "/greenmarker.png", 
+          iconSize: [20,25],
+          className: 'blinking'
+        })
+      }
+    }
+  }
+  
+
   if (data.grey_marker){
     Icon = L.icon({
       iconUrl: imageUrl + "/greymarker.png", //Icon Size 
       iconSize: [20,25],
       className: 'blinking'
       });
-  }else{
-    Icon = L.icon({
-      iconUrl: imageUrl + "/redmarker.png",
-      iconSize: [20,25], //IconSizeFinder
-      className: 'blinking'
-    });
   }
-  console.log(data);
-  console.log(data.hasOwnProperty('resident'));
-  var mac_addr = data.gateway.mac_addr;
-  var full_name;
-  if (!(data.resident === null)){
-    full_name = data.resident.resident_fName.concat(" ", data.resident.resident_lName)
-  }
-  else if (!(data.staff === null)){
-    full_name = data.staff.fName.concat(" ", data.staff.lName)
-    if (data.staff.user_type != null){
-      if (data.staff.user_type.type === "Nurse")
-          full_name = '<span style="color:var(--nurse-color)">' + full_name + '</span>';
-      else
-          full_name = '<span style="color:var(--staff-color)">' + full_name + '</span>';
-      }else{
-          full_name = '<span style="color:var(--staff-color)">' + full_name + '</span>';
-      }
-  }
-  
+
   var tag_mac = data.beacon_mac;
   var last_seen = data.updated_at;
   var result = gatewayZones.filter(obj => obj.mac_addr === mac_addr)[0];

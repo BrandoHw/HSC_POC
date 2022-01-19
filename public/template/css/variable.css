@@ -52,7 +52,11 @@ Variable
   --iq-dark-border: #d7dbda;
   --iq-primary-right: #e9f7f5;
 
+  /* --nurse-color:#008000;
+  --staff-color:#3D63E9; */
+
   --nurse-color:#008000;
-  --staff-color:#3D63E9;
+  --staff-color:#f1be50;
+  --resident-color:#e93d3d;
 }
 

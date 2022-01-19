@@ -199,7 +199,7 @@ class AttendanceController extends Controller
                 } else {
                     // $full_name = $target->resident->full_name ?? '-';
                     $name_text = $target->resident->full_name ?? '-';
-                    $full_name = '<span style="color: #000000;">'.$name_text.'</span>';
+                    $full_name = '<span style="color: var(--resident-color);">'.$name_text.'</span>';
                     $type = "Resident";
                 }
     

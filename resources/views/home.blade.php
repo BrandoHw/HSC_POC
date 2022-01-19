@@ -437,7 +437,7 @@
                         var color;
                         if (alerts_rule[0]['tag']['resident'] != null){
                            type = "Resident";
-                           color = '<h6 style="color:#000000;">';
+                           color = '<h6 style="var(--resident-color);">';
                         }else if (person['user_type'] != null){
                            type = person['user_type']['type'];
                            if (type === "Nurse")

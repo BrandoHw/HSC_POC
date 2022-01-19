@@ -19,7 +19,12 @@
         <div class="col-sm-12 col-lg-12">
             <div class="iq-card">
                 <div class="iq-card-body">
+                   
                     <div style='display: flex; justify-content: flex-end'>
+                        <div style='margin: 0 5px 0;'><span style='color: var(--resident-color)'>•</span><span>Resident</span></div>
+                        <div style='margin: 0 5px 0;'><span style='color: var(--staff-color)'>•</span><span>Staff</span></div>
+                        <div style='margin: 0 5px 0;'><span style='color: var(--nurse-color)'>•</span><span>Nurse</span></div>
+                        
                         <div class="custom-control custom-switch mr-1">
                             <input type="checkbox" class="custom-control-input" id="gateway-switch">
                             <label class="custom-control-label" for="gateway-switch">Hide Gateways</label>
@@ -205,6 +210,7 @@
                                 var full_name;
                                 if (users[i].hasOwnProperty('resident')){
                                     full_name = users[i].resident.resident_fName.concat(" ", users[i].resident.resident_lName)
+                                    full_name = '<h3 class="name" style="color:var(--resident-color)">' + full_name + '</h3>';
                                 }
                                 else if (users[i].hasOwnProperty('staff')){
                                     full_name = users[i].staff.fName.concat(" ", users[i].staff.lName)
