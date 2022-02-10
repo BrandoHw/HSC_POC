@@ -58,11 +58,13 @@ class ResidentController extends Controller
         
         $relationship = Resident::relationship;
 
-        $rooms_ori = Location::where('location_description', 'like', 'Room _')->get();
+        //$rooms_ori = Location::where('location_description', 'like', 'Room _')->get();
+        $rooms_ori = Location::where('location_type_id', 2)->get();
         $rooms = [];
         foreach($rooms_ori as $room){
             $id = $room->location_master_id;
-            $name = 'L'.$room->floor.' - '.$room->location_description;
+            //$name = 'L'.$room->floor.' - '.$room->location_description;
+            $name = $room->location_description;
             $rooms[$id] = $name;
         }
 
@@ -130,11 +132,13 @@ class ResidentController extends Controller
 
         $relationship = Resident::relationship;
 
-        $rooms_ori = Location::where('location_description', 'like', 'Room _')->get();
+        //$rooms_ori = Location::where('location_description', 'like', 'Room _')->get();
+        $rooms_ori = Location::where('location_type_id', 2)->get();
         $rooms = [];
         foreach($rooms_ori as $room){
             $id = $room->location_master_id;
-            $name = 'L'.$room->floor.' - '.$room->location_description;
+            //$name = 'L'.$room->floor.' - '.$room->location_description;
+            $name = $room->location_description;
             $rooms[$id] = $name;
         }
 
@@ -185,13 +189,15 @@ class ResidentController extends Controller
 
         $relationship = Resident::relationship;
 
-        $rooms_ori = Location::where('location_description', 'like', 'Room _')->get();
-        $rooms = [];
-        foreach($rooms_ori as $room){
-            $id = $room->location_master_id;
-            $name = 'L'.$room->floor.' - '.$room->location_description;
-            $rooms[$id] = $name;
-        }
+         //$rooms_ori = Location::where('location_description', 'like', 'Room _')->get();
+         $rooms_ori = Location::where('location_type_id', 2)->get();
+         $rooms = [];
+         foreach($rooms_ori as $room){
+             $id = $room->location_master_id;
+             //$name = 'L'.$room->floor.' - '.$room->location_description;
+             $name = $room->location_description;
+             $rooms[$id] = $name;
+         }
 
         if ($resident->image_url != null){
             $resident->image_url = Storage::disk('s3')->url($resident->image_url);
@@ -438,11 +444,13 @@ class ResidentController extends Controller
 
         $relationship = Resident::relationship;
 
-        $rooms_ori = Location::where('location_description', 'like', 'Room _')->get();
+        //$rooms_ori = Location::where('location_description', 'like', 'Room _')->get();
+        $rooms_ori = Location::where('location_type_id', 2)->get();
         $rooms = [];
         foreach($rooms_ori as $room){
             $id = $room->location_master_id;
-            $name = 'L'.$room->floor.' - '.$room->location_description;
+            //$name = 'L'.$room->floor.' - '.$room->location_description;
+            $name = $room->location_description;
             $rooms[$id] = $name;
         }
 
