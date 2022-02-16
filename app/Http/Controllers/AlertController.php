@@ -29,7 +29,10 @@ class AlertController extends Controller
         $alerts = Alert::latest('alert_id')
         ->first();
         
-        $alerts_last = $alerts->alert_id;
+        if ($alerts === null)
+            $alerts_last = 1;
+        else
+            $alerts_last = $alerts->alert_id;
         return view('alerts.index', compact('alerts', 'alerts_last'));
     }
 

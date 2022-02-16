@@ -25,10 +25,7 @@ class GeneralController extends Controller
 
     public function index (Request $request){
 
-        $user = Auth::user();
-        $users = User::orderBy('user_id', 'asc')->get();
-        $users2 = User::all()->except(Auth::id());
-        return compact('user', 'users', 'users2');
+        phpinfo();
     }
 
      /**
