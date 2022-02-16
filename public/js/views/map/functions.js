@@ -168,11 +168,11 @@ function fillMarkerList(mac_addr, max_count, dialog){
               });
           }
           else if (users[i].hasOwnProperty('staff')){
-              full_name = users[i].staff.fName.concat(" ", users[i].staff.lName)
-              full_name = '<h3 class="name" style="color:var(--staff-color)">' + full_name + '</h3>';
+              full_name_no_color = users[i].staff.fName.concat(" ", users[i].staff.lName)
+              full_name = '<h3 class="name" style="color:var(--staff-color)">' + full_name_no_color+ '</h3>';
               if (users[i].staff.user_type != null){
                   if (users[i].staff.user_type.type === "Nurse")
-                    full_name = '<h3 class="name" style="color:var(--nurse-color)">' + full_name + '</h3>';
+                    full_name = '<h3 class="name" style="color:var(--nurse-color)">' + full_name_no_color + '</h3>';
               }
               userListMarker.add({name: full_name, 
                 tag: users[i].beacon_mac,
@@ -285,8 +285,8 @@ function drawUserLocation(data, drawnLayers, gatewayZones, floorIndex, redIcon){
     })
   }
   else if (!(data.staff === null)){
-    full_name = data.staff.fName.concat(" ", data.staff.lName)
-    full_name = '<span style="color:var(--staff-color)">' + full_name + '</span>';
+    full_name_no_color = data.staff.fName.concat(" ", data.staff.lName)
+    full_name = '<span style="color:var(--staff-color)">' + full_name_no_color + '</span>';
     var Icon = L.icon({
       iconUrl: imageUrl + "/orangemarker.png", 
       iconSize: [20,25],
@@ -294,7 +294,7 @@ function drawUserLocation(data, drawnLayers, gatewayZones, floorIndex, redIcon){
     })
     if (data.staff.user_type != null){
       if (data.staff.user_type.type === "Nurse"){
-        full_name = '<span style="color:var(--nurse-color)">' + full_name + '</span>';
+        full_name = '<span style="color:var(--nurse-color)">' + full_name_no_color + '</span>';
         var Icon = L.icon({
           iconUrl: imageUrl + "/greenmarker.png", 
           iconSize: [20,25],
