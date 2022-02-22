@@ -89,17 +89,29 @@
                             <div class="table-responsive" style="margin-top: 15px">
                                 <table class="table table-stripe table-bordered hover" id="gatewayTable">
                                     <thead>
-                                        <tr>
+                                        {{-- <tr>
                                             <th scope="col">Serial</th>
                                             <th scope="col">Mac Addr</th>
                                             <th scope="col">Location</th>
                                             <th scope="col">IP Address</th>
                                             <th scope="col">Up Status</th>
+                                        </tr> --}}
+                                        <tr>
+                                            <th scope="col" style="width:5%">#</th>
+                                            <th scope="col">Serial Number</th>
+                                            <th scope="col">Mac Address</th>
+                                            <th scope="col">Location</th>
+                                            <th scope="col">Floor</th>
+                                            @if(env('APP_TYPE') != 'klia')
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Time Since Disconnect: </th>
+                                                <th scope="col">Seconds Since Disconect: </th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($gateways as $gateway)
-                                            <tr>
+                                            {{-- <tr>
                                                 <td>{{ $gateway->serial ?? "-"}}</td>
                                                 <td>{{ $gateway->mac_addr}}</td>
                                                 <td>{{ $gateway->location->location_description ?? "-" }}</td>
@@ -109,6 +121,26 @@
                                                         {{ ($gateway->online == true) ? 'Online':'Offline'  }}
                                                     </span>
                                                 </td>
+                                            </tr> --}}
+                                            <tr id="gateway-{{ $gateway->gateway_id }}" href="{{ route('gateways.edit',$gateway->gateway_id) }}">
+                                                <td>{{ $gateway->gateway_id }}</td>
+                                                <td class="info">{{ isset($gateway->serial) ? $gateway->serial : "N/A" }} </td>
+                                                <td class="info">{{ $gateway->mac_addr }}</td>
+                                                <td class="info">{{ isset($gateway->location) ? $gateway->location->location_description : "-"  }}</td>
+                                                <td class="info">{{ isset($gateway->location) ? $gateway->location->floor_level->alias : "-"  }}</td>
+                                                @if(env('APP_TYPE') != 'klia')
+                                                    <td class="info">
+                                                        <span class="badge badge-pill iq-bg-{{ ($gateway->reader_status == true) ? 'success':'danger' }}">
+                                                            {{ ($gateway->reader_status == true) ? 'Online':'Offline'  }}
+                                                        </span>
+                                                    </td>
+                                                    <td class="info">
+                                                            {{ ($gateway->last_seen)  }}
+                                                    </td>
+                                                    <td class="info">
+                                                        {{ ($gateway->last_seen_seconds) }}
+                                                </td>
+                                                @endif
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -423,6 +455,7 @@
   
         console.log('click');
         gateways = <?php echo $gateways ?>;
+        console.log(gateways);
         if (tab === "home-tab-two" && gateways.length != 0){
             $('#chart-div').height("40vh");
             $('#chart-title').show();
@@ -445,6 +478,7 @@
                 var length = gateways.length;
                 for (i=0; i<length; i++){
                     var data = gateways[i];
+                    // counts_gateways[data['online']] = 1 + (counts_gateways[data['online']] || 0);
                     counts_gateways[data['online']] = 1 + (counts_gateways[data['online']] || 0);
                 }
                 for (var key in counts_gateways){

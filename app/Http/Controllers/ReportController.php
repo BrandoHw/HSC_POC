@@ -33,15 +33,23 @@ class ReportController extends Controller
         ->get();
 
 
-        $gateways = Reader::with('location')->get();
+        // $gateways = Reader::with('location')->get();
 
-        $status_check = Carbon::now()->subMinutes(5);
-        foreach($gateways as $reader){
-            if ($reader->up_status >= $status_check){
-                $reader->online = true;
-            }else{
-                $reader->online = false;
-            }
+        // $status_check = Carbon::now()->subMinutes(5);
+        // foreach($gateways as $reader){
+        //     if ($reader->up_status >= $status_check){
+        //         $reader->online = true;
+        //     }else{
+        //         $reader->online = false;
+        //     }
+        // }
+        $gateways = Reader::with('location', 'location.floor_level')->orderBy('gateway_id', 'asc')
+        ->get();
+
+        foreach ($gateways as $gateway){
+            $gateway->disconnect = $gateway->last_seen;
+            if ($gateway->reader_status){$gateway->online = true; }
+            else{$gateway->online = false;}
         }
 
         $residents = Resident::with('room')->get();

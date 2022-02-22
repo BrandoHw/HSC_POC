@@ -66,7 +66,7 @@ class PolicyController extends Controller
         $policy_type = PolicyType::pluck('rules_type_desc', 'rules_type_id')->all();
         $frequency = Policy::frequency;
 
-        $residents = Resident::whereHas('tag')->with('tag')->orderBy('resident_fName', 'asc')->get();
+    $residents = Resident::whereHas('tag')->with('tag')->orderBy('resident_fName', 'asc')->get();
         $residents_all_count = Resident::count();
         $residents_count = $residents->count();
 
