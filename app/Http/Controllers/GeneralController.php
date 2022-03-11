@@ -24,8 +24,8 @@ class GeneralController extends Controller
 {
     //
 
-    public function index (Request $request){
-
+    public function index (Request $request){  
+        return phpinfo();
         $color_black = Color::find('color_name', 'Black');
         return $color_black;
     }
