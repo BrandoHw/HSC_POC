@@ -19,13 +19,15 @@ use App\Location;
 use App\Reader;
 use Illuminate\Support\Facades\Auth;
 use App\User;
+use App\Color;
 class GeneralController extends Controller
 {
     //
 
     public function index (Request $request){
 
-        phpinfo();
+        $color_black = Color::find('color_name', 'Black');
+        return $color_black;
     }
 
      /**
