@@ -110,29 +110,10 @@
                 <div class="iq-card-body">
                     <div class="container">
                         <div class="row">
+
                             
 
-  
-  <div id="test-list">
-    <input type="text" class="search" />
-    <ul class="list">
-      <li><p class="name">Guybrush Threepwood</p></li>
-      <li><p class="name">Elaine Marley</p></li>
-      <li><p class="name">LeChuck</p></li>
-      <li><p class="name">Stan</p></li>
-      <li><p class="name">Voodoo Lady</p></li>
-      <li><p class="name">Herman Toothrot</p></li>
-      <li><p class="name">Meathook</p></li>
-      <li><p class="name">Carla</p></li>
-      <li><p class="name">Otis</p></li>
-      <li><p class="name">Rapp Scallion</p></li>
-      <li><p class="name">Rum Rogers Sr.</p></li>
-      <li><p class="name">Men of Low Moral Fiber</p></li>
-      <li><p class="name">Murray</p></li>
-      <li><p class="name">Cannibals</p></li>
-    </ul>
-    <ul class="pagination"></ul>
-  </div>
+                          $request->user()->twoFactorQrCodeSvg();
 
 
 
@@ -146,16 +127,6 @@
 
 @section("script")
 <script>
-
-values = {};
-values.name = "myop";
-var monkeyList = new List('test-list', {
-  valueNames: ['name'],
-  
-});
-
-monkeyList.add({name: "<li><span class='name'>TEST</span></li>"
-});
 
 
 

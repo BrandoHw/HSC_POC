@@ -1,3 +1,33 @@
+<style>
+i:active {
+    background-color: #a8f2ef;
+}
+
+.fa-clipboard{
+    font-size:20px;
+    cursor: pointer;
+}
+.tfa-info > div {
+    /* flex: 1 1 auto; */
+    text-align: center;
+    margin: 5px;  
+}
+.button-tooltip-container {
+    display: flex;
+    align-items: center;
+    margin-top: 16px;
+    min-height: 30px;
+
+}
+#custom-tooltip {
+    display: none;
+    margin-left: 40px;
+    padding: 5px 12px;
+    background-color: #000000df;
+    border-radius: 4px;
+    color: #fff;
+}
+</style>
 <div class="iq-card">
     <div class="iq-card-body">
         <div class="row ">
@@ -5,6 +35,7 @@
                 <div class="nav flex-column nav-pills text-center mt-lg-5" id="v-pills-tab" role="tablist" aria-orientation="vertical" style="border: 1px solid var(--iq-dark-border);border-radius:10px">
                     <a class="nav-link active" id="manage-personal" data-toggle="pill" href="#personal-tab" role="tab" aria-controls="v-pills-home" aria-selected="true" style="border-radius: 10px 10px 0 0">Personal Information</a>
                     <a class="nav-link" id="manage-password" data-toggle="pill" href="#password-tab" role="tab" aria-controls="v-pills-profile" aria-selected="false" style="border-radius: 0 0 10px 10px">Change Password</a>
+                    <a class="nav-link" id="manage-2fa" data-toggle="pill" href="#fa-tab" role="tab" aria-controls="v-pills-profile" aria-selected="false" style="border-radius: 0 0 10px 10px">Toggle 2FA</a>
                     @if(env('APP_TYPE') == 'hsc')
                         @can('token-list')
                             <a class="nav-link" id="generate-token" data-toggle="pill" href="#generate-tab" role="tab" aria-controls="v-pills-profile" aria-selected="false" style="border-radius: 0 0 10px 10px">Generate Token</a>
@@ -181,6 +212,50 @@
                             {!! Form::close() !!}
                         </div>
                     </div>
+                    <div class="tab-pane fade" id="fa-tab" role="tabpanel" aria-labelledby="manage-2fa">
+                        <div class="iq-card-header d-flex">
+                            <div class="iq-header-title" style="margin-right:20px">
+                                <h4 class="card-title">Toggle two-factor authentication</h4>
+                            </div>
+
+                            <a href="#" data-toggle="tooltip" data-placement="right" title="When enabled a QR Code will be generated that must be scanned with an
+                            authenticator app such as Authy or Google Authenticator. If disabled and enabled the new QR code must be scanned again." 
+                            style="cursor: pointer; left-padding:0">
+                                <i class="ri-information-fill"></i>
+                            </a>
+                        </div>
+                        <div class="iq-card-body">
+                            <div class="d-flex justify-content-center tfa-info" style="gap:50px">
+                                @if (auth()->user()->two_factor_secret)
+                                <div>
+                                    {!!auth()->user()->twoFactorQrCodeSvg()!!}
+                                </div>    
+                                <div class="d-flex justify-content-center" style="display: none!important" id="recovery-container">
+                                    <ul id="recovery-codes">
+                                    </ul>
+                                    <div class="button-tooltip-container">
+                                        <i id="copy-button" class="fa fa-clipboard" aria-hidden="true"></i>
+                                        <span id="custom-tooltip" style="position: absolute">Copied!</span>
+                                    </div>
+                                </div>
+                                @endif
+                            </div>
+                         
+                            <div class="justify-content-center align-items-center" style="display:flex; gap: 20px">
+                                <form method="POST" action="/user/two-factor-authentication">
+                                    @csrf
+                                    @if (auth()->user()->two_factor_secret)
+                                            @method('DELETE')
+                                            <button class="btn btn-danger">Disable</button>
+                                        @else
+                                            <button class="btn btn-primary">Enable</button>
+                                    @endif
+                                </form> 
+                                <button id="recovery-button" class="btn btn-primary">Recovery Codes</button>
+                                <img src={{url('/css/images/ajax-loader.gif')}} id="loading-indicator" style="display:none" />
+                            </div>
+                        </div>
+                    </div>
                     @if(env('APP_TYPE') == 'hsc')
                         @can('token-list')
                             <div class="tab-pane fade" id="generate-tab" role="tabpanel" aria-labelledby="generate-token">
@@ -200,3 +275,57 @@
         </div>
     </div>
 </div>
+
+<script>
+    $ (function(){
+        var copyText = '';
+        getRecoveryCodes =  function (){
+            $.ajax({
+                url: '/user/two-factor-recovery-codes/',
+                type: "GET",
+                success:function(response){
+                    console.log("onload");
+                    console.log(response);
+                    var list = $('#recovery-codes')
+                    $.each(response, function(i){
+                        var li = $('<li/>')
+                        .text(response[i])
+                        .appendTo(list);
+
+                        copyText = copyText + response[i] + "\n";
+                    })
+
+                    console.log(copyText);
+                    /* Copy the text inside the text field */
+                    $("#recovery-button" ).show();
+                    $("#loading-indicator" ).hide();
+               
+                },
+                error:function(error){
+                    console.log(error);
+                    var li = $('<li/>')
+                    .text("There was an error retrieving the recovery codes")
+                    .appendTo(list);
+                    $("#recovery-button" ).show();
+                    $("#loading-indicator" ).hide();
+                }
+            });
+        }
+
+        $("#copy-button" ).click(function() {
+            navigator.clipboard.writeText(copyText);
+            $("#custom-tooltip").css('display', 'inline');
+            setTimeout( function() {
+                $("#custom-tooltip").hide();
+            }, 1000);
+        });
+        
+        $("#recovery-button" ).click(function() {
+            getRecoveryCodes();
+            $("#recovery-container").show();
+            $("#recovery-button" ).hide();
+            $("#loading-indicator" ).show();
+        });
+      
+    });
+</script>

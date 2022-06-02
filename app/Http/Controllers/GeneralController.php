@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ActivityLog;
 use App\Floor;
 use App\MapFile;
 use Carbon\Carbon;
@@ -20,16 +21,40 @@ use App\Reader;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\Color;
+use App\Http\Traits\TestTrait;
 class GeneralController extends Controller
 {
     //
-
-    public function index (Request $request){  
-        return phpinfo();
-        $color_black = Color::find('color_name', 'Black');
-        return $color_black;
+    use TestTrait;
+    public function traitMethod(){
+        return "OVERRIDE";
     }
-
+    public function index (Request $request){  
+        // $activity_log = Tag::whereMonth('last_seen', Carbon::now()->month)
+        //                         ->whereYear('last_seen', Carbon::now()->year)
+        //                         ->orderBy('last_seen', 'asc')
+        //                         ->with('user')
+        //                         ->with('resident')
+        //                         ->groupBy('current_loc')
+        //                         ->get();
+        //                         return response()->json($activity_log);
+        $activity_log = ActivityLog::whereMonth('log_time', Carbon::now()->month)
+                                ->whereYear('log_time', Carbon::now()->year)
+                                ->with('gateway', 'gateway.location')
+                                ->groupBy('gateway_id')
+                                ->orderBy('gateway_id', 'asc')
+                                ->get();
+                               
+        $activity_log2 = ActivityLog::whereMonth('log_time', Carbon::now()->month)
+            ->whereYear('log_time', Carbon::now()->year)
+            ->with('beacon', 'beacon.user', 'beacon.resident')
+            ->groupBy('beacon_id')
+            ->orderBy('beacon_id', 'asc')
+            ->get();              
+        return response()->json([$activity_log,
+            $activity_log2
+        ]);
+    }
      /**
      * Store a newly created resource in storage.
      *
@@ -39,6 +64,7 @@ class GeneralController extends Controller
     public function storeTest(Request $request)
     {
         //
+        
           $user->updated_at = Carbon::parse($user->last_seen)->tz('Asia/Kuala_Lumpur')->format('d-m-Y H:i:s');
             if ($user->last_seen === null)
                 $user->updated_at = $user->created_at;

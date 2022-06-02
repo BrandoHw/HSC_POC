@@ -198,6 +198,9 @@ return [
 
         //AWS
         Aws\Laravel\AwsServiceProvider::class,
+
+        //Foritfy 2FA
+        App\Providers\FortifyServiceProvider::class,
     ],
 
     /*

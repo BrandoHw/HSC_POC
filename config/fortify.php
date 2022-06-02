@@ -46,8 +46,8 @@ return [
     |
     */
 
-    'username' => 'email',
-
+    //'username' => 'email',
+    'username' => 'username',
     'email' => 'email',
 
     /*
@@ -61,7 +61,7 @@ return [
     |
     */
 
-    'home' => RouteServiceProvider::HOME,
+    'residents.index' => RouteServiceProvider::HOME,
 
     /*
     |--------------------------------------------------------------------------
@@ -139,7 +139,7 @@ return [
         Features::updatePasswords(),
         Features::twoFactorAuthentication([
             // 'confirm' => true,
-            'confirmPassword' => true,
+            // 'confirmPassword' => true,
         ]),
     ],
 
